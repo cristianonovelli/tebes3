@@ -1,0 +1,2 @@
+
+mvn install:install-file -Dfile=xlab-common-1.0.jar -DgroupId=it.enea.xlab -DartifactId=xlab-common -Dversion=1.0 -Dpackaging=jar
