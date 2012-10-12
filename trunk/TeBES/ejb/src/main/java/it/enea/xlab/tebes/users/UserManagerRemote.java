@@ -16,8 +16,23 @@ public interface UserManagerRemote {
 	public Boolean updateUser(User user);
 	
 	public Boolean deleteUser(Long id);
-	
-	public void addUserSUT(User user, SUT sut);
 
-	//public void setUserGroup(User user, UserGroup group);
+	
+	
+	
+	public Long createSUT(SUT sut);
+
+	public SUT readSUT(Long idSUT);
+	
+	
+	public Long createGroup(UserGroup group);
+	
+	
+	
+	
+	public void addUserSUT(Long userId, Long sutId);
+
+	public void setUserGroup(User user, UserGroup group);
+
+
 }

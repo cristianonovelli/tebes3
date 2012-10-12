@@ -1,8 +1,9 @@
 package it.enea.xlab.tebes.users;
 
 
+import java.util.List;
+
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import it.enea.xlab.tebes.common.Properties;
 import it.enea.xlab.tebes.entity.SUT;
@@ -40,23 +41,27 @@ public class UserManagerImplITCase {
 	@Test
 	public void testCreateUser() {
 		
-		Long id = userManagerBean.createUser(currentUser);
-		Assert.assertTrue(id > 0);
+		Long idUser = userManagerBean.createUser(currentUser);
+		Assert.assertTrue(idUser > 0);
 		
-		User user = userManagerBean.readUser(id);
+		User user = userManagerBean.readUser(idUser);
 		Assert.assertNotNull(user);
 		Assert.assertEquals(Properties.TEMP_USER, user.getCode());
 		
-		// userManagerBean.createSUT(currentUser);
+		Long idSUT = userManagerBean.createSUT(currentSUT);
+		Assert.assertTrue(idSUT > 0);
+				
+		SUT sut = userManagerBean.readSUT(idSUT);
+		Assert.assertNotNull(sut);
 		
-		userManagerBean.addUserSUT(user, currentSUT);
-		//userManagerBean.setUserGroup(user, currentGroup);
+		userManagerBean.addUserSUT(idUser, idSUT);
 		
-		user = userManagerBean.readUser(id);
-		Assert.assertEquals(1, user.getUserSut().size());
+		
+		user = userManagerBean.readUser(idUser);
+		List<SUT> sutList = user.getUserSut();
+		Assert.assertEquals(1, sutList.size());
 
 	}
-
-
 	
 }
+

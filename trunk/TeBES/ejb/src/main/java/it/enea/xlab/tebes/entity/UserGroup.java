@@ -1,9 +1,9 @@
 package it.enea.xlab.tebes.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +18,7 @@ public class UserGroup implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	
 	private String name;
 	private String description;
 
@@ -25,16 +26,19 @@ public class UserGroup implements Serializable {
 	/**
 	 * Ogni gruppo ha molti utenti => OneToMany 
 	 */
-	@OneToMany(mappedBy="userGroup")
-	private List<User> user;
+	@OneToMany(mappedBy="userGroup",
+			cascade = {CascadeType.ALL})
+	private List<User> users;
 
+	
+	public UserGroup() {
+		
+	}
 	
 	/**
 	 * Constructor without id.
 	 */
 	public UserGroup(String name, String description) {
-
-		user = new ArrayList<User>();
 		
 		this.name = name;
 		this.description = description;
@@ -78,12 +82,12 @@ public class UserGroup implements Serializable {
 		this.description = description;
 	}
 
-	public List<User> getUser() {
-		return user;
+	public List<User> getUsers() {
+		return users;
 	}
 
-	public void setUser(List<User> user) {
-		this.user = user;
+	public void setUser(List<User> users) {
+		this.users = users;
 	}
 
 	

@@ -1,4 +1,6 @@
 
+
+
 import it.enea.xlab.tebes.common.Properties;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
@@ -50,7 +52,7 @@ public class Launcher {
 		
 		UserManagerImpl userManager = new UserManagerImpl();
 		//userManager.setUserGroup(currentUser, currentGroup);
-		userManager.addUserSUT(currentUser, currentSUT);
+		//userManager.addUserSUT(currentUser, currentSUT);
 
 		
 		// old
