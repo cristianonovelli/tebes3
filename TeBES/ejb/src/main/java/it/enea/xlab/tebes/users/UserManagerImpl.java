@@ -48,20 +48,22 @@ public class UserManagerImpl implements UserManagerRemote {
 	 * @param group
 	 * @return SUT ID
 	 */
-	public void addUserSUT(User user, SUT sut) {
+	public void addUserSUT(Long userId, Long sutId) {
 		
 		
-		User tempUser = this.readUser(user.getId());
-
+		User user = this.readUser(userId);
+		SUT sut = this.readSUT(sutId);
 		// commento la vecchia linea
 		// tempUser.getUserSut().add(sut);
 		
 		// provo ad effettuare la relazione user-sut dal sut
 		// si veda il seguente metodo
-		sut.addToUser(tempUser);
+		sut.addToUser(user);
+		
+		eM.persist(user);
 		
 		// persisto il sut
-		eM.merge(sut);
+		//eM.merge(sut);
 		/*user.addSut(sut);*/
 		
 
@@ -74,11 +76,38 @@ public class UserManagerImpl implements UserManagerRemote {
 	 * @param group
 	 * @return group ID
 	 */
-/*	public void setUserGroup(User user, UserGroup group) {
+	public void setUserGroup(User user, UserGroup group) {
 		
 		user.setUserGroup(group);
-		eM.persist(user);	
+		eM.merge(user);	
 		return;
-	}	*/
+	}
+
+	public Long createSUT(SUT sut) {
+
+		eM.persist(sut);		
+		return sut.getId();
+	}
+
+	
+	public SUT readSUT(Long idSUT) {
+		
+		return eM.find(SUT.class, idSUT);
+	}	
+	
+	
+	public Long createGroup(UserGroup group) {
+
+		eM.persist(group);		
+		return group.getId();
+	}
+
+/*	public void refreshUser(Long userId) {
+
+		User user = this.readUser(userId);
+		eM.refresh(user);
+	
+		return;
+	}*/
 
 }

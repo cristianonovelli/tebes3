@@ -1,7 +1,6 @@
 package it.enea.xlab.tebes.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -31,7 +30,7 @@ public class User implements Serializable {
 	 * Ogni User ha uno o più SUT => OneToMany
 	 */
 	@OneToMany(mappedBy="user", 
-			cascade = {CascadeType.PERSIST,CascadeType.MERGE },fetch = FetchType.EAGER)
+			cascade = {CascadeType.ALL,CascadeType.MERGE },fetch = FetchType.EAGER)
 	private List<SUT> userSut;
 	
 	
