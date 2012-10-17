@@ -21,7 +21,12 @@ public interface UserManagerLocal {
 	
 	public Long createSUT(SUT sut);
 	
+	public SUT readSUT(Long idSUT);
+	
+	
 	public Long createGroup(UserGroup group);
+	
+	public UserGroup readGroup(Long idGroup);	
 	
 	
 	

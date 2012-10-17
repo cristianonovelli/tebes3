@@ -42,7 +42,7 @@ public class HelloController {
     	HelloLocal helloService = null;
     	try {
     		InitialContext context = ContextUtils.getInitialContext("localhost:1099");
-    		helloService = (HelloLocal) context.lookup("TeBES-ear-1.0-SNAPSHOT/HelloBean/local");
+    		helloService = (HelloLocal) context.lookup("TeBES-ear/HelloBean/local");
     		} catch (Exception e) { // Error getting the home interface
     		   e.printStackTrace();
     		}

@@ -27,12 +27,14 @@ public interface UserManagerRemote {
 	
 	public Long createGroup(UserGroup group);
 	
-	
+	public UserGroup readGroup(Long idGroup);	
 	
 	
 	public void addUserSUT(Long userId, Long sutId);
 
 	public void setUserGroup(User user, UserGroup group);
+
+
 
 
 }

@@ -1,11 +1,14 @@
 package it.enea.xlab.tebes.users;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.SUT;
@@ -22,9 +25,19 @@ public class UserManagerImpl implements UserManagerRemote {
 	private EntityManager eM; 
 	
 	public Long createUser(User user) {
-
-		eM.persist(user);		
-		return user.getId();
+		
+		List<User> userList = this.findByEmail("cristiano.novelli@enea.it");
+		
+		if ( (userList == null) || (userList.size() == 0) ) {
+			eM.persist(user);
+			return user.getId();
+		}
+		else {
+			return userList.get(0).getId();
+		}
+			
+			
+		
 	}
 
 	public User readUser(Long id) {
@@ -42,6 +55,9 @@ public class UserManagerImpl implements UserManagerRemote {
 		return null;
 	}
 
+
+	
+	
 	/**
 	 * Add SUT to SUT list of User.
 	 * @param user
@@ -77,9 +93,13 @@ public class UserManagerImpl implements UserManagerRemote {
 	 * @return group ID
 	 */
 	public void setUserGroup(User user, UserGroup group) {
+
+		User u = this.readUser(user.getId());
+		UserGroup g = this.readGroup(group.getId());
 		
-		user.setUserGroup(group);
-		eM.merge(user);	
+		u.setUserGroup(g);
+		eM.persist(g);	
+		
 		return;
 	}
 
@@ -102,6 +122,12 @@ public class UserManagerImpl implements UserManagerRemote {
 		return group.getId();
 	}
 
+	public UserGroup readGroup(Long idGroup) {
+		
+		return eM.find(UserGroup.class, idGroup);
+	}
+
+	
 /*	public void refreshUser(Long userId) {
 
 		User user = this.readUser(userId);
@@ -109,5 +135,19 @@ public class UserManagerImpl implements UserManagerRemote {
 	
 		return;
 	}*/
+	
+	private List<User> findByEmail(String parEmail) {
+
+		return eM.createQuery(
+
+		"SELECT u FROM User u WHERE u.eMail LIKE :custEmail")
+
+		.setParameter("custEmail", parEmail)
+
+		.setMaxResults(10)
+
+		.getResultList();
+
+		}
 
 }
