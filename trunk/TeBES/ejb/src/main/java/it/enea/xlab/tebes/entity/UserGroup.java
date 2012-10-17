@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +28,7 @@ public class UserGroup implements Serializable {
 	 * Ogni gruppo ha molti utenti => OneToMany 
 	 */
 	@OneToMany(mappedBy="userGroup",
-			cascade = {CascadeType.ALL})
+			cascade = {CascadeType.ALL,CascadeType.MERGE})
 	private List<User> users;
 
 	

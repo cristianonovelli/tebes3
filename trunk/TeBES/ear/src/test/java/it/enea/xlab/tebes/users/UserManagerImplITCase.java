@@ -41,13 +41,19 @@ public class UserManagerImplITCase {
 	@Test
 	public void testCreateUser() {
 		
-		Long idUser = userManagerBean.createUser(currentUser);
+		// USER
+		Long idUser = userManagerBean.createUser(currentUser);	
+		
 		Assert.assertTrue(idUser > 0);
+		//Assert.assertTrue(idUser == 0);
+		
 		
 		User user = userManagerBean.readUser(idUser);
 		Assert.assertNotNull(user);
 		Assert.assertEquals(Properties.TEMP_USER, user.getCode());
 		
+		
+		// SUT
 		Long idSUT = userManagerBean.createSUT(currentSUT);
 		Assert.assertTrue(idSUT > 0);
 				
@@ -56,11 +62,23 @@ public class UserManagerImplITCase {
 		
 		userManagerBean.addUserSUT(idUser, idSUT);
 		
-		
 		user = userManagerBean.readUser(idUser);
 		List<SUT> sutList = user.getUserSut();
-		Assert.assertEquals(1, sutList.size());
+		Assert.assertTrue(sutList.size() > 0);
 
+		
+		// GROUP
+		Long idGroup = userManagerBean.createGroup(currentGroup);
+		Assert.assertTrue(idGroup > 0);
+		
+		UserGroup group = userManagerBean.readGroup(idGroup);
+		Assert.assertNotNull(group);		
+		
+		userManagerBean.setUserGroup(user, group);
+		//user = userManagerBean.readUser(idUser);
+		//UserGroup g = user.getUserGroup();
+		//Assert.assertEquals(g.getId(), group.getId());
+		
 	}
 	
 }
