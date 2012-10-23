@@ -21,10 +21,10 @@ public class User implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	private String code;
 	private String name;
 	private String surname;
 	private String eMail;
+	private String password;
 	
 	/**
 	 * Ogni User ha uno o più SUT => OneToMany
@@ -38,7 +38,7 @@ public class User implements Serializable {
 	 * Molti User hanno lo stesso Group => ManyToOne 
 	 */
 	@ManyToOne
-	private UserGroup userGroup;
+	private Role role;
 
 	public User() {
 		
@@ -50,12 +50,12 @@ public class User implements Serializable {
 	 * Si lascia la generazione dello userId al motore di persistenza (ORM - Object Relation Mapping)
 	 * Il SUT si aggiunge in un secondo momento
 	 */
-	public User(String userCode, String userName, String userSurname, String userEMail) {
+	public User(String userName, String userSurname, String userEMail, String userPassword) {
 		
-		this.code = userCode;
 		this.name = userName;
 		this.surname = userSurname;
 		this.eMail = userEMail;
+		this.password = userPassword;
 	}
 
 
@@ -71,16 +71,6 @@ public class User implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-
-	public String getCode() {
-		return code;
-	}
-
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 
@@ -114,49 +104,34 @@ public class User implements Serializable {
 	}
 
 
-	public List<SUT> getUserSut() {
+	public String getPassword() {
+		return password;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+	public List<SUT> getSutList() {
 		return userSut;
 	}
 
 
-	public void setUserSut(List<SUT> userSut) {
+	public void setSutList(List<SUT> userSut) {
 		this.userSut = userSut;
 	}
+	
 
-/*	public void addSut(SUT userSut) {
-
-		this.userSut.add(userSut);
-		return;
-	}*/
-
-	public UserGroup getUserGroup() {
-		return userGroup;
+	public Role getRole() {
+		return role;
 	}
 
 
-	public void setUserGroup(UserGroup userGroup) {
-		this.userGroup = userGroup;
+	public void setRole(Role role) {
+		this.role = role;
 	}
-
-	/**
-	 * Constructor with id.
-	 * Si lascia la generazione dello userId al motore di persistenza (ORM - Object Relation Mapping)
-	 */
-/*	public User(Long userId, String userCode, String userName, String userSurname,
-			String userEMail, SUT userSut, UserGroup userGroup) {
-		
-		this.userId = userId;
-		this.userCode = userCode;
-		this.userName = userName;
-		this.userSurname = userSurname;
-		this.userEMail = userEMail;
-		this.userSut.add(userSut);
-		this.userGroup = userGroup;
-	}*/
-	
-	
-
-	
 
 
 }

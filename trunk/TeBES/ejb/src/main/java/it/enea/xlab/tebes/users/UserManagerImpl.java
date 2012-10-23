@@ -13,7 +13,7 @@ import javax.persistence.Query;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.entity.UserGroup;
+import it.enea.xlab.tebes.entity.Role;
 
 
 @Stateless
@@ -24,20 +24,20 @@ public class UserManagerImpl implements UserManagerRemote {
 	@PersistenceContext(unitName="TeBESPersistenceLayer")
 	private EntityManager eM; 
 	
+	/**
+	 * CREATE User
+	 */
 	public Long createUser(User user) {
-		
-		List<User> userList = this.findByEmail("cristiano.novelli@enea.it");
+
+		List<User> userList = this.findByEmail(user.geteMail());
 		
 		if ( (userList == null) || (userList.size() == 0) ) {
 			eM.persist(user);
 			return user.getId();
 		}
 		else {
-			return userList.get(0).getId();
+			return new Long(-1);
 		}
-			
-			
-		
 	}
 
 	public User readUser(Long id) {
@@ -89,15 +89,15 @@ public class UserManagerImpl implements UserManagerRemote {
 	/**
 	 * Set group of User.
 	 * @param user
-	 * @param group
+	 * @param role
 	 * @return group ID
 	 */
-	public void setUserGroup(User user, UserGroup group) {
+	public void setRole(User user, Role role) {
 
 		User u = this.readUser(user.getId());
-		UserGroup g = this.readGroup(group.getId());
+		Role g = this.readRole(role.getId());
 		
-		u.setUserGroup(g);
+		u.setRole(g);
 		eM.persist(g);	
 		
 		return;
@@ -116,15 +116,49 @@ public class UserManagerImpl implements UserManagerRemote {
 	}	
 	
 	
-	public Long createGroup(UserGroup group) {
+/*	public Long createRole(Role group) {
 
 		eM.persist(group);		
 		return group.getId();
-	}
+	}*/
 
-	public UserGroup readGroup(Long idGroup) {
+	/**
+	 * CREATE Role.
+	 * @return the role id. in any case.
+	 * If role exists, return the id of existing role.
+	 */
+	public Long createRole(Role role) {
+
+		Role existingRole = this.findRoleByLevel(role.getLevel());
 		
-		return eM.find(UserGroup.class, idGroup);
+		if (existingRole == null) {
+			
+			eM.persist(role);		
+			return role.getId();
+		}
+		else
+			return existingRole.getId();
+	}
+	
+	
+	private Role findRoleByLevel(int customLevel) {
+		
+        String queryString = "SELECT g FROM Role AS g WHERE g.level = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, customLevel);
+        @SuppressWarnings("unchecked")
+		List<Role> resultList = query.getResultList();
+        if ((resultList != null) && (resultList.size() > 0))
+        	return (Role) resultList.get(0);
+        else
+        	return null;
+	}
+	
+	
+	public Role readRole(Long idGroup) {
+		
+		return eM.find(Role.class, idGroup);
 	}
 
 	
@@ -136,18 +170,35 @@ public class UserManagerImpl implements UserManagerRemote {
 		return;
 	}*/
 	
+	@SuppressWarnings("unchecked")
 	private List<User> findByEmail(String parEmail) {
+		
+        String queryString = "SELECT u FROM User AS u WHERE u.eMail = ?1";
+        
+           Query query = eM.createQuery(queryString);
+           query.setParameter(1, parEmail);
+           return query.getResultList();
+	}
 
-		return eM.createQuery(
+	public List<Role> getRoleList() {
+		
+        String queryString = "SELECT g FROM Role AS g";
+        
+        Query query = eM.createQuery(queryString);
+        List<Role> roleList = query.getResultList();
 
-		"SELECT u FROM User u WHERE u.eMail LIKE :custEmail")
+        return roleList;
+	}
+	
+	public List<User> getUserList() {
+		
+        String queryString = "SELECT u FROM User AS u";   
+        Query query = eM.createQuery(queryString);
+        
+        @SuppressWarnings("unchecked")
+		List<User> userList = query.getResultList();
 
-		.setParameter("custEmail", parEmail)
-
-		.setMaxResults(10)
-
-		.getResultList();
-
-		}
-
+        return userList;
+	}
+	
 }
