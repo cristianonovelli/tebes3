@@ -1,10 +1,11 @@
+/*
 
 
 
 import it.enea.xlab.tebes.common.Properties;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.entity.UserGroup;
+import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.model.TestPlan;
 import it.enea.xlab.tebes.testaction.TestActionManagerImpl;
 import it.enea.xlab.tebes.testplan.TestPlanManagerImpl;
@@ -15,9 +16,9 @@ import org.junit.Test;
 
 public class Launcher {
 
-	/**
+	*//**
 	 * @param args
-	 */
+	 *//*
 	@Test
 	public static void main(String[] args) {
         
@@ -47,7 +48,7 @@ public class Launcher {
 		
 		// Preparazione Entity User
 		SUT currentSUT = new SUT("xmldocument", "XML document uploaded by web interface");
-		UserGroup currentGroup = new UserGroup("administrators", "Administrators Group of TeBES Platform");
+		Role currentGroup = new Role("administrators", "Administrators Group of TeBES Platform");
 		User currentUser = new User(Properties.TEMP_USER, "Cristiano", "Novelli", "cristiano.novelli@enea.it");
 		
 		UserManagerImpl userManager = new UserManagerImpl();
@@ -61,7 +62,7 @@ public class Launcher {
 		
 		
 		// Persistenza User Entity tramite JNDI 
-/*		try {
+		try {
 			
 			InitialContext ctx = new InitialContext();
 			UserManagerRemote bean = (UserManagerRemote) ctx.lookup("TeBES-ear-1.0-SNAPSHOT/UserManagerImpl/remote");
@@ -71,7 +72,7 @@ public class Launcher {
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 
 		
 		// 2. l'utente ha selezionato/configurato un piano di Test	
@@ -146,3 +147,4 @@ public class Launcher {
 }
 
 
+*/
