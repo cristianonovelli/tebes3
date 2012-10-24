@@ -65,27 +65,44 @@ public class UserManagerImpl implements UserManagerRemote {
 	 * @return SUT ID
 	 */
 	public void addUserSUT(Long userId, Long sutId) {
-		
-		
+
 		User user = this.readUser(userId);
 		SUT sut = this.readSUT(sutId);
 		// commento la vecchia linea
 		// tempUser.getUserSut().add(sut);
 		
-		// provo ad effettuare la relazione user-sut dal sut
-		// si veda il seguente metodo
-		sut.addToUser(user);
 		
-		eM.persist(user);
+		//List<SUT> sutList = this.findSUTByName(sut.getName());
+		
+		//if (sutList.size() == 0) {
+			
+			// provo ad effettuare la relazione user-sut dal sut
+			// si veda il seguente metodo
+			sut.addToUser(user);
+			
+			eM.persist(user);
+		//}
 		
 		// persisto il sut
 		//eM.merge(sut);
 		/*user.addSut(sut);*/
-		
 
 		return;
 	}
 	
+	
+	private List<SUT> findSUTByName(String name) {
+        
+		String queryString = "SELECT s FROM SUT AS s WHERE s.name = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, name);
+        @SuppressWarnings("unchecked")
+		List<SUT> resultList = query.getResultList();
+
+        return resultList;
+	}
+
 	/**
 	 * Set group of User.
 	 * @param user
@@ -143,7 +160,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	
 	private Role findRoleByLevel(int customLevel) {
 		
-        String queryString = "SELECT g FROM Role AS g WHERE g.level = ?1";
+        String queryString = "SELECT r FROM Role AS r WHERE r.level = ?1";
         
         Query query = eM.createQuery(queryString);
         query.setParameter(1, customLevel);
@@ -200,5 +217,6 @@ public class UserManagerImpl implements UserManagerRemote {
 
         return userList;
 	}
+	
 	
 }

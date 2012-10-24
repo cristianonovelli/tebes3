@@ -64,14 +64,14 @@ public class UserManagerImplITCase {
 		role4 = roleManagerBean.readRole(idRole4);
 		Assert.assertNotNull(role4);*/
 		
-		// XLabUser: Cristiano Novelli
+		// PREPARE XLabUser: Cristiano Novelli
 		User user1 = new User();
 		user1.setName("Cristiano");
 		user1.setSurname("Novelli");
 		user1.seteMail("cristiano.novelli@enea.it");
 		user1.setPassword("xcristiano");
 
-		// XLabUser: Piero De Sabbata
+		// PREPARE XLabUser: Piero De Sabbata
 		User user2 = new User();
 		user2.setName("Piero");
 		user2.setSurname("De Sabbata");
@@ -82,43 +82,50 @@ public class UserManagerImplITCase {
 		idUser1 = userManagerBean.createUser(user1);
 		idUser2 = userManagerBean.createUser(user2);
 		
-		// Test: verifico che gli id siano maggiori di zero
+		// Test: verifico vi siano i due utenti creati
 		List<User> userList = userManagerBean.getUserList();
 		Assert.assertTrue(userList.size() >= 2);
+		
+		// Test: verifico che gli id siano maggiori di zero
+		// READ USER and Test
+		if (idUser1 > 0)
+			user1 = userManagerBean.readUser(idUser1);
+		else
+			user1 = userList.get(0);
+		Assert.assertNotNull(user1);
+		Assert.assertEquals(user1.getId(), new Long(1));
+		
+		if (idUser2 > 0)
+			user2 = userManagerBean.readUser(idUser2);
+		else
+			user2 = userList.get(1);		
+		Assert.assertNotNull(user2);
+		Assert.assertEquals(user2.getId(), new Long(2));
+		
+		
+		// GROUP
+		Role xlabRole = userManagerBean.readRole(idRole4);
+		Assert.assertNotNull(xlabRole);		
+		
+		//user1 = userManagerBean.readUser(user1.getId());
+		userManagerBean.setRole(user1, xlabRole);
+		user1 = userManagerBean.readUser(user1.getId());
+		Assert.assertTrue(user1.getRole().getId() > 0);
+
+		//user2 = userManagerBean.readUser(idUser2);
+		userManagerBean.setRole(user2, xlabRole);
+		user2 = userManagerBean.readUser(user2.getId());
+		Assert.assertTrue(user2.getRole().getId() > 0);
+		
+		
+
+
 	}
 	
 	
 	
 	@Test
 	public void test1() {
-		
-		// USER
-		//Long idUser = userManagerBean.createUser(currentUser);	
-		
-		//Assert.assertTrue(idUser > 0);
-		//Assert.assertTrue(idUser == 0);
-		
-		
-		//User user = userManagerBean.readUser(idUser);
-		//Assert.assertNotNull(user);
-		//Assert.assertEquals(Properties.TEMP_USER, user.getCode());
-		
-
-		
-		// GROUP
-		//Long idGroup = userManagerBean.createRole(currentGroup);
-		//Assert.assertTrue(idGroup > 0);
-		
-		Role group = userManagerBean.readRole(idRole4);
-		Assert.assertNotNull(group);		
-		
-		user1 = userManagerBean.readUser(idUser1);
-		userManagerBean.setRole(user1, group);
-		user1 = userManagerBean.readUser(user1.getId());
-		//UserGroup g = user.getUserGroup();
-		Assert.assertTrue(user1.getRole().getId() > 0);
-		
-		
 		
 		// SUT
 		Long idSUT = userManagerBean.createSUT(currentSUT);
@@ -127,13 +134,38 @@ public class UserManagerImplITCase {
 		SUT sut = userManagerBean.readSUT(idSUT);
 		Assert.assertNotNull(sut);
 		
-		userManagerBean.addUserSUT(idUser1, idSUT);
+		List<User> userList = userManagerBean.getUserList();
+		if ((userList != null) && (userList.size() > 0))
+			user1 = userList.get(0);
 		
-		user1 = userManagerBean.readUser(idUser1);
+		
+		Assert.assertNotNull(user1);
+		Assert.assertTrue(user1.getId() > 0);
+		
+		userManagerBean.addUserSUT(user1.getId(), sut.getId());
+		
+		
+		
+		user1 = userManagerBean.readUser(user1.getId());	
 		List<SUT> sutList = user1.getSutList();
 		Assert.assertTrue(sutList.size() > 0);
+		
+		// USER
+		//Long idUser = userManagerBean.createUser(currentUser);	
+		
+		//Assert.assertTrue(idUser > 0);
+		
+		//Assert.assertTrue(idUser == 0);
+		
+		
+		//User user = userManagerBean.readUser(idUser);
+		//Assert.assertNotNull(user);
+		//Assert.assertEquals(Properties.TEMP_USER, user.getCode());
 
 		
+		// GROUP
+		//Long idGroup = userManagerBean.createRole(currentGroup);
+		//Assert.assertTrue(idGroup > 0);
 
 		
 	}
