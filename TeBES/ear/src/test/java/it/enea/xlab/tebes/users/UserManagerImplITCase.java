@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.naming.InitialContext;
 
-import it.enea.xlab.tebes.common.Properties;
+
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.entity.Role;
@@ -73,9 +73,9 @@ public class UserManagerImplITCase {
 
 		// PREPARE XLabUser: Piero De Sabbata
 		User user2 = new User();
-		user2.setName("Piero");
-		user2.setSurname("De Sabbata");
-		user2.seteMail("piero.desabbata@enea.it");
+		user2.setName("Arianna");
+		user2.setSurname("Brutti");
+		user2.seteMail("arianna.brutti@enea.it");
 		user2.setPassword("xpiero");
 
 		// CREATE USER: Persist Users in DB through JPA
