@@ -24,6 +24,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	@PersistenceContext(unitName="TeBESPersistenceLayer")
 	private EntityManager eM; 
 	
+	
 	/**
 	 * CREATE User
 	 */
@@ -40,16 +41,25 @@ public class UserManagerImpl implements UserManagerRemote {
 		}
 	}
 
+	/**
+	 * READ User
+	 */
 	public User readUser(Long id) {
 
 		return eM.find(User.class, id);
 	}
 
+	/**
+	 * UPDATE User
+	 */
 	public Boolean updateUser(User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * DELETE User
+	 */
 	public Boolean deleteUser(Long id) {
 		// TODO Auto-generated method stub
 		return null;
@@ -68,20 +78,16 @@ public class UserManagerImpl implements UserManagerRemote {
 
 		User user = this.readUser(userId);
 		SUT sut = this.readSUT(sutId);
-		// commento la vecchia linea
-		// tempUser.getUserSut().add(sut);
+	
 		
-		
-		//List<SUT> sutList = this.findSUTByName(sut.getName());
-		
-		//if (sutList.size() == 0) {
+
 			
 			// provo ad effettuare la relazione user-sut dal sut
 			// si veda il seguente metodo
 			sut.addToUser(user);
 			
 			eM.persist(user);
-		//}
+
 		
 		// persisto il sut
 		//eM.merge(sut);
@@ -90,18 +96,6 @@ public class UserManagerImpl implements UserManagerRemote {
 		return;
 	}
 	
-	
-	private List<SUT> findSUTByName(String name) {
-        
-		String queryString = "SELECT s FROM SUT AS s WHERE s.name = ?1";
-        
-        Query query = eM.createQuery(queryString);
-        query.setParameter(1, name);
-        @SuppressWarnings("unchecked")
-		List<SUT> resultList = query.getResultList();
-
-        return resultList;
-	}
 
 	/**
 	 * Set group of User.
@@ -122,8 +116,14 @@ public class UserManagerImpl implements UserManagerRemote {
 
 	public Long createSUT(SUT sut) {
 
-		eM.persist(sut);		
-		return sut.getId();
+		SUT existingSUT = this.findSUTByName(sut.getName());
+		
+		if (existingSUT == null) {
+			eM.persist(sut);		
+			return sut.getId();
+		}
+		else 
+			return new Long(-1);
 	}
 
 	
@@ -168,6 +168,21 @@ public class UserManagerImpl implements UserManagerRemote {
 		List<Role> resultList = query.getResultList();
         if ((resultList != null) && (resultList.size() > 0))
         	return (Role) resultList.get(0);
+        else
+        	return null;
+	}
+	
+	
+	private SUT findSUTByName(String name) {
+		
+        String queryString = "SELECT s FROM SUT AS s WHERE s.name = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, name);
+        @SuppressWarnings("unchecked")
+		List<SUT> resultList = query.getResultList();
+        if ((resultList != null) && (resultList.size() > 0))
+        	return (SUT) resultList.get(0);
         else
         	return null;
 	}

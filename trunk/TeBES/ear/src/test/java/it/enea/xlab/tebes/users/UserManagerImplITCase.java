@@ -28,7 +28,7 @@ public class UserManagerImplITCase {
 		
 
 
-		currentSUT = new SUT("xmldocument", "XML document uploaded by web interface");
+		currentSUT = new SUT("sut1", "xmldocument", "XML document uploaded by web interface");
 		//currentGroup = new Role("administrators", "Administrators Group of TeBES Platform", 1);
 		
 		InitialContext ctx = new InitialContext();
@@ -126,24 +126,27 @@ public class UserManagerImplITCase {
 	
 	@Test
 	public void test1() {
-		
-		// SUT
-		Long idSUT = userManagerBean.createSUT(currentSUT);
-		Assert.assertTrue(idSUT > 0);
-				
-		SUT sut = userManagerBean.readSUT(idSUT);
-		Assert.assertNotNull(sut);
-		
+
+		// Get First User
 		List<User> userList = userManagerBean.getUserList();
 		if ((userList != null) && (userList.size() > 0))
 			user1 = userList.get(0);
 		
+		// SUT
+		Long idSUT = userManagerBean.createSUT(currentSUT);
 		
-		Assert.assertNotNull(user1);
-		Assert.assertTrue(user1.getId() > 0);
 		
-		userManagerBean.addUserSUT(user1.getId(), sut.getId());
+		// se ho creato un nuovo SUT lo associo allo User
+		if (idSUT > 0) {
 		
+			SUT sut = userManagerBean.readSUT(idSUT);
+			Assert.assertNotNull(sut);
+	
+			Assert.assertNotNull(user1);
+			Assert.assertTrue(user1.getId() > 0);
+			
+			userManagerBean.addUserSUT(user1.getId(), sut.getId());
+		}
 		
 		
 		user1 = userManagerBean.readUser(user1.getId());	
