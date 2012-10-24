@@ -24,13 +24,17 @@ public class UserManagerImpl implements UserManagerRemote {
 	@PersistenceContext(unitName="TeBESPersistenceLayer")
 	private EntityManager eM; 
 	
+
+	////////////////////
+	// USER FUNCTIONS //
+	////////////////////
 	
 	/**
 	 * CREATE User
 	 */
 	public Long createUser(User user) {
 
-		List<User> userList = this.findByEmail(user.geteMail());
+		List<User> userList = this.findUsersByEmail(user.geteMail());
 		
 		if ( (userList == null) || (userList.size() == 0) ) {
 			eM.persist(user);
@@ -65,43 +69,45 @@ public class UserManagerImpl implements UserManagerRemote {
 		return null;
 	}
 
+	/**
+	 * GET User LIST
+	 */
+	public List<User> getUserList() {
+		
+        String queryString = "SELECT u FROM User AS u";   
+        Query query = eM.createQuery(queryString);
+        
+        @SuppressWarnings("unchecked")
+		List<User> userList = query.getResultList();
 
+        return userList;
+	}
+
+	
+
+	
+	////////////////////
+	// JOIN FUNCTIONS //
+	////////////////////
 	
 	
 	/**
-	 * Add SUT to SUT list of User.
-	 * @param user
-	 * @param group
-	 * @return SUT ID
+	 * Add SUT to User's SUT list.
 	 */
 	public void addUserSUT(Long userId, Long sutId) {
 
 		User user = this.readUser(userId);
 		SUT sut = this.readSUT(sutId);
-	
-		
 
-			
-			// provo ad effettuare la relazione user-sut dal sut
-			// si veda il seguente metodo
-			sut.addToUser(user);
-			
-			eM.persist(user);
-
-		
-		// persisto il sut
-		//eM.merge(sut);
-		/*user.addSut(sut);*/
+		sut.addToUser(user);
+		eM.persist(user);
 
 		return;
 	}
 	
 
 	/**
-	 * Set group of User.
-	 * @param user
-	 * @param role
-	 * @return group ID
+	 * Set Role of User.
 	 */
 	public void setRole(User user, Role role) {
 
@@ -114,6 +120,17 @@ public class UserManagerImpl implements UserManagerRemote {
 		return;
 	}
 
+
+	
+	
+	///////////////////
+	// SUT FUNCTIONS //
+	///////////////////
+	
+
+	/**
+	 * CREATE SUT
+	 */
 	public Long createSUT(SUT sut) {
 
 		SUT existingSUT = this.findSUTByName(sut.getName());
@@ -125,23 +142,24 @@ public class UserManagerImpl implements UserManagerRemote {
 		else 
 			return new Long(-1);
 	}
-
 	
+	/**
+	 * READ SUT
+	 */	
 	public SUT readSUT(Long idSUT) {
 		
 		return eM.find(SUT.class, idSUT);
 	}	
 	
 	
-/*	public Long createRole(Role group) {
 
-		eM.persist(group);		
-		return group.getId();
-	}*/
+	
+	////////////////////
+	// ROLE FUNCTIONS //
+	////////////////////
 
 	/**
-	 * CREATE Role.
-	 * @return the role id. in any case.
+	 * CREATE Role
 	 * If role exists, return the id of existing role.
 	 */
 	public Long createRole(Role role) {
@@ -157,7 +175,38 @@ public class UserManagerImpl implements UserManagerRemote {
 			return existingRole.getId();
 	}
 	
+	/**
+	 * READ Role
+	 */
+	public Role readRole(Long idGroup) {
+		
+		return eM.find(Role.class, idGroup);
+	}
 	
+	/**
+	 * GET Role LIST
+	 */	
+	public List<Role> getRoleList() {
+		
+        String queryString = "SELECT g FROM Role AS g";
+        
+        Query query = eM.createQuery(queryString);
+        List<Role> roleList = query.getResultList();
+
+        return roleList;
+	}
+	
+	
+	
+	////////////////////
+	// FIND FUNCTIONS //
+	////////////////////
+	
+	/**
+	 * FIND Role by Level
+	 * @return the first role with that level, if the role is present 
+	 * @return null, if the role is not present 
+	 */
 	private Role findRoleByLevel(int customLevel) {
 		
         String queryString = "SELECT r FROM Role AS r WHERE r.level = ?1";
@@ -173,6 +222,11 @@ public class UserManagerImpl implements UserManagerRemote {
 	}
 	
 	
+	/**
+	 * FIND SUT by Name
+	 * @return the first SUT with that name, if the SUT is present 
+	 * @return null, if the SUT is not present 
+	 */	
 	private SUT findSUTByName(String name) {
 		
         String queryString = "SELECT s FROM SUT AS s WHERE s.name = ?1";
@@ -186,24 +240,12 @@ public class UserManagerImpl implements UserManagerRemote {
         else
         	return null;
 	}
-	
-	
-	public Role readRole(Long idGroup) {
-		
-		return eM.find(Role.class, idGroup);
-	}
 
-	
-/*	public void refreshUser(Long userId) {
-
-		User user = this.readUser(userId);
-		eM.refresh(user);
-	
-		return;
-	}*/
-	
+	/**
+	 * FIND User List by email
+	 */	
 	@SuppressWarnings("unchecked")
-	private List<User> findByEmail(String parEmail) {
+	private List<User> findUsersByEmail(String parEmail) {
 		
         String queryString = "SELECT u FROM User AS u WHERE u.eMail = ?1";
         
@@ -212,26 +254,8 @@ public class UserManagerImpl implements UserManagerRemote {
            return query.getResultList();
 	}
 
-	public List<Role> getRoleList() {
-		
-        String queryString = "SELECT g FROM Role AS g";
-        
-        Query query = eM.createQuery(queryString);
-        List<Role> roleList = query.getResultList();
-
-        return roleList;
-	}
 	
-	public List<User> getUserList() {
-		
-        String queryString = "SELECT u FROM User AS u";   
-        Query query = eM.createQuery(queryString);
-        
-        @SuppressWarnings("unchecked")
-		List<User> userList = query.getResultList();
 
-        return userList;
-	}
 	
 	
 }
