@@ -254,8 +254,34 @@ public class UserManagerImpl implements UserManagerRemote {
            return query.getResultList();
 	}
 
-	
 
 	
+	///////////////////////
+	// MANAGER FUNCTIONS //
+	///////////////////////
+
+	/**
+	 * Login method
+	 * User log in if there is a user with the specified email and password
+	 */
+	public Boolean login(String userEmail, String userPassword) {
+		
+		Boolean result = false;
+		
+		List<User> userList = this.findUsersByEmail(userEmail);
+		
+		if ( (userList != null) && (userList.size() > 0) ) {			
+			
+			User user = userList.get(0);
+			
+			if (user.getPassword().equals(userPassword))
+				result = true;
+		}
+		
+		return result;
+	}
 	
 }
+
+
+
