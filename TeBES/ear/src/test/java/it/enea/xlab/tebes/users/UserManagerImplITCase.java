@@ -111,7 +111,15 @@ public class UserManagerImplITCase {
 	@Test
 	public void t3_login() {
 		
+		boolean login;
 		
+		// Correct login
+		login= userManagerBean.login("cristiano.novelli@enea.it", "xcristiano");
+		Assert.assertTrue(login);		
+		
+		// Incorrect login
+		login = userManagerBean.login("cristiano.novelli@enea.it", "cristiano");
+		Assert.assertFalse(login);
 	}
 	
 	@Test
