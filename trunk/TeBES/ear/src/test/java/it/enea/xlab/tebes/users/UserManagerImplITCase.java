@@ -1,16 +1,13 @@
 package it.enea.xlab.tebes.users;
 
+import it.enea.xlab.tebes.entity.Role;
+import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.User;
 
 import java.util.List;
 
 import javax.naming.InitialContext;
 
-
-import it.enea.xlab.tebes.entity.SUT;
-import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.entity.Role;
-
-import org.hibernate.validator.AssertTrue;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,11 +17,15 @@ public class UserManagerImplITCase {
 	// Interface Declaration
 	UserManagerRemote userManagerBean;
 	
-	Role currentGroup;
+	// Global Variables
 	Long idUser1, idUser2;
 	Long idRole1, idRole2, idRole3, idRole4;
 	
 	
+	/**
+	 * Before (Test1): Setup Roles
+	 * @throws Exception
+	 */
 	@Before
 	public void t1_setupRoles() throws Exception {
 		
@@ -51,8 +52,11 @@ public class UserManagerImplITCase {
 		Assert.assertTrue(roleIdList.size() == 4);
 		
 	}
+
 	
-	
+	/**
+	 * Test2: User Registration
+	 */
 	@Test
 	public void t2_registration() {
 		
@@ -94,6 +98,9 @@ public class UserManagerImplITCase {
 	}
 	
 	
+	/**
+	 * Test3: User Login
+	 */
 	@Test
 	public void t3_login() {
 		
@@ -108,9 +115,12 @@ public class UserManagerImplITCase {
 		Assert.assertNull(login);
 	}
 	
-
+	
+	/**
+	 * Test4: Set Role
+	 */
 	@Test
-	public void t4_setGroup() {
+	public void t4_setRole() {
 		
 		User cristianoUser = userManagerBean.login("cristiano.novelli@enea.it", "xcristiano");
 		Assert.assertNotNull(cristianoUser);
@@ -136,6 +146,9 @@ public class UserManagerImplITCase {
 	}
 	
 	
+	/**
+	 * Test5: Add SUT to User
+	 */
 	@Test
 	public void t5_addSUT() {
 
@@ -167,6 +180,9 @@ public class UserManagerImplITCase {
 	}
 	
 	
+	/**
+	 * Test6: Update User
+	 */
 	@Test
 	public void t6_update() {
 		
@@ -202,6 +218,9 @@ public class UserManagerImplITCase {
 	}
 
 
+	/**
+	 * Test7: Delete User
+	 */
 	@Test
 	public void t7_delete() {
 		
@@ -218,7 +237,4 @@ public class UserManagerImplITCase {
 	}
 	
 }
-
-
-
 
