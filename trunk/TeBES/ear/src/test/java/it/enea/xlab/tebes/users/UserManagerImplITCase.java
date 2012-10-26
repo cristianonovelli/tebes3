@@ -10,21 +10,23 @@ import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.entity.Role;
 
+import org.hibernate.validator.AssertTrue;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class UserManagerImplITCase {
 
-	User user1, user2;
-
-	Role currentGroup;
+	// Interface Declaration
 	UserManagerRemote userManagerBean;
+	
+	Role currentGroup;
 	Long idUser1, idUser2;
 	Long idRole1, idRole2, idRole3, idRole4;
 	
+	
 	@Before
-	public void t1_setup() throws Exception {
+	public void t1_setupRoles() throws Exception {
 		
 
 		// Create EJB linked to interface UserManagerRemote
@@ -45,65 +47,49 @@ public class UserManagerImplITCase {
 		idRole4 = userManagerBean.createRole(role4);
 
 		// Get Role List
-		List<Role> roleList = userManagerBean.getRoleList();
-		Assert.assertTrue(roleList.size() == 4);
+		List<Long> roleIdList = userManagerBean.getRoleIdList();
+		Assert.assertTrue(roleIdList.size() == 4);
 		
 	}
+	
 	
 	@Test
 	public void t2_registration() {
 		
 		// PREPARE User: Cristiano
-		User user1 = new User();
-		user1.setName("Cristiano");
-		user1.setSurname("Novelli");
-		user1.seteMail("cristiano.novelli@enea.it");
-		user1.setPassword("xcristiano");
+		User cristianoUser = new User();
+		cristianoUser.setName("Cristiano");
+		cristianoUser.setSurname("Novelli");
+		cristianoUser.seteMail("cristiano.novelli@enea.it");
+		cristianoUser.setPassword("xcristiano");
 
 		// PREPARE User: Arianna
-		User user2 = new User();
-		user2.setName("Arianna");
-		user2.setSurname("Brutti");
-		user2.seteMail("arianna.brutti@enea.it");
-		user2.setPassword("xpiero");
+		User ariannaUser = new User();
+		ariannaUser.setName("Arianna");
+		ariannaUser.setSurname("Brutti");
+		ariannaUser.seteMail("arianna.brutti@enea.it");
+		ariannaUser.setPassword("xpiero");
 
 		// CREATE USER: Persist Users in DB through JPA
-		idUser1 = userManagerBean.createUser(user1);
-		idUser2 = userManagerBean.createUser(user2);
+		idUser1 = userManagerBean.createUser(cristianoUser);
+		idUser2 = userManagerBean.createUser(ariannaUser);
 		
-		// Test: verifico vi siano i due utenti creati
-		List<User> userList = userManagerBean.getUserList();
-		Assert.assertTrue(userList.size() >= 2);
+		// Test: verifico vi siano due utenti creati
+		List<Long> userIdList = userManagerBean.getUserIdList();
+		Assert.assertTrue(userIdList.size() >= 2);		
+		// Attenzione: con getUserIdList gli Id non vengono restituiti in ordine 
+		// la seguente assertion infatti fallisce
+		// Assert.assertTrue(userIdList.get(0) < userIdList.get(1));
 		
-		// Test: verifico che gli id siano maggiori di zero
-		// READ USER and Test
-		if (idUser1 > 0)
-			user1 = userManagerBean.readUser(idUser1);
-		else
-			user1 = userList.get(0);
-		Assert.assertNotNull(user1);
-		Assert.assertEquals(user1.getId(), new Long(1));
-		
-		if (idUser2 > 0)
-			user2 = userManagerBean.readUser(idUser2);
-		else
-			user2 = userList.get(1);		
-		Assert.assertNotNull(user2);
-		Assert.assertEquals(user2.getId(), new Long(2));
-		
-		
-		// ROLE
-		Role xlabRole = userManagerBean.readRole(idRole4);
-		Assert.assertNotNull(xlabRole);		
-		
-		// SET ROLE
-		userManagerBean.setRole(user1, xlabRole);
-		user1 = userManagerBean.readUser(user1.getId());
-		Assert.assertTrue(user1.getRole().getId() > 0);
-
-		userManagerBean.setRole(user2, xlabRole);
-		user2 = userManagerBean.readUser(user2.getId());
-		Assert.assertTrue(user2.getRole().getId() > 0);
+		// Se ho creato, testo creazione e lettura verificando gli id
+		if (idUser1 > 0) {
+			cristianoUser = userManagerBean.readUser(idUser1);
+			Assert.assertNotNull(cristianoUser.getId());	
+		}	
+		if (idUser2 > 0) {
+			ariannaUser = userManagerBean.readUser(idUser2);
+			Assert.assertNotNull(ariannaUser.getId());	
+		}
 
 	}
 	
@@ -111,29 +97,55 @@ public class UserManagerImplITCase {
 	@Test
 	public void t3_login() {
 		
-		boolean login;
+		User login;
 		
 		// Correct login
 		login= userManagerBean.login("cristiano.novelli@enea.it", "xcristiano");
-		Assert.assertTrue(login);		
+		Assert.assertNotNull(login);		
 		
 		// Incorrect login
 		login = userManagerBean.login("cristiano.novelli@enea.it", "cristiano");
-		Assert.assertFalse(login);
+		Assert.assertNull(login);
 	}
 	
+
 	@Test
-	public void t4_addSUT() {
+	public void t4_setGroup() {
+		
+		User cristianoUser = userManagerBean.login("cristiano.novelli@enea.it", "xcristiano");
+		Assert.assertNotNull(cristianoUser);
+		Assert.assertTrue(cristianoUser.getId() > 0);
+		
+		User ariannaUser = userManagerBean.login("arianna.brutti@enea.it", "xpiero");		
+		Assert.assertNotNull(ariannaUser);
+		Assert.assertTrue(ariannaUser.getId() > 0);
+		
+		
+		// ROLE
+		Role xlabRole = userManagerBean.readRole(idRole4);
+		Assert.assertNotNull(xlabRole);		
+		
+		// SET ROLE
+		userManagerBean.setRole(cristianoUser, xlabRole);
+		cristianoUser = userManagerBean.readUser(cristianoUser.getId());
+		Assert.assertTrue(cristianoUser.getRole().getId() > 0);
+
+		userManagerBean.setRole(ariannaUser, xlabRole);
+		ariannaUser = userManagerBean.readUser(ariannaUser.getId());
+		Assert.assertTrue(ariannaUser.getRole().getId() > 0);
+	}
+	
+	
+	@Test
+	public void t5_addSUT() {
+
+		User cristianoUser;
+				
+		cristianoUser = userManagerBean.login("cristiano.novelli@enea.it", "xcristiano");
+		Assert.assertNotNull(cristianoUser);
 
 		// Create a generic SUT
 		SUT genericSUT = new SUT("sut1", "xmldocument", "XML document uploaded by web interface");
-
-		// Get First User
-		List<User> userList = userManagerBean.getUserList();
-		if ((userList != null) && (userList.size() > 0))
-			user1 = userList.get(0);
-		
-		// SUT
 		Long idSUT = userManagerBean.createSUT(genericSUT);
 		
 		
@@ -143,31 +155,66 @@ public class UserManagerImplITCase {
 			SUT sut = userManagerBean.readSUT(idSUT);
 			Assert.assertNotNull(sut);
 	
-			Assert.assertNotNull(user1);
-			Assert.assertTrue(user1.getId() > 0);
+			Assert.assertTrue(cristianoUser.getId() > 0);
 			
-			userManagerBean.addUserSUT(user1.getId(), sut.getId());
+			userManagerBean.addUserSUT(cristianoUser.getId(), sut.getId());
 		}
 		
-		
-		user1 = userManagerBean.readUser(user1.getId());	
-		List<SUT> sutList = user1.getSutList();
+		cristianoUser = userManagerBean.login("cristiano.novelli@enea.it", "xcristiano");	
+		List<SUT> sutList = cristianoUser.getSutList();
 		Assert.assertTrue(sutList.size() > 0);
 		
 	}
 	
 	
 	@Test
-	public void t5_update() {
+	public void t6_update() {
 		
+		User ariannaUser;
+		
+		// Get second User
+		ariannaUser = userManagerBean.login("arianna.brutti@enea.it", "xpiero");
+		if ( ariannaUser == null )
+			ariannaUser = userManagerBean.login("arianna.brutti@enea.it", "xarianna");		
+		Assert.assertNotNull(ariannaUser);
+		
+		
+		// Get third Role
+		Role role3 = null;
+		List<Long> roleIdList = userManagerBean.getRoleIdList();
+		if ((roleIdList != null) && (roleIdList.size() > 0))
+			role3 = userManagerBean.readRole(roleIdList.get(2));
+		Assert.assertNotNull(role3);		
+	
+		
+		
+		// Update User
+		ariannaUser.setPassword("xarianna");
+		ariannaUser.setRole(role3);
+		Boolean updating = userManagerBean.updateUser(ariannaUser);
+		Assert.assertTrue(updating);
+		
+		// Check Login and Role
+		ariannaUser = userManagerBean.login("arianna.brutti@enea.it", "xarianna");
+		Assert.assertNotNull(ariannaUser);		
+		Assert.assertEquals(ariannaUser.getRole().getLevel(), 3);
 		
 	}
 
 
 	@Test
-	public void t6_delete() {
+	public void t7_delete() {
 		
+		// login
+		User ariannaUser = userManagerBean.login("arianna.brutti@enea.it", "xarianna");
 		
+		// DELETE User
+		Boolean deleting = userManagerBean.deleteUser(ariannaUser.getId());
+		Assert.assertTrue(deleting);
+		
+		// Incorrect login
+		ariannaUser = userManagerBean.login("arianna.brutti@enea.it", "xarianna");
+		Assert.assertNull(ariannaUser);
 	}
 	
 }

@@ -12,14 +12,14 @@ import javax.ejb.Remote;
 public interface UserManagerRemote {
 
 	// Manager Functions
-	public Boolean login(String userEmail, String userPassword);	
+	public User login(String userEmail, String userPassword);	
 	
 	// User functions
 	public Long createUser(User user);	
 	public User readUser(Long id);	
 	public Boolean updateUser(User user);	
 	public Boolean deleteUser(Long id);	
-	public List<User> getUserList();
+	public List<Long> getUserIdList();
 
 	// Join functions
 	public void addUserSUT(Long userId, Long sutId);
@@ -32,7 +32,7 @@ public interface UserManagerRemote {
 	// Role functions
 	public Long createRole(Role role);	
 	public Role readRole(Long idRole);	
-	public List<Role> getRoleList();
+	public List<Long> getRoleIdList();
 	
 
 

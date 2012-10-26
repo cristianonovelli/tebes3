@@ -57,30 +57,61 @@ public class UserManagerImpl implements UserManagerRemote {
 	 * UPDATE User
 	 */
 	public Boolean updateUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Boolean result = false;
+		
+		 try {
+			 if ( (user != null) && (user.getId() != null) ) {
+				 user = eM.merge(user);
+				 //eM.persist(user);
+				 
+				 if (user != null)
+					 result = true;
+			 }
+			 
+		} catch (IllegalArgumentException e) {
+			result = false;
+		} catch (Exception e2) {
+			result = null;
+		}
+		 
+		 return result;
 	}
+	
 
 	/**
 	 * DELETE User
 	 */
 	public Boolean deleteUser(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		User user = this.readUser(id);
+		
+		if (user == null)
+			return false;
+		
+		try {
+			eM.remove(user);
+		} catch (IllegalArgumentException e) {
+			return false;
+		} catch (Exception e2) {
+			return null;
+		}
+		
+		return true;
 	}
 
 	/**
 	 * GET User LIST
 	 */
-	public List<User> getUserList() {
+	public List<Long> getUserIdList() {
 		
-        String queryString = "SELECT u FROM User AS u";   
+        String queryString = "SELECT u.id FROM User AS u";   
         Query query = eM.createQuery(queryString);
         
         @SuppressWarnings("unchecked")
-		List<User> userList = query.getResultList();
+		List<Long> userIdList = query.getResultList();
 
-        return userList;
+        return userIdList;
 	}
 
 	
@@ -186,14 +217,14 @@ public class UserManagerImpl implements UserManagerRemote {
 	/**
 	 * GET Role LIST
 	 */	
-	public List<Role> getRoleList() {
+	public List<Long> getRoleIdList() {
 		
-        String queryString = "SELECT g FROM Role AS g";
+        String queryString = "SELECT g.id FROM Role AS g";
         
         Query query = eM.createQuery(queryString);
-        List<Role> roleList = query.getResultList();
+        List<Long> roleIdList = query.getResultList();
 
-        return roleList;
+        return roleIdList;
 	}
 	
 	
@@ -264,18 +295,18 @@ public class UserManagerImpl implements UserManagerRemote {
 	 * Login method
 	 * User log in if there is a user with the specified email and password
 	 */
-	public Boolean login(String userEmail, String userPassword) {
+	public User login(String userEmail, String userPassword) {
 		
-		Boolean result = false;
+		User result = null;
 		
 		List<User> userList = this.findUsersByEmail(userEmail);
 		
-		if ( (userList != null) && (userList.size() > 0) ) {			
+		if ( (userList != null) && (userList.size() == 1) ) {			
 			
 			User user = userList.get(0);
 			
 			if (user.getPassword().equals(userPassword))
-				result = true;
+				result = user;
 		}
 		
 		return result;
