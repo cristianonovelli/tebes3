@@ -8,7 +8,7 @@ import javax.interceptor.Interceptors;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.model.Action;
 import it.enea.xlab.tebes.model.TAF;
-import it.enea.xlab.tebes.model.TestPlan;
+import it.enea.xlab.tebes.model.TestPlanOLD;
 import it.enea.xlab.tebes.testmanager.TestManagerImpl;
 
 
@@ -35,7 +35,7 @@ public class TestActionManagerImpl implements TestActionManagerRemote {
 	 * @return 	true if all actions return true
 	 * 			false if one action return false
 	 */
-	public boolean executeActionWorkflow(TestPlan testPlan) {
+	public boolean executeActionWorkflow(TestPlanOLD testPlan) {
 		
 		Vector<Action> workflow = testPlan.getWorkflow();
 		

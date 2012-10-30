@@ -47,8 +47,8 @@ public class Launcher {
 
 		
 		// Preparazione Entity User
-		SUT currentSUT = new SUT("xmldocument", "XML document uploaded by web interface");
-		Role currentGroup = new Role("administrators", "Administrators Group of TeBES Platform");
+		SUT currentSUT = new SUT("sut1", "xmldocument", "XML document uploaded by web interface");
+		Role currentRole = new Role("administrators", "Administrators Group of TeBES Platform");
 		User currentUser = new User(Properties.TEMP_USER, "Cristiano", "Novelli", "cristiano.novelli@enea.it");
 		
 		UserManagerImpl userManager = new UserManagerImpl();

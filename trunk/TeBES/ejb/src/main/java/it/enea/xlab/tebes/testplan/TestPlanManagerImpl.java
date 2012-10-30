@@ -1,30 +1,45 @@
 package it.enea.xlab.tebes.testplan;
 
+import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.common.Properties;
+import it.enea.xlab.tebes.dao.TeBESDAO;
+import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.model.Action;
+import it.enea.xlab.tebes.model.TestPlanOLD;
+
 import java.util.Vector;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import it.enea.xlab.tebes.common.Profile;
-import it.enea.xlab.tebes.common.Properties;
-import it.enea.xlab.tebes.dao.TeBESDAO;
-import it.enea.xlab.tebes.model.Action;
-import it.enea.xlab.tebes.model.TestPlan;
-
 @Stateless
 @Interceptors({Profile.class})
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
+	@PersistenceContext(unitName="TeBESPersistenceLayer")
+	private EntityManager eM; 
 	
-	/**
-	 * Empty Constructor
-	 */
-	public TestPlanManagerImpl() {
-
+	
+	public Long createTestPlan(TestPlan testPlan) {
+		
+		//List<User> userList = this.findUsersByEmail(user.geteMail());
+		
+		//if ( (userList == null) || (userList.size() == 0) ) {
+			eM.persist(testPlan);
+			return testPlan.getId();
+		//}
+		//else {
+			//return new Long(-1);
+		//}
 	}
 
 	
@@ -36,9 +51,9 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	 * 
 	 * @return TestPlan
 	 */
-	public TestPlan importTestPlan(String testPlanFilePath, String userId) {
+	public TestPlanOLD importTestPlan(String testPlanFilePath, String userId) {
 
-		TestPlan testPlan = null;
+		TestPlanOLD testPlan = null;
 		
 		System.out.println("Start Test Plan import process.");
 		
@@ -52,7 +67,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		// Check consistence between userId parameter and userId from test plan
 		if ( userId.equals(userId_tp) ) {
 			
-			testPlan = new TestPlan(id_tp, userId_tp);
+			testPlan = new TestPlanOLD(id_tp, userId_tp);
 			
 			// Get other TestPlan root attributes			
 			String userSUT = testPlanDOM.getUserSUTAttribute(testPlanDOM.root);
@@ -138,4 +153,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		return tpDOM;
 	}
+
+
+
 }

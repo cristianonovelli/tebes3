@@ -36,10 +36,10 @@ public class UserManagerImplITCase {
 
 		
 		// Prepare 4 user Roles 
-		Role role1 = new Role("standard_user", "Standard Users Group", 1);
-		Role role2 = new Role("advanced_user", "Advanced Users Group", 2);
-		Role role3 = new Role("system_administrator", "System Administrators Group", 3);
-		Role role4 = new Role("xlab", "XLab Staff Group", 4);
+		Role role1 = new Role("standard_user", "Standard User Role: he can execute a test plan but he can't create/edit it", 1);
+		Role role2 = new Role("advanced_user", "Advanced User Role: he can create/edit/execute a test plan", 2);
+		Role role3 = new Role("system_administrator", "System Administrator Role: he is an advanced user and can add/modify test suites", 3);
+		Role role4 = new Role("xlab", "XLab Role: he has whole power and permissions on TeBES platform", 4);
 		
 		// Create dei Ruoli che devono già essere fissati come setup del sistema
 		idRole1 = userManagerBean.createRole(role1);
