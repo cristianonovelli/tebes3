@@ -11,40 +11,39 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Role implements Serializable {
+public class Group implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
 	private String name;
 	private String description;
-	private int level;
 
-	/**
+
+/*	*//**
 	 * Ogni gruppo ha molti utenti => OneToMany 
-	 */
-	@OneToMany(mappedBy="role",
+	 *//*
+	@OneToMany(mappedBy="group",
 			cascade = {CascadeType.ALL,CascadeType.MERGE})
-	private List<User> users;
+	private List<User> members;*/
 
 	
-	public Role() {
+	public Group() {
 		
 	}
 	
 	/**
 	 * Constructor without id.
 	 */
-	public Role(String name, String description, int level) {
+	public Group(String name, String description) {
 		
 		this.name = name;
 		this.description = description;
-		this.level = level;
-	}
 
+	}
 
 	public Long getId() {
 		return id;
@@ -70,23 +69,13 @@ public class Role implements Serializable {
 		this.description = description;
 	}
 
-	public List<User> getUsers() {
-		return users;
+/*	public List<User> getMembers() {
+		return members;
 	}
 
-	public void setUser(List<User> users) {
-		this.users = users;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-
+	public void setMembers(List<User> members) {
+		this.members = members;
+	}*/
 
 }
 
