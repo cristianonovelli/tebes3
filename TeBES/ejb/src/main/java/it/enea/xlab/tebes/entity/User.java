@@ -4,11 +4,15 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -19,6 +23,7 @@ public class User implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="id")
 	private Long id;
 	
 	private String name;
@@ -35,11 +40,20 @@ public class User implements Serializable {
 	
 	
 	/**
-	 * Molti User hanno lo stesso Group => ManyToOne 
+	 * Molti User hanno lo stesso Role => ManyToOne 
 	 */
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="role_id")
 	private Role role;
 
+/*	*//**
+	 * Molti User possono appartenere a molti Group => ManyToMany 
+	 *//*
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="group_id")
+	private Group group;*/
+	
+	
 	public User() {
 		
 	}
@@ -132,6 +146,16 @@ public class User implements Serializable {
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
+
+/*	public Group getGroup() {
+		return group;
+	}
+
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}*/
 
 
 }

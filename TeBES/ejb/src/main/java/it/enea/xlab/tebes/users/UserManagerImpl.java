@@ -209,9 +209,9 @@ public class UserManagerImpl implements UserManagerRemote {
 	/**
 	 * READ Role
 	 */
-	public Role readRole(Long idGroup) {
+	public Role readRole(Long idRole) {
 		
-		return eM.find(Role.class, idGroup);
+		return eM.find(Role.class, idRole);
 	}
 	
 	/**
@@ -219,7 +219,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	 */	
 	public List<Long> getRoleIdList() {
 		
-        String queryString = "SELECT g.id FROM Role AS g";
+        String queryString = "SELECT r.id FROM Role AS r";
         
         Query query = eM.createQuery(queryString);
         List<Long> roleIdList = query.getResultList();
