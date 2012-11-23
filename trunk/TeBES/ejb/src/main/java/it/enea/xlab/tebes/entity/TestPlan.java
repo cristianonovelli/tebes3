@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,7 +20,11 @@ public class TestPlan implements Serializable {
 	//private String userId;
 	//private String userSUT;
 	
+	@Column(length=9999) 
 	private String xml;
+	
+	private String testPlanId;
+	private String userId;
 	private String datetime;
 	private String state;
 	private String location;
@@ -32,8 +37,10 @@ public class TestPlan implements Serializable {
 
 	}
 
-	public TestPlan(String xml, String datetime, String state, String location) {
+	public TestPlan(String testPlanId, String userId, String xml, String datetime, String state, String location) {
 
+		this.testPlanId = testPlanId;
+		this.userId = userId;
 		this.xml = xml;
 		this.datetime = datetime;
 		this.state = state;
@@ -45,7 +52,6 @@ public class TestPlan implements Serializable {
 		this.xml = xml;
 	}
 
-	
 	
 	
 	
@@ -87,6 +93,22 @@ public class TestPlan implements Serializable {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public String getTestPlanId() {
+		return testPlanId;
+	}
+
+	public void setTestPlanId(String testPlanId) {
+		this.testPlanId = testPlanId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}	
 	
 	

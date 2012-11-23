@@ -1,10 +1,10 @@
 package it.enea.xlab.tebes.users;
 
-import java.util.List;
-
+import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.entity.Role;
+
+import java.util.List;
 
 import javax.ejb.Local;
 
@@ -34,5 +34,8 @@ public interface UserManagerLocal {
 	public Role readRole(Long idRole);	
 	public List<Role> getRoleList();
 	
+	// Group functions
+	//public Long createGroup(Group group);
+	//public List<Long> getGroupIdList();
 	
 }

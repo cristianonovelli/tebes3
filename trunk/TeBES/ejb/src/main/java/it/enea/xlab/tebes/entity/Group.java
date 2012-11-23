@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-@Entity
+//@Entity
 public class Group implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -29,7 +29,11 @@ public class Group implements Serializable {
 	@OneToMany(mappedBy="group",
 			cascade = {CascadeType.ALL,CascadeType.MERGE})
 	private List<User> members;*/
-
+	//@OneToMany(mappedBy="group",
+	//		cascade = {CascadeType.ALL,CascadeType.MERGE})
+	private List<User> users;
+	
+	
 	
 	public Group() {
 		
@@ -77,5 +81,12 @@ public class Group implements Serializable {
 		this.members = members;
 	}*/
 
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUser(List<User> users) {
+		this.users = users;
+	}
 }
 
