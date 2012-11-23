@@ -8,9 +8,9 @@ import javax.ejb.Remote;
 @Remote
 public interface TestPlanManagerRemote {
 
-	public TestPlanOLD importTestPlan(String testPlanFilePath, String userId);
+	//public TestPlanOLD importTestPlan(String testPlanFilePath, String userId);
 	
-	public TestPlanDOM getTestPlanDOM();
+	public TestPlan getTestPlanFromXML(String testPlanAbsFileName);
 
-	public Long createTestPlan(TestPlan testPlan);
+	public String createTestPlan(TestPlan testPlan);
 }

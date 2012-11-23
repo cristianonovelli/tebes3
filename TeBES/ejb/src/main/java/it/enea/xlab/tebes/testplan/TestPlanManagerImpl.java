@@ -1,13 +1,9 @@
 package it.enea.xlab.tebes.testplan;
 
 import it.enea.xlab.tebes.common.Profile;
-import it.enea.xlab.tebes.common.Properties;
-import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.TestPlan;
-import it.enea.xlab.tebes.model.Action;
-import it.enea.xlab.tebes.model.TestPlanOLD;
 
-import java.util.Vector;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -15,10 +11,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import javax.persistence.Query;
 
 @Stateless
 @Interceptors({Profile.class})
@@ -29,20 +22,34 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	private EntityManager eM; 
 	
 	
-	public Long createTestPlan(TestPlan testPlan) {
+	public String createTestPlan(TestPlan testPlan) {
 		
-		//List<User> userList = this.findUsersByEmail(user.geteMail());
+		List<TestPlan> testPlanList = this.findTestPlanById(testPlan.getTestPlanId());
 		
-		//if ( (userList == null) || (userList.size() == 0) ) {
+		if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
+
 			eM.persist(testPlan);
-			return testPlan.getId();
-		//}
-		//else {
-			//return new Long(-1);
-		//}
+			
+		}
+		else {
+			testPlan = testPlanList.get(0);
+		}
+		
+		return testPlan.getTestPlanId();
 	}
 
 	
+	@SuppressWarnings("unchecked")
+	private List<TestPlan> findTestPlanById(String testPlanId) {
+		
+        String queryString = "SELECT t FROM TestPlan AS t WHERE t.testPlanId = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, testPlanId);
+        return query.getResultList();
+	}
+
+
 	/**
 	 * Questo metodo importa il Test Plan (da file o bancadati) 
 	 * e crea la struttura java corrispondente utilizzando TestPlanDOM
@@ -51,14 +58,14 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	 * 
 	 * @return TestPlan
 	 */
-	public TestPlanOLD importTestPlan(String testPlanFilePath, String userId) {
+	/*public TestPlanOLD importTestPlan(String testPlanFilePath, String userId) {
 
 		TestPlanOLD testPlan = null;
 		
 		System.out.println("Start Test Plan import process.");
 		
 		// Open Test Plan XML Source
-		TestPlanDOM testPlanDOM = getTestPlanDOM();
+		TestPlanDOM testPlanDOM = getTestPlanDOM(testPlanFilePath);
 		
 		// Read testPlanId and userId from Test Plan
 		String id_tp = testPlanDOM.getIdAttribute(testPlanDOM.root);
@@ -128,30 +135,42 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		System.out.println("End Test Plan import process.");
 		
 		return testPlan;
-	}
+	}*/
 	
 	
 
 
 
-	public TestPlanDOM getTestPlanDOM() {
-		
-		TestPlanDOM tpDOM;	
+
+
+
+	private TestPlanDOM getTestPlanDOM(String testPlanFilePath) {
 		
 		try {
-			
-			// Prelevo il Test Plan da File. Nel caso si voglia utilizzare una banca dati, questo metodo verrà aggiornato
-			String testPlanAbsFileName = Properties.TEMP_TESTPLAN_PATHNAME;	
+			return new TestPlanDOM(testPlanFilePath);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
 
-			tpDOM = new TestPlanDOM(testPlanAbsFileName);
+
+	public TestPlan getTestPlanFromXML(String testPlanAbsFileName) {
+		
+		TestPlan testPlan = null;	
+		
+		try {
+
+			TestPlanDOM testPlanDOM = new TestPlanDOM(testPlanAbsFileName);
+			testPlan = new TestPlan(testPlanDOM.getRootIdAttribute(), testPlanDOM.getRootUserIDAttribute(), testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName);
 			
 		} catch (Exception e) {
 			
-			tpDOM = null;
 			e.printStackTrace();
 		} 
 		
-		return tpDOM;
+		return testPlan;
 	}
 
 

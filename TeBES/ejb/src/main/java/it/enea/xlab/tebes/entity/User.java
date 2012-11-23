@@ -48,10 +48,11 @@ public class User implements Serializable {
 
 /*	*//**
 	 * Molti User possono appartenere a molti Group => ManyToMany 
-	 *//*
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="group_id")
-	private Group group;*/
+	 * PER ORA PROÏVIAMO MANYTOONE
+	 *//**/
+	//@ManyToOne(cascade=CascadeType.ALL)
+	//@JoinColumn(name="group_id")
+	//private Group group;
 	
 	
 	public User() {

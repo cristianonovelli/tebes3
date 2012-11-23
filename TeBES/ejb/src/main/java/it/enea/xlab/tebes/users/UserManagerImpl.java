@@ -11,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.entity.Role;
@@ -78,7 +79,6 @@ public class UserManagerImpl implements UserManagerRemote {
 		 return result;
 	}
 	
-
 	/**
 	 * DELETE User
 	 */
@@ -158,7 +158,6 @@ public class UserManagerImpl implements UserManagerRemote {
 	// SUT FUNCTIONS //
 	///////////////////
 	
-
 	/**
 	 * CREATE SUT
 	 */
@@ -229,6 +228,43 @@ public class UserManagerImpl implements UserManagerRemote {
 	
 	
 	
+	/////////////////////
+	// GROUP FUNCTIONS //
+	/////////////////////
+	
+	/**
+	 * CREATE Group
+	 * If group exists, return the id of existing group.
+	 */	
+	public Long createGroup(Group group) {
+		
+		//Group existingGroup = this.findGroupByName(group.getName());
+		
+		//if (existingGroup == null) {
+			
+			eM.persist(group);		
+			return group.getId();
+		//}
+		//else
+			//return existingGroup.getId();
+	}
+
+
+	/**
+	 * GET Group List
+	 */
+	public List<Long> getGroupIdList() {
+
+        String queryString = "SELECT g.id FROM Group AS g";
+        
+        Query query = eM.createQuery(queryString);
+        List<Long> groupIdList = query.getResultList();
+
+        return groupIdList;
+	}
+	
+	
+	
 	////////////////////
 	// FIND FUNCTIONS //
 	////////////////////
@@ -272,6 +308,21 @@ public class UserManagerImpl implements UserManagerRemote {
         	return null;
 	}
 
+	private Group findGroupByName(String name) {
+
+        String queryString = "SELECT g FROM Group AS g WHERE g.name = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, name);
+
+		@SuppressWarnings("unchecked")
+		List<Group> resultList = query.getResultList();
+        if ((resultList != null) && (resultList.size() > 0))
+        	return (Group) resultList.get(0);
+        else
+        	return null;
+	}
+	
 	/**
 	 * FIND User List by email
 	 */	
@@ -293,7 +344,8 @@ public class UserManagerImpl implements UserManagerRemote {
 
 	/**
 	 * Login method
-	 * User log in if there is a user with the specified email and password
+	 * @return User if there is a user with the specified email and password
+	 * @return null otherwise
 	 */
 	public User login(String userEmail, String userPassword) {
 		
@@ -311,6 +363,8 @@ public class UserManagerImpl implements UserManagerRemote {
 		
 		return result;
 	}
+
+
 	
 }
 
