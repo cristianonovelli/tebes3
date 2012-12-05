@@ -1,9 +1,13 @@
 package it.enea.xlab.tebes.testplan;
 
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.dao.TeBESDAO;
+import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.TestPlan;
 
 import java.util.List;
+import java.util.Vector;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -12,6 +16,10 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 @Stateless
 @Interceptors({Profile.class})
@@ -22,7 +30,54 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	private EntityManager eM; 
 	
 	
-	public String createTestPlan(TestPlan testPlan) {
+	public TestPlan readTestPlan(Long tp_id) {
+		
+		return eM.find(TestPlan.class, tp_id);
+	}	
+	
+	
+	/**
+	 * CREATE Test Plan
+	 * La createTestPlan crea un nuovo TestPlan solo se non esistono per questo utente TestPlan con lo stesso datetime
+	 * @return id del TestPlan se viene creato
+	 * @return -1 altrimenti
+	 */
+	public Long createTestPlan(TestPlan testPlan) {
+		
+		Long result;
+		
+		// If the object TestPlan has not id
+		if (testPlan.getId() == null) {
+			
+			List<TestPlan> testPlanList = readTestPlanByUserIdAndDatetime(testPlan.getUserId(), testPlan.getDatetime());
+			
+			if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
+				eM.persist(testPlan);	
+				result = testPlan.getId();
+			}
+			else
+				result = new Long(-1);
+		}
+		else
+			result = new Long(-1);
+			
+		return result;	
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<TestPlan> readTestPlanByUserIdAndDatetime(Long userId, String datetime) {
+
+        String queryString = "SELECT t FROM TestPlan AS t WHERE t.userId = ?1 AND t.datetime = ?2";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, userId);
+        query.setParameter(2, datetime);
+        
+        return query.getResultList();
+	}
+
+	
+/*	public String createTestPlan(TestPlan testPlan) {
 		
 		List<TestPlan> testPlanList = this.findTestPlanById(testPlan.getTestPlanId());
 		
@@ -37,8 +92,11 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		return testPlan.getTestPlanId();
 	}
-
+*/
 	
+
+
+
 	@SuppressWarnings("unchecked")
 	private List<TestPlan> findTestPlanById(String testPlanId) {
 		
@@ -50,53 +108,54 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	}
 
 
-	/**
-	 * Questo metodo importa il Test Plan (da file o bancadati) 
-	 * e crea la struttura java corrispondente utilizzando TestPlanDOM
-	 * @param tempUser 
-	 * @param testplan 
-	 * 
-	 * @return TestPlan
-	 */
-	/*public TestPlanOLD importTestPlan(String testPlanFilePath, String userId) {
 
-		TestPlanOLD testPlan = null;
+
+	public TestPlan getTestPlanFromXML(String testPlanAbsFileName) {
 		
-		System.out.println("Start Test Plan import process.");
+		TestPlan testPlan = null;	
 		
-		// Open Test Plan XML Source
-		TestPlanDOM testPlanDOM = getTestPlanDOM(testPlanFilePath);
-		
-		// Read testPlanId and userId from Test Plan
-		String id_tp = testPlanDOM.getIdAttribute(testPlanDOM.root);
-		String userId_tp = testPlanDOM.getUserIDAttribute(testPlanDOM.root);
-		
-		// Check consistence between userId parameter and userId from test plan
-		if ( userId.equals(userId_tp) ) {
+		try {
+
+			TestPlanDOM testPlanDOM = new TestPlanDOM(testPlanAbsFileName);			
 			
-			testPlan = new TestPlanOLD(id_tp, userId_tp);
+			if ( testPlanDOM.root == null ) {
+				System.out.println("XReport: " + testPlanDOM.getReport().getErrorMessage());	
+			}
+			else
+				testPlan = new TestPlan(new Long(testPlanDOM.getRootUserIDAttribute()), testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName);
 			
-			// Get other TestPlan root attributes			
-			String userSUT = testPlanDOM.getUserSUTAttribute(testPlanDOM.root);
-			String datetime = testPlanDOM.getDatetimeAttribute(testPlanDOM.root);
-			String state = testPlanDOM.getStateAttribute(testPlanDOM.root);
-			testPlan.setUserSUT(userSUT);
-			testPlan.setDatetime(datetime);
-			testPlan.setState(state);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		} 
+		
+		return testPlan;
+	}
+
+
+	
+	public Vector<Action> getActionsFromXML(Long testPlanId) {
+		
+		Vector<Action> actionsList = new Vector<Action>();
+		
+		TestPlan testPlan = readTestPlan(testPlanId);
+				//findTestPlanByTestPlanId(testPlanId);
+		
+		try {
+			TestPlanDOM testPlanDOM = new TestPlanDOM();
+			testPlanDOM.setContent(testPlan.getXml());
 			
 			// Ottengo lista actions
 			NodeList actionNodes = testPlanDOM.getTestActionNodeList();
-			System.out.println("READ " + actionNodes.getLength() + " Test Actions.");
-			
-			// TODO estraggo lista action e workflow e creo strutture dati
-			// per il momento creo una struttura lineare, un array
-			Vector<Action> testActionList = new Vector<Action>();
-		
+
+
 			// Ciclo su ogni azione
 			Element actionElement = null;
 			for (int i = 0; i < actionNodes.getLength(); i++) {
 				
 				actionElement = (Element) actionNodes.item(i);
+				
+				//String actionId = testPlanDOM.getIdAttribute(actionElement);	
 				
 				int number = new Integer(testPlanDOM.getNumberAttribute(actionElement)).intValue();
 				
@@ -120,59 +179,159 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				location = TeBESDAO.url2localLocation(location);
 				
 				Action action = new Action(number, name, lg, type, location, value, jump, description);
+				//Long actionId = this.insertAction(action);
+				
+				
+				
 				System.out.println(action.getActionSummaryString());
 				
-				testActionList.add(action);
+				actionsList.add(action);
+				
 			}	
-	
-	
-			testPlan.setWorkflow(testActionList);
+
+
+		} catch (Exception e) {
 			
+			actionsList = null;
 		}
-		else
-			System.out.println("ERROR: Detect inconsistence between userId parameter and userId of Test Plan!");
+
 		
-		System.out.println("End Test Plan import process.");
+		return actionsList;
+	}
+
+	
+
+/*	public Long insertAction(Action action) {
 		
-		return testPlan;
+			eM.persist(action);
+			return action.getId();
 	}*/
-	
-	
 
 
-
-
-
-
-	private TestPlanDOM getTestPlanDOM(String testPlanFilePath) {
+/*	public TestPlan findTestPlanByTestPlanId(String testPlanId) {
 		
-		try {
-			return new TestPlanDOM(testPlanFilePath);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+        String queryString = "SELECT tp FROM TestPlan AS tp WHERE tp.testPlanId = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, testPlanId);
+        @SuppressWarnings("unchecked")
+		List<TestPlan> resultList = query.getResultList();
+        if ((resultList != null) && (resultList.size() > 0))
+        	return (TestPlan) resultList.get(0);
+        else
+        	return null;
+	}*/
+
+
+	public Boolean updateWorkflow(ActionWorkflow workflow) {
+		
+		Boolean result = false;
+
+		 if ( (workflow != null) && (workflow.getId() != null) ) {
+			 workflow = eM.merge(workflow);
+			 //eM.persist(user);
+			 
+			 if (workflow != null)
+				 result = true;
+		 }
+
+		 return result;
+	}
+
+
+	public Long insertWorkflow(ActionWorkflow workflow, Long testPlan_id) {
+		
+			TestPlan tp = this.readTestPlan(testPlan_id);
+			if (tp.getWorkflow() == null) {
+				eM.persist(workflow);
+				return workflow.getId();
+			}
+			else return new Long(-1);
+	}
+
+
+	public ActionWorkflow readWorkflow(Long workflowId) {
+		
+		return eM.find(ActionWorkflow.class, workflowId);
+	}
+
+
+	public Long createAction(Action action) {
+
+		Action existingAction = this.findActionByName(action.getActionName());
+		
+		if (existingAction == null) {
+			eM.persist(action);		
+			return action.getId();
 		}
+		else 
+			return new Long(-1);
+	}
+
+	private Action findActionByName(String name) {
+		
+	    String queryString = "SELECT a FROM Action AS a WHERE a.actionName = ?1";
+	    
+	    Query query = eM.createQuery(queryString);
+	    query.setParameter(1, name);
+	    @SuppressWarnings("unchecked")
+		List<Action> resultList = query.getResultList();
+	    if ((resultList != null) && (resultList.size() > 0))
+	    	return (Action) resultList.get(0);
+	    else
+	    	return null;
 	}
 
 
-	public TestPlan getTestPlanFromXML(String testPlanAbsFileName) {
+	public Action readAction(Long id_action) {
 		
-		TestPlan testPlan = null;	
-		
-		try {
-
-			TestPlanDOM testPlanDOM = new TestPlanDOM(testPlanAbsFileName);
-			testPlan = new TestPlan(testPlanDOM.getRootIdAttribute(), testPlanDOM.getRootUserIDAttribute(), testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName);
-			
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-		} 
-		
-		return testPlan;
+		return eM.find(Action.class, id_action);
 	}
 
 
+	public void addAction(Long id_workflow, Long id_action) {
+
+		ActionWorkflow wf = this.readWorkflow(id_workflow);
+		Action a = this.readAction(id_action);
+
+		a.addToWorkflow(wf);
+		eM.persist(wf);
+
+		return;
+		
+	}
+
+
+	public void addWorkflow(Long tp_id, Long wf_id) {
+		
+		TestPlan tp = this.readTestPlan(tp_id);
+		ActionWorkflow wf = this.readWorkflow(wf_id);
+		
+
+		wf.addToTestPlan(tp);
+		eM.persist(tp);
+		
+		return;
+	}
+
+
+
+
+
+
+	/*public void addActionToWorkflow(Long workflowId, Long actionId) {
+
+		User user = this.readUser(userId);
+		SUT sut = this.readSUT(sutId);
+
+		sut.addToUser(user);
+		eM.persist(user);
+
+		return;
+	}*/
 
 }
+
+
+
+

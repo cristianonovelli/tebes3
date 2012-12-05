@@ -9,7 +9,7 @@ import javax.interceptor.Interceptors;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
-import it.enea.xlab.tebes.model.Action;
+import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.TestRule;
 import it.enea.xlab.tebes.testrule.TestRuleManagerImpl;

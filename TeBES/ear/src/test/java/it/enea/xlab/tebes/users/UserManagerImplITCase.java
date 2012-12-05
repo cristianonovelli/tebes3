@@ -36,7 +36,6 @@ public class UserManagerImplITCase {
 		InitialContext ctx = new InitialContext();
 		userManagerBean = (UserManagerRemote) ctx.lookup("TeBES-ear/UserManagerImpl/remote");
 
-		
 		// Prepare 4 user Roles 
 		Role role1 = new Role("standard_user", "Standard User Role: he can execute a test plan but he can't create/edit it", 1);
 		Role role2 = new Role("advanced_user", "Advanced User Role: he can create/edit/execute a test plan", 2);
@@ -75,6 +74,7 @@ public class UserManagerImplITCase {
 		
 		// PREPARE User: Cristiano
 		User cristianoUser = new User();
+		//cristianoUser.setUserId("IT-12345678909");
 		cristianoUser.setName("Cristiano");
 		cristianoUser.setSurname("Novelli");
 		cristianoUser.seteMail("cristiano.novelli@enea.it");
@@ -84,6 +84,7 @@ public class UserManagerImplITCase {
 		User ariannaUser = new User();
 		ariannaUser.setName("Arianna");
 		ariannaUser.setSurname("Brutti");
+		//ariannaUser.setUserId("IT-98765432101");
 		ariannaUser.seteMail("arianna.brutti@enea.it");
 		ariannaUser.setPassword("xpiero");
 
@@ -107,6 +108,8 @@ public class UserManagerImplITCase {
 			ariannaUser = userManagerBean.readUser(idUser2);
 			Assert.assertNotNull(ariannaUser.getId());	
 		}
+		
+		// NOTA: alla regitrazione nella banca dati dovrebbe seguire anche la creazione di una directory di lavoro dove allocare file XML
 
 	}
 	
@@ -247,5 +250,10 @@ public class UserManagerImplITCase {
 		Assert.assertNull(ariannaUser);
 	}
 	
+	
+	
 }
+
+
+
 

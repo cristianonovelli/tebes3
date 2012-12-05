@@ -1,14 +1,15 @@
 package it.enea.xlab.tebes.testaction;
 
-import javax.ejb.Local;
+import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.TestPlan;
 
-import it.enea.xlab.tebes.model.Action;
-import it.enea.xlab.tebes.model.TestPlanOLD;
+import javax.ejb.Local;
 
 @Local
 public interface TestActionManagerLocal {
 
 	public boolean execute(Action action);
 	
-	public boolean executeActionWorkflow(TestPlanOLD testPlan);
+	public boolean executeActionWorkflow(ActionWorkflow workflow);
 }

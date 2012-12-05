@@ -11,8 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -25,7 +23,8 @@ public class User implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
 	private Long id;
-	
+
+	//private String userId;
 	private String name;
 	private String surname;
 	private String eMail;
@@ -67,6 +66,7 @@ public class User implements Serializable {
 	 */
 	public User(String userName, String userSurname, String userEMail, String userPassword) {
 		
+		//this.userId = userId;
 		this.name = userName;
 		this.surname = userSurname;
 		this.eMail = userEMail;
@@ -86,6 +86,16 @@ public class User implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+
+	public List<SUT> getUserSut() {
+		return userSut;
+	}
+
+
+	public void setUserSut(List<SUT> userSut) {
+		this.userSut = userSut;
 	}
 
 
@@ -149,6 +159,8 @@ public class User implements Serializable {
 	}
 
 
+	
+	
 /*	public Group getGroup() {
 		return group;
 	}

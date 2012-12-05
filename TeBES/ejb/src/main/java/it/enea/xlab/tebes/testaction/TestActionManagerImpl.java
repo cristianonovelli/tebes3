@@ -1,12 +1,17 @@
 package it.enea.xlab.tebes.testaction;
 
+import java.util.List;
 import java.util.Vector;
 
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 
+import junit.framework.Assert;
+
 import it.enea.xlab.tebes.common.Profile;
-import it.enea.xlab.tebes.model.Action;
+import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.TestPlanOLD;
 import it.enea.xlab.tebes.testmanager.TestManagerImpl;
@@ -35,17 +40,31 @@ public class TestActionManagerImpl implements TestActionManagerRemote {
 	 * @return 	true if all actions return true
 	 * 			false if one action return false
 	 */
-	public boolean executeActionWorkflow(TestPlanOLD testPlan) {
-		
-		Vector<Action> workflow = testPlan.getWorkflow();
+	public boolean executeActionWorkflow(ActionWorkflow workflow) {
 		
 		boolean result = true;
 
-		System.out.println("Execution of " + workflow.size() + " test actions.");
-		for (int i = 0 ; i < workflow.size(); i++) {
+		
+		// io credo dovrei fare una ricerca del tipo readActionByWorkflowId
+		// eseguire questa action e una volta eseguita, eliminarla dal DB o settarla come "done"
+		List<Action> actionList = workflow.getActions();
+		Action a;
+		
+		for (int k=0;k<actionList.size();k++) {
 			
-			result = result && execute((Action) workflow.get(i));
-		}
+			a =	(Action) actionList.get(k);
+			
+			if (a != null)
+				result = result && execute(a);
+			else 
+				result = false;
+			}
+		
+		
+		//for (int i = 0 ; i < workflow.size(); i++) {
+		//	
+		//	result = result && execute((Action) workflow.get(i));
+		//}
 		
 		return result;
 	}

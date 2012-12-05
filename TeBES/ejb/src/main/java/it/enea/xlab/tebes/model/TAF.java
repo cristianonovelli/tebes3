@@ -1,5 +1,7 @@
 package it.enea.xlab.tebes.model;
 
+import it.enea.xlab.tebes.entity.Action;
+
 import java.util.Hashtable;
 import java.util.Vector;
 
