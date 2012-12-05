@@ -8,7 +8,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import it.enea.xlab.tebes.common.Constants;
-import it.enea.xlab.tebes.model.Action;
+import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.model.ReportFragment;
 import it.enea.xlab.tebes.model.Target;
 import it.enea.xlab.tebes.model.TestRule;
@@ -109,6 +109,7 @@ public class TAML2Java {
 				String name = tamlDOM.getNameAttribute(externalTANodeList.item(i));
 				String location = tamlDOM.getSourcedocAttribute(externalTANodeList.item(i));
 				
+				String actionId = "ta-taref".concat((new Integer(i+1)).toString());
 				Action taAction = new Action(i+1, name, Constants.TAML, Constants.TA, location, value, false, null);
 				actionTable.put(value, taAction);
 			}
@@ -222,6 +223,7 @@ public class TAML2Java {
 				else
 					jump = true;
 				
+				String actionId = "ta-ta".concat((new Integer(i+1)).toString());
 				Action taAction = new Action(i+1, name, Constants.TAML, Constants.TA, location, value, jump, description);
 				actionTable.put(value, taAction);
 			}

@@ -1,14 +1,14 @@
 package it.enea.xlab.tebes.testaction;
 
-import javax.ejb.Remote;
+import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.ActionWorkflow;
 
-import it.enea.xlab.tebes.model.Action;
-import it.enea.xlab.tebes.model.TestPlanOLD;
+import javax.ejb.Remote;
 
 @Remote
 public interface TestActionManagerRemote {
 
 	public boolean execute(Action action);
 	
-	public boolean executeActionWorkflow(TestPlanOLD testPlan);
+	public boolean executeActionWorkflow(ActionWorkflow workflow);
 }

@@ -27,6 +27,14 @@ public class TestPlanDOM extends JXLabDOM {
 		
 	} 
 
+	
+	public TestPlanDOM() 
+			throws SAXException, IOException, ParserConfigurationException {
+			
+			super();
+			
+		} 
+	
 	public NodeList getTestActionNodeList() {
 
 		NodeList actionNodes = null;
@@ -39,6 +47,7 @@ public class TestPlanDOM extends JXLabDOM {
 	}
 
 
+	
 	public String getActionName(Element actionElement) {
 
 		return actionElement.getElementsByTagName("tebes:ActionName").item(0).getFirstChild().getNodeValue();
@@ -140,9 +149,13 @@ public class TestPlanDOM extends JXLabDOM {
 		
 		if (node != null) 
 			attributeValue = ((Element) node).getAttribute(attributeLabel);
-
+		else
+			System.out.println("r2d2: node null 153");
 		return attributeValue;
 	}
+
+
+
 
 
 }

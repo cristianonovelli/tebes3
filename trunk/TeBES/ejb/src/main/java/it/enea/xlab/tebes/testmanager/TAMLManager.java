@@ -5,7 +5,7 @@ import it.enea.xlab.taml.TAMLDOM;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Properties;
 import it.enea.xlab.tebes.dao.TeBESDAO;
-import it.enea.xlab.tebes.model.Action;
+import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.model.ReportFragment;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.Target;
@@ -341,8 +341,14 @@ public class TAMLManager extends TestManagerImpl implements TestManagerLocal {
 						}
 					}
 
+					// creo l'id della test action come:
+					// "ta" + var.getValue() + i+1
+					String actionId = "ta-".concat(var.getValue()).concat(new String(new Integer(i+1).toString()));
+					
 					// se la variabile è di tipo Schematron
 					if (var.getType().equals(TAML2Java.SCHEMATRON_TYPE)) {
+						
+						
 						
 						// prendo la TA esterna
 						// TODO qui prendo il nome della variabile
@@ -361,7 +367,8 @@ public class TAMLManager extends TestManagerImpl implements TestManagerLocal {
 				// Se il linguaggio è XPATH (senza passare dalla variabile)
 				else if (singleTestRule.getLanguage().equals(TAML2Java.XPATH_TYPE)) {
 					
-					Action xpath = new Action(i+1, "xpath".concat((new Integer(i+1)).toString()), TAML2Java.XPATH_TYPE, Constants.TA, singleTestRule.getValue(), singleTestRule.getValue(), jump, null);
+					String xpathId = "xpath".concat((new Integer(i+1)).toString());
+					Action xpath = new Action(i+1, xpathId, TAML2Java.XPATH_TYPE, Constants.TA, singleTestRule.getValue(), singleTestRule.getValue(), jump, null);
 					
 					result.add(xpath);
 				}

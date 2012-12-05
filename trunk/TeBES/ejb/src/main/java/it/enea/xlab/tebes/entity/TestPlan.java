@@ -2,11 +2,14 @@ package it.enea.xlab.tebes.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class TestPlan implements Serializable {
@@ -23,28 +26,35 @@ public class TestPlan implements Serializable {
 	@Column(length=9999) 
 	private String xml;
 	
-	private String testPlanId;
-	private String userId;
+	//private String testPlanId;
+	private Long userId;
 	private String datetime;
 	private String state;
 	private String location;
 		
 	// private Header header;
-	//private List<Action> workflow;
+	
+	
+	//(mappedBy="testPlan", 
+		//	cascade = {CascadeType.ALL,CascadeType.MERGE },fetch = FetchType.EAGER)
+	@OneToOne(mappedBy="testPlan",cascade = CascadeType.ALL)
+	ActionWorkflow workflow;
 
 
 	public TestPlan() {
 
 	}
 
-	public TestPlan(String testPlanId, String userId, String xml, String datetime, String state, String location) {
+	public TestPlan(Long userId, String xml, String datetime, String state, String location) {
 
-		this.testPlanId = testPlanId;
+		//this.testPlanId = testPlanId;
 		this.userId = userId;
 		this.xml = xml;
 		this.datetime = datetime;
 		this.state = state;
 		this.location = location;
+		
+		this.workflow = null;
 	}
 
 	public TestPlan(String xml) {
@@ -95,20 +105,20 @@ public class TestPlan implements Serializable {
 		this.location = location;
 	}
 
-	public String getTestPlanId() {
-		return testPlanId;
-	}
-
-	public void setTestPlanId(String testPlanId) {
-		this.testPlanId = testPlanId;
-	}
-
-	public String getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public ActionWorkflow getWorkflow() {
+		return workflow;
+	}
+
+	public void setWorkflow(ActionWorkflow workflow) {
+		this.workflow = workflow;
 	}	
 	
 	
