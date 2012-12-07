@@ -2,14 +2,14 @@ package it.enea.xlab.tebes.testplan;
 
 
 
-import java.util.List;
-
-import it.enea.xlab.tebes.common.Properties;
+import it.enea.xlab.tebes.common.ContextUtils;
+import it.enea.xlab.tebes.common.Paths;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
-import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.testaction.TestActionManagerImpl;
+
+import java.util.List;
 
 import javax.naming.InitialContext;
 
@@ -34,9 +34,9 @@ public class TestPlanManagerImplITCase {
 
 		// Create EJB linked to interface UserManagerRemote
 		InitialContext ctx = new InitialContext();
+		//InitialContext ctx = ContextUtils.getInitialContext("http://winter.bologna.enea.it:8081");
 		testPlanManagerBean = (TestPlanManagerRemote) ctx.lookup("TeBES-ear/TestPlanManagerImpl/remote");	
 	}
-	
 	
 
 	
@@ -46,18 +46,18 @@ public class TestPlanManagerImplITCase {
 	@Test
 	public void t1_check() {
 		
-		Assert.assertNotNull(testPlanManagerBean);
-		
+		Assert.assertNotNull(testPlanManagerBean);	
 	}
 
+	
 	/**
 	 * Test1: User Registration
 	 */
 	@Test
 	public void t2_setupTestPlan() {
 		
-		Assert.assertEquals(Properties.TeBES_ARTIFACTS_LOCAL_HOME + "users/1/testplans/TP-1.xml", 
-				Properties.TeBES_TESTPLAN_ABSFILENAME);
+		Assert.assertEquals(Paths.TeBES_ARTIFACTS_LOCAL_HOME + "users/1/testplans/TP-1.xml", 
+				Paths.TeBES_TESTPLAN_ABSFILENAME);
 	}
 	
 
@@ -65,12 +65,11 @@ public class TestPlanManagerImplITCase {
 	public void t3_setupTestPlan() {	
 		
 		// Get TeBES Test Plan	
-		TestPlan testPlan = testPlanManagerBean.getTestPlanFromXML(Properties.TeBES_TESTPLAN_ABSFILENAME);
+		TestPlan testPlan = testPlanManagerBean.getTestPlanFromXML(Paths.TeBES_TESTPLAN_ABSFILENAME);
 		
 		Assert.assertNotNull(testPlan);
 		Assert.assertEquals("2012-06-13T18:43:00", testPlan.getDatetime());
 		Assert.assertEquals("draft", testPlan.getState());
-		
 		
 		// Create TODO da modificare per ritornare -1
 		Long testPlanId = testPlanManagerBean.createTestPlan(testPlan);
@@ -80,17 +79,12 @@ public class TestPlanManagerImplITCase {
 		Assert.assertNotNull(testPlanId);
 		Assert.assertTrue(testPlanId < 0 || testPlanId > 0);		
 	}
-	
-	
-	// t4_readTestPlan
-	// prendo il workflow e salvo le action
-	
 
 
 	@Test
 	public void t4_importTestPlan() {	
 		
-		Long testPlanId = Properties.TeBES_TESTPLANID;		
+		Long testPlanId = Paths.TeBES_TESTPLANID;		
 		Assert.assertNotNull(testPlanId);
 		
 		// Read TestPlan
@@ -113,7 +107,7 @@ public class TestPlanManagerImplITCase {
 		List<Action> actionList = testPlanManagerBean.getActionsFromXML(testPlan.getId());
 		Assert.assertTrue(actionList.size() > 0);	
 		
-		// Per ogni Action dovrei persisterla e attaccarla al workflow con addToWorkflow per poi persistere il tutto
+		// Per ogni Action dovrei persisterla e attaccarla al workflow per poi persistere il tutto
 		// così come con il SUT
 		Long id_action;
 		for (int k=0;k<actionList.size();k++) {
@@ -126,7 +120,7 @@ public class TestPlanManagerImplITCase {
 		
 				Assert.assertTrue(workflow.getId() > 0);
 				
-				testPlanManagerBean.addAction(workflow.getId(), action.getId());
+				testPlanManagerBean.addActionToWorkflow(action.getId(), workflow.getId());
 			}
 		}
 		
@@ -139,10 +133,8 @@ public class TestPlanManagerImplITCase {
 			Assert.assertTrue(updating);
 		}
 		
-		// TODO questo forse può spostarsi sopra, quando inserisco il wf
-		// link workflow to TestPlan
-		// Essendo uno solo, se già è presente devo aggiornarlo
-		testPlanManagerBean.addWorkflow(testPlan.getId(), workflow.getId());
+		// aggiunge il workflow al test plan se non esiste, altrimenti lo aggiorna
+		testPlanManagerBean.addWorkflowToTestPlan(workflow.getId(), testPlan.getId());
 		
 		testPlan = testPlanManagerBean.readTestPlan(testPlan.getId());
 		Assert.assertTrue(testPlan.getWorkflow().getActions().size() > 0);
@@ -153,8 +145,8 @@ public class TestPlanManagerImplITCase {
 	public void t5_readTestPlan() {	
 
 		// Read TestPlan
-		TestPlan testPlan = testPlanManagerBean.readTestPlan(Properties.TeBES_TESTPLANID);
-				//findTestPlanByTestPlanId(Properties.TeBES_TESTPLANID);
+		TestPlan testPlan = testPlanManagerBean.readTestPlan(Paths.TeBES_TESTPLANID);
+		//findTestPlanByTestPlanId(Properties.TeBES_TESTPLANID);
 		Assert.assertNotNull(testPlan);
 		
 		// questo UserId è stato inserito esplicitamente e non è un id di collegamento come dovrebbe essere
@@ -168,36 +160,15 @@ public class TestPlanManagerImplITCase {
 	@Test
 	public void t6_execution() {	
 	
-		TestPlan testPlan = testPlanManagerBean.readTestPlan(Properties.TeBES_TESTPLANID);
+		TestPlan testPlan = testPlanManagerBean.readTestPlan(Paths.TeBES_TESTPLANID);
 		TestActionManagerImpl actionManager = new TestActionManagerImpl(); 
 		
 		Assert.assertNotNull(actionManager);
 		
-		// forse dovrebbe ritornare qualcos'altro
+		// forse dovrebbe ritornare qualcos'altro? tipo l'id del report
 		boolean actionWorkflowExecutionResult = actionManager.executeActionWorkflow(testPlan.getWorkflow());
 		Assert.assertNotNull(actionWorkflowExecutionResult);
 		
-		
-		/*System.out.println();
-		
-		// 5. utente può interagire durante esecuzione (monitoraggio, interventi)
-		System.out.println("TODO: Interazione Utente");
-		System.out.println();
-		if ( actionWorkflowExecutionResult )
-			System.out.println(">>>> Test Plan Execution Successful! <<<<");
-		else
-			System.out.println(">>>> Test Plan Execution Failure! <<<<");
-		System.out.println();
-		
-		System.out.println("-----------------------------------");
-		System.out.println();
-		
-		// 6. utente preleva report finale
-		System.out.println("-----------------------------------");
-		System.out.println("--------------REPORT---------------");
-		System.out.println("TODO: REPORT");
-		System.out.println("-----------------------------------");
-		System.out.println(); */
 	}
 
 	

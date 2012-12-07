@@ -31,10 +31,11 @@ public interface TestPlanManagerRemote {
 
 	public Action readAction(Long id_action);
 
-	public void addAction(Long id, Long id2);
+	public void addActionToWorkflow(Long workflowId, Long actionId);
 
-	public void addWorkflow(Long id, Long id2);
+	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId);
 	
 	
 	
 }
+

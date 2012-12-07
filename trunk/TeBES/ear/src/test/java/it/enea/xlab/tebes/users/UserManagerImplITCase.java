@@ -1,6 +1,7 @@
 package it.enea.xlab.tebes.users;
 
 
+import it.enea.xlab.tebes.common.ContextUtils;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
@@ -34,6 +35,7 @@ public class UserManagerImplITCase {
 
 		// Create EJB linked to interface UserManagerRemote
 		InitialContext ctx = new InitialContext();
+		//InitialContext ctx = ContextUtils.getInitialContext("http://winter.bologna.enea.it:8081");
 		userManagerBean = (UserManagerRemote) ctx.lookup("TeBES-ear/UserManagerImpl/remote");
 
 		// Prepare 4 user Roles 

@@ -41,7 +41,7 @@ public class User implements Serializable {
 	/**
 	 * Molti User hanno lo stesso Role => ManyToOne 
 	 */
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="role_id")
 	private Role role;
 
