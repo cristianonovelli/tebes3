@@ -3,7 +3,7 @@ package it.enea.xlab.tebes.testmanager;
 import it.enea.xlab.taml.TAML2Java;
 import it.enea.xlab.taml.TAMLDOM;
 import it.enea.xlab.tebes.common.Constants;
-import it.enea.xlab.tebes.common.Properties;
+import it.enea.xlab.tebes.common.Paths;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.model.ReportFragment;
@@ -116,7 +116,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerLocal {
 		try {
 		
 			// Get DOM object from TAML 
-			tamlDOM = new TAMLDOM(absoluteLocation, Properties.TAML_XMLSCHEMA, true);
+			tamlDOM = new TAMLDOM(absoluteLocation, Paths.TAML_XMLSCHEMA, true);
 
 			// Get TestAssertion Hashtable from TAML
 			taHashtable = t2j.getTestAssertionHashtable(tamlDOM);	
@@ -192,7 +192,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerLocal {
 			String absoluteLocation = TeBESDAO.url2localLocation(action.getTestLocation());					
 			//System.out.println("pre-TAMLDOM:" + absoluteLocation);
 			// Get DOM object from TAML 
-			tamlDOM = new TAMLDOM(absoluteLocation, Properties.TAML_XMLSCHEMA, true);
+			tamlDOM = new TAMLDOM(absoluteLocation, Paths.TAML_XMLSCHEMA, true);
 
 			// Get TestAssertion Hashtable from TAML
 			taHashtable = t2j.getTestAssertionHashtable(tamlDOM);

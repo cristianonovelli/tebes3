@@ -2,7 +2,7 @@ package it.enea.xlab.tebes.dao;
 
 import org.xlab.file.XLabFileManager;
 
-import it.enea.xlab.tebes.common.Properties;
+import it.enea.xlab.tebes.common.Paths;
 
 /**
  * I metodi sviluppati in questo File Manager potrebbero venire sostituiti con un altro tipo di DAO basato su Database
@@ -19,13 +19,13 @@ public class TeBESDAO {
 		String relativeLocation = null;
 		
 		// Recognize TeBES home URL 
-		if (urlLocation.startsWith(Properties.TEBES_URL_HOME)) {
+		if (urlLocation.startsWith(Paths.TEBES_URL_HOME)) {
 			
 			// Get relative URL
-			relativeLocation = urlLocation.substring(Properties.TEBES_URL_HOME.length(), urlLocation.length());
+			relativeLocation = urlLocation.substring(Paths.TEBES_URL_HOME.length(), urlLocation.length());
 			
 			// Add file system local path
-			localLocation = Properties.TeBES_ARTIFACTS_LOCAL_HOME.concat(relativeLocation);
+			localLocation = Paths.TeBES_ARTIFACTS_LOCAL_HOME.concat(relativeLocation);
 			
 			// Verificare che il file o la directory esista
 			if( !XLabFileManager.isPresent(localLocation) ) {

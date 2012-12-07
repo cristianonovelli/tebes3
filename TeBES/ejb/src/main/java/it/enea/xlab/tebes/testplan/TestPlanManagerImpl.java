@@ -289,27 +289,25 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	}
 
 
-	public void addAction(Long id_workflow, Long id_action) {
+	public void addActionToWorkflow(Long actionId, Long workflowId) {
 
-		ActionWorkflow wf = this.readWorkflow(id_workflow);
-		Action a = this.readAction(id_action);
+		ActionWorkflow wf = this.readWorkflow(workflowId);
+		Action a = this.readAction(actionId);
 
 		a.addToWorkflow(wf);
 		eM.persist(wf);
 
 		return;
-		
 	}
 
 
-	public void addWorkflow(Long tp_id, Long wf_id) {
+	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId) {
 		
-		TestPlan tp = this.readTestPlan(tp_id);
-		ActionWorkflow wf = this.readWorkflow(wf_id);
-		
+		ActionWorkflow workflow = this.readWorkflow(workflowId);
+		TestPlan testPlan = this.readTestPlan(testPlanId);
 
-		wf.addToTestPlan(tp);
-		eM.persist(tp);
+		workflow.addToTestPlan(testPlan);
+		eM.persist(testPlan);
 		
 		return;
 	}
