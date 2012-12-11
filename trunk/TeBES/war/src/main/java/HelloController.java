@@ -2,7 +2,6 @@
 
 import javax.naming.InitialContext;
 
-import utils.ContextUtils;
 
 /**
 *
@@ -41,7 +40,7 @@ public class HelloController {
     public String sendAction() {
     	HelloLocal helloService = null;
     	try {
-    		InitialContext context = ContextUtils.getInitialContext("localhost:1099");
+    		InitialContext context = it.enea.xlab.tebes.common.ContextUtils.getInitialContext("localhost:1099");
     		helloService = (HelloLocal) context.lookup("TeBES-ear/HelloBean/local");
     		} catch (Exception e) { // Error getting the home interface
     		   e.printStackTrace();

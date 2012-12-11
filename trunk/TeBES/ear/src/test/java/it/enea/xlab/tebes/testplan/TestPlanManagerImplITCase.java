@@ -71,13 +71,35 @@ public class TestPlanManagerImplITCase {
 		Assert.assertEquals("2012-06-13T18:43:00", testPlan.getDatetime());
 		Assert.assertEquals("draft", testPlan.getState());
 		
-		// Create TODO da modificare per ritornare -1
+		// Create TestPlan
 		Long testPlanId = testPlanManagerBean.createTestPlan(testPlan);
-		
-		// se è stato creato, testPlanId è nuovo
-		// altrimenti è -1. in ogni caso deve essere diverso maggiore o minore di zero
 		Assert.assertNotNull(testPlanId);
-		Assert.assertTrue(testPlanId < 0 || testPlanId > 0);		
+		
+		Boolean updating = false;
+		
+		// Update TestPlan
+		if (testPlanId < 0) {
+			testPlan.setState("updated");
+			List<TestPlan> testPlanList = testPlanManagerBean.readTestPlanByUserIdAndDatetime(testPlan.getUserId(), testPlan.getDatetime());
+			
+			
+			if ( (testPlanList != null) && (testPlanList.size() > 0) ) {
+				
+				// setto al nuovo test plan l'id del vecchio
+				TestPlan updatedTP = testPlanList.get(0);
+				updatedTP.setUserId(testPlan.getUserId());
+				updatedTP.setXml(testPlan.getXml());
+				updatedTP.setDatetime(testPlan.getDatetime());
+				updatedTP.setState(testPlan.getState());
+				updatedTP.setLocation(testPlan.getLocation());
+
+				updating = testPlanManagerBean.updateTestPlan(updatedTP);
+			}
+		}
+		
+		// se è stato creato, testPlanId è nuovo e > 0
+		// se è stato aggiornato updating è true
+		Assert.assertTrue((testPlanId > 0) || updating);		
 	}
 
 
@@ -154,6 +176,12 @@ public class TestPlanManagerImplITCase {
 		Assert.assertNotNull(testPlan.getDatetime());
 		Assert.assertNotNull(testPlan.getState());
 		Assert.assertNotNull(testPlan.getWorkflow().getActions());
+	
+		
+		Action a = testPlan.getWorkflow().getActions().get(0);
+		Assert.assertNotNull(a);
+		
+		Assert.assertFalse(a.isJumpTurnedON());
 	}
 	
 	

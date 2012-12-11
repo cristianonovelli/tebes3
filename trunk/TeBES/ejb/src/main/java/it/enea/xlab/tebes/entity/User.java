@@ -34,7 +34,7 @@ public class User implements Serializable {
 	 * Ogni User ha uno o più SUT => OneToMany
 	 */
 	@OneToMany(mappedBy="user", 
-			cascade = {CascadeType.ALL,CascadeType.MERGE },fetch = FetchType.EAGER)
+			cascade = {CascadeType.ALL,CascadeType.MERGE},fetch = FetchType.EAGER)
 	private List<SUT> userSut;
 	
 	

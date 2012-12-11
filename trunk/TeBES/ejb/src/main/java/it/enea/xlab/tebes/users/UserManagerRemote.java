@@ -10,17 +10,23 @@ import javax.ejb.Remote;
 
 @Remote
 public interface UserManagerRemote {
-
-	// Manager Functions
-	public User login(String userEmail, String userPassword);	
 	
-	// User functions
-	public Long createUser(User user);	
+	// CREATE User
+	public Long createUser(User user);
+	
+	// READ User
 	public User readUser(Long id);	
-	public Boolean updateUser(User user);	
-	public Boolean deleteUser(Long id);	
+	public User readUserbyEmailAndPassword(String userEmail, String userPassword);	
 	public List<Long> getUserIdList();
+	
+	// UPDATE User
+	public Boolean updateUser(User user);	
+	
+	// DELETE User
+	public Boolean deleteUser(Long id);	
+	
 
+	
 	// Join functions
 	public void addUserSUT(Long userId, Long sutId);
 	public void setRole(User user, Role role);

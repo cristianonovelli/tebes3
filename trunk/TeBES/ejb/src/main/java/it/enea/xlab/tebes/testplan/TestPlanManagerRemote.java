@@ -14,10 +14,13 @@ public interface TestPlanManagerRemote {
 	//public TestPlanOLD importTestPlan(String testPlanFilePath, String userId);
 	
 	public TestPlan readTestPlan(Long id);
+	public List<TestPlan> readTestPlanByUserIdAndDatetime(Long userId, String datetime);
 	
 	public TestPlan getTestPlanFromXML(String testPlanAbsFileName);
 
 	public Long createTestPlan(TestPlan testPlan);
+	
+	public Boolean updateTestPlan(TestPlan testPlan);
 
 	public List<Action> getActionsFromXML(Long testPlanId);
 
@@ -34,6 +37,8 @@ public interface TestPlanManagerRemote {
 	public void addActionToWorkflow(Long workflowId, Long actionId);
 
 	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId);
+
+	
 	
 	
 	

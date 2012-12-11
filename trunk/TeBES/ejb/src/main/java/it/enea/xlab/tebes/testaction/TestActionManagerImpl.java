@@ -1,20 +1,15 @@
 package it.enea.xlab.tebes.testaction;
 
-import java.util.List;
-import java.util.Vector;
-
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-
-import junit.framework.Assert;
-
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
-import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.model.TAF;
-import it.enea.xlab.tebes.model.TestPlanOLD;
 import it.enea.xlab.tebes.testmanager.TestManagerImpl;
+
+import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
 
 
 @Stateless
