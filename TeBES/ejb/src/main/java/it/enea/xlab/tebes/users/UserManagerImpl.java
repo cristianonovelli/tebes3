@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.SUT;
@@ -182,6 +183,26 @@ public class UserManagerImpl implements UserManagerRemote {
 	}	
 	
 	
+	/**
+	 * DELETE SUT
+	 */
+	public Boolean deleteSUT(Long idSUT) {
+
+		SUT sut = this.readSUT(idSUT);
+		
+		if (sut == null)
+			return false;
+		
+		try {
+			eM.remove(sut);
+		} catch (IllegalArgumentException e) {
+			return false;
+		} catch (Exception e2) {
+			return null;
+		}
+		
+		return true;
+	}
 
 	
 	////////////////////
@@ -347,7 +368,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	 * @return User if there is a user with the specified email and password
 	 * @return null otherwise
 	 */
-	public User login(String userEmail, String userPassword) {
+	public User readUserbyEmailAndPassword(String userEmail, String userPassword) {
 		
 		User result = null;
 		

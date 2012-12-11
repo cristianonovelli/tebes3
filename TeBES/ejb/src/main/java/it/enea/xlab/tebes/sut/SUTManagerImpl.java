@@ -1,0 +1,122 @@
+package it.enea.xlab.tebes.sut;
+
+import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.entity.SUT;
+
+import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+
+@Stateless
+@Interceptors({Profile.class})
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
+public class SUTManagerImpl implements SUTManagerRemote {
+
+	@PersistenceContext(unitName="TeBESPersistenceLayer")
+	private EntityManager eM; 
+	
+	
+	/**
+	 * CREATE SUT
+	 * If there isn't SUT with this SUT name, it creates the new SUT
+	 * @return 	sutID if created
+	 * 			-1 otherwise
+	 */
+	public Long createSUT(SUT sut) {
+
+		SUT existingSUT = this.readSUTByName(sut.getName());
+		
+		if (existingSUT == null) {
+			eM.persist(sut);		
+			return sut.getId();
+		}
+		else 
+			return new Long(-1);
+	}
+	
+	
+	/**
+	 * READ SUT
+	 */	
+	public SUT readSUT(Long sutID) {
+		
+		return eM.find(SUT.class, sutID);
+	}	
+	
+	
+	/**
+	 * READ SUT by Name
+	 * @return the first SUT with that name, if the SUT is present 
+	 * @return null, if the SUT is not present 
+	 */	
+	private SUT readSUTByName(String name) {
+		
+        String queryString = "SELECT s FROM SUT AS s WHERE s.name = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, name);
+        @SuppressWarnings("unchecked")
+		List<SUT> resultList = query.getResultList();
+        if ((resultList != null) && (resultList.size() > 0))
+        	return (SUT) resultList.get(0);
+        else
+        	return null;
+	}
+
+	
+	/**
+	 * UPDATE SUT
+	 */
+	public Boolean updateSUT(Long sutID) {
+		
+		Boolean result = false;
+		
+		SUT sut = readSUT(sutID);
+		
+		 try {
+			 if ( (sut != null) && (sut.getId() != null) ) {
+				 sut = eM.merge(sut);
+				 
+				 if (sut != null)
+					 result = true;
+			 }
+			 
+		} catch (IllegalArgumentException e) {
+			result = false;
+		} catch (Exception e2) {
+			result = null;
+		}
+		 
+		 return result;
+	}
+	
+	
+	/**
+	 * DELETE SUT
+	 */
+	public Boolean deleteSUT(Long sutID) {
+
+		SUT sut = this.readSUT(sutID);
+		
+		if (sut == null)
+			return false;
+		
+		try {
+			eM.remove(sut);
+		} catch (IllegalArgumentException e) {
+			return false;
+		} catch (Exception e2) {
+			return null;
+		}
+		
+		return true;
+	}
+	
+}

@@ -30,9 +30,9 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	private EntityManager eM; 
 	
 	
-	public TestPlan readTestPlan(Long tp_id) {
+	public TestPlan readTestPlan(Long id) {
 		
-		return eM.find(TestPlan.class, tp_id);
+		return eM.find(TestPlan.class, id);
 	}	
 	
 	
@@ -46,26 +46,41 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		Long result;
 		
-		// If the object TestPlan has not id
-		if (testPlan.getId() == null) {
-			
-			List<TestPlan> testPlanList = readTestPlanByUserIdAndDatetime(testPlan.getUserId(), testPlan.getDatetime());
-			
-			if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
-				eM.persist(testPlan);	
-				result = testPlan.getId();
-			}
-			else
-				result = new Long(-1);
+		List<TestPlan> testPlanList = readTestPlanByUserIdAndDatetime(testPlan.getUserId(), testPlan.getDatetime());
+		
+		if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
+			eM.persist(testPlan);	
+			result = testPlan.getId();
 		}
 		else
 			result = new Long(-1);
 			
 		return result;	
 	}
+
+	
+	/**
+	 * UPDATE Test Plan
+	 */
+	public Boolean updateTestPlan(TestPlan testPlan) {
+		
+		Boolean result = false;
+		
+		 if ( (testPlan != null) && (testPlan.getId() != null) ) {
+			 testPlan = eM.merge(testPlan);
+			 //eM.persist(user);
+			 
+			 if (testPlan != null)
+				 result = true;
+		 }
+		
+		return result;
+	}
+
+	
 	
 	@SuppressWarnings("unchecked")
-	private List<TestPlan> readTestPlanByUserIdAndDatetime(Long userId, String datetime) {
+	public List<TestPlan> readTestPlanByUserIdAndDatetime(Long userId, String datetime) {
 
         String queryString = "SELECT t FROM TestPlan AS t WHERE t.userId = ?1 AND t.datetime = ?2";
         
@@ -311,6 +326,9 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		return;
 	}
+
+
+	
 
 
 
