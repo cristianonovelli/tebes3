@@ -34,7 +34,7 @@ public interface TestPlanManagerRemote {
 
 	public Action readAction(Long id_action);
 
-	public void addActionToWorkflow(Long workflowId, Long actionId);
+	public void addActionToWorkflow(Long actionId, Long workflowId);
 
 	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId);
 

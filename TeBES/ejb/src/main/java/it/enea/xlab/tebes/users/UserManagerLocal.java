@@ -22,7 +22,8 @@ public interface UserManagerLocal {
 	public List<User> getUserList();
 
 	// Join functions
-	public void addUserSUT(Long userId, Long sutId);
+	//public void addSUTToUser(SUT sut, User user);
+	public void addSUTToUser(Long sutId, Long userId);
 	public void setRole(User user, Role role);
 
 	// SUT functions	
