@@ -4,6 +4,7 @@ package it.enea.xlab.tebes.users;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.sut.SUTManagerController;
 
 import java.util.List;
 
@@ -174,28 +175,31 @@ public class UserManagerImplITCase {
 	 */
 	@Test
 	public void t4_addSUT() throws Exception {
-
-		UserManagerController userMC = new UserManagerController();
-		User user = userMC.login("cristiano.novelli@enea.it", "xcristiano");
+		
+		UserManagerController userManagerController = new UserManagerController();
+		User user = userManagerController.login("cristiano.novelli@enea.it", "xcristiano");
 		Assert.assertNotNull(user);
 
+		user = userManagerController.readUser(user.getId());
+		
 		// Create a generic SUT
-		SUT genericSUT = new SUT("sut1", "xmldocument", "XML document uploaded by web interface");
-		Long idSUT = userManagerBean.createSUT(genericSUT);
+		SUT sut1 = new SUT("sut1", "xmldocument", "XML document uploaded by web interface");
+		SUTManagerController sutManagerController = new SUTManagerController();
+		Long idSUT = sutManagerController.createSUT(sut1, user);
 		
 		
 		// se ho creato un nuovo SUT lo associo allo User
 		if (idSUT > 0) {
 		
-			SUT sut = userManagerBean.readSUT(idSUT);
+			SUT sut = sutManagerController.readSUT(idSUT);
 			Assert.assertNotNull(sut);
 	
 			Assert.assertTrue(user.getId() > 0);
 			
-			userManagerBean.addUserSUT(user.getId(), sut.getId());
+			userManagerController.addSUTToUser(sut.getId(), user.getId());
 		}
 		
-		user = userMC.login("cristiano.novelli@enea.it", "xcristiano");	
+		user = userManagerController.login("cristiano.novelli@enea.it", "xcristiano");	
 		List<SUT> sutList = user.getSutList();
 		Assert.assertTrue(sutList.size() > 0);
 		

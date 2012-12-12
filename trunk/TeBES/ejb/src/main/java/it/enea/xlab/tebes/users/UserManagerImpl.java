@@ -126,7 +126,14 @@ public class UserManagerImpl implements UserManagerRemote {
 	/**
 	 * Add SUT to User's SUT list.
 	 */
-	public void addUserSUT(Long userId, Long sutId) {
+/*	public void addSUTToUser(SUT sut, User user) {
+
+		sut.addToUser(user);
+		eM.persist(user);
+
+		return;
+	}*/
+	public void addSUTToUser(Long sutId, Long userId) {
 
 		User user = this.readUser(userId);
 		SUT sut = this.readSUT(sutId);
@@ -137,7 +144,13 @@ public class UserManagerImpl implements UserManagerRemote {
 		return;
 	}
 	
-
+	// duplicato dalla sutmanagerimpl
+	// non ho trovato altra via
+	private SUT readSUT(Long sutID) {
+		
+		return eM.find(SUT.class, sutID);
+	}	
+	
 	/**
 	 * Set Role of User.
 	 */
@@ -158,10 +171,10 @@ public class UserManagerImpl implements UserManagerRemote {
 	///////////////////
 	// SUT FUNCTIONS //
 	///////////////////
-	
-	/**
+	/*
+	*//**
 	 * CREATE SUT
-	 */
+	 *//*
 	public Long createSUT(SUT sut) {
 
 		SUT existingSUT = this.findSUTByName(sut.getName());
@@ -174,18 +187,18 @@ public class UserManagerImpl implements UserManagerRemote {
 			return new Long(-1);
 	}
 	
-	/**
+	*//**
 	 * READ SUT
-	 */	
+	 *//*	
 	public SUT readSUT(Long idSUT) {
 		
 		return eM.find(SUT.class, idSUT);
 	}	
 	
 	
-	/**
+	*//**
 	 * DELETE SUT
-	 */
+	 *//*
 	public Boolean deleteSUT(Long idSUT) {
 
 		SUT sut = this.readSUT(idSUT);
@@ -203,7 +216,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		
 		return true;
 	}
-
+*/
 	
 	////////////////////
 	// ROLE FUNCTIONS //

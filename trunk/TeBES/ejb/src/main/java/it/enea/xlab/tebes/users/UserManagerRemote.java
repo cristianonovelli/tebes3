@@ -28,12 +28,13 @@ public interface UserManagerRemote {
 
 	
 	// Join functions
-	public void addUserSUT(Long userId, Long sutId);
+	//public void addSUTToUser(SUT sut, User user);
+	public void addSUTToUser(Long sutId, Long userId);
 	public void setRole(User user, Role role);
 
 	// SUT functions	
-	public Long createSUT(SUT sut);
-	public SUT readSUT(Long idSUT);
+	//public Long createSUT(SUT sut);
+	//public SUT readSUT(Long idSUT);
 	
 	// Role functions
 	public Long createRole(Role role);	

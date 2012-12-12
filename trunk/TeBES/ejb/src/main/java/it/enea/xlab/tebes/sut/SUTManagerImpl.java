@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.sut;
 
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.User;
 
 import java.util.List;
 
@@ -29,12 +30,17 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	 * @return 	sutID if created
 	 * 			-1 otherwise
 	 */
-	public Long createSUT(SUT sut) {
+	public Long createSUT(SUT sut, User user) {
 
+		// TODO qui ci vuole una readByNameAndUser
 		SUT existingSUT = this.readSUTByName(sut.getName());
 		
 		if (existingSUT == null) {
 			eM.persist(sut);		
+			
+			//sut.addToUser(user);
+			//eM.persist(user);
+			
 			return sut.getId();
 		}
 		else 
