@@ -1,7 +1,6 @@
 package it.enea.xlab.tebes.session;
 
 import it.enea.xlab.tebes.common.Profile;
-import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 
 import java.util.List;
@@ -23,6 +22,14 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	@PersistenceContext(unitName="TeBESPersistenceLayer")
 	private EntityManager eM; 
 	
+	
+	/**
+	 * REACTIVATION (RIPRISTINO) Session
+	 */
+	public Session reactivation(Long sessionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	/**
 	 * CREATE Session
@@ -49,8 +56,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		
 		return eM.find(Session.class, sessionID);
 	}	
-	
-	
+		
 	/**
 	 * READ Session by userId, testplanId and sutId
 	 * @return 	session if present
@@ -72,8 +78,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
         else
         	return null;
 	}
-	
-	
+		
 	/**
 	 * READ Session List by userId
 	 * @return 	Session List
@@ -88,35 +93,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 
         return query.getResultList();
 	}
-
-
-	/**
-	 * UPDATE Session
-	 */
-	public Boolean updateSession(Long sessionID) {
 		
-		Boolean result = false;
-		
-		Session session = readSession(sessionID);
-		
-		 try {
-			 if ( (session != null) && (session.getId() != null) ) {
-				 session = eM.merge(session);
-				 
-				 if (session != null)
-					 result = true;
-			 }
-			 
-		} catch (IllegalArgumentException e) {
-			result = false;
-		} catch (Exception e2) {
-			result = null;
-		}
-		 
-		 return result;
-	}
-	
-	
 	/**
 	 * DELETE Session
 	 */

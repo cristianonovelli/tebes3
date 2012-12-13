@@ -1,7 +1,6 @@
 package it.enea.xlab.tebes.users;
 
 import it.enea.xlab.tebes.entity.Role;
-import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public interface UserManagerRemote {
 	// Join functions
 	//public void addSUTToUser(SUT sut, User user);
 	public void addSUTToUser(Long sutId, Long userId);
-	public void setRole(User user, Role role);
+	public void setUserRole(User user, Role role);
 
 	// SUT functions	
 	//public Long createSUT(SUT sut);
@@ -39,7 +38,10 @@ public interface UserManagerRemote {
 	// Role functions
 	public Long createRole(Role role);	
 	public Role readRole(Long idRole);	
+	public Role readRoleByLevel(int level);
 	public List<Long> getRoleIdList();
+
+	
 
 	// Group functions
 	//public Long createGroup(Group group);

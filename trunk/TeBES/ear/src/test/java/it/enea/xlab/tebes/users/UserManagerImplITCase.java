@@ -1,14 +1,13 @@
 package it.enea.xlab.tebes.users;
 
 
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.sut.SUTManagerController;
 
 import java.util.List;
-
-import javax.naming.InitialContext;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,7 +16,11 @@ import org.junit.Test;
 public class UserManagerImplITCase {
 
 	// Interface Declaration
-	UserManagerRemote userManagerBean;
+	// UserManagerRemote userManagerBean;
+	
+	UserProfileController userProfileController;
+	UserAdminController adminController;
+	SUTManagerController sutManagerController;
 	
 	// Global Variables
 	Long idUser1, idUser2;
@@ -30,28 +33,33 @@ public class UserManagerImplITCase {
 	 * @throws Exception
 	 */
 	@Before
-	public void before_rolesCreation() throws Exception {
+	public void before_preparation() throws Exception {
 		
-
+		userProfileController = new UserProfileController();
+		adminController = new UserAdminController();
+		sutManagerController = new SUTManagerController();
+		
 		// Create EJB linked to interface UserManagerRemote
-		InitialContext ctx = new InitialContext();
-		//InitialContext ctx = ContextUtils.getInitialContext("http://winter.bologna.enea.it:8081");
-		userManagerBean = (UserManagerRemote) ctx.lookup("TeBES-ear/UserManagerImpl/remote");
+		// InitialContext ctx = new InitialContext();
+		////InitialContext ctx = ContextUtils.getInitialContext("http://winter.bologna.enea.it:8081");
+		// userManagerBean = (UserManagerRemote) ctx.lookup("TeBES-ear/UserManagerImpl/remote");
 
+		//UserAdminController adminController = new UserAdminController();
+		
 		// Prepare 4 user Roles 
-		Role role1 = new Role("standard_user", "Standard User Role: he can execute a test plan but he can't create/edit it", 1);
-		Role role2 = new Role("advanced_user", "Advanced User Role: he can create/edit/execute a test plan", 2);
-		Role role3 = new Role("system_administrator", "System Administrator Role: he is an advanced user and can add/modify test suites", 3);
-		Role role4 = new Role("super_administrator", "Super Administrator Role: he has whole power and permissions on TeBES platform", 4);
+		Role role1 = new Role(Constants.STANDARD_ROLE_NAME, Constants.STANDARD_ROLE_DESCRIPTION, Constants.STANDARD_ROLE_LEVEL);
+		Role role2 = new Role(Constants.ADVANCED_ROLE_NAME, Constants.ADVANCED_ROLE_DESCRIPTION, Constants.ADVANCED_ROLE_LEVEL);
+		Role role3 = new Role(Constants.ADMIN_ROLE_NAME, Constants.ADMIN_ROLE_DESCRIPTION, Constants.ADMIN_ROLE_LEVEL);
+		Role role4 = new Role(Constants.DEVELOPER_ROLE_NAME, Constants.DEVELOPER_ROLE_DESCRIPTION, Constants.DEVELOPER_ROLE_LEVEL);
 		
 		// Create dei Ruoli che devono già essere fissati come setup del sistema
-		idRole1 = userManagerBean.createRole(role1);
-		idRole2 = userManagerBean.createRole(role2);
-		idRole3 = userManagerBean.createRole(role3);
-		idRole4 = userManagerBean.createRole(role4);
+		idRole1 = adminController.createRole(role1);
+		idRole2 = adminController.createRole(role2);
+		idRole3 = adminController.createRole(role3);
+		idRole4 = adminController.createRole(role4);
 
 		// Get Role List
-		List<Long> roleIdList = userManagerBean.getRoleIdList();
+		List<Long> roleIdList = adminController.getRoleIdList();
 		Assert.assertTrue(roleIdList.size() == 4);
 		
 		
@@ -70,44 +78,40 @@ public class UserManagerImplITCase {
 	
 	/**
 	 * Test1: User Registration
+	 * @throws Exception 
 	 */
 	@Test
-	public void t1_registration() {
+	public void t1_registration() throws Exception {
 		
-		// PREPARE User: Cristiano
-		User user1 = new User();
-		//cristianoUser.setUserId("IT-12345678909");
-		user1.setName("Cristiano");
-		user1.setSurname("Novelli");
-		user1.seteMail("cristiano.novelli@enea.it");
-		user1.setPassword("xcristiano");
 
-		// PREPARE User: Arianna
-		User user2 = new User();
-		user2.setName("Arianna");
-		user2.setSurname("Brutti");
-		//ariannaUser.setUserId("IT-98765432101");
-		user2.seteMail("arianna.brutti@enea.it");
-		user2.setPassword("xpiero");
+		
+		// PREPARE User 1 e 2
+		User user1 = new User("Cristiano", "Novelli", "cristiano.novelli@enea.it", "xcristiano");
+		User user2 = new User("Arianna", "Brutti", "arianna.brutti@enea.it", "xpiero");
+
 
 		// CREATE USER: Persist Users in DB through JPA
-		idUser1 = userManagerBean.createUser(user1);
-		idUser2 = userManagerBean.createUser(user2);
+		//idUser1 = userManagerBean.createUser(user1);
+		//idUser2 = userManagerBean.createUser(user2);
+		idUser1 = userProfileController.signUp(user1);
+		idUser2 = userProfileController.signUp(user2);
+		
 		
 		// Test: verifico vi siano due utenti creati
-		List<Long> userIdList = userManagerBean.getUserIdList();
+		List<Long> userIdList = adminController.getUserIdList();
 		Assert.assertTrue(userIdList.size() >= 2);		
+		
 		// Attenzione: con getUserIdList gli Id non vengono restituiti in ordine 
-		// la seguente assertion infatti fallisce
+		// la seguente assertion infatti può fallire
 		// Assert.assertTrue(userIdList.get(0) < userIdList.get(1));
 		
 		// Se ho creato, testo creazione e lettura verificando gli id
 		if (idUser1 > 0) {
-			user1 = userManagerBean.readUser(idUser1);
+			user1 = adminController.readUser(idUser1);
 			Assert.assertNotNull(user1.getId());	
 		}	
 		if (idUser2 > 0) {
-			user2 = userManagerBean.readUser(idUser2);
+			user2 = adminController.readUser(idUser2);
 			Assert.assertNotNull(user2.getId());	
 		}
 		
@@ -127,12 +131,12 @@ public class UserManagerImplITCase {
 		User user;
 		
 		// Correct login
-		UserManagerController userMC = new UserManagerController();
-		user = userMC.login("cristiano.novelli@enea.it", "xcristiano");
+		//UserProfileController userProfileController = new UserProfileController();
+		user = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");
 		Assert.assertNotNull(user);		
 		
 		// Incorrect login because there is wrong password
-		user = userMC.login("cristiano.novelli@enea.it", "cristiano");
+		user = userProfileController.login("cristiano.novelli@enea.it", "cristiano");
 		Assert.assertNull(user);
 	}
 	
@@ -144,27 +148,25 @@ public class UserManagerImplITCase {
 	@Test
 	public void t3_setRole() throws Exception {
 		
-		UserManagerController userMC = new UserManagerController();
-		User user1 = userMC.login("cristiano.novelli@enea.it", "xcristiano");
-		Assert.assertNotNull(user1);
+		//userProfileController = new UserProfileController();
+		User user1 = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");
 		Assert.assertTrue(user1.getId() > 0);
 		
-		User user2 = userMC.login("arianna.brutti@enea.it", "xpiero");		
-		Assert.assertNotNull(user2);
+		User user2 = userProfileController.login("arianna.brutti@enea.it", "xpiero");		
 		Assert.assertTrue(user2.getId() > 0);
 		
 		
 		// ROLE
-		Role xlabRole = userManagerBean.readRole(idRole4);
+		Role xlabRole = adminController.readRoleByLevel(4);
 		Assert.assertNotNull(xlabRole);		
 		
 		// SET ROLE
-		userManagerBean.setRole(user1, xlabRole);
-		user1 = userManagerBean.readUser(user1.getId());
+		adminController.setUserRole(user1, xlabRole);
+		user1 = adminController.readUser(user1.getId());
 		Assert.assertTrue(user1.getRole().getId() > 0);
 
-		userManagerBean.setRole(user2, xlabRole);
-		user2 = userManagerBean.readUser(user2.getId());
+		adminController.setUserRole(user2, xlabRole);
+		user2 = adminController.readUser(user2.getId());
 		Assert.assertTrue(user2.getRole().getId() > 0);
 	}
 	
@@ -176,15 +178,16 @@ public class UserManagerImplITCase {
 	@Test
 	public void t4_addSUT() throws Exception {
 		
-		UserManagerController userManagerController = new UserManagerController();
-		User user = userManagerController.login("cristiano.novelli@enea.it", "xcristiano");
+		//UserProfileController userManagerController = new UserProfileController();
+		User user = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");
 		Assert.assertNotNull(user);
 
-		user = userManagerController.readUser(user.getId());
+		//UserAdminController adminController = new UserAdminController();
+		user = adminController.readUser(user.getId());
 		
 		// Create a generic SUT
 		SUT sut1 = new SUT("sut1", "xmldocument", "XML document uploaded by web interface");
-		SUTManagerController sutManagerController = new SUTManagerController();
+		sutManagerController = new SUTManagerController();
 		Long idSUT = sutManagerController.createSUT(sut1, user);
 		
 		
@@ -196,10 +199,10 @@ public class UserManagerImplITCase {
 	
 			Assert.assertTrue(user.getId() > 0);
 			
-			userManagerController.addSUTToUser(sut.getId(), user.getId());
+			userProfileController.addSUTToUser(sut.getId(), user.getId());
 		}
 		
-		user = userManagerController.login("cristiano.novelli@enea.it", "xcristiano");	
+		user = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");	
 		List<SUT> sutList = user.getSutList();
 		Assert.assertTrue(sutList.size() > 0);
 		
@@ -213,27 +216,28 @@ public class UserManagerImplITCase {
 	@Test
 	public void t5_update() throws Exception {
 		
-		UserManagerController userMC = new UserManagerController();
-		User user = userMC.login("arianna.brutti@enea.it", "xpiero");
+		//UserProfileController userMC = new UserProfileController();
+		User user = userProfileController.login("arianna.brutti@enea.it", "xpiero");
 		if ( user == null )
-			user = userMC.login("arianna.brutti@enea.it", "xarianna");		
+			user = userProfileController.login("arianna.brutti@enea.it", "xarianna");		
 		Assert.assertNotNull(user);
 		
 		
 		// Get System Admin Role
-		Role systemRole = userManagerBean.readRole(idRole3);
-		Assert.assertNotNull(systemRole);	
-			
+		Role adminRole = adminController.readRoleByLevel(3);
+		Assert.assertNotNull(adminRole);	
+		user.setRole(adminRole);
+		
+		
 		// Update User
 		user.setPassword("xarianna");
-		user.setRole(systemRole);
-		Boolean updating = userManagerBean.updateUser(user);
+		Boolean updating = userProfileController.updateUser(user);
 		Assert.assertTrue(updating);
 		
 		// Check Login and Role
-		user = userMC.login("arianna.brutti@enea.it", "xarianna");
+		user = userProfileController.login("arianna.brutti@enea.it", "xarianna");
 		Assert.assertNotNull(user);		
-		Assert.assertEquals(systemRole.getLevel(), user.getRole().getLevel());
+		Assert.assertEquals(adminRole.getLevel(), user.getRole().getLevel());
 		
 	}
 
@@ -246,18 +250,18 @@ public class UserManagerImplITCase {
 	public void t6_delete() throws Exception {
 		
 		// login
-		UserManagerController userMC = new UserManagerController();
-		User user2 = userMC.login("arianna.brutti@enea.it", "xarianna");
+		// UserProfileController userMC = new UserProfileController();
+		User user2 = userProfileController.login("arianna.brutti@enea.it", "xarianna");
 		
 		if (user2 != null) {
 		
 			// DELETE User
-			Boolean deleting = userManagerBean.deleteUser(user2.getId());
+			Boolean deleting = adminController.deleteUser(user2.getId());
 			Assert.assertTrue(deleting);
 		}
 		
 		// Incorrect login (wrong password)
-		user2 = userMC.login("arianna.brutti@enea.it", "xarianna");
+		user2 = userProfileController.login("arianna.brutti@enea.it", "xarianna");
 		Assert.assertNull(user2);
 	}
 	

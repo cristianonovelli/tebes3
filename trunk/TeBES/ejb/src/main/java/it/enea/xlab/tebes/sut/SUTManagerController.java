@@ -5,11 +5,9 @@ import it.enea.xlab.tebes.entity.User;
 
 import javax.naming.InitialContext;
 
-public class SUTManagerController {
+public class SUTManagerController implements SUTManagerRemote {
 
 	private SUTManagerRemote sutManagerBean;
-	
-	
 	
 	public SUTManagerController() throws Exception {
 
@@ -27,5 +25,17 @@ public class SUTManagerController {
 	public SUT readSUT(Long sutId) {
 
 		return sutManagerBean.readSUT(sutId);
+	}
+
+
+	public Boolean updateSUT(SUT sut) {
+		
+		return sutManagerBean.updateSUT(sut);
+	}
+
+
+	public Boolean deleteSUT(Long idSUT) {
+		
+		return sutManagerBean.deleteSUT(idSUT);
 	}	
 }

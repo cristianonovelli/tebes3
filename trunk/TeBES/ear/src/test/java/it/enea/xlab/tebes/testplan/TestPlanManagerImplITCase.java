@@ -1,20 +1,13 @@
 package it.enea.xlab.tebes.testplan;
 
-
-
-import it.enea.xlab.tebes.common.ContextUtils;
 import it.enea.xlab.tebes.common.Paths;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.testaction.TestActionManagerImpl;
-
 import java.util.List;
-
 import javax.naming.InitialContext;
-
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
