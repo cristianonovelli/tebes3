@@ -7,15 +7,15 @@ import javax.ejb.Local;
 @Local
 public interface SessionManagerLocal {
 	
+	// Reactivation (Ripristino)
+	public Session reactivation(Long sessionId);
+	
 	// Create Session
 	public Long createSession(Session session);
 	
 	// Read Session
 	public Session readSession(Long sessionId);
 	public List<Session> readSessionListbyUserId(Long userId);
-	
-	// Update Session
-	public Boolean updateSession(Long sessionId);
 	
 	// Delete Session
 	public Boolean deleteSession(Long sessionId);

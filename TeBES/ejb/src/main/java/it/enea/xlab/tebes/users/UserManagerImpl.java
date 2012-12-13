@@ -154,7 +154,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	/**
 	 * Set Role of User.
 	 */
-	public void setRole(User user, Role role) {
+	public void setUserRole(User user, Role role) {
 
 		User u = this.readUser(user.getId());
 		Role g = this.readRole(role.getId());
@@ -228,7 +228,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	 */
 	public Long createRole(Role role) {
 
-		Role existingRole = this.findRoleByLevel(role.getLevel());
+		Role existingRole = this.readRoleByLevel(role.getLevel());
 		
 		if (existingRole == null) {
 			
@@ -245,6 +245,25 @@ public class UserManagerImpl implements UserManagerRemote {
 	public Role readRole(Long idRole) {
 		
 		return eM.find(Role.class, idRole);
+	}
+	
+	/**
+	 * READ Role by Level
+	 * @return the first role with that level, if the role is present 
+	 * @return null, if the role is not present 
+	 */
+	public Role readRoleByLevel(int customLevel) {
+		
+        String queryString = "SELECT r FROM Role AS r WHERE r.level = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, customLevel);
+        @SuppressWarnings("unchecked")
+		List<Role> resultList = query.getResultList();
+        if ((resultList != null) && (resultList.size() > 0))
+        	return (Role) resultList.get(0);
+        else
+        	return null;
 	}
 	
 	/**
@@ -303,24 +322,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	// FIND FUNCTIONS //
 	////////////////////
 	
-	/**
-	 * FIND Role by Level
-	 * @return the first role with that level, if the role is present 
-	 * @return null, if the role is not present 
-	 */
-	private Role findRoleByLevel(int customLevel) {
-		
-        String queryString = "SELECT r FROM Role AS r WHERE r.level = ?1";
-        
-        Query query = eM.createQuery(queryString);
-        query.setParameter(1, customLevel);
-        @SuppressWarnings("unchecked")
-		List<Role> resultList = query.getResultList();
-        if ((resultList != null) && (resultList.size() > 0))
-        	return (Role) resultList.get(0);
-        else
-        	return null;
-	}
+
 	
 	
 	/**
@@ -397,6 +399,8 @@ public class UserManagerImpl implements UserManagerRemote {
 		
 		return result;
 	}
+
+
 
 
 	

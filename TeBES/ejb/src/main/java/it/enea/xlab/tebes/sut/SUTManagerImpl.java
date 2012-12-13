@@ -23,6 +23,10 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	@PersistenceContext(unitName="TeBESPersistenceLayer")
 	private EntityManager eM; 
 	
+	// TODO 
+	// 1. createSUT dovrebbe essere capace di "linkarsi" all'utente
+	// 2. readSUTByName dovrebbe essere una readSUTByUserIdAndName ma non so come impostare la query
+	
 	
 	/**
 	 * CREATE SUT
@@ -55,8 +59,7 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		
 		return eM.find(SUT.class, sutID);
 	}	
-	
-	
+		
 	/**
 	 * READ SUT by Name
 	 * @return the first SUT with that name, if the SUT is present 
@@ -80,11 +83,9 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	/**
 	 * UPDATE SUT
 	 */
-	public Boolean updateSUT(Long sutID) {
+	public Boolean updateSUT(SUT sut) {
 		
 		Boolean result = false;
-		
-		SUT sut = readSUT(sutID);
 		
 		 try {
 			 if ( (sut != null) && (sut.getId() != null) ) {

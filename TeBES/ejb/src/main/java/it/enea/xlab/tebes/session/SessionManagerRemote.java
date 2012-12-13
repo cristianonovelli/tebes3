@@ -6,6 +6,9 @@ import javax.ejb.Remote;
 
 @Remote
 public interface SessionManagerRemote {
+
+	// Reactivation (Ripristino)
+	public Session reactivation(Long sessionId);
 	
 	// Create Session
 	public Long createSession(Session session);
@@ -13,9 +16,6 @@ public interface SessionManagerRemote {
 	// Read Session
 	public Session readSession(Long sessionId);
 	public List<Session> readSessionListbyUserId(Long userId);
-	
-	// Update Session
-	public Boolean updateSession(Long sessionId);
 	
 	// Delete Session
 	public Boolean deleteSession(Long sessionId);

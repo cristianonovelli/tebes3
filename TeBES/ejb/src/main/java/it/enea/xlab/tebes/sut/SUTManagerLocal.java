@@ -19,7 +19,7 @@ public interface SUTManagerLocal {
 	// public List<SUT> readSUTListbyUserId(Long userId);
 	
 	// Update SUT
-	public Boolean updateSUT(Long idSUT);
+	public Boolean updateSUT(SUT sut);
 	
 	// Delete SUT
 	public Boolean deleteSUT(Long idSUT);
