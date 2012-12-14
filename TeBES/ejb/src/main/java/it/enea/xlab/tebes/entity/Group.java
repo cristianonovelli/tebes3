@@ -31,7 +31,7 @@ public class Group implements Serializable {
 	private List<User> members;*/
 	//@OneToMany(mappedBy="group",
 	//		cascade = {CascadeType.ALL,CascadeType.MERGE})
-	private List<User> users;
+	//private List<User> users;
 	
 	
 	
@@ -81,12 +81,12 @@ public class Group implements Serializable {
 		this.members = members;
 	}*/
 
-	public List<User> getUsers() {
+/*	public List<User> getUsers() {
 		return users;
 	}
 
 	public void setUser(List<User> users) {
 		this.users = users;
-	}
+	}*/
 }
 
