@@ -1,5 +1,7 @@
 package it.enea.xlab.tebes.entity;
 
+
+
 import it.enea.xlab.tebes.common.Constants;
 
 import java.io.Serializable;
