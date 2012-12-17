@@ -12,6 +12,19 @@
 	
 	<tebes:TestActionList>
 	
+		<tebes:TestAction number="1">
+			
+			<tebes:ActionName>XMLSchema-UBL-T10</tebes:ActionName>
+			<tebes:ActionDescription>UBL Invoice XML Schema Validation.</tebes:ActionDescription>
+			<tebes:Test 
+				lg="taml" 
+				type="TestAssertion" 
+				jumpPrerequisites="true"
+				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml">TA-001_TC-001_TS-001</tebes:Test>
+			
+		</tebes:TestAction>
+	
+	
 		<!-- 
 			Each tebes:TestAction MUST have a @number attribute used to enumerate every action.
 			The N actions will be execute from 1 to N, sequentially, 
@@ -22,7 +35,7 @@
 				- "TestCase" 
 				- "TestSuite" 
 		-->
-		<tebes:TestAction number="1">
+		<tebes:TestAction number="2">
 			
 			<!-- 
 				The following "tebes:ActionName" element can take different values 
@@ -81,17 +94,7 @@
 			
 		</tebes:TestAction>
 		
-		<tebes:TestAction number="2">
-			
-			<tebes:ActionName>BIIRULES-UBL-T10</tebes:ActionName>
-			<tebes:ActionDescription>BII RULES UBL Invoice Schematron Validation.</tebes:ActionDescription>
-			<tebes:Test 
-				lg="taml" 
-				type="TestAssertion" 
-				jumpPrerequisites="true"
-				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-002_bii/TC-001_BII-UBL-T10.xml">TA-003_TC-001_TS-002</tebes:Test>
-			
-		</tebes:TestAction>
+
 
 		<!-- tebes:TestAction number="3">
 			

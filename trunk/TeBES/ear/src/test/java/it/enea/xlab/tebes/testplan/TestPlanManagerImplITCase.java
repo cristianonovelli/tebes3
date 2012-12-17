@@ -174,7 +174,7 @@ public class TestPlanManagerImplITCase {
 		Action a = testPlan.getWorkflow().getActions().get(0);
 		Assert.assertNotNull(a);
 		
-		Assert.assertFalse(a.isJumpTurnedON());
+		Assert.assertTrue(a.isJumpTurnedON());
 	}
 	
 	
