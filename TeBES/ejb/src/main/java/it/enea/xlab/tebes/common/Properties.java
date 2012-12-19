@@ -2,7 +2,7 @@ package it.enea.xlab.tebes.common;
 
 public class Properties {
 
-	// URL
+/*	// URL
 	public static final String TEBES_URL_HOME = "http://www.ubl-italia.org/TeBES/";
 	
 	// User and Test Plan
@@ -22,6 +22,6 @@ public class Properties {
 	//public static final String TEMP_DOC2 = "IT-12345678909";
 	
 	// TAML
-	public static final String TAML_XMLSCHEMA = TeBES_ARTIFACTS_LOCAL_HOME + "xmlschemas/TAML/testAssertionMarkupLanguage.xsd";
+	public static final String TAML_XMLSCHEMA = TeBES_ARTIFACTS_LOCAL_HOME + "xmlschemas/TAML/testAssertionMarkupLanguage.xsd";*/
 
 }
