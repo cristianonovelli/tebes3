@@ -1,6 +1,5 @@
 package it.enea.xlab.tebes.users;
 
-import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.entity.User;
 import javax.naming.InitialContext;
 
@@ -16,8 +15,6 @@ public class UserProfileController {
 		userManagerBean = (UserManagerRemote) ctx.lookup("TeBES-ear/UserManagerImpl/remote");
 	}
 
-	
-	
 	
 	/**
 	 * Sign Up (CREATE) User

@@ -1,8 +1,11 @@
 package it.enea.xlab.tebes.dao;
 
+import java.io.FileNotFoundException;
+
 import org.xlab.file.XLabFileManager;
 
 import it.enea.xlab.tebes.common.Paths;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 
 /**
  * I metodi sviluppati in questo File Manager potrebbero venire sostituiti con un altro tipo di DAO basato su Database
@@ -13,25 +16,25 @@ import it.enea.xlab.tebes.common.Paths;
 public class TeBESDAO {
 
 	
-	public static String url2localLocation(String urlLocation) {
+	public static String url2localLocation(String urlLocation) throws FileNotFoundException {
 		
 		String localLocation = null;
 		String relativeLocation = null;
-		
+
 		// Recognize TeBES home URL 
-		if (urlLocation.startsWith(Paths.TEBES_URL_HOME)) {
+		if (urlLocation.startsWith(PropertiesUtil.getTeBESURL())) {
 			
 			// Get relative URL
-			relativeLocation = urlLocation.substring(Paths.TEBES_URL_HOME.length(), urlLocation.length());
+			relativeLocation = urlLocation.substring(PropertiesUtil.getTeBESURL().length(), urlLocation.length());
 			
 			// Add file system local path
-			localLocation = Paths.TeBES_ARTIFACTS_LOCAL_HOME.concat(relativeLocation);
+			localLocation = PropertiesUtil.getArtifactsPath().concat(relativeLocation);
 			
 			// Verificare che il file o la directory esista
-			if( !XLabFileManager.isPresent(localLocation) ) {
-				localLocation = null;
-				System.out.println("It is NOT present the file or directory related to: " + urlLocation);
-			}
+			if( !XLabFileManager.isFileOrDirectoryPresent(localLocation) ) 
+				throw new FileNotFoundException("Conversion from URL to Local path failed: maybe Test Plan specifies a file not present in TeBES.");
+				
+			
 		}
 		else
 			localLocation = urlLocation;

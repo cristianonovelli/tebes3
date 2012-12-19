@@ -2,7 +2,7 @@ package it.enea.xlab.tebes.common;
 
 public class Paths {
 
-	// URL
+/*	// URL
 	public static final String TEBES_URL_HOME = "http://www.ubl-italia.org/TeBES/";
 	
 	// Path Windows Cristiano 
@@ -22,6 +22,6 @@ public class Paths {
 	
 	
 	// TAML
-	public static final String TAML_XMLSCHEMA = TeBES_ARTIFACTS_LOCAL_HOME + "xmlschemas/TAML/testAssertionMarkupLanguage.xsd";
+	public static final String TAML_XMLSCHEMA = TeBES_ARTIFACTS_LOCAL_HOME + "xmlschemas/TAML/testAssertionMarkupLanguage.xsd";*/
 
 }

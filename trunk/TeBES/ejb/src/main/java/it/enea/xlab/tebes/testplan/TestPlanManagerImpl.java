@@ -163,7 +163,6 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			// Ottengo lista actions
 			NodeList actionNodes = testPlanDOM.getTestActionNodeList();
 
-
 			// Ciclo su ogni azione
 			Element actionElement = null;
 			for (int i = 0; i < actionNodes.getLength(); i++) {
@@ -171,7 +170,6 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				actionElement = (Element) actionNodes.item(i);
 				
 				//String actionId = testPlanDOM.getIdAttribute(actionElement);	
-				
 				int number = new Integer(testPlanDOM.getNumberAttribute(actionElement)).intValue();
 				
 				String name = testPlanDOM.getActionName(actionElement);
@@ -190,9 +188,9 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 					jump = false;
 				
 				String location = testPlanDOM.getLocationAttribute(testNode);
-				
+
 				location = TeBESDAO.url2localLocation(location);
-				
+
 				Action action = new Action(number, name, lg, type, location, value, jump, description);
 				//Long actionId = this.insertAction(action);
 				
@@ -206,7 +204,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 			actionsList = null;
 		}
 

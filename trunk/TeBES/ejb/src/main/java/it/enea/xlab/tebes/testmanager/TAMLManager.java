@@ -4,6 +4,7 @@ import it.enea.xlab.taml.TAML2Java;
 import it.enea.xlab.taml.TAMLDOM;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Paths;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.model.ReportFragment;
@@ -106,17 +107,20 @@ public class TAMLManager extends TestManagerImpl implements TestManagerLocal {
 		TAMLDOM tamlDOM;
 		Hashtable<String, Action> taHashtable = null;
 				
-		// DAO: Retrieving of absolute TAML file path
-		// (nel Test Plan viene recuperato il path relativo
-		// p.es. "TeBES/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml"
-		// a cui viene qui aggiunto	Properties.TeBES_HOME)
-		String absoluteLocation = TeBESDAO.url2localLocation(action.getTestLocation());					
-		System.out.println("pre-TAMLDOM:" + absoluteLocation);
+
+
 		
 		try {
-		
+
+			// DAO: Retrieving of absolute TAML file path
+			// (nel Test Plan viene recuperato il path relativo
+			// p.es. "TeBES/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml"
+			// a cui viene qui aggiunto	la root artifacts delle properties
+			String absoluteLocation = TeBESDAO.url2localLocation(action.getTestLocation());					
+			System.out.println("pre-TAMLDOM:" + absoluteLocation);
+			
 			// Get DOM object from TAML 
-			tamlDOM = new TAMLDOM(absoluteLocation, Paths.TAML_XMLSCHEMA, true);
+			tamlDOM = new TAMLDOM(absoluteLocation, PropertiesUtil.getTAMLXMLSchema(), true);
 
 			// Get TestAssertion Hashtable from TAML
 			taHashtable = t2j.getTestAssertionHashtable(tamlDOM);	
@@ -192,7 +196,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerLocal {
 			String absoluteLocation = TeBESDAO.url2localLocation(action.getTestLocation());					
 			//System.out.println("pre-TAMLDOM:" + absoluteLocation);
 			// Get DOM object from TAML 
-			tamlDOM = new TAMLDOM(absoluteLocation, Paths.TAML_XMLSCHEMA, true);
+			tamlDOM = new TAMLDOM(absoluteLocation, PropertiesUtil.getTAMLXMLSchema(), true);
 
 			// Get TestAssertion Hashtable from TAML
 			taHashtable = t2j.getTestAssertionHashtable(tamlDOM);

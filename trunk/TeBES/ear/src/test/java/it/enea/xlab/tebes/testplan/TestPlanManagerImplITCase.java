@@ -1,15 +1,22 @@
 package it.enea.xlab.tebes.testplan;
 
-import it.enea.xlab.tebes.common.Paths;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.testaction.TestActionManagerImpl;
+
+import java.io.FileNotFoundException;
 import java.util.List;
+
 import javax.naming.InitialContext;
+
 import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.xlab.file.XLabFileManager;
+
 
 
 public class TestPlanManagerImplITCase {
@@ -45,20 +52,21 @@ public class TestPlanManagerImplITCase {
 	
 	/**
 	 * Test1: User Registration
+	 * @throws FileNotFoundException 
 	 */
 	@Test
-	public void t2_setupTestPlan() {
+	public void t2_setupTestPlan() throws FileNotFoundException {
 		
-		Assert.assertEquals(Paths.TeBES_ARTIFACTS_LOCAL_HOME + "users/1/testplans/TP-1.xml", 
-				Paths.TeBES_TESTPLAN_ABSFILENAME);
+		Assert.assertTrue(XLabFileManager.isFileOrDirectoryPresent(PropertiesUtil.getTestPlan1AbsPathName()));
+		
 	}
 	
 
 	@Test
-	public void t3_setupTestPlan() {	
+	public void t3_setupTestPlan() throws FileNotFoundException {	
 		
 		// Get TeBES Test Plan	
-		TestPlan testPlan = testPlanManagerBean.getTestPlanFromXML(Paths.TeBES_TESTPLAN_ABSFILENAME);
+		TestPlan testPlan = testPlanManagerBean.getTestPlanFromXML(PropertiesUtil.getTestPlan1AbsPathName());
 		
 		Assert.assertNotNull(testPlan);
 		Assert.assertEquals("2012-06-13T18:43:00", testPlan.getDatetime());
@@ -97,9 +105,9 @@ public class TestPlanManagerImplITCase {
 
 
 	@Test
-	public void t4_importTestPlan() {	
+	public void t4_importTestPlan() throws NumberFormatException, FileNotFoundException {	
 		
-		Long testPlanId = Paths.TeBES_TESTPLANID;		
+		Long testPlanId = new Long(PropertiesUtil.getTestPlanIdOfUser1());	
 		Assert.assertNotNull(testPlanId);
 		
 		// Read TestPlan
@@ -120,6 +128,7 @@ public class TestPlanManagerImplITCase {
 		
 		// Get Actions from XML source (anche se il testplan è già stato importato)
 		List<Action> actionList = testPlanManagerBean.getActionsFromXML(testPlan.getId());
+		Assert.assertNotNull(actionList);
 		Assert.assertTrue(actionList.size() > 0);	
 		
 		// Per ogni Action dovrei persisterla e attaccarla al workflow per poi persistere il tutto
@@ -157,10 +166,10 @@ public class TestPlanManagerImplITCase {
 	
 		
 	@Test
-	public void t5_readTestPlan() {	
+	public void t5_readTestPlan() throws NumberFormatException, FileNotFoundException {	
 
 		// Read TestPlan
-		TestPlan testPlan = testPlanManagerBean.readTestPlan(Paths.TeBES_TESTPLANID);
+		TestPlan testPlan = testPlanManagerBean.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
 		//findTestPlanByTestPlanId(Properties.TeBES_TESTPLANID);
 		Assert.assertNotNull(testPlan);
 		
@@ -179,9 +188,9 @@ public class TestPlanManagerImplITCase {
 	
 	
 	@Test
-	public void t6_execution() {	
+	public void t6_execution() throws NumberFormatException, FileNotFoundException {	
 	
-		TestPlan testPlan = testPlanManagerBean.readTestPlan(Paths.TeBES_TESTPLANID);
+		TestPlan testPlan = testPlanManagerBean.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
 		TestActionManagerImpl actionManager = new TestActionManagerImpl(); 
 		
 		Assert.assertNotNull(actionManager);
