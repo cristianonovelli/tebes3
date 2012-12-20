@@ -32,7 +32,7 @@ public class Session implements Serializable {
 	/*
 	 *  Una sessione è relativa a:
 	 *  1 user
-	 *  1 sut
+	 *  1 sut (o più sut)
 	 *  1 piano di test
 	 *  devo capire se unirli con delle merge o join 
 	 *  quando una sessione viene cancellata gli oggetti a cui fa riferimento rimangono
