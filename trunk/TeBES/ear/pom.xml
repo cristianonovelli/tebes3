@@ -77,6 +77,18 @@
 						</properties>
 					</configuration>
 					<wait>false</wait>
+					 <deployer>
+                            <type>installed</type>
+                            <deployables>
+                                <deployable>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <type>ear</type>
+                                    <pingURL>http://localhost:8080/TeBES-war/index.jsf</pingURL>
+                                    <pingTimeout>30000</pingTimeout>
+                                </deployable>
+                            </deployables>
+                        </deployer>
 				</configuration>
 				<executions>
 					<execution>

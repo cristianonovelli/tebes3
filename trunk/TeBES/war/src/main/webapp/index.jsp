@@ -7,14 +7,14 @@
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="eng">
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-            <title><h:outputText value="#{msgs.sitename}"/></title>
+            <title><!--<h:outputText value="#{msgs.sitename}"/>--></title>
         </head>
         <body>
             <div id="main">
                 <div id="header">
                 </div>
                 <div id="content">
-                    <h:form id="mainForm">
+                    <!--<h:form id="mainForm">
                         <h:panelGrid columns="3">
                             <h:outputLabel for="name" value="#{msgs.entername}" />
                             <h:inputText id="name" value="#{HelloController.name}" required="true" requiredMessage=" <- #{errs.nameRequired}"/>
@@ -22,6 +22,8 @@
                         </h:panelGrid>
                         <h:commandButton value="#{msgs.send}" action="#{HelloController.sendAction}"/>
                     </h:form>
+                    -->
+                    <h1>Hello TeBES!</h1>
                 </div>
                 <div id="footer">
                 </div>
