@@ -42,7 +42,7 @@ public class PropertiesUtil {
 	 */
 	public static String getArtifactsPath() {
 		
-		String artifactsPath = getConfiguration().getString("artifacts_path");
+		String artifactsPath = getConfiguration().getString("artifacts.path");
 		
 		if (artifactsPath.endsWith("TeBES"))
 			artifactsPath = artifactsPath.concat(SLASH);
@@ -58,7 +58,7 @@ public class PropertiesUtil {
 	 */
 	public static String getTeBESURL() {
 		
-		String tebesURL = getConfiguration().getString("tebes_url");
+		String tebesURL = getConfiguration().getString("tebes.url");
 		
 		if (!tebesURL.endsWith(SLASH))
 			tebesURL = tebesURL.concat(SLASH);
@@ -70,7 +70,7 @@ public class PropertiesUtil {
 	public static String getUsersDir() throws FileNotFoundException {
 
 		String artifactsRootPath = PropertiesUtil.getArtifactsPath();
-		String usersDir = getConfiguration().getString("users_dir");
+		String usersDir = getConfiguration().getString("users.dir");
 		
 		String result = artifactsRootPath.concat(usersDir);
 		
@@ -86,7 +86,7 @@ public class PropertiesUtil {
 	public static String getUser1Dir() throws FileNotFoundException {
 		
 		String absUsersDir = PropertiesUtil.getUsersDir();	
-		String user1Id = getConfiguration().getString("user1_id");
+		String user1Id = getConfiguration().getString("user1.id");
 		
 		String result = absUsersDir.concat(user1Id);
 		
@@ -102,7 +102,7 @@ public class PropertiesUtil {
 	public static String getTestPlanDir() throws FileNotFoundException {
 		
 		String absUser1Dir = PropertiesUtil.getUser1Dir();
-		String testPlansDir = getConfiguration().getString("testplans_dir");
+		String testPlansDir = getConfiguration().getString("testplans.dir");
 		
 		String result = absUser1Dir.concat(testPlansDir);
 		
@@ -118,7 +118,7 @@ public class PropertiesUtil {
 	public static String getTestPlan1AbsPathName() throws FileNotFoundException {
 		
 		String absTestPlanDir = PropertiesUtil.getTestPlanDir();	
-		String testPlan1FileName = getConfiguration().getString("user1_testplan");
+		String testPlan1FileName = getConfiguration().getString("user1.testplan");
 		
 		String result = absTestPlanDir.concat(testPlan1FileName);
 		
@@ -131,7 +131,7 @@ public class PropertiesUtil {
 
 	public static String getTestPlanIdOfUser1() throws FileNotFoundException {
 		
-		return  getConfiguration().getString("user1_testplanid");
+		return  getConfiguration().getString("user1.testplanid");
 	}	
 	
 	/**
@@ -142,9 +142,9 @@ public class PropertiesUtil {
 	public static String getTAMLXMLSchema() throws FileNotFoundException {
 		
 		String artifactsRootPath = PropertiesUtil.getArtifactsPath();
-		String xmlschemaDir = getConfiguration().getString("xmlschemas_dir");
-		String tamlDir = getConfiguration().getString("taml_dir");
-		String tamlXMLSchema = getConfiguration().getString("taml_xmlschema");
+		String xmlschemaDir = getConfiguration().getString("xmlschemas.dir");
+		String tamlDir = getConfiguration().getString("taml.dir");
+		String tamlXMLSchema = getConfiguration().getString("taml.xmlschema");
 		
 		String result = artifactsRootPath.concat(xmlschemaDir).concat(SLASH).concat(tamlDir).concat(SLASH).concat(tamlXMLSchema);
 		
