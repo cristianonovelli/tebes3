@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 
 import org.xlab.file.XLabFileManager;
 
-import it.enea.xlab.tebes.common.Paths;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 
 /**

@@ -129,9 +129,9 @@ public class PropertiesUtil {
 			throw new FileNotFoundException();
 	}	
 
-	public static String getTestPlanIdOfUser1() throws FileNotFoundException {
+	public static Long getTestPlanIdOfUser1() throws FileNotFoundException {
 		
-		return  getConfiguration().getString("user1.testplanid");
+		return  getConfiguration().getLong("user1.testplanid");
 	}	
 	
 	/**
