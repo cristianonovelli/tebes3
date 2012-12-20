@@ -35,7 +35,20 @@ public class TestPlanManagerImplITCase {
 		// Create EJB linked to interface UserManagerRemote
 		InitialContext ctx = new InitialContext();
 		//InitialContext ctx = ContextUtils.getInitialContext("http://winter.bologna.enea.it:8081");
-		testPlanManagerBean = (TestPlanManagerRemote) ctx.lookup("TeBES-ear/TestPlanManagerImpl/remote");	
+		
+		//try {
+			
+			testPlanManagerBean = (TestPlanManagerRemote) ctx.lookup("TeBES-ear/TestPlanManagerImpl/remote");	
+		
+		
+/*		    Thread.sleep(2000);
+		      
+		      
+		      
+		  } catch(javax.naming.NameNotFoundException ex) {
+		      Thread.currentThread().interrupt();
+		  }
+		*/
 	}
 	
 
@@ -107,7 +120,13 @@ public class TestPlanManagerImplITCase {
 	@Test
 	public void t4_importTestPlan() throws NumberFormatException, FileNotFoundException {	
 		
-		Long testPlanId = new Long(PropertiesUtil.getTestPlanIdOfUser1());	
+		
+		
+		
+		Long testPlanId = PropertiesUtil.getTestPlanIdOfUser1();
+
+
+		
 		Assert.assertNotNull(testPlanId);
 		
 		// Read TestPlan
