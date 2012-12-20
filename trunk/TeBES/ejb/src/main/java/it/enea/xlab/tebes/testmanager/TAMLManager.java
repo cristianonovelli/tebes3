@@ -3,7 +3,6 @@ package it.enea.xlab.tebes.testmanager;
 import it.enea.xlab.taml.TAML2Java;
 import it.enea.xlab.taml.TAMLDOM;
 import it.enea.xlab.tebes.common.Constants;
-import it.enea.xlab.tebes.common.Paths;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
