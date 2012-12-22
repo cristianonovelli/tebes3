@@ -44,13 +44,10 @@ public class PropertiesUtil {
 		
 		String artifactsPath = getConfiguration().getString("artifacts.path");
 		
-		if (artifactsPath.endsWith("TeBES"))
+		if (!artifactsPath.endsWith(SLASH))
 			artifactsPath = artifactsPath.concat(SLASH);
 
-		if (artifactsPath.endsWith("/TeBES/"))
-			return artifactsPath;
-		else
-			return null;
+		return artifactsPath;
 	}
 	
 	/**
