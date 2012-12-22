@@ -77,7 +77,7 @@
 						</properties>
 					</configuration>
 					<wait>false</wait>
-					 <deployer>
+					  <deployer>
                             <type>installed</type>
                             <deployables>
                                 <deployable>
@@ -95,7 +95,7 @@
 						<id>start-container</id>
 						<phase>pre-integration-test</phase>
 						<goals>
-							<!--  goal>start</goal -->
+							<!-- >goal>start</goal -->
 							<goal>deploy</goal>
 						</goals>
 					</execution>
