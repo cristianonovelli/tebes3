@@ -1,18 +1,16 @@
 package it.enea.xlab.tebes.users;
 
+import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.entity.User;
-import javax.naming.InitialContext;
 
 public class UserProfileController {
 
 	private UserManagerRemote userManagerBean;
 	
-	
-	
+
 	public UserProfileController() throws Exception {
 
-		InitialContext ctx = new InitialContext();
-		userManagerBean = (UserManagerRemote) ctx.lookup("TeBES-ear/UserManagerImpl/remote");
+		userManagerBean = JNDIServices.getUserManagerService();
 	}
 
 	

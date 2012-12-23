@@ -1,9 +1,8 @@
 package it.enea.xlab.tebes.sut;
 
+import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
-
-import javax.naming.InitialContext;
 
 public class SUTManagerController implements SUTManagerRemote {
 
@@ -11,8 +10,7 @@ public class SUTManagerController implements SUTManagerRemote {
 	
 	public SUTManagerController() throws Exception {
 
-		InitialContext ctx = new InitialContext();
-		sutManagerBean = (SUTManagerRemote) ctx.lookup("TeBES-ear/SUTManagerImpl/remote");
+		sutManagerBean = JNDIServices.getSUTManagerService();
 	}
 
 

@@ -1,10 +1,9 @@
 package it.enea.xlab.tebes.session;
 
+import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.entity.Session;
 
 import java.util.List;
-
-import javax.naming.InitialContext;
 
 public class SessionManagerController implements SessionManagerRemote {
 
@@ -12,8 +11,7 @@ public class SessionManagerController implements SessionManagerRemote {
 	
 	public SessionManagerController() throws Exception {
 
-		InitialContext ctx = new InitialContext();
-		sessionManagerBean = (SessionManagerRemote) ctx.lookup("TeBES-ear/SessionManagerImpl/remote");
+		sessionManagerBean = JNDIServices.getSessionManagerService();
 	}
 
 	public Session reactivation(Long sessionId) {
