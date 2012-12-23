@@ -1,11 +1,10 @@
 package it.enea.xlab.tebes.users;
 
-import java.util.List;
-
+import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.User;
 
-import javax.naming.InitialContext;
+import java.util.List;
 
 public class UserAdminController {
 
@@ -15,8 +14,9 @@ public class UserAdminController {
 	
 	public UserAdminController() throws Exception {
 
-		InitialContext ctx = new InitialContext();
-		userManagerBean = (UserManagerRemote) ctx.lookup("TeBES-ear/UserManagerImpl/remote");
+		//InitialContext ctx = new InitialContext();
+		userManagerBean = JNDIServices.getUserManagerService();
+				//(UserManagerRemote) ctx.lookup("TeBES-ear/UserManagerImpl/remote");
 	}
 
 	

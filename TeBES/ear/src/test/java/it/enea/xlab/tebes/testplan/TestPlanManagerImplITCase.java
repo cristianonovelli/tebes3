@@ -9,8 +9,6 @@ import it.enea.xlab.tebes.testaction.TestActionManagerImpl;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import javax.naming.InitialContext;
-
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -22,56 +20,27 @@ import org.xlab.file.XLabFileManager;
 public class TestPlanManagerImplITCase {
 
 	// Interface Declaration
-	TestPlanManagerRemote testPlanManagerBean;
-	
+	//TestPlanManagerRemote testPlanManagerBean;
+	TestPlanManagerController testPlanController;
 
 	
-	/**
-	 * Before (Test1): Setup 
-	 */
 	@Before
 	public void before() throws Exception {
-
-		// Create EJB linked to interface UserManagerRemote
-		InitialContext ctx = new InitialContext();
-		//InitialContext ctx = ContextUtils.getInitialContext("http://winter.bologna.enea.it:8081");
 		
-		//try {
-			
-			testPlanManagerBean = (TestPlanManagerRemote) ctx.lookup("TeBES-ear/TestPlanManagerImpl/remote");	
-		
-		
-/*		    Thread.sleep(2000);
-		      
-		      
-		      
-		  } catch(javax.naming.NameNotFoundException ex) {
-		      Thread.currentThread().interrupt();
-		  }
-		*/
+		testPlanController = new TestPlanManagerController();
 	}
 	
-
-	
-	/**
-	 * Test1: User Registration
-	 */
 	@Test
 	public void t1_check() {
 		
-		Assert.assertNotNull(testPlanManagerBean);	
+		Assert.assertNotNull(testPlanController);	
 	}
 
 	
-	/**
-	 * Test1: User Registration
-	 * @throws FileNotFoundException 
-	 */
 	@Test
 	public void t2_setupTestPlan() throws FileNotFoundException {
 		
-		Assert.assertTrue(XLabFileManager.isFileOrDirectoryPresent(PropertiesUtil.getTestPlan1AbsPathName()));
-		
+		Assert.assertTrue(XLabFileManager.isFileOrDirectoryPresent(PropertiesUtil.getTestPlan1AbsPathName()));	
 	}
 	
 
@@ -79,14 +48,14 @@ public class TestPlanManagerImplITCase {
 	public void t3_setupTestPlan() throws FileNotFoundException {	
 		
 		// Get TeBES Test Plan	
-		TestPlan testPlan = testPlanManagerBean.getTestPlanFromXML(PropertiesUtil.getTestPlan1AbsPathName());
+		TestPlan testPlan = testPlanController.getTestPlanFromXML(PropertiesUtil.getTestPlan1AbsPathName());
 		
 		Assert.assertNotNull(testPlan);
 		Assert.assertEquals("2012-06-13T18:43:00", testPlan.getDatetime());
 		Assert.assertEquals("draft", testPlan.getState());
 		
 		// Create TestPlan
-		Long testPlanId = testPlanManagerBean.createTestPlan(testPlan);
+		Long testPlanId = testPlanController.createTestPlan(testPlan);
 		Assert.assertNotNull(testPlanId);
 		
 		Boolean updating = false;
@@ -94,7 +63,7 @@ public class TestPlanManagerImplITCase {
 		// Update TestPlan
 		if (testPlanId < 0) {
 			testPlan.setState("updated");
-			List<TestPlan> testPlanList = testPlanManagerBean.readTestPlanByUserIdAndDatetime(testPlan.getUserId(), testPlan.getDatetime());
+			List<TestPlan> testPlanList = testPlanController.readTestPlanByUserIdAndDatetime(testPlan.getUserId(), testPlan.getDatetime());
 			
 			
 			if ( (testPlanList != null) && (testPlanList.size() > 0) ) {
@@ -107,7 +76,7 @@ public class TestPlanManagerImplITCase {
 				updatedTP.setState(testPlan.getState());
 				updatedTP.setLocation(testPlan.getLocation());
 
-				updating = testPlanManagerBean.updateTestPlan(updatedTP);
+				updating = testPlanController.updateTestPlan(updatedTP);
 			}
 		}
 		
@@ -130,23 +99,23 @@ public class TestPlanManagerImplITCase {
 		Assert.assertNotNull(testPlanId);
 		
 		// Read TestPlan
-		TestPlan testPlan = testPlanManagerBean.readTestPlan(testPlanId);
+		TestPlan testPlan = testPlanController.readTestPlan(testPlanId);
 		Assert.assertEquals(testPlanId, testPlan.getId());
 		
 		ActionWorkflow workflow = new ActionWorkflow();
 		workflow.setCommnet("from create-drop, 1st round of update");
-		Long workflowId = testPlanManagerBean.insertWorkflow(workflow, testPlan.getId());
+		Long workflowId = testPlanController.insertWorkflow(workflow, testPlan.getId());
 		Assert.assertNotNull(workflowId);
 		
 		if (workflowId > 0) {
-			workflow = testPlanManagerBean.readWorkflow(workflowId);
+			workflow = testPlanController.readWorkflow(workflowId);
 		} else
 			workflow = testPlan.getWorkflow();
 		
 		Assert.assertNotNull(workflow);
 		
 		// Get Actions from XML source (anche se il testplan è già stato importato)
-		List<Action> actionList = testPlanManagerBean.getActionsFromXML(testPlan.getId());
+		List<Action> actionList = testPlanController.getActionsFromXML(testPlan.getId());
 		Assert.assertNotNull(actionList);
 		Assert.assertTrue(actionList.size() > 0);	
 		
@@ -155,15 +124,15 @@ public class TestPlanManagerImplITCase {
 		Long id_action;
 		for (int k=0;k<actionList.size();k++) {
 			
-			id_action = testPlanManagerBean.createAction(actionList.get(k));
+			id_action = testPlanController.createAction(actionList.get(k));
 			if (id_action > 0) {
 				
-				Action action = testPlanManagerBean.readAction(id_action);
+				Action action = testPlanController.readAction(id_action);
 				Assert.assertNotNull(action);
 		
 				Assert.assertTrue(workflow.getId() > 0);
 				
-				testPlanManagerBean.addActionToWorkflow(action.getId(), workflow.getId());
+				testPlanController.addActionToWorkflow(action.getId(), workflow.getId());
 			}
 		}
 		
@@ -172,14 +141,14 @@ public class TestPlanManagerImplITCase {
 		
 			// Update workflow
 			workflow.setCommnet("2 round of update or more");
-			Boolean updating = testPlanManagerBean.updateWorkflow(workflow);
+			Boolean updating = testPlanController.updateWorkflow(workflow);
 			Assert.assertTrue(updating);
 		}
 		
 		// aggiunge il workflow al test plan se non esiste, altrimenti lo aggiorna
-		testPlanManagerBean.addWorkflowToTestPlan(workflow.getId(), testPlan.getId());
+		testPlanController.addWorkflowToTestPlan(workflow.getId(), testPlan.getId());
 		
-		testPlan = testPlanManagerBean.readTestPlan(testPlan.getId());
+		testPlan = testPlanController.readTestPlan(testPlan.getId());
 		Assert.assertTrue(testPlan.getWorkflow().getActions().size() > 0);
 	}
 	
@@ -188,7 +157,7 @@ public class TestPlanManagerImplITCase {
 	public void t5_readTestPlan() throws NumberFormatException, FileNotFoundException {	
 
 		// Read TestPlan
-		TestPlan testPlan = testPlanManagerBean.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
+		TestPlan testPlan = testPlanController.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
 		//findTestPlanByTestPlanId(Properties.TeBES_TESTPLANID);
 		Assert.assertNotNull(testPlan);
 		
@@ -209,7 +178,7 @@ public class TestPlanManagerImplITCase {
 	@Test
 	public void t6_execution() throws NumberFormatException, FileNotFoundException {	
 	
-		TestPlan testPlan = testPlanManagerBean.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
+		TestPlan testPlan = testPlanController.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
 		TestActionManagerImpl actionManager = new TestActionManagerImpl(); 
 		
 		Assert.assertNotNull(actionManager);
