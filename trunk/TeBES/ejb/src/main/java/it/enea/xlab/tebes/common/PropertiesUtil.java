@@ -1,12 +1,9 @@
 
 package it.enea.xlab.tebes.common;
 
-import java.io.FileNotFoundException;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
-import org.xlab.file.XLabFileManager;
 
 /**
  * @author fulvio
@@ -25,6 +22,7 @@ public class PropertiesUtil {
 	
 	private static String SLASH = "/";
 	
+	
 	private static org.apache.commons.configuration.Configuration getConfiguration() {
 		if (configuration == null) {
 			try {
@@ -35,6 +33,7 @@ public class PropertiesUtil {
 		}
 		return configuration;
 	}
+	
 	
 	/**
 	 * Get XML Artifacts Path
@@ -50,6 +49,7 @@ public class PropertiesUtil {
 		return artifactsPath;
 	}
 	
+	
 	/**
 	 * Get TeBES home final URL
 	 */
@@ -64,7 +64,7 @@ public class PropertiesUtil {
 	}
 	
 	
-	public static String getUsersDir() throws FileNotFoundException {
+	public static String getUsersDir() {
 
 		String artifactsRootPath = PropertiesUtil.getArtifactsPath();
 		String usersDir = getConfiguration().getString("users.dir");
@@ -74,13 +74,11 @@ public class PropertiesUtil {
 		if (!result.endsWith(SLASH))
 			result = result.concat(SLASH);
 		
-		if (XLabFileManager.isFileOrDirectoryPresent(result))
-			return result;
-		else 
-			throw new FileNotFoundException();
+		return result;
 	}
 	
-	public static String getUser1Dir() throws FileNotFoundException {
+	
+	public static String getUser1Dir() {
 		
 		String absUsersDir = PropertiesUtil.getUsersDir();	
 		String user1Id = getConfiguration().getString("user1.id");
@@ -90,13 +88,11 @@ public class PropertiesUtil {
 		if (!result.endsWith(SLASH))
 			result = result.concat(SLASH);
 		
-		if (XLabFileManager.isFileOrDirectoryPresent(result))
-			return result;
-		else 
-			throw new FileNotFoundException();
+		return result;
 	}	
 	
-	public static String getTestPlanDir() throws FileNotFoundException {
+	
+	public static String getTestPlanDir() {
 		
 		String absUser1Dir = PropertiesUtil.getUser1Dir();
 		String testPlansDir = getConfiguration().getString("testplans.dir");
@@ -106,37 +102,31 @@ public class PropertiesUtil {
 		if (!result.endsWith(SLASH))
 			result = result.concat(SLASH);
 		
-		if (XLabFileManager.isFileOrDirectoryPresent(result))
-			return result;
-		else 
-			throw new FileNotFoundException();
+		return result;
 	}	
 	
-	public static String getTestPlan1AbsPathName() throws FileNotFoundException {
+	
+	public static String getTestPlan1AbsPathName() {
 		
 		String absTestPlanDir = PropertiesUtil.getTestPlanDir();	
 		String testPlan1FileName = getConfiguration().getString("user1.testplan");
 		
 		String result = absTestPlanDir.concat(testPlan1FileName);
 		
-		
-		if (XLabFileManager.isFileOrDirectoryPresent(result))
-			return result;
-		else 
-			throw new FileNotFoundException();
+		return result;
 	}	
 
-	public static Long getTestPlanIdOfUser1() throws FileNotFoundException {
+	
+	public static Long getTestPlanIdOfUser1() {
 		
 		return  getConfiguration().getLong("user1.testplanid");
 	}	
 	
+	
 	/**
 	 * Get TAML XML Schema testAssertionMarkupLanguage.xsd
-	 * 
-	 * @throws FileNotFoundException
 	 */
-	public static String getTAMLXMLSchema() throws FileNotFoundException {
+	public static String getTAMLXMLSchema() {
 		
 		String artifactsRootPath = PropertiesUtil.getArtifactsPath();
 		String xmlschemaDir = getConfiguration().getString("xmlschemas.dir");
@@ -145,10 +135,7 @@ public class PropertiesUtil {
 		
 		String result = artifactsRootPath.concat(xmlschemaDir).concat(SLASH).concat(tamlDir).concat(SLASH).concat(tamlXMLSchema);
 		
-		if (XLabFileManager.isFileOrDirectoryPresent(result))
-			return result;
-		else 
-			throw new FileNotFoundException();
+		return result;
 	}
 	
 }
