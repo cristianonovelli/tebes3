@@ -31,11 +31,15 @@ public class JNDIServices {
 		if (userManager == null) {
 			try {
 				InitialContext ctx = new InitialContext();
+				
 				userManager = (UserManagerRemote) ctx.lookup(UserManagerServiceName);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		
+		
 		return userManager;
 	}
 
