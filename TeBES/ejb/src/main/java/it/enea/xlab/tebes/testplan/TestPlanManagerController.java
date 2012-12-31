@@ -1,6 +1,12 @@
 package it.enea.xlab.tebes.testplan;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.entity.Action;
@@ -52,7 +58,7 @@ public class TestPlanManagerController {
 		return testPlanManagerService.readWorkflow(workflowId);
 	}
 
-	public List<Action> getActionsFromXML(Long id) {
+	public List<Action> getActionsFromXML(Long id) throws FileNotFoundException, SAXException, ParserConfigurationException, IOException {
 		
 		return testPlanManagerService.getActionsFromXML(id);
 	}

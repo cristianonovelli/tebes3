@@ -7,13 +7,17 @@ import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.testaction.TestActionManagerImpl;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.xlab.file.XLabFileManager;
+import org.xml.sax.SAXException;
 
 
 
@@ -38,17 +42,28 @@ public class TestPlanManagerImplITCase {
 
 	
 	@Test
-	public void t2_setupTestPlan() throws FileNotFoundException {
+	public void t2_setupTestPlan() {
 		
-		Assert.assertTrue(XLabFileManager.isFileOrDirectoryPresent(PropertiesUtil.getTestPlan1AbsPathName()));	
+		try {
+			Assert.assertTrue(XLabFileManager.isFileOrDirectoryPresent(PropertiesUtil.getTestPlan1AbsPathName()));
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}	
 	}
 	
 
 	@Test
-	public void t3_setupTestPlan() throws FileNotFoundException {	
+	public void t3_setupTestPlan() {	
 		
 		// Get TeBES Test Plan	
-		TestPlan testPlan = testPlanController.getTestPlanFromXML(PropertiesUtil.getTestPlan1AbsPathName());
+		TestPlan testPlan = null;
+		try {
+			testPlan = testPlanController.getTestPlanFromXML(PropertiesUtil.getTestPlan1AbsPathName());
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
 		
 		Assert.assertNotNull(testPlan);
 		Assert.assertEquals("2012-06-13T18:43:00", testPlan.getDatetime());
@@ -115,7 +130,16 @@ public class TestPlanManagerImplITCase {
 		Assert.assertNotNull(workflow);
 		
 		// Get Actions from XML source (anche se il testplan è già stato importato)
-		List<Action> actionList = testPlanController.getActionsFromXML(testPlan.getId());
+		List<Action> actionList;
+		
+		try {
+			actionList = testPlanController.getActionsFromXML(testPlan.getId());
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			actionList = null;
+		} 
+		
 		Assert.assertNotNull(actionList);
 		Assert.assertTrue(actionList.size() > 0);	
 		

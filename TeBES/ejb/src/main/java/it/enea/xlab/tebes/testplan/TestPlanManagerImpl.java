@@ -6,6 +6,8 @@ import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.TestPlan;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
@@ -16,10 +18,12 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 @Stateless
 @Interceptors({Profile.class})
@@ -149,65 +153,55 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 
 	
-	public Vector<Action> getActionsFromXML(Long testPlanId) {
+	public Vector<Action> getActionsFromXML(Long testPlanId) throws SAXException, ParserConfigurationException, IOException {
 		
 		Vector<Action> actionsList = new Vector<Action>();
 		
 		TestPlan testPlan = readTestPlan(testPlanId);
 				//findTestPlanByTestPlanId(testPlanId);
-		
-		try {
-			TestPlanDOM testPlanDOM = new TestPlanDOM();
-			testPlanDOM.setContent(testPlan.getXml());
-			
-			// Ottengo lista actions
-			NodeList actionNodes = testPlanDOM.getTestActionNodeList();
-
-			// Ciclo su ogni azione
-			Element actionElement = null;
-			for (int i = 0; i < actionNodes.getLength(); i++) {
-				
-				actionElement = (Element) actionNodes.item(i);
-				
-				//String actionId = testPlanDOM.getIdAttribute(actionElement);	
-				int number = new Integer(testPlanDOM.getNumberAttribute(actionElement)).intValue();
-				
-				String name = testPlanDOM.getActionName(actionElement);
-				String description = testPlanDOM.getActionDescription(actionElement);				
-				
-				Node testNode = testPlanDOM.getTestNode(actionElement);
-				String lg = testPlanDOM.getLgAttribute(testNode);
 	
-				String type = testPlanDOM.getTypeAttribute(testNode);		
-				String value = testNode.getFirstChild().getNodeValue();				
-				String jumpString = testPlanDOM.getJumpAttribute(testNode);		
-				boolean jump;
-				if (jumpString.equals("true"))
-					jump = true;
-				else 
-					jump = false;
-				
-				String location = testPlanDOM.getLocationAttribute(testNode);
+		TestPlanDOM testPlanDOM = new TestPlanDOM();
+		testPlanDOM.setContent(testPlan.getXml());
+		
+		// Ottengo lista actions
+		NodeList actionNodes = testPlanDOM.getTestActionNodeList();
 
-				location = TeBESDAO.url2localLocation(location);
+		// Ciclo su ogni azione
+		Element actionElement = null;
+		for (int i = 0; i < actionNodes.getLength(); i++) {
+			
+			actionElement = (Element) actionNodes.item(i);
+			
+			//String actionId = testPlanDOM.getIdAttribute(actionElement);	
+			int number = new Integer(testPlanDOM.getNumberAttribute(actionElement)).intValue();
+			
+			String name = testPlanDOM.getActionName(actionElement);
+			String description = testPlanDOM.getActionDescription(actionElement);				
+			
+			Node testNode = testPlanDOM.getTestNode(actionElement);
+			String lg = testPlanDOM.getLgAttribute(testNode);
 
-				Action action = new Action(number, name, lg, type, location, value, jump, description);
-				//Long actionId = this.insertAction(action);
-				
-				
-				
-				System.out.println(action.getActionSummaryString());
-				
-				actionsList.add(action);
-				
-			}	
+			String type = testPlanDOM.getTypeAttribute(testNode);		
+			String value = testNode.getFirstChild().getNodeValue();				
+			String jumpString = testPlanDOM.getJumpAttribute(testNode);		
+			boolean jump;
+			if (jumpString.equals("true"))
+				jump = true;
+			else 
+				jump = false;
+			
+			String location = testPlanDOM.getLocationAttribute(testNode);
 
+			location = TeBESDAO.url2localLocation(location);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			actionsList = null;
-		}
-
+			Action action = new Action(number, name, lg, type, location, value, jump, description);
+			//Long actionId = this.insertAction(action);
+			
+			System.out.println(action.getActionSummaryString());
+			
+			actionsList.add(action);
+			
+		}	
 		
 		return actionsList;
 	}
