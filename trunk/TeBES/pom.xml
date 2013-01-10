@@ -68,6 +68,74 @@
 		</extensions>
     </build>
 
+	<!--  profiles>
+		<profile>
+			<id>ITs</id>
+
+		</profile>
+		<profile>
+			<id>dev</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete
+											file="src/main/resources/META-INF/spring/database.properties" />
+										<copy file="configurations/dev/database.developer.properties"
+											tofile="src/main/resources/META-INF/spring/database.properties" />
+										<delete
+											file="src/main/resources/META-INF/spring/applicationContext.xml" />
+										<copy file="configurations/dev/applicationContext-dev.xml"
+											tofile="src/main/resources/META-INF/spring/applicationContext.xml" />
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>production</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete
+											file="src/main/resources/META-INF/spring/database.properties" />
+										<copy
+											file="configurations/production/database.production.properties"
+											tofile="src/main/resources/META-INF/spring/database.properties" />
+										<delete
+											file="src/main/resources/META-INF/spring/applicationContext.xml" />
+										<copy file="configurations/dev/applicationContext-production.xml"
+											tofile="src/main/resources/META-INF/spring/applicationContext.xml" />
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles -->
+
     <dependencyManagement>
         <dependencies>
             <dependency>
