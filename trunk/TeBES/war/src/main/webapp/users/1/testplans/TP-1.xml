@@ -30,7 +30,7 @@
 			The N actions will be execute from 1 to N, sequentially, 
 			excepted different specification expressed through the tebes:TestPlan/tebes:Choreography element
 			
-			Each tebes:TestAction MUST have a @type attribute used with one and only one of these values:
+			Each tebes:Test element MUST have a @type attribute used with one and only one of these values:
 				- "TestAssertion" 
 				- "TestCase" 
 				- "TestSuite" 

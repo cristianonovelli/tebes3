@@ -70,10 +70,6 @@
 
 	<!--  profiles>
 		<profile>
-			<id>ITs</id>
-
-		</profile>
-		<profile>
 			<id>dev</id>
 			<build>
 				<plugins>
