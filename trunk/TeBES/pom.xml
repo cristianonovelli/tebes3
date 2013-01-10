@@ -68,7 +68,7 @@
 		</extensions>
     </build>
 
-	<!--  profiles>
+	<profiles>
 		<profile>
 			<id>dev</id>
 			<build>
@@ -84,13 +84,9 @@
 								<configuration>
 									<tasks>
 										<delete
-											file="src/main/resources/META-INF/spring/database.properties" />
-										<copy file="configurations/dev/database.developer.properties"
-											tofile="src/main/resources/META-INF/spring/database.properties" />
-										<delete
-											file="src/main/resources/META-INF/spring/applicationContext.xml" />
-										<copy file="configurations/dev/applicationContext-dev.xml"
-											tofile="src/main/resources/META-INF/spring/applicationContext.xml" />
+											file="ejb/src/main/resources/import.sql.not" />
+										<copy file="config/dev-import.sql.not"
+											tofile="ejb/src/main/resources/import.sql.not" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -114,14 +110,9 @@
 								<configuration>
 									<tasks>
 										<delete
-											file="src/main/resources/META-INF/spring/database.properties" />
-										<copy
-											file="configurations/production/database.production.properties"
-											tofile="src/main/resources/META-INF/spring/database.properties" />
-										<delete
-											file="src/main/resources/META-INF/spring/applicationContext.xml" />
-										<copy file="configurations/dev/applicationContext-production.xml"
-											tofile="src/main/resources/META-INF/spring/applicationContext.xml" />
+											file="ejb/src/main/resources/import.sql.not" />
+										<copy file="config/prod-import.sql.not"
+											tofile="ejb/src/main/resources/import.sql.not" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -130,7 +121,7 @@
 				</plugins>
 			</build>
 		</profile>
-	</profiles -->
+	</profiles>
 
     <dependencyManagement>
         <dependencies>
