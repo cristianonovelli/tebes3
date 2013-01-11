@@ -43,8 +43,20 @@ public class UserAdminController {
 		return userManagerBean.getUserIdList();
 	}
 	
-	// CREATE -> UserProfileManager.Registration
-	
+	// CREATE -> Equivalente a UserProfileManager.signUp MA ASSEGNA ANCHE UN RUOLO DIVERSO DA QUELLO DI DEFAULT
+	/**
+	 * Sign Up (CREATE) User
+	 * @return userId
+	 */
+	public Long createUser(User user, Role role) {
+
+		// persist
+		// join role to user
+		// persist
+		
+		
+		return userManagerBean.createUser(user);
+	}	
 
 	// READ User
 	public User readUser(Long id) {
