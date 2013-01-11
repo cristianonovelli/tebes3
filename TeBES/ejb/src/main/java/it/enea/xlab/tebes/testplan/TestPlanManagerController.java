@@ -19,9 +19,27 @@ public class TestPlanManagerController {
 	
 	// CONTROLLER Constructor
 	public TestPlanManagerController() throws Exception {
-
-		testPlanManagerService = JNDIServices.getTestPlanManagerService();
+		
+		int guard = 0;
+		
+		// To avoid Remote Not Bound exception, we retry to lockup for 5 attempts
+		// waiting 2 seconds between an attempt and another
+		while (guard < 5) {
+			try {
+				
+				// GET SERVICE
+				testPlanManagerService = JNDIServices.getTestPlanManagerService();
+				
+				guard = 5;
+			} catch (Exception e) {
+				
+				guard++;
+				System.out.println("REMOTE NOT BOUND for TestPlanManagerController. Try " + guard + " of 5");				
+				wait(2000);
+			}
+		}	
 	}
+		
 
 	
 	public TestPlan getTestPlanFromXML(String testPlanAbsPathName) {
