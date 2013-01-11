@@ -73,15 +73,15 @@ public class UserManagerImplITCase {
 		//List<Long> groupIdList = userManagerBean.getGroupIdList();
 		//Assert.assertTrue(groupIdList.size() == 1);
 		
-	}
+	/*}
 
 	
-	/**
+	*//**
 	 * Test1: User Registration
 	 * @throws Exception 
-	 */
+	 *//*
 	@Test
-	public void t1_registration() throws Exception {
+	public void t1_registration() throws Exception {*/
 		
 
 		
@@ -117,42 +117,41 @@ public class UserManagerImplITCase {
 		
 		// NOTA: alla regitrazione nella banca dati dovrebbe seguire anche la creazione di una directory di lavoro dove allocare file XML
 
-	}
+	/*}
 	
 	
-	/**
+	*//**
 	 * Test2: User Login
 	 * In questo caso ho richiamato il Controller
 	 * @throws Exception 
-	 */
+	 *//*
 	@Test
-	public void t2_login() throws Exception {
+	public void t2_login() throws Exception {*/
 		
-		User user;
 		
 		// Correct login
 		//UserProfileController userProfileController = new UserProfileController();
-		user = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");
-		Assert.assertNotNull(user);		
+		user1 = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");
+		Assert.assertNotNull(user1);		
 		
 		// Incorrect login because there is wrong password
-		user = userProfileController.login("cristiano.novelli@enea.it", "cristiano");
-		Assert.assertNull(user);
-	}
+		user1 = userProfileController.login("cristiano.novelli@enea.it", "cristiano");
+		Assert.assertNull(user1);
+	/*}
 	
 	
-	/**
+	*//**
 	 * Test3: Set Role into Users
 	 * @throws Exception 
-	 */
+	 *//*
 	@Test
-	public void t3_setRole() throws Exception {
+	public void t3_setRole() throws Exception {*/
 		
 		//userProfileController = new UserProfileController();
-		User user1 = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");
+		user1 = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");
 		Assert.assertTrue(user1.getId() > 0);
 		
-		User user2 = userProfileController.login("arianna.brutti@enea.it", "xpiero");		
+		user2 = userProfileController.login("arianna.brutti@enea.it", "xpiero");		
 		Assert.assertTrue(user2.getId() > 0);
 		
 		
@@ -168,27 +167,27 @@ public class UserManagerImplITCase {
 		adminController.setUserRole(user2, xlabRole);
 		user2 = adminController.readUser(user2.getId());
 		Assert.assertTrue(user2.getRole().getId() > 0);
-	}
+	/*}
 	
 	
-	/**
+	*//**
 	 * Test4: Add SUT to User
 	 * @throws Exception 
-	 */
+	 *//*
 	@Test
-	public void t4_addSUT() throws Exception {
+	public void t4_addSUT() throws Exception {*/
 		
 		//UserProfileController userManagerController = new UserProfileController();
-		User user = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");
-		Assert.assertNotNull(user);
+		user1 = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");
+		Assert.assertNotNull(user1);
 
 		//UserAdminController adminController = new UserAdminController();
-		user = adminController.readUser(user.getId());
+		user1 = adminController.readUser(user1.getId());
 		
 		// Create a generic SUT
 		SUT sut1 = new SUT("sut1", "xmldocument", "XML document uploaded by web interface");
 		sutManagerController = new SUTManagerController();
-		Long idSUT = sutManagerController.createSUT(sut1, user);
+		Long idSUT = sutManagerController.createSUT(sut1, user1);
 		
 		
 		// se ho creato un nuovo SUT lo associo allo User
@@ -197,61 +196,61 @@ public class UserManagerImplITCase {
 			SUT sut = sutManagerController.readSUT(idSUT);
 			Assert.assertNotNull(sut);
 	
-			Assert.assertTrue(user.getId() > 0);
+			Assert.assertTrue(user1.getId() > 0);
 			
-			userProfileController.addSUTToUser(sut.getId(), user.getId());
+			userProfileController.addSUTToUser(sut.getId(), user1.getId());
 		}
 		
-		user = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");	
-		List<SUT> sutList = user.getSutList();
+		user1 = userProfileController.login("cristiano.novelli@enea.it", "xcristiano");	
+		List<SUT> sutList = user1.getSutList();
 		Assert.assertTrue(sutList.size() > 0);
 		
-	}
+	/*}
 	
 	
-	/**
+	*//**
 	 * Test5: Update User
 	 * @throws Exception 
-	 */
+	 *//*
 	@Test
-	public void t5_update() throws Exception {
+	public void t5_update() throws Exception {*/
 		
 		//UserProfileController userMC = new UserProfileController();
-		User user = userProfileController.login("arianna.brutti@enea.it", "xpiero");
-		if ( user == null )
-			user = userProfileController.login("arianna.brutti@enea.it", "xarianna");		
-		Assert.assertNotNull(user);
+		user2 = userProfileController.login("arianna.brutti@enea.it", "xpiero");
+		if ( user2 == null )
+			user2 = userProfileController.login("arianna.brutti@enea.it", "xarianna");		
+		Assert.assertNotNull(user2);
 		
 		
 		// Get System Admin Role
 		Role adminRole = adminController.readRoleByLevel(3);
 		Assert.assertNotNull(adminRole);	
-		user.setRole(adminRole);
+		user2.setRole(adminRole);
 		
 		
 		// Update User
-		user.setPassword("xarianna");
-		Boolean updating = userProfileController.updateUser(user);
+		user2.setPassword("xarianna");
+		Boolean updating = userProfileController.updateUser(user2);
 		Assert.assertTrue(updating);
 		
 		// Check Login and Role
-		user = userProfileController.login("arianna.brutti@enea.it", "xarianna");
-		Assert.assertNotNull(user);		
-		Assert.assertEquals(adminRole.getLevel(), user.getRole().getLevel());
+		user2 = userProfileController.login("arianna.brutti@enea.it", "xarianna");
+		Assert.assertNotNull(user2);		
+		Assert.assertEquals(adminRole.getLevel(), user2.getRole().getLevel());
 		
-	}
+	/*}
 
 
-	/**
+	*//**
 	 * Test6: Delete User
 	 * @throws Exception 
-	 */
+	 *//*
 	@Test
-	public void t6_delete() throws Exception {
+	public void t6_delete() throws Exception {*/
 		
 		// login
 		// UserProfileController userMC = new UserProfileController();
-		User user2 = userProfileController.login("arianna.brutti@enea.it", "xarianna");
+		user2 = userProfileController.login("arianna.brutti@enea.it", "xarianna");
 		
 		if (user2 != null) {
 		

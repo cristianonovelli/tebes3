@@ -6,18 +6,12 @@ import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.testaction.TestActionManagerImpl;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.Test;
 import org.xlab.file.XLabFileManager;
-import org.xml.sax.SAXException;
 
 
 
@@ -32,17 +26,17 @@ public class TestPlanManagerImplITCase {
 	public void before() throws Exception {
 		
 		testPlanController = new TestPlanManagerController();
-	}
+/*	}
 	
 	@Test
-	public void t1_check() {
+	public void t1_check() {*/
 		
 		Assert.assertNotNull(testPlanController);	
-	}
+/*	}
 
 	
 	@Test
-	public void t2_setupTestPlan() {
+	public void t2_setupTestPlan() {*/
 		
 		try {
 			Assert.assertTrue(XLabFileManager.isFileOrDirectoryPresent(PropertiesUtil.getTestPlan1AbsPathName()));
@@ -50,11 +44,11 @@ public class TestPlanManagerImplITCase {
 			
 			e.printStackTrace();
 		}	
-	}
+/*	}
 	
 
 	@Test
-	public void t3_setupTestPlan() {	
+	public void t3_setupTestPlan() {*/	
 		
 		// Get TeBES Test Plan	
 		TestPlan testPlan = null;
@@ -98,23 +92,23 @@ public class TestPlanManagerImplITCase {
 		// se è stato creato, testPlanId è nuovo e > 0
 		// se è stato aggiornato updating è true
 		Assert.assertTrue((testPlanId > 0) || updating);		
-	}
+/*	}
 
 
 	@Test
-	public void t4_importTestPlan() throws NumberFormatException, FileNotFoundException {	
+	public void t4_importTestPlan() throws NumberFormatException, FileNotFoundException {	*/
 		
 		
 		
 		
-		Long testPlanId = PropertiesUtil.getTestPlanIdOfUser1();
+		testPlanId = PropertiesUtil.getTestPlanIdOfUser1();
 
 
 		
 		Assert.assertNotNull(testPlanId);
 		
 		// Read TestPlan
-		TestPlan testPlan = testPlanController.readTestPlan(testPlanId);
+		testPlan = testPlanController.readTestPlan(testPlanId);
 		Assert.assertEquals(testPlanId, testPlan.getId());
 		
 		ActionWorkflow workflow = new ActionWorkflow();
@@ -165,7 +159,7 @@ public class TestPlanManagerImplITCase {
 		
 			// Update workflow
 			workflow.setCommnet("2 round of update or more");
-			Boolean updating = testPlanController.updateWorkflow(workflow);
+			updating = testPlanController.updateWorkflow(workflow);
 			Assert.assertTrue(updating);
 		}
 		
@@ -174,14 +168,14 @@ public class TestPlanManagerImplITCase {
 		
 		testPlan = testPlanController.readTestPlan(testPlan.getId());
 		Assert.assertTrue(testPlan.getWorkflow().getActions().size() > 0);
-	}
+/*	}
 	
 		
 	@Test
-	public void t5_readTestPlan() throws NumberFormatException, FileNotFoundException {	
+	public void t5_readTestPlan() throws NumberFormatException, FileNotFoundException {	*/
 
 		// Read TestPlan
-		TestPlan testPlan = testPlanController.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
+		testPlan = testPlanController.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
 		//findTestPlanByTestPlanId(Properties.TeBES_TESTPLANID);
 		Assert.assertNotNull(testPlan);
 		
@@ -196,13 +190,13 @@ public class TestPlanManagerImplITCase {
 		Assert.assertNotNull(a);
 		
 		Assert.assertTrue(a.isJumpTurnedON());
-	}
+/*	}
 	
 	
 	@Test
-	public void t6_execution() throws NumberFormatException, FileNotFoundException {	
+	public void t6_execution() throws NumberFormatException, FileNotFoundException {*/	
 	
-		TestPlan testPlan = testPlanController.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
+		testPlan = testPlanController.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
 		TestActionManagerImpl actionManager = new TestActionManagerImpl(); 
 		
 		Assert.assertNotNull(actionManager);
@@ -213,12 +207,7 @@ public class TestPlanManagerImplITCase {
 		
 	}
 
-	
-	@Test
-	public void t7_report() {	
-		
-	}
-	
+
 }
 
 

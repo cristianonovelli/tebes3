@@ -23,22 +23,11 @@ public class SUTManagerImplITCase {
 		
 
 		sutManagerController = new SUTManagerController();	
-	}
-
-	
-	/**
-	 * Test1: User + SUT Creation
-	 */
-	@Test
-	public void t1_create() {
 		
 		Assert.assertNotNull(sutManagerController);
 		//sutManagerController.createSUT(sut, user)
 	}
-	
 
-	// Creare un utente
-	
 	
 	
 }
