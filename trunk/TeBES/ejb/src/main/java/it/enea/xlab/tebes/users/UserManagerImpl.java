@@ -91,6 +91,11 @@ public class UserManagerImpl implements UserManagerRemote {
 			return false;
 		
 		try {
+			
+			// TODO Deleting Sut List?
+			
+			
+			
 			eM.remove(user);
 		} catch (IllegalArgumentException e) {
 			return false;
