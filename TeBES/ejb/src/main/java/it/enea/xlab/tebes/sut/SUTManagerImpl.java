@@ -82,6 +82,7 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	
 	/**
 	 * UPDATE SUT
+	 * TODO tocheck
 	 */
 	public Boolean updateSUT(SUT sut) {
 		

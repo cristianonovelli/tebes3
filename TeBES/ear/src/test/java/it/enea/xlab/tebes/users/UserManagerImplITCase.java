@@ -73,15 +73,15 @@ public class UserManagerImplITCase {
 		//List<Long> groupIdList = userManagerBean.getGroupIdList();
 		//Assert.assertTrue(groupIdList.size() == 1);
 		
-	/*}
+	}
 
 	
-	*//**
+	/**
 	 * Test1: User Registration
 	 * @throws Exception 
-	 *//*
+	 */
 	@Test
-	public void t1_registration() throws Exception {*/
+	public void t1_registration() throws Exception {
 		
 
 		

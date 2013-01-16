@@ -11,6 +11,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.xlab.file.XLabFileManager;
 
 
@@ -26,10 +27,10 @@ public class TestPlanManagerImplITCase {
 	public void before() throws Exception {
 		
 		testPlanController = new TestPlanManagerController();
-/*	}
+	}
 	
 	@Test
-	public void t1_check() {*/
+	public void t1_check() {
 		
 		Assert.assertNotNull(testPlanController);	
 /*	}

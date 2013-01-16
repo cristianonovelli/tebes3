@@ -54,6 +54,7 @@ public class UserAdminController {
 		// join role to user
 		// persist
 		
+		// TODO IF ROLE == null THEN standard role
 		
 		return userManagerBean.createUser(user);
 	}	
