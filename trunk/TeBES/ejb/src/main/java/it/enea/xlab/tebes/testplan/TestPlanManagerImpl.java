@@ -45,6 +45,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	 * La createTestPlan crea un nuovo TestPlan solo se non esistono per questo utente TestPlan con lo stesso datetime
 	 * @return id del TestPlan se viene creato
 	 * @return -1 altrimenti
+	 * @return -2 se per esempio
 	 */
 	public Long createTestPlan(TestPlan testPlan) {
 		
