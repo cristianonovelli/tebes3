@@ -16,9 +16,9 @@ public class Constants {
 	public static final String ADMIN_ROLE_DESCRIPTION = "System Administrator Role: he is an advanced user and can add/modify test suites";
 	public static final int ADMIN_ROLE_LEVEL = 3;
 	// standard role
-	public static final String DEVELOPER_ROLE_NAME = "developer_user";
-	public static final String DEVELOPER_ROLE_DESCRIPTION = "Developer Role: he has whole power and permissions on test bed platform";
-	public static final int DEVELOPER_ROLE_LEVEL = 4;
+	public static final String SUPERUSER_ROLE_NAME = "super_user";
+	public static final String SUPERUSER_ROLE_DESCRIPTION = "Super User Role: he has whole power and permissions on test bed platform";
+	public static final int SUPERUSER_ROLE_LEVEL = 4;
 	
 	// Test Languages
 	public static final String XPATH = "http://www.w3.org/TR/xpath20/";

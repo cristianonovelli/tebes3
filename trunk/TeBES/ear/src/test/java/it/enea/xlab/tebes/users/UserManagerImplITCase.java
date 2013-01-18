@@ -50,7 +50,7 @@ public class UserManagerImplITCase {
 		Role role1 = new Role(Constants.STANDARD_ROLE_NAME, Constants.STANDARD_ROLE_DESCRIPTION, Constants.STANDARD_ROLE_LEVEL);
 		Role role2 = new Role(Constants.ADVANCED_ROLE_NAME, Constants.ADVANCED_ROLE_DESCRIPTION, Constants.ADVANCED_ROLE_LEVEL);
 		Role role3 = new Role(Constants.ADMIN_ROLE_NAME, Constants.ADMIN_ROLE_DESCRIPTION, Constants.ADMIN_ROLE_LEVEL);
-		Role role4 = new Role(Constants.DEVELOPER_ROLE_NAME, Constants.DEVELOPER_ROLE_DESCRIPTION, Constants.DEVELOPER_ROLE_LEVEL);
+		Role role4 = new Role(Constants.SUPERUSER_ROLE_NAME, Constants.SUPERUSER_ROLE_DESCRIPTION, Constants.SUPERUSER_ROLE_LEVEL);
 		
 		// Create dei Ruoli che devono già essere fissati come setup del sistema
 		idRole1 = adminController.createRole(role1);
@@ -77,13 +77,11 @@ public class UserManagerImplITCase {
 
 	
 	/**
-	 * Test1: User Registration
+	 * Test1: User Profile Manager
 	 * @throws Exception 
 	 */
 	@Test
-	public void t1_registration() throws Exception {
-		
-
+	public void test_userprofile() throws Exception {
 		
 		// PREPARE User 1 e 2
 		User user1 = new User("Cristiano", "Novelli", "cristiano.novelli@enea.it", "xcristiano");
@@ -265,7 +263,19 @@ public class UserManagerImplITCase {
 	}
 	
 	
+	/**
+	 * Test1: User Profile Manager
+	 * @throws Exception 
+	 */
+/*	@Test
+	public void test2_useradmin() throws Exception {
+		
+		
+		
+	}*/
 	
+	
+	// TODO RIPULIRE TABELLE INTERESSATE NEL CASO SIA RIMASTO QUALCOSA
 }
 
 
