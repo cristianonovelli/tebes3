@@ -88,11 +88,16 @@ public class TestPlanManagerImplITCase {
 		}
 		
 		Assert.assertNotNull(testPlan);
+		
+		
 		Assert.assertEquals("2012-06-13T18:43:00", testPlan.getDatetime());
 		Assert.assertEquals("draft", testPlan.getState());
 		
 		// Create TestPlan
 		Long testPlanId = testPlanController.createTestPlan(testPlan);
+		
+		
+		
 		Assert.assertNotNull(testPlanId);
 		
 		Boolean updating = false;
@@ -114,6 +119,8 @@ public class TestPlanManagerImplITCase {
 				updatedTP.setLocation(testPlan.getLocation());
 
 				updating = testPlanController.updateTestPlan(updatedTP);
+				
+				//testPlanId = updatedTP.getId();
 			}
 		}
 		
