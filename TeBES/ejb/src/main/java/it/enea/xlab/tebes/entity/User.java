@@ -54,6 +54,7 @@ public class User implements Serializable {
 	//private Group group;
 	
 	
+	
 	public User() {
 		
 	}

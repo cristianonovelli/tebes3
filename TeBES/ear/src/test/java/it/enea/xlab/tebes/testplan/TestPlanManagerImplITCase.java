@@ -15,7 +15,34 @@ import org.junit.Test;
 import org.xlab.file.XLabFileManager;
 
 
-
+/**
+ * Sicuramente c'è una fase di importazione dei Test Plan da XML. XML SOLO PER TEST PLAN SYSTEMS?
+ * Lo User 1 è uno super User che deve essere presente nel momento in cui succede l'import.
+ * 
+ * @before
+ * 1. Creazione Ruoli
+ * 2. Creazione superuser
+ * 3. import testplans
+ * 4. creazione tempuser
+ * 
+ * 
+ * Test1
+ * CREATE (che sia da form o da esistente ottengo sempre una struttura dati con cui faccio la CREATE!!!
+ * 1. lista SUT System disponibili
+ * 2. creazione da copia
+ * 3 creazione da form?
+ * 4. specificazione SUT compatibile per ogni action? (caso del documento, dove lo metto?)
+ * 
+ * Test2 - CRUD per TestPlanManager:
+ * 1. LIST
+ * 3. READ
+ * 4. UPDATE
+ * 5. DELETE generic user (the superuser non è cancellabile)
+ * 6. DELETE come conseguenza
+ * 
+ * @author Cristiano
+ *
+ */
 public class TestPlanManagerImplITCase {
 
 	// Interface Declaration
