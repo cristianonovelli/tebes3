@@ -11,7 +11,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
@@ -33,19 +35,31 @@ public class UserManagerImpl implements UserManagerRemote {
 	
 	/**
 	 * CREATE User
+	 * @return 	id of User if created
+	 * 			-1 if already a User with that email exists
+	 * 			-2 if an exception occurs
 	 */
 	public Long createUser(User user) {
 
-		List<User> userList = this.findUsersByEmail(user.geteMail());
+		List<User> userList = this.readUsersByEmail(user.geteMail());
 		
-		if ( (userList == null) || (userList.size() == 0) ) {
-			eM.persist(user);
-			return user.getId();
+		try {
+			if ( (userList == null) || (userList.size() == 0) ) {
+				eM.persist(user);
+				return user.getId();
+			}
+			else {
+				return new Long(-1);
+			}
 		}
-		else {
-			return new Long(-1);
-		}
+		catch(Exception e) {
+			return new Long(-2);
+		}	
 	}
+	
+	
+	
+	
 
 	/**
 	 * READ User
@@ -97,6 +111,7 @@ public class UserManagerImpl implements UserManagerRemote {
 			
 			
 			eM.remove(user);
+			
 		} catch (IllegalArgumentException e) {
 			return false;
 		} catch (Exception e2) {
@@ -104,6 +119,25 @@ public class UserManagerImpl implements UserManagerRemote {
 		}
 		
 		return true;
+	}
+	
+	public Boolean deleteUserByEmail(String email) {
+		
+		Boolean result = false;
+		List<User> userList = this.readUsersByEmail(email);	
+		
+		if ( (userList == null) || (userList.size() == 0) ) {
+			
+			int i=0;
+			while (i < userList.size()) {
+			
+				this.deleteUser(userList.get(i).getId());
+				i++;		
+			}
+			result = true;
+		}
+
+		return result;
 	}
 
 	/**
@@ -142,7 +176,7 @@ public class UserManagerImpl implements UserManagerRemote {
 
 		User user = this.readUser(userId);
 		SUT sut = this.readSUT(sutId);
-
+		
 		sut.addToUser(user);
 		eM.persist(user);
 
@@ -162,11 +196,22 @@ public class UserManagerImpl implements UserManagerRemote {
 	public void setUserRole(User user, Role role) {
 
 		User u = this.readUser(user.getId());
-		Role g = this.readRole(role.getId());
+		Role r = this.readRole(role.getId());
 		
-		u.setRole(g);
-		eM.persist(g);	
 		
+		// Effettuo il Set se il Role è null oppure è diverso da superuser
+		if ( ( u.getRole() == null ) || (u.getRole().getLevel() != Constants.SUPERUSER_ROLE_LEVEL ) ) {
+
+			u.setRole(r);
+			eM.persist(r);	
+		}
+		
+		
+		// se il ruolo dell'utente c'è e non è lo superuser
+		if ( ( u.getRole() != null ) && (u.getRole().getLevel() != Constants.SUPERUSER_ROLE_LEVEL ) ) {
+		
+
+		}
 		return;
 	}
 
@@ -229,7 +274,8 @@ public class UserManagerImpl implements UserManagerRemote {
 
 	/**
 	 * CREATE Role
-	 * If role exists, return the id of existing role.
+	 * @return 	id of Role if created
+	 * 			id of Role if already exists
 	 */
 	public Long createRole(Role role) {
 
@@ -284,6 +330,26 @@ public class UserManagerImpl implements UserManagerRemote {
         return roleIdList;
 	}
 	
+	public Boolean deleteRole(Long id) {
+		
+		Role role = this.readRole(id);
+		
+		if (role == null)
+			return false;
+		
+		try {
+
+			eM.remove(role);
+			
+		} catch (IllegalArgumentException e) {
+			return false;
+		} catch (Exception e2) {
+			return null;
+		}
+		
+		return true;
+	}
+
 	
 	
 	/////////////////////
@@ -368,7 +434,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	 * FIND User List by email
 	 */	
 	@SuppressWarnings("unchecked")
-	private List<User> findUsersByEmail(String parEmail) {
+	public List<User> readUsersByEmail(String parEmail) {
 		
         String queryString = "SELECT u FROM User AS u WHERE u.eMail = ?1";
         
@@ -392,7 +458,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		
 		User result = null;
 		
-		List<User> userList = this.findUsersByEmail(userEmail);
+		List<User> userList = this.readUsersByEmail(userEmail);
 		
 		if ( (userList != null) && (userList.size() == 1) ) {			
 			
@@ -404,6 +470,12 @@ public class UserManagerImpl implements UserManagerRemote {
 		
 		return result;
 	}
+
+
+
+
+
+
 
 
 

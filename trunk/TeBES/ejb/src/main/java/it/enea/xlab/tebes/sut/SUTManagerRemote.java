@@ -13,6 +13,7 @@ public interface SUTManagerRemote {
 	
 	// Read SUT
 	public SUT readSUT(Long idSUT);
+	public SUT readSUTByName(String sutName);
 	
 	// la lista di SUT di uno User si ricava direttamente dall'oggetto user
 	// questo metodo è quindi inutile
@@ -23,5 +24,7 @@ public interface SUTManagerRemote {
 	
 	// Delete SUT
 	public Boolean deleteSUT(Long idSUT);
+
+	
 
 }

@@ -24,6 +24,11 @@ public class SUTManagerController implements SUTManagerRemote {
 
 		return sutManagerBean.readSUT(sutId);
 	}
+	
+	public SUT readSUTByName(String sutName) {
+		
+		return sutManagerBean.readSUTByName(sutName);
+	}	
 
 
 	public Boolean updateSUT(SUT sut) {
@@ -35,5 +40,6 @@ public class SUTManagerController implements SUTManagerRemote {
 	public Boolean deleteSUT(Long idSUT) {
 		
 		return sutManagerBean.deleteSUT(idSUT);
-	}	
+	}
+
 }

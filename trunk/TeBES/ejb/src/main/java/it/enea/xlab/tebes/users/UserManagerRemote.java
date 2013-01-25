@@ -23,7 +23,7 @@ public interface UserManagerRemote {
 	
 	// DELETE User
 	public Boolean deleteUser(Long id);	
-	
+	public Boolean deleteUserByEmail(String email);
 
 	
 	// Join functions
@@ -40,6 +40,9 @@ public interface UserManagerRemote {
 	public Role readRole(Long idRole);	
 	public Role readRoleByLevel(int level);
 	public List<Long> getRoleIdList();
+	public Boolean deleteRole(Long id);
+
+	
 
 	
 

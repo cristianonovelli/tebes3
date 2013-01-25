@@ -15,7 +15,7 @@
 
 	<profiles>
 		<profile>
-			<id>dev</id>
+			<id>dev-create</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -28,10 +28,54 @@
 								</goals>
 								<configuration>
 									<tasks>
+									
+										<!-- import dev-import.sql -->
 										<delete
-											file="ejb/src/main/resources/import.sql.not" />
+											file="src/main/resources/import.sql.not" />
 										<copy file="config/dev-import.sql.not"
-											tofile="ejb/src/main/resources/import.sql.not" />
+											tofile="src/main/resources/import.sql.not" />
+										
+										<!-- import create-drop_persistence.xml -->
+										<delete
+											file="src/main/resources/META-INF/persistence.xml" />
+										<copy file="config/create-drop_persistence.xml"
+											tofile="src/main/resources/META-INF/persistence.xml" />
+											
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>dev-update</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+									
+										<!-- import dev-import.sql -->
+										<delete
+											file="src/main/resources/import.sql.not" />
+										<copy file="config/dev-import.sql.not"
+											tofile="src/main/resources/import.sql.not" />
+										
+										<!-- import update_persistence.xml -->
+										<delete
+											file="src/main/resources/META-INF/persistence.xml" />
+										<copy file="config/update_persistence.xml"
+											tofile="src/main/resources/META-INF/persistence.xml" />
+											
 									</tasks>
 								</configuration>
 							</execution>
@@ -54,10 +98,19 @@
 								</goals>
 								<configuration>
 									<tasks>
+									
+										<!-- import prod-import.sql -->
 										<delete
-											file="ejb/src/main/resources/import.sql.not" />
+											file="src/main/resources/import.sql.not" />
 										<copy file="config/prod-import.sql.not"
-											tofile="ejb/src/main/resources/import.sql.not" />
+											tofile="src/main/resources/import.sql.not" />
+										
+										<!-- import update_persistence.xml -->
+										<delete
+											file="src/main/resources/META-INF/persistence.xml" />
+										<copy file="config/update_persistence.xml"
+											tofile="src/main/resources/META-INF/persistence.xml" />
+											
 									</tasks>
 								</configuration>
 							</execution>

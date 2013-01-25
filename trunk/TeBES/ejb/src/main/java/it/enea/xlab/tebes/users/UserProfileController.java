@@ -1,6 +1,8 @@
 package it.enea.xlab.tebes.users;
 
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
+import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.User;
 
 public class UserProfileController {
@@ -35,17 +37,37 @@ public class UserProfileController {
 	/**
 	 * Sign Up (CREATE) User
 	 * When a user signes up, the system assign him the standard role with level 1
-	 * @return userId
+	 * 
+	 * @return 	id of User if created
+	 * 			-1 if already a User with that email exists
+	 * 			-2 if an exception occurs
+	 * 			-3 if the Role isn't standard
 	 */
-	public Long signUp(User user) {
+	public Long registration(User user, Role role) {
 		
-		// Eventuali Controlli
-		// TODO
+		Long userId;
 		
-		// Set default standard Role
-		// TODO
+		if (role.getLevel() == Constants.STANDARD_ROLE_LEVEL) {
+		
+			userId = userManagerBean.createUser(user);
+		
+			if (userId > 0) {
 
-		return userManagerBean.createUser(user);
+				try {
+					
+					user = this.login(user.geteMail(), user.getPassword());
+
+					userManagerBean.setUserRole(user, role);
+					
+				} catch (Exception e) {					
+					return new Long(-2);
+				}
+			}
+		}
+		else 
+			userId = new Long(-3);
+		
+		return userId;
 	}
 	
 	
@@ -70,14 +92,11 @@ public class UserProfileController {
 	// ADD SUT TO USER
 	// TODO questa dovrebbe stare nel sut manager
 	public void addSUTToUser(Long sutId, Long userId) throws Exception {
-		
-		//User user = this.readUser(userId);
-		
-		//SUTManagerController sutManagerController = new SUTManagerController();
-		//SUT sut = sutManagerController.readSUT(sutId);
-		
+
 		userManagerBean.addSUTToUser(sutId, userId);
 	}
+
+
 
 
 
