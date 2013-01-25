@@ -77,6 +77,15 @@ public class PropertiesUtil {
 		return result;
 	}
 	
+	public static String getUser1Email() {
+
+		return getConfiguration().getString("user1.email");
+	}	
+
+	public static String getUser1Password() {
+
+		return getConfiguration().getString("user1.password");
+	}	
 	
 	public static String getUser1Dir() {
 		

@@ -1,6 +1,7 @@
 package it.enea.xlab.tebes.sut;
 
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 
@@ -32,23 +33,30 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	 * CREATE SUT
 	 * If there isn't SUT with this SUT name, it creates the new SUT
 	 * @return 	sutID if created
-	 * 			-1 otherwise
+	 * @return 	id of SUT if created
+	 * 			-1 if already a SUT with that name exists
+	 * 			-2 if an exception occurs
 	 */
 	public Long createSUT(SUT sut, User user) {
 
-		// TODO qui ci vuole una readByNameAndUser
-		SUT existingSUT = this.readSUTByName(sut.getName());
+		// TODO qui ci vuole una readSUTByNameAndUser che sia gestito bene
+		SUT existingSUT = this.readSUTByNameAndUser(sut.getName(), user);
 		
-		if (existingSUT == null) {
-			eM.persist(sut);		
-			
-			//sut.addToUser(user);
-			//eM.persist(user);
-			
-			return sut.getId();
+		try {
+			if (existingSUT == null) {
+					
+				
+				//sut.addToUser(user);
+				eM.persist(sut);	
+				
+				return sut.getId();
+			}
+			else 
+				return new Long(-1);
 		}
-		else 
-			return new Long(-1);
+		catch(Exception e) {
+			return new Long(-2);
+		}
 	}
 	
 	
@@ -59,18 +67,34 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		
 		return eM.find(SUT.class, sutID);
 	}	
+	
+
+	public SUT readSUTByName(String sutName) {
+		
+        String queryString = "SELECT s FROM SUT AS s WHERE s.name = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, sutName);
+        @SuppressWarnings("unchecked")
+		List<SUT> resultList = query.getResultList();
+        if ((resultList != null) && (resultList.size() > 0))
+        	return (SUT) resultList.get(0);
+        else
+        	return null;
+	}
 		
 	/**
 	 * READ SUT by Name
 	 * @return the first SUT with that name, if the SUT is present 
 	 * @return null, if the SUT is not present 
 	 */	
-	private SUT readSUTByName(String name) {
+	private SUT readSUTByNameAndUser(String name, User userId) {
 		
         String queryString = "SELECT s FROM SUT AS s WHERE s.name = ?1";
         
         Query query = eM.createQuery(queryString);
         query.setParameter(1, name);
+        //query.setParameter(2, userId);
         @SuppressWarnings("unchecked")
 		List<SUT> resultList = query.getResultList();
         if ((resultList != null) && (resultList.size() > 0))
@@ -126,5 +150,7 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		
 		return true;
 	}
+
+
 	
 }

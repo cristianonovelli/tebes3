@@ -20,6 +20,19 @@ public class Constants {
 	public static final String SUPERUSER_ROLE_DESCRIPTION = "Super User Role: he has whole power and permissions on test bed platform";
 	public static final int SUPERUSER_ROLE_LEVEL = 4;
 	
+	// User1
+	public static final String USER1_EMAIL = "angelo.frascella@enea.it";
+	public static final String USER1_PASSWORD = "xangelo";
+	// User2
+	public static final String USER2_EMAIL1 = "arianna.brutti@enea.it";
+	public static final String USER2_EMAIL2 = "arianna2@enea.it";	
+	public static final String USER2_PASSWORD1 = "xpiero";	
+	public static final String USER2_PASSWORD2 = "xarianna";	
+	
+	// SUT
+	public static final String SUT_DESCRIPTION = "descrizione";	
+	
+	
 	// Test Languages
 	public static final String XPATH = "http://www.w3.org/TR/xpath20/";
 	public static final String SCHEMATRON = "http://purl.oclc.org/dsdl/schematron";

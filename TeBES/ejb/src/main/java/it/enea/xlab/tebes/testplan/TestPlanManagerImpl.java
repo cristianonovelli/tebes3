@@ -43,24 +43,25 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	/**
 	 * CREATE Test Plan
 	 * La createTestPlan crea un nuovo TestPlan solo se non esistono per questo utente TestPlan con lo stesso datetime
-	 * @return id del TestPlan se viene creato
-	 * @return -1 altrimenti
-	 * @return -2 se per esempio
+	 * @return 	id of TestPlan if created
+	 * 			-1 if already a TestPlan with that datetime exists
+	 * 			-2 if an exception occurs
 	 */
 	public Long createTestPlan(TestPlan testPlan) {
-		
-		Long result;
-		
+
 		List<TestPlan> testPlanList = readTestPlanByUserIdAndDatetime(testPlan.getUserId(), testPlan.getDatetime());
 		
-		if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
-			eM.persist(testPlan);	
-			result = testPlan.getId();
+		try {
+			if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
+				eM.persist(testPlan);	
+				return testPlan.getId();
+			}
+			else
+				return new Long(-1);
 		}
-		else
-			result = new Long(-1);
-			
-		return result;	
+		catch(Exception e) {
+			return new Long(-2);
+		}
 	}
 
 	

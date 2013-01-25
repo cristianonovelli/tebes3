@@ -14,10 +14,10 @@ TeBES/ejb/src/main/resources
 (i.e. JBOSS_HOME=C:\Java\jboss-4.2.3.GA)
 
 6. Check build-package-deployment through the maven statement:
-> mvn clean install -DskipTests
+mvn clean install -DskipTests
 
-7. Check JUnit Tests through the maven statement:
-> mvn clean install
-
-
-(!) The "remote not bound" error happens when JBoss doesn't register the services yet.
+7. Check JUnit Tests through one of following maven statements:
+mvn clean install
+mvn clean install -Pdev-create
+mvn clean install -Pdev-update
+mvn clean install -Pprod

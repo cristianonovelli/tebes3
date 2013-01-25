@@ -45,18 +45,18 @@ public class UserAdminController {
 	
 	// CREATE -> Equivalente a UserProfileManager.signUp MA ASSEGNA ANCHE UN RUOLO DIVERSO DA QUELLO DI DEFAULT
 	/**
-	 * Sign Up (CREATE) User
+	 * Registration (CREATE) User
 	 * @return userId
 	 */
 	public Long createUser(User user, Role role) {
 
-		// persist
-		// join role to user
-		// persist
+		Long userId = userManagerBean.createUser(user);
 		
-		// TODO IF ROLE == null THEN standard role
-		
-		return userManagerBean.createUser(user);
+		if (userId > 0) {
+			user = this.readUser(userId);
+			userManagerBean.setUserRole(user, role);
+		}
+		return userId;
 	}	
 
 	// READ User
@@ -64,6 +64,12 @@ public class UserAdminController {
 		
 		return userManagerBean.readUser(id);
 	}
+	
+/*	public User readUserbyEmailAndPassword(String email) {
+		
+		return userManagerBean.readUserbyEmailAndPassword(userEmail, userPassword)
+	}*/
+	
 	
 	// UPDATE -> UserProfileManager.Update
 	
@@ -74,7 +80,11 @@ public class UserAdminController {
 		
 		return userManagerBean.deleteUser(id);
 	}
-	
+
+	public Boolean deleteUserByEmail(String email) {
+		
+		return userManagerBean.deleteUserByEmail(email);
+	}
 	
 	
 	// GET Role LIST
@@ -111,6 +121,21 @@ public class UserAdminController {
 		
 		userManagerBean.setUserRole(user, role);
 	}
+
+
+
+	public Boolean deleteRole(Long id) {
+		
+		return userManagerBean.deleteRole(id);
+	}
+
+
+
+
+
+
+
+
 
 
 
