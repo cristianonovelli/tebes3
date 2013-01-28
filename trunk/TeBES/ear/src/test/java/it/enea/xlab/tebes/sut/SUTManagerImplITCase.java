@@ -43,13 +43,18 @@ public class SUTManagerImplITCase {
 	@BeforeClass
 	public static void before_sutManager() throws Exception {
 
-		// Get SUTManagerController Service
+		// Get SUTManager Service
 		sutManagerController = new SUTManagerController();			
 		Assert.assertNotNull(sutManagerController);
 		
-		// Get UserAdminController Service
+		// Get UserAdmin Service
 		userAdminController = new UserAdminController();
 		Assert.assertNotNull(userAdminController);
+
+		// Get UserProfile service for the Test
+		userProfileController = new UserProfileController();
+		Assert.assertNotNull(userProfileController);
+		
 		
 		// Prepare 4 user Roles 
 		role1_standard = new Role(Constants.STANDARD_ROLE_NAME, Constants.STANDARD_ROLE_DESCRIPTION, Constants.STANDARD_ROLE_LEVEL);
@@ -71,10 +76,7 @@ public class SUTManagerImplITCase {
 		role2_advanced = userAdminController.readRole(id_role2_advanced);
 		role3_admin = userAdminController.readRole(id_role3_admin);
 		role4_superuser = userAdminController.readRole(id_role4_superuser);
-		
-		// Get UserProfileController service for the Test
-		userProfileController = new UserProfileController();
-		Assert.assertNotNull(userProfileController);
+
 
 	}
 
@@ -86,8 +88,7 @@ public class SUTManagerImplITCase {
 	public void test_sutmanager() throws Exception {
 
 		
-		// Create a temporary User to associate to SUT
-		
+		// Create a temporary User	
 		User tempUser = new User("Temp", "User4SUT", "tempuser.forsut@enea.it", "xuser");
 		Long idTempUser = userProfileController.registration(tempUser, role1_standard);
 		

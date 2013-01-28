@@ -3,6 +3,9 @@ package it.enea.xlab.tebes.common;
 
 public class Constants {
 
+	public static final String PERSISTENCE_CONTEXT = "TeBESPersistenceLayer";
+	
+	
 	// standard role
 	public static final String STANDARD_ROLE_NAME = "standard_user";
 	public static final String STANDARD_ROLE_DESCRIPTION = "Standard User Role: he can execute a test plan but he can't create/edit it";

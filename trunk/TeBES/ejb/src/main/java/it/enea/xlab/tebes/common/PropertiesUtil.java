@@ -11,8 +11,6 @@ import org.apache.log4j.Logger;
  * 
  * <p>Copyright 2009-2010 Epoca srl</p>
  * <p>Copyright 2012 Enea</p>
- *
- *
  */
 public class PropertiesUtil {
 	
@@ -79,20 +77,20 @@ public class PropertiesUtil {
 	
 	public static String getUser1Email() {
 
-		return getConfiguration().getString("user1.email");
+		return getConfiguration().getString("superuser.email");
 	}	
 
 	public static String getUser1Password() {
 
-		return getConfiguration().getString("user1.password");
+		return getConfiguration().getString("superuser.password");
 	}	
 	
-	public static String getUser1Dir() {
+	public static String getSuperUserDir() {
 		
 		String absUsersDir = PropertiesUtil.getUsersDir();	
-		String user1Id = getConfiguration().getString("user1.id");
+		String systemId = getConfiguration().getString("superuser.id");
 		
-		String result = absUsersDir.concat(user1Id);
+		String result = absUsersDir.concat(systemId);
 		
 		if (!result.endsWith(SLASH))
 			result = result.concat(SLASH);
@@ -101,9 +99,9 @@ public class PropertiesUtil {
 	}	
 	
 	
-	public static String getTestPlanDir() {
+	public static String getSuperUserTestPlanDir() {
 		
-		String absUser1Dir = PropertiesUtil.getUser1Dir();
+		String absUser1Dir = PropertiesUtil.getSuperUserDir();
 		String testPlansDir = getConfiguration().getString("testplans.dir");
 		
 		String result = absUser1Dir.concat(testPlansDir);
@@ -115,10 +113,10 @@ public class PropertiesUtil {
 	}	
 	
 	
-	public static String getTestPlan1AbsPathName() {
+	public static String getSuperUserTestPlan1AbsPathName() {
 		
-		String absTestPlanDir = PropertiesUtil.getTestPlanDir();	
-		String testPlan1FileName = getConfiguration().getString("user1.testplan");
+		String absTestPlanDir = PropertiesUtil.getSuperUserTestPlanDir();	
+		String testPlan1FileName = getConfiguration().getString("superuser.testplan1");
 		
 		String result = absTestPlanDir.concat(testPlan1FileName);
 		
@@ -126,9 +124,9 @@ public class PropertiesUtil {
 	}	
 
 	
-	public static Long getTestPlanIdOfUser1() {
+	public static Long getSuperUserTestPlan1Id() {
 		
-		return  getConfiguration().getLong("user1.testplanid");
+		return  getConfiguration().getLong("superuser.testplan1id");
 	}	
 	
 	
@@ -148,3 +146,4 @@ public class PropertiesUtil {
 	}
 	
 }
+

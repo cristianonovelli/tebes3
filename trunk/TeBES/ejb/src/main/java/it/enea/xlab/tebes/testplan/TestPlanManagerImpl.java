@@ -1,5 +1,6 @@
 package it.enea.xlab.tebes.testplan;
 
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
@@ -30,7 +31,7 @@ import org.xml.sax.SAXException;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
-	@PersistenceContext(unitName="TeBESPersistenceLayer")
+	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
 	
@@ -119,7 +120,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 
 	@SuppressWarnings("unchecked")
-	private List<TestPlan> findTestPlanById(String testPlanId) {
+	private List<TestPlan> readTestPlanById(String testPlanId) {
 		
         String queryString = "SELECT t FROM TestPlan AS t WHERE t.testPlanId = ?1";
         

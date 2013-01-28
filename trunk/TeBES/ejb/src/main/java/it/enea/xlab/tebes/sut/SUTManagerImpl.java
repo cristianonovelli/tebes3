@@ -1,5 +1,6 @@
 package it.enea.xlab.tebes.sut;
 
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
@@ -21,7 +22,7 @@ import javax.persistence.Query;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class SUTManagerImpl implements SUTManagerRemote {
 
-	@PersistenceContext(unitName="TeBESPersistenceLayer")
+	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
 	// TODO 

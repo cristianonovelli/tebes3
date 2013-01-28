@@ -1,5 +1,6 @@
 package it.enea.xlab.tebes.session;
 
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Session;
 
@@ -19,7 +20,7 @@ import javax.persistence.Query;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class SessionManagerImpl implements SessionManagerRemote {
 
-	@PersistenceContext(unitName="TeBESPersistenceLayer")
+	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
 	
