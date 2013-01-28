@@ -25,7 +25,7 @@ import it.enea.xlab.tebes.entity.Role;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class UserManagerImpl implements UserManagerRemote {
 
-	@PersistenceContext(unitName="TeBESPersistenceLayer")
+	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
 

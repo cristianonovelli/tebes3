@@ -27,11 +27,19 @@ public class UserManagerImplITCase {
 	 * @throws Exception
 	 */
 	@BeforeClass
-	public static void before_preparation() throws Exception {
+	public static void before_userManager() throws Exception {
 		
+		// Get UserProfileManager Service
 		userProfileController = new UserProfileController();
+		Assert.assertNotNull(userProfileController);
+		
+		// Get UserAdminManager Service
 		userAdminController = new UserAdminController();
+		Assert.assertNotNull(userAdminController);
+		
+		// Get SUTManagerController Service
 		sutManagerController = new SUTManagerController();
+		Assert.assertNotNull(sutManagerController);
 		
 		// Create EJB linked to interface UserManagerRemote
 		// InitialContext ctx = new InitialContext();
@@ -102,9 +110,7 @@ public class UserManagerImplITCase {
 		User user1 = new User("Angelo", "Frascella", Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
 		User user2 = new User("Arianna", "Brutti", Constants.USER2_EMAIL1, Constants.USER2_PASSWORD1);
 
-
-		// Due utenti si registrano
-		// REGISTRATION USER: Persist Users in DB through JPA
+		// REGISTRATION USERS: Persist Users in DB through JPA
 		// il ProfileController può e deve assegnare solo lo standard Role
 		// sarà  il superUser o l'adminuser a modificare tale ruolo in un secondo momento
 		Role standardRole = userAdminController.readRoleByLevel(1);
@@ -119,21 +125,18 @@ public class UserManagerImplITCase {
 		idUser2 = userProfileController.registration(user2, standardRole);
 		
 		
-		// Test: verifico vi tre utenti creati
+		// Test: verifico i tre utenti creati
 		List<Long> userIdList = userAdminController.getUserIdList();
 		Assert.assertTrue(userIdList.size() == 3);		
-		
 		
 		// Attenzione: con getUserIdList gli Id non vengono restituiti in ordine 
 		// la seguente assertion infatti potrebbe fallire
 		// Assert.assertTrue(userIdList.get(0) < userIdList.get(1));
 
-		// li leggo con una login
-		user1 = userProfileController.login(user1.geteMail(), user1.getPassword());
-			
+		// li leggo con una LOGIN
+		user1 = userProfileController.login(user1.geteMail(), user1.getPassword());			
 		user2 = userProfileController.login(user2.geteMail(), user2.getPassword());
 	
-
 		// Test: in un modo o nell'altro (create o update) a questo punto ho i 2 Users
 		Assert.assertNotNull(user1);	
 		Assert.assertNotNull(user2);
@@ -145,7 +148,7 @@ public class UserManagerImplITCase {
 		Assert.assertTrue(user2.getRole().getLevel() == Constants.STANDARD_ROLE_LEVEL);
 		
 
-		// User Profile updating
+		// User Profile UPDATING
 		user2.seteMail(Constants.USER2_EMAIL2);
 		user2.setPassword(Constants.USER2_PASSWORD2);
 		Boolean updating = userProfileController.updateUser(user2);

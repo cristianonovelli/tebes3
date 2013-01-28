@@ -24,14 +24,14 @@ import org.xlab.file.XLabFileManager;
  * 2. Creazione superuser
  * 3. import testplans
  * 4. creazione tempuser
- * 
- * 
- * Test1
+ *
+ *  * Test1
  * CREATE (che sia da form o da esistente ottengo sempre una struttura dati con cui faccio la CREATE!!!
  * 1. lista SUT System disponibili
  * 2. creazione da copia
  * 3 creazione da form?
- * 4. specificazione SUT compatibile per ogni action? (caso del documento, dove lo metto?)
+ * 4. specificazione SUT compatibile per ogni action? 
+ * (caso del documento, dove lo metto?)
  * 
  * Test2 - CRUD per TestPlanManager:
  * 1. LIST
@@ -40,54 +40,75 @@ import org.xlab.file.XLabFileManager;
  * 5. DELETE generic user (the superuser non è cancellabile)
  * 6. DELETE come conseguenza
  * 
+
+ * 
+ * 
  * @author Cristiano
  *
  */
 public class TestPlanManagerImplITCase {
 
 	// Interface Declaration
-	//TestPlanManagerRemote testPlanManagerBean;
 	TestPlanManagerController testPlanController;
 
 	
 	@Before
-	public void before() throws Exception {
+	public void before_testPlanManager() throws Exception {
 		
 		testPlanController = new TestPlanManagerController();
+		Assert.assertNotNull(testPlanController);	
+		
+		
+		
 	}
 	
-	@Test
-	public void t1_check() {
-		
-		Assert.assertNotNull(testPlanController);	
-/*	}
-
 	
 	@Test
-	public void t2_setupTestPlan() {*/
+	public void test1_testPlanManager() {
 		
-		try {
-			Assert.assertTrue(XLabFileManager.isFileOrDirectoryPresent(PropertiesUtil.getTestPlan1AbsPathName()));
+		// CREATE (from system Test Plan)
+		// 1. un utente fa login 
+		// 2. sceglie un test plan predefinito, tramite ID?
+		// 3. importa il nuovo testplan da template xml
+		// 4. il testplan viene scritto in memoria modificando i campi dove occorre
+		// 	(quali sono i campi da personalizzare? id, nome utente, che altro?)
+		// 5. 
+		
+		
+		
+		// Get TeBES testPlan1 absolute PathName from .properties file
+		String testPlan1AbsPathName = null;
+		
+		try {		
+			testPlan1AbsPathName = PropertiesUtil.getSuperUserTestPlan1AbsPathName();
+			Assert.assertTrue(XLabFileManager.isFileOrDirectoryPresent(testPlan1AbsPathName));
+
 		} catch (Exception e) {
 			
 			e.printStackTrace();
+			testPlan1AbsPathName = null;
+			Assert.assertNotNull(testPlan1AbsPathName);			
 		}	
-/*	}
-	
-
-	@Test
-	public void t3_setupTestPlan() {*/	
 		
-		// Get TeBES Test Plan	
+		
+		// Get TeBES Test Plan from XML
 		TestPlan testPlan = null;
 		try {
-			testPlan = testPlanController.getTestPlanFromXML(PropertiesUtil.getTestPlan1AbsPathName());
+			testPlan = testPlanController.getTestPlanFromXML(testPlan1AbsPathName);
+			Assert.assertNotNull(testPlan);
+			
 		} catch (Exception e) {
 			
 			e.printStackTrace();
+			testPlan = null;
+			Assert.assertNotNull(testPlan);		
 		}
 		
-		Assert.assertNotNull(testPlan);
+		
+		
+		
+		
+		/*Assert.assertNotNull(testPlan);
 		
 		
 		Assert.assertEquals("2012-06-13T18:43:00", testPlan.getDatetime());
@@ -127,11 +148,11 @@ public class TestPlanManagerImplITCase {
 		// se è stato creato, testPlanId è nuovo e > 0
 		// se è stato aggiornato updating è true
 		Assert.assertTrue((testPlanId > 0) || updating);		
-/*	}
+	}
 
 
 	@Test
-	public void t4_importTestPlan() throws NumberFormatException, FileNotFoundException {	*/
+	public void t4_importTestPlan() throws NumberFormatException, FileNotFoundException {	
 		
 		
 		
@@ -203,11 +224,11 @@ public class TestPlanManagerImplITCase {
 		
 		testPlan = testPlanController.readTestPlan(testPlan.getId());
 		Assert.assertTrue(testPlan.getWorkflow().getActions().size() > 0);
-/*	}
+	}
 	
 		
 	@Test
-	public void t5_readTestPlan() throws NumberFormatException, FileNotFoundException {	*/
+	public void t5_readTestPlan() throws NumberFormatException, FileNotFoundException {	
 
 		// Read TestPlan
 		testPlan = testPlanController.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
@@ -225,11 +246,11 @@ public class TestPlanManagerImplITCase {
 		Assert.assertNotNull(a);
 		
 		Assert.assertTrue(a.isJumpTurnedON());
-/*	}
+	}
 	
 	
 	@Test
-	public void t6_execution() throws NumberFormatException, FileNotFoundException {*/	
+	public void t6_execution() throws NumberFormatException, FileNotFoundException {	
 	
 		testPlan = testPlanController.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
 		TestActionManagerImpl actionManager = new TestActionManagerImpl(); 
@@ -239,7 +260,7 @@ public class TestPlanManagerImplITCase {
 		// forse dovrebbe ritornare qualcos'altro? tipo l'id del report
 		boolean actionWorkflowExecutionResult = actionManager.executeActionWorkflow(testPlan.getWorkflow());
 		Assert.assertNotNull(actionWorkflowExecutionResult);
-		
+		*/
 	}
 
 
