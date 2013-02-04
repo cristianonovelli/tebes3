@@ -1,4 +1,4 @@
-Setup TeBES in Eclipse Development Environment:
+TeBES setup into the Eclipse Development Environment:
 
 1. SVN Checkout from location:
 https://tebes3.googlecode.com/svn/trunk/
