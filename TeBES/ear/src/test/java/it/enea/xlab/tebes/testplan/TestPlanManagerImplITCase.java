@@ -60,13 +60,12 @@ public class TestPlanManagerImplITCase {
 		// CREATE (from system Test Plan)
 		// 1. un utente fa login e va nel testplanmanager
 		// 2. può vedere suoi testplan (Test2)
-		// 2. vede lista test plan sistema (Test1) per usarli
-		// 3. sceglie un test plan predefinito, tramite ID?
-		// 4. importa il nuovo testplan da template xml
-		// 5. il testplan viene scritto in memoria modificando i campi dove occorre
+		// 3. vede lista test plan sistema (Test1) per usarli
+		// 4. sceglie un test plan predefinito, tramite ID?
+		// 5. importa il nuovo testplan da template xml
+		// 6. il testplan viene scritto in memoria modificando i campi dove occorre
 		// 	(quali sono i campi da personalizzare? id, nome utente, che altro?)
-		// 6. 
-		
+				
 		
 		// L'utente sceglie il TestPlan da importare: 
 		// Get TeBES testPlan1 absolute PathName from .properties file
