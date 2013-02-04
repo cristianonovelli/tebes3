@@ -2,12 +2,12 @@ package it.enea.xlab.tebes.testplan;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.TestPlan;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
@@ -24,6 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xlab.file.XLabFileManager;
 import org.xml.sax.SAXException;
 
 @Stateless
@@ -139,7 +140,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		try {
 
 			TestPlanDOM testPlanDOM = new TestPlanDOM(testPlanAbsFileName);			
-			
+			 
 			if ( testPlanDOM.root == null ) {
 				System.out.println("XReport: " + testPlanDOM.getReport().getErrorMessage());	
 			}
@@ -320,6 +321,30 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		eM.persist(testPlan);
 		
 		return;
+	}
+
+
+	public Vector<String> readSystemTestPlanList() {
+
+		Vector<String> result = null;
+		
+		// L'utente deve scegliere il TestPlan da importare: 
+		// Get TeBES testPlan1 absolute PathName from .properties file
+		String systemTestPlanAbsDirName = null;
+		
+		try {		
+			systemTestPlanAbsDirName = PropertiesUtil.getSuperUserTestPlanDir();
+			
+			if (XLabFileManager.isFileOrDirectoryPresent(systemTestPlanAbsDirName) ) 
+
+			result = XLabFileManager.getFileList(systemTestPlanAbsDirName);
+			
+		} catch (Exception e) {
+			
+			result = null;		
+		}	
+		
+		return result;
 	}
 
 
