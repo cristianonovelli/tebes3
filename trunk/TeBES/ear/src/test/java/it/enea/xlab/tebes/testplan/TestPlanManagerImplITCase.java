@@ -1,13 +1,7 @@
 package it.enea.xlab.tebes.testplan;
 
 import it.enea.xlab.tebes.common.PropertiesUtil;
-import it.enea.xlab.tebes.entity.Action;
-import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.TestPlan;
-import it.enea.xlab.tebes.testaction.TestActionManagerImpl;
-
-import java.util.List;
-
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -40,8 +34,6 @@ import org.xlab.file.XLabFileManager;
  * 5. DELETE generic user (the superuser non è cancellabile)
  * 6. DELETE come conseguenza
  * 
-
- * 
  * 
  * @author Cristiano
  *
@@ -58,8 +50,7 @@ public class TestPlanManagerImplITCase {
 		testPlanController = new TestPlanManagerController();
 		Assert.assertNotNull(testPlanController);	
 		
-		
-		
+
 	}
 	
 	
@@ -67,15 +58,17 @@ public class TestPlanManagerImplITCase {
 	public void test1_testPlanManager() {
 		
 		// CREATE (from system Test Plan)
-		// 1. un utente fa login 
-		// 2. sceglie un test plan predefinito, tramite ID?
-		// 3. importa il nuovo testplan da template xml
-		// 4. il testplan viene scritto in memoria modificando i campi dove occorre
+		// 1. un utente fa login e va nel testplanmanager
+		// 2. può vedere suoi testplan (Test2)
+		// 2. vede lista test plan sistema (Test1) per usarli
+		// 3. sceglie un test plan predefinito, tramite ID?
+		// 4. importa il nuovo testplan da template xml
+		// 5. il testplan viene scritto in memoria modificando i campi dove occorre
 		// 	(quali sono i campi da personalizzare? id, nome utente, che altro?)
-		// 5. 
+		// 6. 
 		
 		
-		
+		// L'utente sceglie il TestPlan da importare: 
 		// Get TeBES testPlan1 absolute PathName from .properties file
 		String testPlan1AbsPathName = null;
 		
@@ -103,24 +96,16 @@ public class TestPlanManagerImplITCase {
 			testPlan = null;
 			Assert.assertNotNull(testPlan);		
 		}
+		Assert.assertNotNull(testPlan);
+
 		
-		
-		
-		
-		
-		/*Assert.assertNotNull(testPlan);
-		
-		
-		Assert.assertEquals("2012-06-13T18:43:00", testPlan.getDatetime());
-		Assert.assertEquals("draft", testPlan.getState());
-		
+		/*
 		// Create TestPlan
-		Long testPlanId = testPlanController.createTestPlan(testPlan);
-		
-		
-		
+		Long testPlanId = testPlanController.createTestPlan(testPlan);	
 		Assert.assertNotNull(testPlanId);
 		
+		
+		 
 		Boolean updating = false;
 		
 		// Update TestPlan
