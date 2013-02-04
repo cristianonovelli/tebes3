@@ -142,7 +142,6 @@ public class SUTManagerImplITCase {
 		
 		// 1. READ SUT LIST
 		sutList = tempUser.getSutList();
-		System.out.println("sutList.size():" + sutList.size());
 		Assert.assertTrue(sutList.size() == 2);
 		
 		// 3.2 UPDATE SUT

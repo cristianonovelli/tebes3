@@ -1,6 +1,7 @@
 package it.enea.xlab.tebes.users;
 
 import it.enea.xlab.tebes.entity.Role;
+import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public interface UserManagerRemote {
 	public Role readRoleByLevel(int level);
 	public List<Long> getRoleIdList();
 	public Boolean deleteRole(Long id);
+
 
 	
 

@@ -1,9 +1,20 @@
 package it.enea.xlab.tebes.testplan;
 
+import java.util.List;
+import java.util.Vector;
+
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.entity.Role;
+import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.sut.SUTManagerController;
+import it.enea.xlab.tebes.users.UserAdminController;
+import it.enea.xlab.tebes.users.UserProfileController;
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.xlab.file.XLabFileManager;
@@ -15,11 +26,9 @@ import org.xlab.file.XLabFileManager;
  * 
  * @before
  * 1. Creazione Ruoli
- * 2. Creazione superuser
- * 3. import testplans
- * 4. creazione tempuser
  *
  *  * Test1
+ *   * 2. Creazione user
  * CREATE (che sia da form o da esistente ottengo sempre una struttura dati con cui faccio la CREATE!!!
  * 1. lista SUT System disponibili
  * 2. creazione da copia
@@ -41,8 +50,11 @@ import org.xlab.file.XLabFileManager;
 public class TestPlanManagerImplITCase {
 
 	// Interface Declaration
-	TestPlanManagerController testPlanController;
+	static TestPlanManagerController testPlanController;
+	static UserAdminController userAdminController;
+	static UserProfileController userProfileController;
 
+	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
 	@Before
 	public void before_testPlanManager() throws Exception {
@@ -50,12 +62,44 @@ public class TestPlanManagerImplITCase {
 		testPlanController = new TestPlanManagerController();
 		Assert.assertNotNull(testPlanController);	
 		
+		// Get UserAdmin Service
+		userAdminController = new UserAdminController();
+		Assert.assertNotNull(userAdminController);
 
+		// Get UserProfile service for the Test
+		userProfileController = new UserProfileController();
+		Assert.assertNotNull(userProfileController);		
+
+		List<Long> roleIdList = userAdminController.getRoleIdList();
+		Assert.assertTrue(roleIdList.size() == 0);
+		
+		// TODO la creazione e cancellazione dei ruoli possiamo spostarlo nell'EJB come singolo metodo
+		
+		// Prepare 4 user Roles 
+		role1_standard = new Role(Constants.STANDARD_ROLE_NAME, Constants.STANDARD_ROLE_DESCRIPTION, Constants.STANDARD_ROLE_LEVEL);
+		role2_advanced = new Role(Constants.ADVANCED_ROLE_NAME, Constants.ADVANCED_ROLE_DESCRIPTION, Constants.ADVANCED_ROLE_LEVEL);
+		role3_admin = new Role(Constants.ADMIN_ROLE_NAME, Constants.ADMIN_ROLE_DESCRIPTION, Constants.ADMIN_ROLE_LEVEL);
+		role4_superuser = new Role(Constants.SUPERUSER_ROLE_NAME, Constants.SUPERUSER_ROLE_DESCRIPTION, Constants.SUPERUSER_ROLE_LEVEL);
+		
+		// Create dei Ruoli che devono già essere fissati come setup del sistema
+		Long id_role1_standard = userAdminController.createRole(role1_standard);
+		Long id_role2_advanced = userAdminController.createRole(role2_advanced);
+		Long id_role3_admin = userAdminController.createRole(role3_admin);
+		Long id_role4_superuser = userAdminController.createRole(role4_superuser);
+
+		// Get Role List
+		roleIdList = userAdminController.getRoleIdList();
+		Assert.assertTrue(roleIdList.size() == 4);
+		
+		role1_standard = userAdminController.readRole(id_role1_standard);
+		role2_advanced = userAdminController.readRole(id_role2_advanced);
+		role3_admin = userAdminController.readRole(id_role3_admin);
+		role4_superuser = userAdminController.readRole(id_role4_superuser);
 	}
 	
 	
 	@Test
-	public void test1_testPlanManager() {
+	public void test1_createTestPlanManager() {
 		
 		// CREATE (from system Test Plan)
 		// 1. un utente fa login e va nel testplanmanager
@@ -66,22 +110,27 @@ public class TestPlanManagerImplITCase {
 		// 6. il testplan viene scritto in memoria modificando i campi dove occorre
 		// 	(quali sono i campi da personalizzare? id, nome utente, che altro?)
 				
+		// Create a temporary User	
+		User tempUser = new User("Temp", "User4TestPlan", "tempuser.fortestplan@enea.it", "xuser");
+		Long idTempUser = userProfileController.registration(tempUser, role1_standard);
 		
-		// L'utente sceglie il TestPlan da importare: 
-		// Get TeBES testPlan1 absolute PathName from .properties file
-		String testPlan1AbsPathName = null;
+		// Login
+		tempUser = userProfileController.login(tempUser.geteMail(), tempUser.getPassword());
+		idTempUser = tempUser.getId();
 		
-		try {		
-			testPlan1AbsPathName = PropertiesUtil.getSuperUserTestPlan1AbsPathName();
-			Assert.assertTrue(XLabFileManager.isFileOrDirectoryPresent(testPlan1AbsPathName));
+		Assert.assertNotNull(tempUser);
+		Assert.assertTrue(idTempUser > 0);
+		
+		
+		// 1. READ SYSTEM TESTPLAN LIST
+		Vector<String> systemTestPlanList = testPlanController.getSystemTestPlanList();
+		Assert.assertTrue(systemTestPlanList.size() == 2);
 
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			testPlan1AbsPathName = null;
-			Assert.assertNotNull(testPlan1AbsPathName);			
-		}	
 		
+
+		
+
+		/*
 		
 		// Get TeBES Test Plan from XML
 		TestPlan testPlan = null;
@@ -98,7 +147,7 @@ public class TestPlanManagerImplITCase {
 		Assert.assertNotNull(testPlan);
 
 		
-		/*
+		
 		// Create TestPlan
 		Long testPlanId = testPlanController.createTestPlan(testPlan);	
 		Assert.assertNotNull(testPlanId);
@@ -132,9 +181,15 @@ public class TestPlanManagerImplITCase {
 		// se è stato creato, testPlanId è nuovo e > 0
 		// se è stato aggiornato updating è true
 		Assert.assertTrue((testPlanId > 0) || updating);		
+	
+*/
+		
+		
+		// User DELETING
+		Boolean b = userAdminController.deleteUser(tempUser.getId());
+		Assert.assertTrue(b);
 	}
-
-
+		/*
 	@Test
 	public void t4_importTestPlan() throws NumberFormatException, FileNotFoundException {	
 		
@@ -244,10 +299,47 @@ public class TestPlanManagerImplITCase {
 		// forse dovrebbe ritornare qualcos'altro? tipo l'id del report
 		boolean actionWorkflowExecutionResult = actionManager.executeActionWorkflow(testPlan.getWorkflow());
 		Assert.assertNotNull(actionWorkflowExecutionResult);
-		*/
+		
+	}*/
+
+	@AfterClass
+	public static void after_sutManager() throws Exception {
+
+		Boolean deleting;
+		
+		// Get Role List
+		List<Long> roleIdList = userAdminController.getRoleIdList();
+		Assert.assertTrue(roleIdList.size() == 4);
+		
+		Role tempRole;
+		Long tempRoleId;
+		
+		// Cancello ogni ruolo
+		for (int u=0;u<roleIdList.size();u++) {
+			
+			tempRoleId = (Long) roleIdList.get(u);
+			Assert.assertTrue(tempRoleId > 0);
+
+			tempRole = userAdminController.readRole(tempRoleId);			
+			Assert.assertNotNull(tempRole);
+						
+			// DELETE Role
+			deleting = userAdminController.deleteRole(tempRole.getId());
+			Assert.assertTrue(deleting);			
+		}		
+
+		
+		// Get Role List
+		roleIdList = userAdminController.getRoleIdList();
+		Assert.assertTrue(roleIdList.size() == 0);
+		
+		// Last Check
+		// Sono stati eliminati tutti gli utenti?
+		List<Long> userIdList = userAdminController.getUserIdList();
+		userIdList = userAdminController.getUserIdList();
+		Assert.assertTrue(userIdList.size() == 0);
+		
 	}
-
-
 }
 
 

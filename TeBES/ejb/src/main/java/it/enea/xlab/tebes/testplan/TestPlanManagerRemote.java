@@ -3,9 +3,11 @@ package it.enea.xlab.tebes.testplan;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.TestPlan;
 
 import javax.ejb.Remote;
@@ -20,6 +22,8 @@ public interface TestPlanManagerRemote {
 	
 	public TestPlan readTestPlan(Long id);
 	public List<TestPlan> readTestPlanByUserIdAndDatetime(Long userId, String datetime);
+	public Vector<String> readSystemTestPlanList();
+	
 	
 	public TestPlan getTestPlanFromXML(String testPlanAbsFileName);
 
@@ -42,6 +46,7 @@ public interface TestPlanManagerRemote {
 	public void addActionToWorkflow(Long actionId, Long workflowId);
 
 	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId);
+	
 
 	
 	

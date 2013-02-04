@@ -1,8 +1,11 @@
 package it.enea.xlab.tebes.users;
 
+import java.util.List;
+
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.entity.Role;
+import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 
 public class UserProfileController {
@@ -95,27 +98,6 @@ public class UserProfileController {
 
 		userManagerBean.addSUTToUser(sutId, userId);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	
