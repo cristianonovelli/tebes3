@@ -8,8 +8,7 @@
 	userID="0" 
 	userSUT="xmlupload"
 	datetime="2012-06-13T18:43:00" 
-	state="draft"
-	description="Test Plan to perform Italian INTERCENT-ER UBL Invoice Validation">
+	state="draft">
 	
 	<tebes:TestActionList>
 	

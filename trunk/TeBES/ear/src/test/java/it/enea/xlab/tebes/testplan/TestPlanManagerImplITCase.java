@@ -101,7 +101,7 @@ public class TestPlanManagerImplITCase {
 	@Test
 	public void test1_createTestPlanManager() {
 		
-		// CREATE (from system Test Plan)
+		// CREATE (from system Test Plan XML)
 		// 1. un utente fa login e va nel testplanmanager
 		// 2. può vedere suoi testplan (Test2)
 		// 3. vede lista test plan sistema (Test1) per usarli
@@ -128,7 +128,6 @@ public class TestPlanManagerImplITCase {
 
 		
 
-		
 
 		/*
 		
