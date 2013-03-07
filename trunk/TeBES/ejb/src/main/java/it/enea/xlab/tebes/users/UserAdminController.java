@@ -1,6 +1,7 @@
 package it.enea.xlab.tebes.users;
 
 import it.enea.xlab.tebes.common.JNDIServices;
+import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.User;
 
@@ -135,7 +136,40 @@ public class UserAdminController {
 
 
 
+	// CREATE Role
+	public Long createGroup(Group group) {
 
+		return userManagerBean.createGroup(group);
+	}
+
+
+
+	public List<Long> getGroupIdList() {
+		
+		return userManagerBean.getGroupIdList();
+	}
+
+
+
+	public Group readGroup(Long id) {
+		
+		return userManagerBean.readGroup(id);
+	}
+
+
+
+	public Long setUserGroup(User user, Group group) {
+		
+		return userManagerBean.setUserGroup(user, group);
+	}
+
+
+
+	public Boolean deleteGroup(Long id) {
+		
+		return userManagerBean.deleteGroup(id);
+		
+	}
 
 
 

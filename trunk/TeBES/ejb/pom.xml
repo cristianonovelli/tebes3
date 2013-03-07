@@ -32,8 +32,8 @@
 										<!-- import dev-import.sql -->
 										<delete
 											file="src/main/resources/import.sql.not" />
-										<copy file="config/dev-import.sql.not"
-											tofile="src/main/resources/import.sql.not" />
+										<!--  copy file="config/dev-import.sql.not"
+											tofile="src/main/resources/import.sql.not" / -->
 										
 										<!-- import create-drop_persistence.xml -->
 										<delete
@@ -67,8 +67,8 @@
 										<!-- import dev-import.sql -->
 										<delete
 											file="src/main/resources/import.sql.not" />
-										<copy file="config/dev-import.sql.not"
-											tofile="src/main/resources/import.sql.not" />
+										<!-- copy file="config/dev-import.sql.not"
+											tofile="src/main/resources/import.sql.not" / -->
 										
 										<!-- import update_persistence.xml -->
 										<delete
@@ -102,8 +102,8 @@
 										<!-- import prod-import.sql -->
 										<delete
 											file="src/main/resources/import.sql.not" />
-										<copy file="config/prod-import.sql.not"
-											tofile="src/main/resources/import.sql.not" />
+										<!-- copy file="config/prod-import.sql.not"
+											tofile="src/main/resources/import.sql.not" / -->
 										
 										<!-- import update_persistence.xml -->
 										<delete
