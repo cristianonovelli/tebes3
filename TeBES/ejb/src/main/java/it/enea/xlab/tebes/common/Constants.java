@@ -22,6 +22,11 @@ public class Constants {
 	public static final String SUPERUSER_ROLE_NAME = "super_user";
 	public static final String SUPERUSER_ROLE_DESCRIPTION = "Super User Role: he has whole power and permissions on test bed platform";
 	public static final int SUPERUSER_ROLE_LEVEL = 4;
+
+	// group
+	public static final String XLAB_GROUP_NAME = "xlab1";
+	public static final String XLAB_GROUP_DESCRIPTION = "X-Lab stuff";	
+	
 	
 	// User1
 	public static final String USER1_EMAIL = "angelo.frascella@enea.it";

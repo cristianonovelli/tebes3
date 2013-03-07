@@ -1,5 +1,12 @@
 package it.enea.xlab.tebes.users;
 
+import it.enea.xlab.tebes.common.Constants;
+import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.entity.Group;
+import it.enea.xlab.tebes.entity.Role;
+import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.User;
+
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -9,15 +16,6 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
-
-import it.enea.xlab.tebes.common.Constants;
-import it.enea.xlab.tebes.common.Profile;
-import it.enea.xlab.tebes.common.PropertiesUtil;
-import it.enea.xlab.tebes.entity.Group;
-import it.enea.xlab.tebes.entity.SUT;
-import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.entity.Role;
 
 
 @Stateless
@@ -59,8 +57,6 @@ public class UserManagerImpl implements UserManagerRemote {
 	
 	
 	
-	
-
 	/**
 	 * READ User
 	 */
@@ -69,6 +65,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		return eM.find(User.class, id);
 	}
 
+	
 	/**
 	 * UPDATE User
 	 */
@@ -379,7 +376,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	 */
 	public List<Long> getGroupIdList() {
 
-        String queryString = "SELECT g.id FROM Group AS g";
+        String queryString = "SELECT g.id FROM UserGroup AS g";
         
         Query query = eM.createQuery(queryString);
         List<Long> groupIdList = query.getResultList();
@@ -430,6 +427,7 @@ public class UserManagerImpl implements UserManagerRemote {
         	return null;
 	}
 	
+	
 	/**
 	 * FIND User List by email
 	 */	
@@ -473,11 +471,59 @@ public class UserManagerImpl implements UserManagerRemote {
 
 
 
+	public Group readGroup(Long id) {
+		return eM.find(Group.class, id);
+	}
+
+
+	/**
+	 * SET Group to User
+	 * @return 	 1 ok
+	 * 			-1 exception1 read error
+	 * 			-2 exception2 persist error
+	 */
+	public Long setUserGroup(User user, Group group) {
+
+		try {
+			User u = this.readUser(user.getId());
+			Group g = this.readGroup(group.getId());
+			
+			try {
+				u.setGroup(g);
+				eM.persist(g);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return new Long(-2);
+			}	
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return new Long(-1);
+		}		
+		
+		return new Long(1);		
+	}
 
 
 
+	public Boolean deleteGroup(Long id) {
+		
+		Group group = this.readGroup(id);
+		
+		if (group == null)
+			return false;
+		
+		try {
 
-
+			eM.remove(group);
+			
+		} catch (IllegalArgumentException e) {
+			return false;
+		} catch (Exception e2) {
+			return null;
+		}
+		
+		return true;
+	}
 
 
 	

@@ -3,6 +3,7 @@ package it.enea.xlab.tebes.users;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.sut.SUTManagerController;
@@ -86,15 +87,13 @@ public class UserManagerImplITCase {
 		superUser = userAdminController.readUser(id_superuser);
 		Assert.assertNotNull(superUser);		
 
-		// Prepare 1 User Group 
-		//Group group1 = new Group("xlab1", "X-Lab stuff");
+		// Prepare User Group 
+		Group group1 = new Group(Constants.XLAB_GROUP_NAME, Constants.XLAB_GROUP_DESCRIPTION);
 		
-		// Create 1 group
-		//idGroup1 = userManagerBean.createGroup(group1);
+		// Create group
+		Long idGroup1 = userAdminController.createGroup(group1);
+		Assert.assertTrue(idGroup1 > 0);	
 
-		// Get Group List
-		//List<Long> groupIdList = userManagerBean.getGroupIdList();
-		//Assert.assertTrue(groupIdList.size() == 1);
 		
 	}
 
@@ -119,11 +118,10 @@ public class UserManagerImplITCase {
 		Role advancedRole = userAdminController.readRoleByLevel(2);
 		Long idUser2 = userProfileController.registration(user2, advancedRole);
 		
-		// idUser2 negativo perchè gli ho dato tramite il profileController un ruolo non standard
+		// idUser2 negativo perchè gli ho dato tramite il profileController un ruolo non standard e non è permesso in fase di registrazione
 		Assert.assertTrue(idUser2 < 0);
-		
+		// ripeto l'operazione con il ruolo standard
 		idUser2 = userProfileController.registration(user2, standardRole);
-		
 		
 		// Test: verifico i tre utenti creati
 		List<Long> userIdList = userAdminController.getUserIdList();
@@ -178,7 +176,7 @@ public class UserManagerImplITCase {
 		// TODO delete user
 		// logout
 		
-		// Login Admin
+		// Login Admin per usare il service EJB AdminController altrimenti inacessibile
 		String superUserEmail = PropertiesUtil.getUser1Email();
 		String superUserPassword = PropertiesUtil.getUser1Password();	
 		User superUser = userProfileController.login(superUserEmail, superUserPassword);
@@ -187,40 +185,53 @@ public class UserManagerImplITCase {
 		// Get User List
 		List<Long> userIdList = userAdminController.getUserIdList();
 		Assert.assertTrue(userIdList.size() > 0);
-
 		
-		// Recupero ROLE
+		// Get Admin ROLE
 		Role adminRole = userAdminController.readRoleByLevel(3);
 		Assert.assertNotNull(adminRole);	
+
+		// Get Group List
+		List<Long> groupIdList = userAdminController.getGroupIdList();
+		Assert.assertTrue(groupIdList.size() == 1);
+		Group xlabGroup = userAdminController.readGroup(groupIdList.get(0));
+		Assert.assertNotNull(xlabGroup);
+		
 		
 		User tempUser;
-		Long tempUserId;
+		Long tempUserId, groupSetting;
 		
-		// Per ogni utente (tranne l'admin) cambio ruolo
+		// Per ogni utente (tranne lo superuser) cambio ruolo e assegno gruppo
 		for (int u=0;u<userIdList.size();u++) {
 			
 			tempUserId = (Long) userIdList.get(u);
 			Assert.assertTrue(tempUserId > 0);
 
+			tempUser = userAdminController.readUser(tempUserId);			
+			Assert.assertNotNull(tempUser);		
+			
 			// Questo controllo deve esserci sia qui che anche internamente alle funzioni
-			if (tempUserId.intValue() != superUser.getId().intValue()) {
-				tempUser = userAdminController.readUser(tempUserId);			
-				Assert.assertNotNull(tempUser);
-							
-	
+			if (tempUserId.intValue() != superUser.getId().intValue()) {			
+				
 				// Change ROLE to User
 				userAdminController.setUserRole(tempUser, adminRole);
-				tempUser = userAdminController.readUser(tempUserId);
+				
+				// Check Group and Role
+				tempUser = userAdminController.readUser(tempUserId);					
 				Assert.assertTrue(tempUser.getRole().getLevel() == Constants.ADMIN_ROLE_LEVEL);
 			
 			}
 			
+			// Set xlab GROUP to everyone
+			groupSetting = userAdminController.setUserGroup(tempUser, xlabGroup);
+			Assert.assertTrue(groupSetting>0);
+			tempUser = userAdminController.readUser(tempUserId);	
+			Assert.assertTrue(tempUser.getGroup().getName().equals(Constants.XLAB_GROUP_NAME));
+			
 		}
 		
 		// Verifico Role
-		tempUser = userProfileController.login("angelo.frascella@enea.it", "xangelo");
+		tempUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
 		Assert.assertEquals(tempUser.getRole().getLevel(), adminRole.getLevel());
-		
 
 		// DELETE Users
 		Boolean deleting;
@@ -280,6 +291,14 @@ public class UserManagerImplITCase {
 				deleting = userAdminController.deleteRole(tempRole.getId());
 				Assert.assertTrue(deleting);			
 		}		
+		
+		// Get Group List
+		List<Long> groupIdList = userAdminController.getGroupIdList();
+		Assert.assertTrue(groupIdList.size() == 1);
+		deleting = userAdminController.deleteGroup(groupIdList.get(0));
+		Assert.assertTrue(deleting);
+		groupIdList = userAdminController.getGroupIdList();
+		Assert.assertTrue(groupIdList.size() == 0);
 		
 		// Last Check
 		// Sono stati eliminati tutti gli utenti?

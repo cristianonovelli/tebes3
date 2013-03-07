@@ -1,7 +1,7 @@
 package it.enea.xlab.tebes.users;
 
+import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
-import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 
 import java.util.List;
@@ -21,36 +21,24 @@ public interface UserManagerRemote {
 	
 	// UPDATE User
 	public Boolean updateUser(User user);	
+	public void addSUTToUser(Long sutId, Long userId);
 	
 	// DELETE User
 	public Boolean deleteUser(Long id);	
 	public Boolean deleteUserByEmail(String email);
 
-	
-	// Join functions
-	//public void addSUTToUser(SUT sut, User user);
-	public void addSUTToUser(Long sutId, Long userId);
-	public void setUserRole(User user, Role role);
-
-	// SUT functions	
-	//public Long createSUT(SUT sut);
-	//public SUT readSUT(Long idSUT);
-	
 	// Role functions
 	public Long createRole(Role role);	
 	public Role readRole(Long idRole);	
 	public Role readRoleByLevel(int level);
 	public List<Long> getRoleIdList();
+	public void setUserRole(User user, Role role);
 	public Boolean deleteRole(Long id);
 
-
-	
-
-	
-
 	// Group functions
-	//public Long createGroup(Group group);
-	//public List<Long> getGroupIdList();
-	
-
+	public Long createGroup(Group group);
+	public List<Long> getGroupIdList();
+	public Group readGroup(Long id);
+	public Long setUserGroup(User user, Group group);
+	public Boolean deleteGroup(Long id);
 }

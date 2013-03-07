@@ -49,9 +49,9 @@ public class User implements Serializable {
 	 * Molti User possono appartenere a molti Group => ManyToMany 
 	 * PER ORA PROÏVIAMO MANYTOONE
 	 *//**/
-	//@ManyToOne(cascade=CascadeType.ALL)
-	//@JoinColumn(name="group_id")
-	//private Group group;
+	@ManyToOne(cascade=CascadeType.MERGE)
+	@JoinColumn(name="group_id")
+	private Group group;
 	
 	
 	
@@ -162,14 +162,14 @@ public class User implements Serializable {
 
 	
 	
-/*	public Group getGroup() {
+	public Group getGroup() {
 		return group;
 	}
 
 
 	public void setGroup(Group group) {
 		this.group = group;
-	}*/
+	}
 
 
 }
