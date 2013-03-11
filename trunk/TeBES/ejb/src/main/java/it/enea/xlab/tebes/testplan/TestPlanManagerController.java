@@ -14,6 +14,7 @@ import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.User;
 
 public class TestPlanManagerController {
 
@@ -111,7 +112,14 @@ public class TestPlanManagerController {
 
 	public Vector<String> getSystemTestPlanList() {
 		
-		return testPlanManagerService.readSystemTestPlanList();
+		return testPlanManagerService.getSystemTestPlanList();
+	}
+
+
+
+	public List<TestPlan> readUserTestPlanList(User user) {
+		
+		return testPlanManagerService.readUserTestPlanList(user);
 	}
 	
 	

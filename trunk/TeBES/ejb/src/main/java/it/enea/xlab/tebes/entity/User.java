@@ -24,13 +24,14 @@ public class User implements Serializable {
 	@Column(name="id")
 	private Long id;
 
-	//private String userId;
 	private String name;
 	private String surname;
 	private String eMail;
 	private String password;
 	
+	
 	/**
+	 * Lista dei SUT dello User 
 	 * Ogni User ha uno o più SUT => OneToMany
 	 */
 	@OneToMany(mappedBy="user", 
@@ -39,19 +40,29 @@ public class User implements Serializable {
 	
 	
 	/**
+	 * ROLE dello User
 	 * Molti User hanno lo stesso Role => ManyToOne 
 	 */
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="role_id")
 	private Role role;
 
-/*	*//**
-	 * Molti User possono appartenere a molti Group => ManyToMany 
-	 * PER ORA PROìVIAMO MANYTOONE
-	 *//**/
+	
+	/**
+	 * GROUP dello User
+	 * Molti User hanno lo stesso Group => ManyToOne 
+	 */
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="group_id")
 	private Group group;
+	
+	
+	/**
+	 * Lista dei TEST PLANS dello User 
+	 * Ogni User ha zero o più TestPlans => OneToMany
+	 */
+	@OneToMany(mappedBy="user", cascade = {CascadeType.ALL,CascadeType.MERGE})
+	private List<TestPlan> testPlans;
 	
 	
 	
@@ -154,14 +165,11 @@ public class User implements Serializable {
 		return role;
 	}
 
-
+	
 	public void setRole(Role role) {
 		this.role = role;
 	}
 
-
-	
-	
 	public Group getGroup() {
 		return group;
 	}
@@ -169,6 +177,16 @@ public class User implements Serializable {
 
 	public void setGroup(Group group) {
 		this.group = group;
+	}
+
+
+	public List<TestPlan> getTestPlans() {
+		return testPlans;
+	}
+
+
+	public void setTestPlans(List<TestPlan> testPlans) {
+		this.testPlans = testPlans;
 	}
 
 
