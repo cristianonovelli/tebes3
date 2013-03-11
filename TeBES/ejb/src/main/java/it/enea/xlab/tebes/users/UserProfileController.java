@@ -15,7 +15,7 @@ public class UserProfileController {
 
 	public UserProfileController() throws Exception {
 
-		int guard = 0;
+		int guard = 1;
 		
 		// To avoid Remote Not Bound exception, we retry to lockup for 5 attempts
 		// waiting 2 seconds between an attempt and another
@@ -28,9 +28,9 @@ public class UserProfileController {
 				guard = 5;
 			} catch (Exception e) {
 				
-				guard++;
 				System.out.println("REMOTE NOT BOUND for UserAdminController. Try " + guard + " of 5");				
-				wait(2000);
+				Thread.sleep(2000);
+				guard++;
 			}
 		}
 				

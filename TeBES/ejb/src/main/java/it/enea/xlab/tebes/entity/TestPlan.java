@@ -5,10 +5,11 @@ import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -20,23 +21,32 @@ public class TestPlan implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	//private String userId;
-	//private String userSUT;
-	
 	@Column(length=9999) 
 	private String xml;
 	
-	//private String testPlanId;
+	// TODO avendo collegato tramite JPA questa classe a user
+	// si è venuto a creare il campo user_id e quindi questo non ha motivo di esistere
+	// cancellarlo assicurandosi che l'importazione XML rimanga consistente
 	private Long userId;
+	
 	private String datetime;
 	private String state;
 	private String location;
 		
-	// private Header header;
+
+	/**
+	 * USER del TestPlan
+	 * Molti TestPlan hanno lo stesso User => ManyToOne 
+	 */
+	@ManyToOne(cascade=CascadeType.MERGE)
+	@JoinColumn(name="user_id")
+	private User user;
 	
 	
-	//(mappedBy="testPlan", 
-		//	cascade = {CascadeType.ALL,CascadeType.MERGE },fetch = FetchType.EAGER)
+	/**
+	 * WORKFLOW del TestPlan
+	 * Ogni TestPlan ha un workflow di actions => OneToOne 
+	 */
 	@OneToOne(mappedBy="testPlan",cascade = CascadeType.ALL)
 	ActionWorkflow workflow;
 
@@ -56,14 +66,13 @@ public class TestPlan implements Serializable {
 		
 		this.workflow = null;
 	}
+	
 
 	public TestPlan(String xml) {
 
 		this.xml = xml;
 	}
 
-	
-	
 	
 	public Long getId() {
 		return id;
@@ -119,10 +128,17 @@ public class TestPlan implements Serializable {
 
 	public void setWorkflow(ActionWorkflow workflow) {
 		this.workflow = workflow;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}	
 	
-	
-	
+
 	
 }
 

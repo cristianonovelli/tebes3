@@ -6,6 +6,7 @@ import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 /**
  * @author fulvio di marco, chiara pezzi, stefano monti
@@ -26,59 +27,46 @@ public class JNDIServices {
 	private static String TestPlanManagerServiceName = "TeBES-ear/TestPlanManagerImpl/remote";
 	
 
-	public static UserManagerRemote getUserManagerService() {
+	public static UserManagerRemote getUserManagerService() throws NamingException {
 		
 		if (userManager == null) {
-			try {
-				InitialContext ctx = new InitialContext();
-				
+
+				InitialContext ctx = new InitialContext();		
 				userManager = (UserManagerRemote) ctx.lookup(UserManagerServiceName);
 				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 		
 		
 		return userManager;
 	}
 
-	public static SUTManagerRemote getSUTManagerService() {
+	public static SUTManagerRemote getSUTManagerService() throws NamingException {
 
 		if (sutManager == null) {
-			try {
+
 				InitialContext ctx = new InitialContext();
 				sutManager = (SUTManagerRemote) ctx.lookup(SUTManagerServiceName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 		return sutManager;
 	}
 	
 
-	public static SessionManagerRemote getSessionManagerService() {
+	public static SessionManagerRemote getSessionManagerService() throws NamingException {
 
 		if (sessionManager == null) {
-			try {
+
 				InitialContext ctx = new InitialContext();
 				sessionManager = (SessionManagerRemote) ctx.lookup(SessionManagerServiceName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 		return sessionManager;
 	}
 
-	public static TestPlanManagerRemote getTestPlanManagerService() {
+	public static TestPlanManagerRemote getTestPlanManagerService() throws NamingException {
 
 		if (testPlanManager == null) {
-			try {
+
 				InitialContext ctx = new InitialContext();
 				testPlanManager = (TestPlanManagerRemote) ctx.lookup(TestPlanManagerServiceName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 		return testPlanManager;
 	}

@@ -103,53 +103,69 @@ public class TestPlanManagerImplITCase {
 		
 		// CREATE (from system Test Plan XML)
 		// 1. un utente fa login e va nel testplanmanager
-		// 2. può vedere suoi testplan (Test2)
+		// 2. può vedere suoi testplan 
 		// 3. vede lista test plan sistema (Test1) per usarli
 		// 4. sceglie un test plan predefinito, tramite ID?
 		// 5. importa il nuovo testplan da template xml
 		// 6. il testplan viene scritto in memoria modificando i campi dove occorre
 		// 	(quali sono i campi da personalizzare? id, nome utente, che altro?)
 				
-		// Create a temporary User	
-		User tempUser = new User("Temp", "User4TestPlan", "tempuser.fortestplan@enea.it", "xuser");
-		Long idTempUser = userProfileController.registration(tempUser, role1_standard);
+		// Create a temporary User
+		// (non importa in questo test che lo superuser esista o meno)
+		User currentUser = new User("Temp1", "User1", Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
+		User otherUser = new User("Temp2", "User2", Constants.USER2_EMAIL1, Constants.USER2_EMAIL1);
+		Long idTempUser = userProfileController.registration(currentUser, role1_standard);
 		
 		// Login
-		tempUser = userProfileController.login(tempUser.geteMail(), tempUser.getPassword());
-		idTempUser = tempUser.getId();
+		currentUser = userProfileController.login(currentUser.geteMail(), currentUser.getPassword());
+		idTempUser = currentUser.getId();
 		
-		Assert.assertNotNull(tempUser);
+		Assert.assertNotNull(currentUser);
 		Assert.assertTrue(idTempUser > 0);
+		
+		
+		
+		
+		/*
+		
+		// Get Current User Test Plan List
+		List<TestPlan> userTestPlanList = testPlanController.readUserTestPlanList(currentUser);
+		Assert.assertNotNull(userTestPlanList);
+		Assert.assertTrue(userTestPlanList.size() == 0);
+		
+		
+		
 		
 		
 		// 1. READ SYSTEM TESTPLAN LIST
 		Vector<String> systemTestPlanList = testPlanController.getSystemTestPlanList();
 		Assert.assertTrue(systemTestPlanList.size() == 2);
 
-		
+		// User chooses a System Test Plan
+		String testPlanAbsPathName = PropertiesUtil.getSuperUserTestPlanDir().concat(systemTestPlanList.elementAt(0));
 
-
-		/*
-		
-		// Get TeBES Test Plan from XML
+		// Get System Test Plan from XML
 		TestPlan testPlan = null;
 		try {
-			testPlan = testPlanController.getTestPlanFromXML(testPlan1AbsPathName);
+			testPlan = testPlanController.getTestPlanFromXML(testPlanAbsPathName);
 			Assert.assertNotNull(testPlan);
 			
 		} catch (Exception e) {
 			
 			e.printStackTrace();
-			testPlan = null;
-			Assert.assertNotNull(testPlan);		
+			testPlan = null;	
 		}
 		Assert.assertNotNull(testPlan);
-
 		
 		
-		// Create TestPlan
-		Long testPlanId = testPlanController.createTestPlan(testPlan);	
-		Assert.assertNotNull(testPlanId);
+		// Create TestPlan Entity
+		//testPlan.setUser(currentUser);
+		//Long testPlanId = testPlanController.createTestPlan(testPlan);	
+		//Assert.assertNotNull(testPlanId);
+		
+		
+		// 
+		
 		
 		
 		 
@@ -185,7 +201,7 @@ public class TestPlanManagerImplITCase {
 		
 		
 		// User DELETING
-		Boolean b = userAdminController.deleteUser(tempUser.getId());
+		Boolean b = userAdminController.deleteUser(currentUser.getId());
 		Assert.assertTrue(b);
 	}
 		/*
@@ -301,7 +317,7 @@ public class TestPlanManagerImplITCase {
 		
 	}*/
 
-	@AfterClass
+/*	@AfterClass
 	public static void after_sutManager() throws Exception {
 
 		Boolean deleting;
@@ -338,7 +354,7 @@ public class TestPlanManagerImplITCase {
 		userIdList = userAdminController.getUserIdList();
 		Assert.assertTrue(userIdList.size() == 0);
 		
-	}
+	}*/
 }
 
 

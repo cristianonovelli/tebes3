@@ -1,20 +1,29 @@
 package it.enea.xlab.tebes.testplan;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.User;
 
 
 import javax.ejb.Local;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 @Local
 public interface TestPlanManagerLocal {
 
-	//public TestPlanOLD importTestPlan(String testPlanFilePath, String userId);
-	
 	public TestPlan readTestPlan(Long id);
+	public List<TestPlan> readTestPlanByUserIdAndDatetime(Long userId, String datetime);
+	public Vector<String> getSystemTestPlanList();
+	public List<TestPlan> readUserTestPlanList(User user);
+	
 	
 	public TestPlan getTestPlanFromXML(String testPlanAbsFileName);
 
@@ -22,7 +31,7 @@ public interface TestPlanManagerLocal {
 	
 	public Boolean updateTestPlan(TestPlan testPlan);
 
-	public List<Action> getActionsFromXML(Long testPlanId);
+	public List<Action> getActionsFromXML(Long testPlanId) throws FileNotFoundException, SAXException, ParserConfigurationException, IOException;
 
 	//public TestPlan findTestPlanByTestPlanId(String testPlanId);
 
@@ -34,7 +43,7 @@ public interface TestPlanManagerLocal {
 
 	public Action readAction(Long id_action);
 
-	public void addActionToWorkflow(Long workflowId, Long actionId);
+	public void addActionToWorkflow(Long actionId, Long workflowId);
 
 	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId);
 }

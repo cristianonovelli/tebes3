@@ -7,6 +7,7 @@ import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.User;
 
 import java.io.IOException;
 import java.util.List;
@@ -66,6 +67,25 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		}
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	public List<TestPlan> readUserTestPlanList(User user) {
+
+		Vector<TestPlan> testPlanListResult = new Vector<TestPlan>();
+		
+        String queryString = "SELECT t FROM TestPlan AS t";
+        
+        Query query = eM.createQuery(queryString);
+        List<TestPlan> tempTestPlanList = query.getResultList();
+        
+        for (int i=0; i<tempTestPlanList.size(); i++)         	
+        	if (tempTestPlanList.get(0).getUser().getId().intValue()==user.getId().intValue())
+        		testPlanListResult.add(tempTestPlanList.get(0));
+	
+        return testPlanListResult;
+	}
+
+	
 	
 	/**
 	 * UPDATE Test Plan
@@ -324,7 +344,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	}
 
 
-	public Vector<String> readSystemTestPlanList() {
+	public Vector<String> getSystemTestPlanList() {
 
 		Vector<String> result = null;
 		
@@ -346,6 +366,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		return result;
 	}
+
+
 
 
 	
