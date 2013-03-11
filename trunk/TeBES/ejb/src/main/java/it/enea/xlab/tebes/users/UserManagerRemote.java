@@ -39,6 +39,6 @@ public interface UserManagerRemote {
 	public Long createGroup(Group group);
 	public List<Long> getGroupIdList();
 	public Group readGroup(Long id);
-	public Long setUserGroup(User user, Group group);
+	//public Long setUserGroup(User user, Group group);
 	public Boolean deleteGroup(Long id);
 }

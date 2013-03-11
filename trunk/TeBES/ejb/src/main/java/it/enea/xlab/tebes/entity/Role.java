@@ -27,8 +27,8 @@ public class Role implements Serializable {
 	/**
 	 * Ogni gruppo ha molti utenti => OneToMany 
 	 */
-	@OneToMany(mappedBy="role",
-			cascade = {CascadeType.ALL,CascadeType.MERGE})
+	//,cascade = {CascadeType.ALL,CascadeType.MERGE})
+	@OneToMany(mappedBy="role")	
 	private List<User> users;
 
 	
