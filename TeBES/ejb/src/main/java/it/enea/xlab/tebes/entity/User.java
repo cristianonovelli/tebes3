@@ -34,8 +34,10 @@ public class User implements Serializable {
 	 * Lista dei SUT dello User 
 	 * Ogni User ha uno o più SUT => OneToMany
 	 */
-	@OneToMany(mappedBy="user", 
-			cascade = {CascadeType.ALL,CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
+	//,CascadeType.MERGE,CascadeType.REMOVE
+	// , fetch = FetchType.EAGER
+	// @OneToMany(mappedBy="user",cascade = {CascadeType.ALL})
+	@OneToMany(mappedBy="user")
 	private List<SUT> userSut;
 	
 	
@@ -43,7 +45,8 @@ public class User implements Serializable {
 	 * ROLE dello User
 	 * Molti User hanno lo stesso Role => ManyToOne 
 	 */
-	@ManyToOne(cascade=CascadeType.MERGE)
+	// (cascade=CascadeType.MERGE)
+	@ManyToOne
 	@JoinColumn(name="role_id")
 	private Role role;
 
@@ -52,7 +55,8 @@ public class User implements Serializable {
 	 * GROUP dello User
 	 * Molti User hanno lo stesso Group => ManyToOne 
 	 */
-	@ManyToOne(cascade=CascadeType.MERGE)
+	// (cascade=CascadeType.MERGE)
+	@ManyToOne
 	@JoinColumn(name="group_id")
 	private Group group;
 	
@@ -61,7 +65,8 @@ public class User implements Serializable {
 	 * Lista dei TEST PLANS dello User 
 	 * Ogni User ha zero o più TestPlans => OneToMany
 	 */
-	@OneToMany(mappedBy="user", cascade = {CascadeType.ALL,CascadeType.MERGE})
+	// , cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy="user")
 	private List<TestPlan> testPlans;
 	
 	

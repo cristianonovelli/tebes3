@@ -29,7 +29,8 @@ public class Group implements Serializable {
 	@OneToMany(mappedBy="group",
 			cascade = {CascadeType.ALL,CascadeType.MERGE})
 	private List<User> members;*/
-	@OneToMany(mappedBy="group", cascade = {CascadeType.ALL,CascadeType.MERGE})
+	// ,cascade = {CascadeType.MERGE})
+	@OneToMany(mappedBy="group")
 	private List<User> users;
 	//		cascade = {CascadeType.ALL,CascadeType.MERGE})
 	 

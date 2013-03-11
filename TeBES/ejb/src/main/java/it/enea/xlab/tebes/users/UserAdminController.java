@@ -158,10 +158,10 @@ public class UserAdminController {
 
 
 
-	public Long setUserGroup(User user, Group group) {
+/*	public Long setUserGroup(User user, Group group) {
 		
 		return userManagerBean.setUserGroup(user, group);
-	}
+	}*/
 
 
 
