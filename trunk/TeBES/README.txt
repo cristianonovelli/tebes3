@@ -18,6 +18,7 @@ mvn clean install -DskipTests
 
 7. Check JUnit Tests through one of following maven statements:
 mvn clean install
+mvn clean install -Pdev-create -DskipTests
 mvn clean install -Pdev-create
 mvn clean install -Pdev-update
 mvn clean install -Pprod
