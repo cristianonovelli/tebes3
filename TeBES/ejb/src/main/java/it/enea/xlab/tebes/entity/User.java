@@ -13,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 @Entity
 public class User implements Serializable {
 	
@@ -36,6 +39,7 @@ public class User implements Serializable {
 	//,CascadeType.MERGE,CascadeType.REMOVE
 	// , fetch = FetchType.EAGER
 	@OneToMany(mappedBy="user",cascade = {CascadeType.ALL})
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<SUT> userSut;
 	
 	
@@ -53,9 +57,9 @@ public class User implements Serializable {
 	 * Molti User hanno lo stesso Group => ManyToOne 
 	 */
 	// (cascade=CascadeType.MERGE)
-/*	@ManyToOne
+	@ManyToOne
 	@JoinColumn(name="group_id")
-	private Group group;*/
+	private Group group;
 	
 	
 	/**
@@ -172,14 +176,14 @@ public class User implements Serializable {
 		this.role = role;
 	}
 
-/*	public Group getGroup() {
+	public Group getGroup() {
 		return group;
 	}
 
 
 	public void setGroup(Group group) {
 		this.group = group;
-	}*/
+	}
 
 
 	public List<TestPlan> getTestPlans() {

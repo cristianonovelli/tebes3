@@ -482,7 +482,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	 * 			-1 exception1 read error
 	 * 			-2 exception2 persist error
 	 */
-/*	public Long setUserGroup(User user, Group group) {
+	public Long setUserGroup(User user, Group group) {
 
 		try {
 			User u = this.readUser(user.getId());
@@ -501,7 +501,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		}		
 		
 		return new Long(1);		
-	}*/
+	}
 
 
 
