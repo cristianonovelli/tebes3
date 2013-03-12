@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,8 +35,7 @@ public class User implements Serializable {
 	 */
 	//,CascadeType.MERGE,CascadeType.REMOVE
 	// , fetch = FetchType.EAGER
-	// @OneToMany(mappedBy="user",cascade = {CascadeType.ALL})
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user",cascade = {CascadeType.ALL})
 	private List<SUT> userSut;
 	
 	
@@ -45,8 +43,7 @@ public class User implements Serializable {
 	 * ROLE dello User
 	 * Molti User hanno lo stesso Role => ManyToOne 
 	 */
-	// (cascade=CascadeType.MERGE)
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="role_id")
 	private Role role;
 
@@ -56,9 +53,9 @@ public class User implements Serializable {
 	 * Molti User hanno lo stesso Group => ManyToOne 
 	 */
 	// (cascade=CascadeType.MERGE)
-	@ManyToOne
+/*	@ManyToOne
 	@JoinColumn(name="group_id")
-	private Group group;
+	private Group group;*/
 	
 	
 	/**
@@ -175,14 +172,14 @@ public class User implements Serializable {
 		this.role = role;
 	}
 
-	public Group getGroup() {
+/*	public Group getGroup() {
 		return group;
 	}
 
 
 	public void setGroup(Group group) {
 		this.group = group;
-	}
+	}*/
 
 
 	public List<TestPlan> getTestPlans() {
