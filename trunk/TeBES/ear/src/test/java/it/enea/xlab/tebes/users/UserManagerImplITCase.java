@@ -222,10 +222,10 @@ public class UserManagerImplITCase {
 			}
 			
 			// Set xlab GROUP to everyone
-			//groupSetting = userAdminController.setUserGroup(tempUser, xlabGroup);
-			//Assert.assertTrue(groupSetting>0);
-			//tempUser = userAdminController.readUser(tempUserId);	
-			//Assert.assertTrue(tempUser.getGroup().getName().equals(Constants.XLAB_GROUP_NAME));
+			groupSetting = userAdminController.setUserGroup(tempUser, xlabGroup);
+			Assert.assertTrue(groupSetting>0);
+			tempUser = userAdminController.readUser(tempUserId);	
+			Assert.assertTrue(tempUser.getGroup().getName().equals(Constants.XLAB_GROUP_NAME));
 			
 		}
 		

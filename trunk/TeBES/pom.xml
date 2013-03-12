@@ -16,7 +16,8 @@
 	<repositories>
 		<repository>
 		<id>jboss repository</id>
-		<url>https://repository.jboss.org/nexus/content/groups/public/</url>	
+		<!-- url>https://repository.jboss.org/nexus/content/groups/public/</url -->
+		<url>http://repository.jboss.org/nexus/content/repositories/releases</url>	
 		</repository>
 	</repositories>
 
