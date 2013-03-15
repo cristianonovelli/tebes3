@@ -67,7 +67,8 @@ public class User implements Serializable {
 	 * Ogni User ha zero o più TestPlans => OneToMany
 	 */
 	// , cascade = CascadeType.MERGE)
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user",cascade = {CascadeType.ALL})
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<TestPlan> testPlans;
 	
 	

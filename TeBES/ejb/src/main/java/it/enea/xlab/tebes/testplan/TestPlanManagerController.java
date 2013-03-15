@@ -7,9 +7,12 @@ import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import junit.framework.Assert;
+
 import org.xml.sax.SAXException;
 
 import it.enea.xlab.tebes.common.JNDIServices;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.SUT;
@@ -38,7 +41,10 @@ public class TestPlanManagerController {
 				
 				guard++;
 				System.out.println("REMOTE NOT BOUND for TestPlanManagerController. Try " + guard + " of 5");				
-				wait(2000);
+				
+				//wait(2000);
+				Thread.currentThread();
+				Thread.sleep(2000);
 			}
 		}	
 	}
@@ -112,7 +118,7 @@ public class TestPlanManagerController {
 
 	public Vector<String> getSystemTestPlanList() {
 		
-		return testPlanManagerService.getSystemTestPlanList();
+		return testPlanManagerService.getSystemXMLTestPlanList();
 	}
 
 
@@ -120,6 +126,20 @@ public class TestPlanManagerController {
 	public List<TestPlan> readUserTestPlanList(User user) {
 		
 		return testPlanManagerService.readUserTestPlanList(user);
+	}
+
+
+
+	public Long addTestPlanToUser(Long testPlanId, Long userId) {
+		
+		return testPlanManagerService.addTestPlanToUser(testPlanId, userId);
+	}
+
+
+
+	public List<TestPlan> readSystemTestPlanList() {
+
+		return testPlanManagerService.readSystemTestPlanList();
 	}
 	
 	

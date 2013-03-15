@@ -6,7 +6,6 @@
 	xsi:schemaLocation="http://www.ubl-italia.org/TeBES/xmlschemas/TAML http://www.ubl-italia.org/TeBES/xmlschemas/TAML/testAssertionMarkupLanguage.xsd"
 	id="TP-1"
 	userID="0" 
-	userSUT="xmlupload"
 	datetime="2012-06-13T18:43:00" 
 	state="draft"
 	description="Test Plan to perform Italian INTERCENT-ER UBL Invoice Validation">
@@ -22,7 +21,13 @@
 				type="TestAssertion" 
 				jumpPrerequisites="true"
 				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml">TA-001_TC-001_TS-001</tebes:Test>
-			
+			<tebes:EUT 
+				type="document" 
+				lg="xml"
+				reference="http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd"
+				description="My UBL Invoice">
+				<tebes:interaction type="website" />
+				</tebes:EUT>
 		</tebes:TestAction>
 	
 	
@@ -92,7 +97,38 @@
 				type="TestAssertion" 
 				jumpPrerequisites="false" 
 				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml">TA-001_TC-001_TS-005</tebes:Test>
-			
+				
+			<!-- 
+				EUT sta per Element Under Test ed è un elemento del SUT 
+				(o il SUT stesso se l'elemento è uno)
+				su cui sarà eseguita quest'action.
+				Nell'action corrente, per esempio, il SUT è la fattura UBL.
+				I seguenti attributi possono assumere i seguenti valori:
+				- type: "document", "transport", "process";
+				- language:
+				"xml": se sto effettuando validazione schema o schematron
+				"ebms" o "soap": se sto effettuando validazione sulla transazione
+				"ebbp": se sto effettuando validazione sul processo				
+				- reference: uri specifico dello schema di regole che descrive il linguaggio usato
+				(schema ubl, schema ebms, schema ebbp, profilo, ecc.)
+				- description: descrizione testuale
+			-->
+			<tebes:EUT 
+				type="document" 
+				lg="xml"
+				reference="http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd"
+				description="My UBL Invoice">
+				
+					<!-- L'elemento complesso tebes:interaction specifica l'interazione con la piattaforma di test:
+						- website: interazione tramite interfaccia del sito web, upload e download;
+						- email: interazione tramite protocollo pop/smtp;
+						- webservice: interazione tramite servizio web;
+						- ebxmlcpa: interazione descritta tramite standard ebXML CPA.
+						A seconda del tipo di interazione scelta l'elemento può contenere altri parametri,
+						come per esempio tebes:endpoint
+					-->
+					<tebes:interaction type="website" />
+				</tebes:EUT>
 		</tebes:TestAction>
 		
 

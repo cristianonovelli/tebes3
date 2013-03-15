@@ -22,7 +22,7 @@ public interface TestPlanManagerRemote {
 	
 	public TestPlan readTestPlan(Long id);
 	public List<TestPlan> readTestPlanByUserIdAndDatetime(Long userId, String datetime);
-	public Vector<String> getSystemTestPlanList();
+	public Vector<String> getSystemXMLTestPlanList();
 	public List<TestPlan> readUserTestPlanList(User user);
 	
 	
@@ -47,11 +47,8 @@ public interface TestPlanManagerRemote {
 	public void addActionToWorkflow(Long actionId, Long workflowId);
 
 	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId);
-	
-
-	
-
-	
+	public Long addTestPlanToUser(Long testPlanId, Long userId);
+	public List<TestPlan> readSystemTestPlanList();
 	
 	
 	

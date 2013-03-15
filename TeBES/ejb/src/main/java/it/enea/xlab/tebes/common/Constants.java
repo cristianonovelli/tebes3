@@ -36,22 +36,42 @@ public class Constants {
 	public static final String USER2_EMAIL2 = "arianna2@enea.it";	
 	public static final String USER2_PASSWORD1 = "xpiero";	
 	public static final String USER2_PASSWORD2 = "xarianna";	
+
+	// SUT description
+	public static final String SUT_DESCRIPTION = "Static SUT description";
 	
-	// SUT
-	public static final String SUT_DESCRIPTION = "descrizione";	
+	// SUT Types
+	public static final String SUT_TYPE1_DOCUMENT = "document";
+	public static final String SUT_TYPE2_TRANSPORT = "transport";
+	public static final String SUT_TYPE3_PROCESS = "process";
+
+	// SUT Interactions
+	// interazioni possibili: website (upload), email, webservice, ebxmlcpa
+	public static final String INTERACTION_WEBSITE = "website";
+	public static final String INTERACTION_EMAIL = "email";
+	public static final String INTERACTION_WS = "webservice";
+	public static final String INTERACTION_CPA = "ebxmlcpa";
 	
+	// Supported Test Definition Language Types
+	public static final String TAML = "taml";
 	
-	// Test Languages
+	// Supported Definition Language Types
+	public static final String XML = "xml";
+	public static final String UBL = "ubl";
+	public static final String EBMS = "ebms";
+	public static final String EBBP = "ebbp";
+	
+	// References of schema languages
 	public static final String XPATH = "http://www.w3.org/TR/xpath20/";
 	public static final String SCHEMATRON = "http://purl.oclc.org/dsdl/schematron";
-	
-	// Test Definition Language Types
-	public static final String TAML = "taml";
+	public static final String UBLSCHEMA = "http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd";
 	
 	// Test Artifact Types
 	public static final String TA = "TestAssertion";
 	public static final String TC = "TestCase";
 	public static final String TS = "TestSuite";
+	
+
 	
 	// Other Values
 	public static final String MANDATORY = "mandatory";

@@ -20,7 +20,24 @@ public class SUT implements Serializable {
 	private Long id;
 	
 	private String name;
+	
+	// tipi possibili: document, transport, process
 	private String type;
+	
+	// linguaggi possibili:
+	// xml: se sto effettuando validazione schema o schematron
+	// ebms: se sto effettuando validazione sulla transazione
+	// ebbp: se sto effettuando validazione sul processo
+	private String language;
+	
+	// riferimento alla descrizione delle regole che descrivono il linguaggio usato
+	// (p.es. schema ubl, schema ebms, schema ebbp, profilo, ecc.)
+	private String reference;
+	
+	// interazioni possibili: website (upload), email, ws, cpa
+	private SUTInteraction interaction;
+	
+	// descrizione testuale
 	private String description;
 
 
@@ -36,11 +53,14 @@ public class SUT implements Serializable {
 	/**
 	 * Constructor without id.
 	 */
-	public SUT(String name, String type, String description) {
+	public SUT(String name, String type, String language, String reference, SUTInteraction interaction, String description) {
 
-		this.name = name;
-		this.type = type;
-		this.description = description;
+		this.setName(name);
+		this.setType(type);
+		this.setLanguage(language);
+		this.setReference(reference);
+		this.setInteraction(interaction);
+		this.setDescription(description);
 	}
 
 
@@ -100,6 +120,36 @@ public class SUT implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+
+	public String getLanguage() {
+		return language;
+	}
+
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+
+	public String getReference() {
+		return reference;
+	}
+
+
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
+
+
+	public SUTInteraction getInteraction() {
+		return interaction;
+	}
+
+
+	public void setInteraction(SUTInteraction interaction) {
+		this.interaction = interaction;
 	}
 
 }
