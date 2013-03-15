@@ -6,13 +6,17 @@ import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.users.UserManagerImpl;
+import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -36,6 +40,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
+	@EJB
+	private UserManagerRemote userManager;
 	
 	public TestPlan readTestPlan(Long id) {
 		
@@ -48,23 +54,26 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	 * La createTestPlan crea un nuovo TestPlan solo se non esistono per questo utente TestPlan con lo stesso datetime
 	 * @return 	id of TestPlan if created
 	 * 			-1 if already a TestPlan with that datetime exists
-	 * 			-2 if an exception occurs
+	 * 			-2 if a persist exception occurs
 	 */
 	public Long createTestPlan(TestPlan testPlan) {
 
 		List<TestPlan> testPlanList = readTestPlanByUserIdAndDatetime(testPlan.getUserId(), testPlan.getDatetime());
 		
-		try {
+
 			if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
-				eM.persist(testPlan);	
-				return testPlan.getId();
+				
+				try {
+					eM.persist(testPlan);	
+					return testPlan.getId();
+				}
+				catch(Exception e) {
+					return new Long(-2);
+				}
 			}
 			else
 				return new Long(-1);
-		}
-		catch(Exception e) {
-			return new Long(-2);
-		}
+
 	}
 
 	
@@ -79,8 +88,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
         List<TestPlan> tempTestPlanList = query.getResultList();
         
         for (int i=0; i<tempTestPlanList.size(); i++)         	
-        	if (tempTestPlanList.get(0).getUser().getId().intValue()==user.getId().intValue())
-        		testPlanListResult.add(tempTestPlanList.get(0));
+        	if (tempTestPlanList.get(i).getUser().getId().intValue()==user.getId().intValue())
+        		testPlanListResult.add(tempTestPlanList.get(i));
 	
         return testPlanListResult;
 	}
@@ -118,24 +127,6 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
         
         return query.getResultList();
 	}
-
-	
-/*	public String createTestPlan(TestPlan testPlan) {
-		
-		List<TestPlan> testPlanList = this.findTestPlanById(testPlan.getTestPlanId());
-		
-		if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
-
-			eM.persist(testPlan);
-			
-		}
-		else {
-			testPlan = testPlanList.get(0);
-		}
-		
-		return testPlan.getTestPlanId();
-	}
-*/
 	
 
 
@@ -344,7 +335,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	}
 
 
-	public Vector<String> getSystemTestPlanList() {
+	public Vector<String> getSystemXMLTestPlanList() {
 
 		Vector<String> result = null;
 		
@@ -369,24 +360,55 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 
 
+	/**
+	 * ADD TestPlan to User
+	 * @return 	 1 ok
+	 * 			-1 exception1 read error
+	 * 			-2 exception2 persist error
+	 */
+	public Long addTestPlanToUser(Long testPlanId, Long userId) {
 
+		try {
+			
+			User user = userManager.readUser(userId);
+			TestPlan testPlan = this.readTestPlan(testPlanId);
+			
+			try {
+				
+				testPlan.setUser(user);
+				eM.persist(testPlan);
+				
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				return new Long(-2);
+			}	
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return new Long(-1);
+		}		
+		
+		return new Long(1);	
+	}
+
+
+	public Vector<TestPlan> readSystemTestPlanList() {
+		
+		Vector<TestPlan> testPlanListResult = new Vector<TestPlan>();
+		
+        String queryString = "SELECT t FROM TestPlan AS t";
+        
+        Query query = eM.createQuery(queryString);
+        List<TestPlan> tempTestPlanList = query.getResultList();
+        
+        Long superUserId = userManager.getSuperUserId();
+        for (int i=0; i<tempTestPlanList.size(); i++)         	
+        	if (tempTestPlanList.get(0).getUser().getId().intValue()==superUserId.intValue())
+        		testPlanListResult.add(tempTestPlanList.get(0));
 	
-
-
-
-
-
-
-	/*public void addActionToWorkflow(Long workflowId, Long actionId) {
-
-		User user = this.readUser(userId);
-		SUT sut = this.readSUT(sutId);
-
-		sut.addToUser(user);
-		eM.persist(user);
-
-		return;
-	}*/
+        return testPlanListResult;
+	}
+		
+	
 
 }
 

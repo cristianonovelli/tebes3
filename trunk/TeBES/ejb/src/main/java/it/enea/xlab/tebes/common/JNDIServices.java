@@ -26,6 +26,11 @@ public class JNDIServices {
 	private static String SessionManagerServiceName = "TeBES-ear/SessionManagerImpl/remote";
 	private static String TestPlanManagerServiceName = "TeBES-ear/TestPlanManagerImpl/remote";
 	
+	
+	
+	
+	
+	
 
 	public static UserManagerRemote getUserManagerService() throws NamingException {
 		

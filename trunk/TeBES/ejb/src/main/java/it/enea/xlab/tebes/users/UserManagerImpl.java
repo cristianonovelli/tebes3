@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.users;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
@@ -152,6 +153,13 @@ public class UserManagerImpl implements UserManagerRemote {
 	}
 
 	
+	public Long getSuperUserId() {
+
+		// TODO  sarebbe più ottimizzato e opportuno creare procedura che nelle before legge da file properties
+		// quella stessa procedura può essere richiamata per sincronizzare DB con file di properties
+		// dopodichè si legge sempre da DB
+		return this.readUserbyEmailAndPassword(PropertiesUtil.getUser1Email(), PropertiesUtil.getUser1Password()).getId();
+	}
 
 	
 	////////////////////
@@ -180,6 +188,8 @@ public class UserManagerImpl implements UserManagerRemote {
 		return;
 	}
 	
+	
+
 	// duplicato dalla sutmanagerimpl
 	// non ho trovato altra via
 	private SUT readSUT(Long sutID) {

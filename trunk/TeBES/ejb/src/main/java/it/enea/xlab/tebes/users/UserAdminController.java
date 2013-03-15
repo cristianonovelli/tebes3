@@ -1,6 +1,7 @@
 package it.enea.xlab.tebes.users;
 
 import it.enea.xlab.tebes.common.JNDIServices;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.User;
@@ -86,6 +87,7 @@ public class UserAdminController {
 		
 		return userManagerBean.deleteUserByEmail(email);
 	}
+	
 	
 	
 	// GET Role LIST
