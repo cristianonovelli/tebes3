@@ -29,7 +29,7 @@ public class JNDIServices {
 	
 	
 	
-	
+	 
 	
 
 	public static UserManagerRemote getUserManagerService() throws NamingException {

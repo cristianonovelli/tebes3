@@ -24,7 +24,7 @@ public class UserAdminController {
 			try {
 				
 				// GET SERVICE
-				userManagerBean = JNDIServices.getUserManagerService();
+				userManagerBean = JNDIServices.getUserManagerService(); 
 				
 				guard = 5;
 			} catch (Exception e) {
