@@ -109,7 +109,7 @@ public class TestPlanManagerImplITCase {
 	
 	
 	@Test
-	public void test1_createTestPlanManager() {
+	public void test_testPlanManager() {
 		
 		
 		// Summary
@@ -140,7 +140,8 @@ public class TestPlanManagerImplITCase {
 		Assert.assertNotNull(superUser);	
 		
 		// Import System Test Plan from XML
-		Vector<String> systemTestPlanList = testPlanController.getSystemTestPlanList();
+		// TODO è consigliato usare arraylist perchè più performanti e immediatamente "persistibili" da jpa
+		Vector<String> systemTestPlanList = testPlanController.getSystemXMLTestPlanList();
 		Assert.assertTrue(systemTestPlanList.size() == 2);
 		TestPlan testPlan = null;
 		Long testPlanId;
@@ -197,13 +198,18 @@ public class TestPlanManagerImplITCase {
 		TestPlan selectedTestPlan = superUserTestPlanList.get(0);
 
 		// TODO 6. Vengono modificati alcuni campi (anche dentro l'XML!!!)
-		selectedTestPlan.setDatetime("2013-06-13T18:43:00");
+		selectedTestPlan.setDatetime(Constants.SUT_DATETIME2013);
+		selectedTestPlan.setState("draft");
 		selectedTestPlan.setId(null);
 		
 		// TODO 7. Viene impostato per ogni action il sut 
 		
 		// 8. SAVE TestPlan for the current user
 		// testPlan.setUser(currentUser);
+		
+		// TODO inglobare nella createTestPlan il current user in modo da spostare lì la join tra testplan e user
+		// e risolvere anche il problema del doppio user
+		
 		Long importedTestPlanId = testPlanController.createTestPlan(selectedTestPlan);	
 		Assert.assertTrue(importedTestPlanId > 0);		
 		// Add Test Plan to User
@@ -216,19 +222,21 @@ public class TestPlanManagerImplITCase {
 		currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
 		userTestPlanList = testPlanController.readUserTestPlanList(currentUser);
 		Assert.assertNotNull(userTestPlanList);
-		Assert.assertTrue(userTestPlanList.size() > 0);
+		Assert.assertTrue(userTestPlanList.size() == 1);
 		
 		
 		
-		 /*
+		
 		Boolean updating = false;
 		
 		// Update TestPlan
-		if (testPlanId < 0) {
-			testPlan.setState("updated");
-			List<TestPlan> testPlanList = testPlanController.readTestPlanByUserIdAndDatetime(testPlan.getUserId(), testPlan.getDatetime());
-			
-			
+	
+		importedTestPlan.setState("updated");
+		List<TestPlan> testPlanList = testPlanController.readTestPlanByUserIdAndDatetime(importedTestPlan.getUserIdXML(), importedTestPlan.getDatetime());
+		Assert.assertTrue(testPlanList.size() == 1);
+		
+		
+			/*
 			if ( (testPlanList != null) && (testPlanList.size() > 0) ) {
 				
 				// setto al nuovo test plan l'id del vecchio
@@ -248,7 +256,7 @@ public class TestPlanManagerImplITCase {
 		// se è stato creato, testPlanId è nuovo e > 0
 		// se è stato aggiornato updating è true
 		Assert.assertTrue((testPlanId > 0) || updating);		
-	
+		 
 
 		
 		
@@ -370,7 +378,7 @@ public class TestPlanManagerImplITCase {
 	}*/
 
 	@AfterClass
-	public static void after_sutManager() throws Exception {
+	public static void after_testPlanManager() throws Exception {
 
 		Boolean deleting;
 		

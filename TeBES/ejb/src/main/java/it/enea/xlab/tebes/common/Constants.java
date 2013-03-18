@@ -39,6 +39,8 @@ public class Constants {
 
 	// SUT description
 	public static final String SUT_DESCRIPTION = "Static SUT description";
+	public static final String SUT_DATETIME2013 = "2013-06-13T18:43:00";
+	
 	
 	// SUT Types
 	public static final String SUT_TYPE1_DOCUMENT = "document";

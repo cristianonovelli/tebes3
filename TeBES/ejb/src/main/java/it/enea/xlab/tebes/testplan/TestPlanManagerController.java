@@ -7,7 +7,7 @@ import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import junit.framework.Assert;
+import junit.framework.Assert; 
 
 import org.xml.sax.SAXException;
 
@@ -116,7 +116,7 @@ public class TestPlanManagerController {
 	}
 
 
-	public Vector<String> getSystemTestPlanList() {
+	public Vector<String> getSystemXMLTestPlanList() {
 		
 		return testPlanManagerService.getSystemXMLTestPlanList();
 	}

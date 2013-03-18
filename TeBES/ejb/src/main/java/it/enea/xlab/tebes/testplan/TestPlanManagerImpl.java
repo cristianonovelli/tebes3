@@ -1,6 +1,6 @@
 package it.enea.xlab.tebes.testplan;
 
-import it.enea.xlab.tebes.common.Constants;
+import it.enea.xlab.tebes.common.Constants; 
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.dao.TeBESDAO;
@@ -26,6 +26,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -40,8 +41,11 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
+	// Logger
+	private static Logger logger = Logger.getLogger(TestPlanManagerImpl.class);
+	
 	@EJB
-	private UserManagerRemote userManager;
+	private UserManagerRemote userManager; 
 	
 	public TestPlan readTestPlan(Long id) {
 		
@@ -58,7 +62,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	 */
 	public Long createTestPlan(TestPlan testPlan) {
 
-		List<TestPlan> testPlanList = readTestPlanByUserIdAndDatetime(testPlan.getUserId(), testPlan.getDatetime());
+		List<TestPlan> testPlanList = readTestPlanByUserIdAndDatetime(testPlan.getUserIdXML(), testPlan.getDatetime());
 		
 
 			if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
@@ -349,7 +353,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			if (XLabFileManager.isFileOrDirectoryPresent(systemTestPlanAbsDirName) ) 
 
 			result = XLabFileManager.getFileList(systemTestPlanAbsDirName);
-			
+
 		} catch (Exception e) {
 			
 			result = null;		
@@ -372,6 +376,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			
 			User user = userManager.readUser(userId);
 			TestPlan testPlan = this.readTestPlan(testPlanId);
+			
+			// logger.info();
 			
 			try {
 				
