@@ -27,7 +27,7 @@ public class TestPlan implements Serializable {
 	// TODO avendo collegato tramite JPA questa classe a user
 	// si è venuto a creare il campo user_id e quindi questo non ha motivo di esistere
 	// cancellarlo assicurandosi che l'importazione XML rimanga consistente
-	private Long userIdXML;
+	//private Long userIdXML;
 	
 	private String datetime;
 	private String state;
@@ -55,10 +55,10 @@ public class TestPlan implements Serializable {
 
 	}
 
-	public TestPlan(Long userId, String xml, String datetime, String state, String location) {
+	public TestPlan(String xml, String datetime, String state, String location) {
 
 		//this.testPlanId = testPlanId;
-		this.userIdXML = userId;
+		//this.userIdXML = userId;
 		this.xml = xml;
 		this.datetime = datetime;
 		this.state = state;
@@ -114,13 +114,13 @@ public class TestPlan implements Serializable {
 		this.location = location;
 	}
 
-	public Long getUserIdXML() {
+/*	public Long getUserIdXML() {
 		return userIdXML;
 	}
 
 	public void setUserIdXML(Long userId) {
 		this.userIdXML = userId;
-	}
+	}*/
 
 	public ActionWorkflow getWorkflow() {
 		return workflow;

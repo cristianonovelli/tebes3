@@ -87,6 +87,11 @@ public class TestPlanDOM extends JXLabDOM {
 		
 		return this.getUserIDAttribute(this.root);
 	}
+
+	public void setRootUserIDAttribute(String userId) {
+		
+		//this.getUserIDAttribute(this.root);
+	}
 	
 	////////////////////////////////////////
 	//// Methods to get node ATTRIBUTES ////
@@ -145,13 +150,15 @@ public class TestPlanDOM extends JXLabDOM {
 	// Get generic node Attribute
 	private String getNodeAttribute(Node node, String attributeLabel) {
 
-		String attributeValue = null;
+		return this.getAttribute(attributeLabel, node);
+		
+/*		String attributeValue = null;
 		
 		if (node != null) 
 			attributeValue = ((Element) node).getAttribute(attributeLabel);
 		else
 			System.out.println("r2d2: node null 153");
-		return attributeValue;
+		return attributeValue;*/
 	}
 
 
@@ -159,4 +166,6 @@ public class TestPlanDOM extends JXLabDOM {
 
 
 }
+
+
 

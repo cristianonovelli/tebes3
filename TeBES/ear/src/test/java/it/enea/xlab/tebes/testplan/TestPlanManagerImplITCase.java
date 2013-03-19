@@ -1,7 +1,13 @@
 package it.enea.xlab.tebes.testplan;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
@@ -14,10 +20,13 @@ import it.enea.xlab.tebes.users.UserAdminController;
 import it.enea.xlab.tebes.users.UserProfileController;
 import junit.framework.Assert;
 
+import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.xlab.file.XLabFileManager;
+import org.xlab.utilities.XLabDates;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -49,6 +58,9 @@ import org.xlab.file.XLabFileManager;
  */
 public class TestPlanManagerImplITCase {
 
+	// Logger
+	private static Logger logger = Logger.getLogger(TestPlanManagerImplITCase.class);
+	
 	// Interface Declaration
 	static TestPlanManagerController testPlanController;
 	static UserAdminController userAdminController;
@@ -100,16 +112,16 @@ public class TestPlanManagerImplITCase {
 		User currentUser = new User("Temp1", "User1", Constants.USER1_EMAIL, Constants.USER1_PASSWORD);	
 		Long idTempUser1 = userProfileController.registration(currentUser, role1_standard);
 		Assert.assertNotNull(currentUser);
-		Assert.assertTrue(idTempUser1>0);
+		Assert.assertTrue(idTempUser1.intValue()>0);
 		User otherUser = new User("Temp2", "User2", Constants.USER2_EMAIL1, Constants.USER2_EMAIL1);
 		Long idTempUser2 = userProfileController.registration(otherUser, role1_standard);
 		Assert.assertNotNull(currentUser);
-		Assert.assertTrue(idTempUser2>0);
+		Assert.assertTrue(idTempUser2.intValue()>0);
 	}
 	
 	
 	@Test
-	public void test_testPlanManager() {
+	public void test_testPlanManager() throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException {
 		
 		
 		// Summary
@@ -124,8 +136,10 @@ public class TestPlanManagerImplITCase {
 		// (per il momento facciamo che inserisce 1 sut per tutte le action)
 		// 8. il testplan viene scritto in memoria modificando i campi dove occorre
 		
-				
-
+		// N.B. l'id dello superuser nei file XML è zero ma quando viene creato, 
+		// questo id cambia a quello che la bancadati gli da'
+		// la cartella 0 rimane l'utente superuser per evitare errori
+		
 		// 1. IMPORT system TPs from XML
 		
 		// Initialize superuser
@@ -135,7 +149,7 @@ public class TestPlanManagerImplITCase {
 		Long superUserId = userAdminController.createUser(superUser, role4_superuser);
 		superUser = userProfileController.login(superUserEmail, superUserPassword);
 		superUserId = superUser.getId();
-		Assert.assertTrue(superUserId > 0);
+		Assert.assertTrue(superUserId.intValue() > 0);
 		superUser = userAdminController.readUser(superUserId);
 		Assert.assertNotNull(superUser);	
 		
@@ -147,7 +161,8 @@ public class TestPlanManagerImplITCase {
 		Long testPlanId;
 		String testPlanAbsPathName;
 		String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlanDir();
-		Long adding;
+		Boolean updating;
+		
 		for (int i=0; i<systemTestPlanList.size();i++) {
 
 			testPlanAbsPathName = superUserTestPlanDir.concat(systemTestPlanList.elementAt(i));
@@ -155,13 +170,28 @@ public class TestPlanManagerImplITCase {
 			Assert.assertNotNull(testPlan);
 			
 			// Create TestPlan Entity
-			testPlanId = testPlanController.createTestPlan(testPlan);				
-			Assert.assertTrue(testPlanId>0);
+			testPlanId = testPlanController.createTestPlan(testPlan, superUserId);
+
+			Assert.assertTrue(testPlanId.intValue() > 0);
+
+			// Test the XML adjustment (done into the create)
+			testPlan = testPlanController.readTestPlan(testPlanId);
+			TestPlanDOM tpDOM = new TestPlanDOM();
+			tpDOM.setContent(testPlan.getXml());
 			
-			// Add Test Plan to SuperUser
-			adding = testPlanController.addTestPlanToUser(testPlanId, superUserId);
-			Assert.assertTrue(adding > 0);
+			
+/*			String userIdXML = tpDOM.getRootElement().getAttribute(Constants.USERID_XMLATTRIBUTE_LABEL);
+
+			Assert.assertTrue(userIdXML.equals(superUserId.toString()));
+
+			String idXML = tpDOM.getRootElement().getAttribute(Constants.ID_XMLATTRIBUTE_LABEL);
+			Assert.assertTrue(idXML.equals(testPlan.getId().toString()));
+			
+			String datetimeXML = tpDOM.getRootElement().getAttribute(Constants.DATETIME_XMLATTRIBUTE_LABEL);
+			Assert.assertTrue(datetimeXML.equals(testPlan.getDatetime()));	*/		
+			
 		}
+		
 		
 		// Check List of PERSISTED System Test Plans		
 		List<TestPlan> superUserTestPlanList = testPlanController.readUserTestPlanList(superUser);
@@ -175,7 +205,7 @@ public class TestPlanManagerImplITCase {
 		User currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
 		Long currentUserId = currentUser.getId();
 		Assert.assertNotNull(currentUser);
-		Assert.assertTrue(currentUserId > 0);
+		Assert.assertTrue(currentUserId.intValue() > 0);
 		
 		// 3. READ User List of own Test Plans		
 		List<TestPlan> userTestPlanList = testPlanController.readUserTestPlanList(currentUser);
@@ -198,9 +228,8 @@ public class TestPlanManagerImplITCase {
 		TestPlan selectedTestPlan = superUserTestPlanList.get(0);
 
 		// TODO 6. Vengono modificati alcuni campi (anche dentro l'XML!!!)
-		selectedTestPlan.setDatetime(Constants.SUT_DATETIME2013);
 		selectedTestPlan.setState("draft");
-		selectedTestPlan.setId(null);
+
 		
 		// TODO 7. Viene impostato per ogni action il sut 
 		
@@ -210,13 +239,15 @@ public class TestPlanManagerImplITCase {
 		// TODO inglobare nella createTestPlan il current user in modo da spostare lì la join tra testplan e user
 		// e risolvere anche il problema del doppio user
 		
-		Long importedTestPlanId = testPlanController.createTestPlan(selectedTestPlan);	
-		Assert.assertTrue(importedTestPlanId > 0);		
-		// Add Test Plan to User
-		adding = testPlanController.addTestPlanToUser(importedTestPlanId, currentUserId);
-		Assert.assertTrue(adding > 0);		
+		Long importedTestPlanId = testPlanController.createTestPlan(selectedTestPlan, currentUserId);	
+		Assert.assertTrue(importedTestPlanId.intValue() > selectedTestPlan.getId().intValue());		
+		
 		TestPlan importedTestPlan = testPlanController.readTestPlan(importedTestPlanId);
-		Assert.assertTrue(importedTestPlan.getId() > 0);
+		Assert.assertTrue(importedTestPlan.getId().intValue() > 0);
+
+		TestPlanDOM tpDOM2 = new TestPlanDOM();
+		tpDOM2.setContent(importedTestPlan.getXml());
+		
 		
 		// Last Check
 		currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
@@ -224,158 +255,35 @@ public class TestPlanManagerImplITCase {
 		Assert.assertNotNull(userTestPlanList);
 		Assert.assertTrue(userTestPlanList.size() == 1);
 		
+		superUserTestPlanList = testPlanController.readUserTestPlanList(superUser);
+		Assert.assertNotNull(superUserTestPlanList);
+		Assert.assertTrue(superUserTestPlanList.size() == 2);		
 		
 		
 		
-		Boolean updating = false;
-		
-		// Update TestPlan
-	
-		importedTestPlan.setState("updated");
-		List<TestPlan> testPlanList = testPlanController.readTestPlanByUserIdAndDatetime(importedTestPlan.getUserIdXML(), importedTestPlan.getDatetime());
-		Assert.assertTrue(testPlanList.size() == 1);
 		
 		
-			/*
-			if ( (testPlanList != null) && (testPlanList.size() > 0) ) {
-				
-				// setto al nuovo test plan l'id del vecchio
-				TestPlan updatedTP = testPlanList.get(0);
-				updatedTP.setUserId(testPlan.getUserId());
-				updatedTP.setXml(testPlan.getXml());
-				updatedTP.setDatetime(testPlan.getDatetime());
-				updatedTP.setState(testPlan.getState());
-				updatedTP.setLocation(testPlan.getLocation());
+		// UPDATE TestPlan
+		importedTestPlan.setState(Constants.STATE_FINAL);
+		updating = testPlanController.updateTestPlan(importedTestPlan);
+		Assert.assertTrue(updating);	
 
-				updating = testPlanController.updateTestPlan(updatedTP);
-				
-				//testPlanId = updatedTP.getId();
-			}
-		}
-		
-		// se è stato creato, testPlanId è nuovo e > 0
-		// se è stato aggiornato updating è true
-		Assert.assertTrue((testPlanId > 0) || updating);		
-		 
+		importedTestPlan = testPlanController.readTestPlan(importedTestPlan.getId());
+		Assert.assertTrue(importedTestPlan.getState().equals(Constants.STATE_FINAL));
 
 		
+		// DELETING TestPlan
+		/*Boolean deleting = testPlanController.deleteTestPlan(importedTestPlan.getId());
+		Assert.assertTrue(deleting);	
 		
-		// User DELETING
+		userTestPlanList = testPlanController.readUserTestPlanList(currentUser);
+		Assert.assertTrue(userTestPlanList.size() == 0);	
+		
+
 		Boolean b = userAdminController.deleteUser(currentUser.getId());
 		Assert.assertTrue(b);*/
 	}
-		/*
-	@Test
-	public void t4_importTestPlan() throws NumberFormatException, FileNotFoundException {	
 		
-		
-		
-		
-		testPlanId = PropertiesUtil.getTestPlanIdOfUser1();
-
-
-		
-		Assert.assertNotNull(testPlanId);
-		
-		// Read TestPlan
-		testPlan = testPlanController.readTestPlan(testPlanId);
-		Assert.assertEquals(testPlanId, testPlan.getId());
-		
-		ActionWorkflow workflow = new ActionWorkflow();
-		workflow.setCommnet("from create-drop, 1st round of update");
-		Long workflowId = testPlanController.insertWorkflow(workflow, testPlan.getId());
-		Assert.assertNotNull(workflowId);
-		
-		if (workflowId > 0) {
-			workflow = testPlanController.readWorkflow(workflowId);
-		} else
-			workflow = testPlan.getWorkflow();
-		
-		Assert.assertNotNull(workflow);
-		
-		// Get Actions from XML source (anche se il testplan è già stato importato)
-		List<Action> actionList;
-		
-		try {
-			actionList = testPlanController.getActionsFromXML(testPlan.getId());
-		} catch (Exception e) {
-			
-			e.printStackTrace();
-			actionList = null;
-		} 
-		
-		Assert.assertNotNull(actionList);
-		Assert.assertTrue(actionList.size() > 0);	
-		
-		// Per ogni Action dovrei persisterla e attaccarla al workflow per poi persistere il tutto
-		// così come con il SUT
-		Long id_action;
-		for (int k=0;k<actionList.size();k++) {
-			
-			id_action = testPlanController.createAction(actionList.get(k));
-			if (id_action > 0) {
-				
-				Action action = testPlanController.readAction(id_action);
-				Assert.assertNotNull(action);
-		
-				Assert.assertTrue(workflow.getId() > 0);
-				
-				testPlanController.addActionToWorkflow(action.getId(), workflow.getId());
-			}
-		}
-		
-		// dal secondo giro in update
-		if (testPlan.getWorkflow() != null) {
-		
-			// Update workflow
-			workflow.setCommnet("2 round of update or more");
-			updating = testPlanController.updateWorkflow(workflow);
-			Assert.assertTrue(updating);
-		}
-		
-		// aggiunge il workflow al test plan se non esiste, altrimenti lo aggiorna
-		testPlanController.addWorkflowToTestPlan(workflow.getId(), testPlan.getId());
-		
-		testPlan = testPlanController.readTestPlan(testPlan.getId());
-		Assert.assertTrue(testPlan.getWorkflow().getActions().size() > 0);
-	}
-	
-		
-	@Test
-	public void t5_readTestPlan() throws NumberFormatException, FileNotFoundException {	
-
-		// Read TestPlan
-		testPlan = testPlanController.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
-		//findTestPlanByTestPlanId(Properties.TeBES_TESTPLANID);
-		Assert.assertNotNull(testPlan);
-		
-		// questo UserId è stato inserito esplicitamente e non è un id di collegamento come dovrebbe essere
-		Assert.assertNotNull(testPlan.getUserId());
-		Assert.assertNotNull(testPlan.getDatetime());
-		Assert.assertNotNull(testPlan.getState());
-		Assert.assertNotNull(testPlan.getWorkflow().getActions());
-	
-		
-		Action a = testPlan.getWorkflow().getActions().get(0);
-		Assert.assertNotNull(a);
-		
-		Assert.assertTrue(a.isJumpTurnedON());
-	}
-	
-	
-	@Test
-	public void t6_execution() throws NumberFormatException, FileNotFoundException {	
-	
-		testPlan = testPlanController.readTestPlan(new Long(PropertiesUtil.getTestPlanIdOfUser1()));
-		TestActionManagerImpl actionManager = new TestActionManagerImpl(); 
-		
-		Assert.assertNotNull(actionManager);
-		
-		// forse dovrebbe ritornare qualcos'altro? tipo l'id del report
-		boolean actionWorkflowExecutionResult = actionManager.executeActionWorkflow(testPlan.getWorkflow());
-		Assert.assertNotNull(actionWorkflowExecutionResult);
-		
-	}*/
 
 	@AfterClass
 	public static void after_testPlanManager() throws Exception {
@@ -393,7 +301,7 @@ public class TestPlanManagerImplITCase {
 		for (int u=0;u<roleIdList.size();u++) {
 			
 			tempRoleId = (Long) roleIdList.get(u);
-			Assert.assertTrue(tempRoleId > 0);
+			Assert.assertTrue(tempRoleId.intValue() > 0);
 
 			tempRole = userAdminController.readRole(tempRoleId);			
 			Assert.assertNotNull(tempRole);
@@ -413,7 +321,6 @@ public class TestPlanManagerImplITCase {
 		List<Long> userIdList = userAdminController.getUserIdList();
 		userIdList = userAdminController.getUserIdList();
 		Assert.assertTrue(userIdList.size() == 0);
-		
 	}
 }
 

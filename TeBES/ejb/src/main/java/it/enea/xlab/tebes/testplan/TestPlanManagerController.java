@@ -56,14 +56,19 @@ public class TestPlanManagerController {
 		return testPlanManagerService.getTestPlanFromXML(testPlanAbsPathName);
 	}
 
-	public Long createTestPlan(TestPlan testPlan) {
+	public Long createTestPlan(TestPlan testPlan, Long userId) {
 		
-		return testPlanManagerService.createTestPlan(testPlan);
+		return testPlanManagerService.createTestPlan(testPlan, userId);
 	}
 
-	public List<TestPlan> readTestPlanByUserIdAndDatetime(Long userId, String datetime) {
+	public Boolean deleteTestPlan(Long testPlanId) {
 		
-		return testPlanManagerService.readTestPlanByUserIdAndDatetime(userId, datetime);
+		return testPlanManagerService.deleteTestPlan(testPlanId);
+	}
+	
+	public List<TestPlan> readTestPlanByUserIdAndDatetime(String datetime, Long userId) {
+		
+		return testPlanManagerService.readTestPlanByDatetimeAndUserId(datetime, userId);
 	}
 
 	public Boolean updateTestPlan(TestPlan updatedTP) {

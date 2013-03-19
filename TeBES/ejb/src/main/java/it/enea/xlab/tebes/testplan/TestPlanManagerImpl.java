@@ -7,6 +7,7 @@ import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Group;
+import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.users.UserManagerImpl;
@@ -25,12 +26,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+
+import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xlab.file.XLabFileManager;
+import org.xlab.utilities.XLabDates;
 import org.xml.sax.SAXException;
 
 @Stateless
@@ -57,32 +62,97 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	 * CREATE Test Plan
 	 * La createTestPlan crea un nuovo TestPlan solo se non esistono per questo utente TestPlan con lo stesso datetime
 	 * @return 	id of TestPlan if created
-	 * 			-1 if already a TestPlan with that datetime exists
-	 * 			-2 if a persist exception occurs
+	 * 			-1 if a persist exception occurs
+	 * 			-2 if an addTestPlanToUser error occours
 	 */
-	public Long createTestPlan(TestPlan testPlan) {
+	public Long createTestPlan(TestPlan testPlan, Long userId) {
 
-		List<TestPlan> testPlanList = readTestPlanByUserIdAndDatetime(testPlan.getUserIdXML(), testPlan.getDatetime());
+		TestPlan testPlanResult = null;
 		
+		
+		
+		// sto creando un testplan e quindi creo un nuovo datetime!
+		// N.B. a meno che non sia l'import iniziale dello superuser!
+		//List<TestPlan> testPlanList = this.readTestPlanByDatetimeAndUserId(testPlan.getDatetime(), userId);
 
-			if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
+			//if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
 				
 				try {
-					eM.persist(testPlan);	
-					return testPlan.getId();
+
+					String datetime = XLabDates.getCurrentUTC();
+					
+					
+					if ( testPlan.getId() != null ) {
+							TestPlan testPlan2 = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, null);
+							testPlanResult = testPlan2;
+					}
+					else {
+						
+						TestPlan testPlan1 = testPlan;
+						testPlan.setDatetime(datetime);
+						testPlan.setLocation(null);
+						testPlanResult = testPlan1;
+					}
+						
+					
+
+					
+					// C'E' PROPRIO BISOGNO DI INDICARE USERID E TESTPLANID NELL'XML??????????????
+					// O IN ALTRE PAROLE, C'è BISOGNO DI SINCRONIZZARLI?
+					// NO
+					
+					/*	try {
+						// Create TestPlan DOM
+					TestPlanDOM tpDOM = new TestPlanDOM();
+						// Set imported XML into the DOM
+						tpDOM.setContent(testPlan.getXml());
+						
+
+						
+						tpDOM.setNodeAttribute(tpDOM.getRootElement(), Constants.ID_XMLATTRIBUTE_LABEL, testPlan.getId().toString());
+						// Set new TestPlan/@userID
+						tpDOM.setNodeAttribute(tpDOM.getRootElement(), Constants.USERID_XMLATTRIBUTE_LABEL, userId.toString());
+						// Set new TestPlan/@datetime
+						tpDOM.setNodeAttribute(tpDOM.getRootElement(), Constants.DATETIME_XMLATTRIBUTE_LABEL, datetime);
+						// Set DOM into the TestPlan structure
+						testPlan.setXml(tpDOM.getXMLString());
+						
+					} catch (TransformerFactoryConfigurationError e) {
+						e.printStackTrace();
+						return new Long(-3);	
+					}*/
+					
+					eM.persist(testPlanResult);	
+					
+					// Set new TestPlan/@id
+					while (testPlanResult.getId() == null)
+						Thread.sleep(50);
+					
+					// Add Test Plan to User
+					Long adding = this.addTestPlanToUser(testPlanResult.getId(), userId);
+					
+					
+					
+					if (adding > 0) {	
+						return testPlanResult.getId();
+					}
+					else
+						return new Long(-2);							
 				}
 				catch(Exception e) {
-					return new Long(-2);
+					e.printStackTrace();
+					return new Long(-1);
 				}
-			}
-			else
-				return new Long(-1);
+			//}
+			//else
+			//	return new Long(-3);
+				
 
 	}
 
 	
 	@SuppressWarnings("unchecked")
-	public List<TestPlan> readUserTestPlanList(User user) {
+	public Vector<TestPlan> readUserTestPlanList(User user) {
 
 		Vector<TestPlan> testPlanListResult = new Vector<TestPlan>();
 		
@@ -107,7 +177,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		Boolean result = false;
 		
-		 if ( (testPlan != null) && (testPlan.getId() != null) ) {
+		 if ( (testPlan != null) && (testPlan.getId() > 0) ) {
+			 
 			 testPlan = eM.merge(testPlan);
 			 //eM.persist(user);
 			 
@@ -119,17 +190,49 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	}
 
 	
-	
-	@SuppressWarnings("unchecked")
-	public List<TestPlan> readTestPlanByUserIdAndDatetime(Long userId, String datetime) {
+	/**
+	 * DELETE TestPlan
+	 */
+	public Boolean deleteTestPlan(Long testPlanId) {
 
-        String queryString = "SELECT t FROM TestPlan AS t WHERE t.userId = ?1 AND t.datetime = ?2";
-        
-        Query query = eM.createQuery(queryString);
-        query.setParameter(1, userId);
-        query.setParameter(2, datetime);
-        
-        return query.getResultList();
+		TestPlan testPlan = this.readTestPlan(testPlanId);
+		
+		if (testPlan == null)
+			return false;
+		
+		try {
+			
+			eM.remove(testPlan);
+			
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			return false;
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			return null;
+		}
+		
+		return true;
+	}
+
+	
+	
+	
+	
+	public List<TestPlan> readTestPlanByDatetimeAndUserId(String datetime, Long userId) {
+
+		User user = userManager.readUser(userId);
+		List<TestPlan> testPlanList1 = user.getTestPlans();
+		List<TestPlan> testPlanList2 = null;
+		
+		for(int i=0; i<testPlanList1.size(); i++) {
+			
+			if (testPlanList1.get(i).getDatetime().equals(datetime))
+				testPlanList2.add(testPlanList1.get(i));
+			
+		}
+		
+        return testPlanList2;
 	}
 	
 
@@ -160,7 +263,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				System.out.println("XReport: " + testPlanDOM.getReport().getErrorMessage());	
 			}
 			else
-				testPlan = new TestPlan(new Long(testPlanDOM.getRootUserIDAttribute()), testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName);
+				testPlan = new TestPlan(testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName);
 			
 		} catch (Exception e) {
 			
@@ -396,6 +499,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		return new Long(1);	
 	}
 
+	
 
 	public Vector<TestPlan> readSystemTestPlanList() {
 		
@@ -413,6 +517,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	
         return testPlanListResult;
 	}
+
 		
 	
 

@@ -39,7 +39,7 @@ public class Constants {
 
 	// SUT description
 	public static final String SUT_DESCRIPTION = "Static SUT description";
-	public static final String SUT_DATETIME2013 = "2013-06-13T18:43:00";
+	public static final String SUT_DATETIME2013 = "2013-06-13T18:43:00Z";
 	
 	
 	// SUT Types
@@ -73,8 +73,19 @@ public class Constants {
 	public static final String TC = "TestCase";
 	public static final String TS = "TestSuite";
 	
-
+	// TestPlan XML
+	public static final String ID_XMLATTRIBUTE_LABEL = "id";
+	public static final String USERID_XMLATTRIBUTE_LABEL = "userID";
+	public static final String DATETIME_XMLATTRIBUTE_LABEL = "datetime";
+	
+	public static final String STATE_DRAFT = "draft";
+	public static final String STATE_FINAL = "final";
+	//public static final String STATE_DRAFT = "draft";
 	
 	// Other Values
 	public static final String MANDATORY = "mandatory";
+	
+	
+	
+	
 }
