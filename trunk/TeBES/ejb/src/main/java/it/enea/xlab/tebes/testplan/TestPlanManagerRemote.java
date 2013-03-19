@@ -21,17 +21,18 @@ public interface TestPlanManagerRemote {
 	//public TestPlanOLD importTestPlan(String testPlanFilePath, String userId);
 	
 	public TestPlan readTestPlan(Long id);
-	public List<TestPlan> readTestPlanByUserIdAndDatetime(Long userId, String datetime);
+	public List<TestPlan>  readTestPlanByDatetimeAndUserId(String datetime, Long userId);
 	public Vector<String> getSystemXMLTestPlanList();
 	public List<TestPlan> readUserTestPlanList(User user);
 	
 	
 	public TestPlan getTestPlanFromXML(String testPlanAbsFileName);
 
-	public Long createTestPlan(TestPlan testPlan);
+	public Long createTestPlan(TestPlan testPlan, Long userId);
 	
 	public Boolean updateTestPlan(TestPlan testPlan);
-
+	public Boolean deleteTestPlan(Long testPlanId);
+	
 	public List<Action> getActionsFromXML(Long testPlanId) throws FileNotFoundException, SAXException, ParserConfigurationException, IOException;
 
 	//public TestPlan findTestPlanByTestPlanId(String testPlanId);
