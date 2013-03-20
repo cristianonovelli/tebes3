@@ -29,7 +29,7 @@
 								<configuration>
 									<tasks>
 									
-									<copy todir="C:/Java/jboss-4.2.3.GA/server/default/data/TeBES_Artifacts/">
+									<copy todir="${env.JBOSS_HOME}/server/default/data/TeBES_Artifacts/">
 							          <fileset dir="TeBES_Artifacts/" includes="**/*" />
 							         </copy>
 											
