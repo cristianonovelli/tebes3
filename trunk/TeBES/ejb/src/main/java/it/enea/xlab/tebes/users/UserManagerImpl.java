@@ -6,6 +6,7 @@ import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 
 import java.util.List;
@@ -530,6 +531,33 @@ public class UserManagerImpl implements UserManagerRemote {
 			return false;
 		} catch (Exception e2) {
 			return null;
+		}
+		
+		return true;
+	}
+
+
+
+	public Boolean deleteTestPlan(Long userId, Long testPlanId) {
+		
+		User u = this.readUser(userId);
+		List<TestPlan> tpList = u.getTestPlans();
+		
+		TestPlan tempTP;
+		for (int i = 0; i < tpList.size(); i++) {
+			
+			tempTP = tpList.get(i);
+			if (tempTP.getId().intValue() == testPlanId.intValue())
+				tpList.remove(i);
+		}
+		u.setTestPlans(tpList);
+		
+		try {
+			eM.persist(u);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
 		}
 		
 		return true;

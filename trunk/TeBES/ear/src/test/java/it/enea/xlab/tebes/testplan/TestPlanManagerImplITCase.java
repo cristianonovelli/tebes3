@@ -271,11 +271,15 @@ public class TestPlanManagerImplITCase {
 		importedTestPlan = testPlanController.readTestPlan(importedTestPlan.getId());
 		Assert.assertTrue(importedTestPlan.getState().equals(Constants.STATE_FINAL));
 
-		
+
 		// DELETING TestPlan
-		/*Boolean deleting = testPlanController.deleteTestPlan(importedTestPlan.getId());
+		//Boolean deleting = userProfileController.deleteTestPlan(currentUser.getId(), importedTestPlan.getId());
+		//Assert.assertTrue(deleting);
+		
+		Boolean deleting = testPlanController.deleteTestPlan(importedTestPlan.getId());
 		Assert.assertTrue(deleting);	
 		
+		/*
 		userTestPlanList = testPlanController.readUserTestPlanList(currentUser);
 		Assert.assertTrue(userTestPlanList.size() == 0);	
 		
