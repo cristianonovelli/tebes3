@@ -14,14 +14,14 @@ public class SessionManagerController implements SessionManagerRemote {
 		sessionManagerBean = JNDIServices.getSessionManagerService();
 	}
 
-	public Session reactivation(Long sessionId) {
+	public Session reactivateSession(Long sessionId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Long createSession(Session session) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return sessionManagerBean.createSession(session);
 	}
 
 	public Session readSession(Long sessionId) {

@@ -100,10 +100,10 @@ public class UserProfileController {
 	}
 
 
-	public Boolean deleteTestPlan(Long userId, Long testPlanId) {
+/*	public Boolean deleteTestPlan(Long userId, Long testPlanId) {
 		
 		return userManagerBean.deleteTestPlan(userId, testPlanId);
-	}
+	}*/
 
 
 	

@@ -8,7 +8,7 @@ import javax.ejb.Remote;
 public interface SessionManagerRemote {
 
 	// Reactivation (Ripristino)
-	public Session reactivation(Long sessionId);
+	public Session reactivateSession(Long sessionId);
 	
 	// Create Session
 	public Long createSession(Session session);

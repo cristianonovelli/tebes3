@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class SUT implements Serializable {
@@ -35,6 +36,7 @@ public class SUT implements Serializable {
 	private String reference;
 	
 	// interazioni possibili: website (upload), email, ws, cpa
+	//@OneToOne
 	private SUTInteraction interaction;
 	
 	// descrizione testuale

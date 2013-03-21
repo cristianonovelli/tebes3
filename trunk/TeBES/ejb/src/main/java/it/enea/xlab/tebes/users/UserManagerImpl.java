@@ -538,7 +538,7 @@ public class UserManagerImpl implements UserManagerRemote {
 
 
 
-	public Boolean deleteTestPlan(Long userId, Long testPlanId) {
+/*	public Boolean deleteTestPlan(Long userId, Long testPlanId) {
 		
 		User u = this.readUser(userId);
 		List<TestPlan> tpList = u.getTestPlans();
@@ -562,7 +562,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		
 		return true;
 	}
-
+*/
 
 	
 }
