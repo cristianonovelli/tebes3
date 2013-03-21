@@ -27,7 +27,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	/**
 	 * REACTIVATION (RIPRISTINO) Session
 	 */
-	public Session reactivation(Long sessionId) {
+	public Session reactivateSession(Long sessionId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

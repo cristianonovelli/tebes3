@@ -22,16 +22,18 @@ public class Session implements Serializable {
 	@Column(name="id")
 	private Long id;
 
-	private final String DONE_STATE = "done";
-	private final String SUSPENDED_STATE = "suspended";
-	private final String ABORTED_STATE = "aborted";
-	private final String WORKING_STATE = "working";
+	private final String STATE1_WORKING = "working";
+	private final String STATE2_SUSPENDED = "suspended";
+	private final String STATE3_ABORTED = "aborted";
+	private final String STATE4_DONE = "done";
+
+
 	
 	// Sessione corrente o passata
 	
 	/*
 	 *  Una sessione è relativa a:
-	 *  1 user
+	 *  1 user (1 user ha 0 o più sessioni)
 	 *  1 sut (o più sut)
 	 *  1 piano di test
 	 *  devo capire se unirli con delle merge o join 
@@ -46,17 +48,21 @@ public class Session implements Serializable {
 	private Long testPlanId;
 	private Long sutId;
 	
+	// TODO meglio una relazione con l'entity report
 	private Long reportId;
+	
 	private String state;
 	
 	// Costruttore
-	public Session(Long userId, Long sutId, Long testPlanId, Long reportId, String state) {
+	public Session(Long userId, Long sutId, Long testPlanId) {
 
 		this.userId = userId;
 		this.sutId = sutId;
 		this.testPlanId = testPlanId;
-		this.reportId = reportId;
-		this.state = state;
+
+		// TODO Inizializzare Nuovo Report
+		
+		this.setWorkingState();
 	}
 
 	
@@ -104,19 +110,20 @@ public class Session implements Serializable {
 		return state;
 	}
 
-	public void setDoneState() {
-		this.state = this.DONE_STATE;
+	public void setWorkingState() {
+		this.state = this.STATE1_WORKING;
 	}
 	
 	public void setSuspendedState() {
-		this.state = this.SUSPENDED_STATE;
+		this.state = this.STATE2_SUSPENDED;
 	}
 	
 	public void setAbortedState() {
-		this.state = this.ABORTED_STATE;
+		this.state = this.STATE3_ABORTED;
 	}
 	
-	public void setWorkingState() {
-		this.state = this.WORKING_STATE;
-	}
+	public void setDoneState() {
+		this.state = this.STATE4_DONE;
+	}	
+
 }

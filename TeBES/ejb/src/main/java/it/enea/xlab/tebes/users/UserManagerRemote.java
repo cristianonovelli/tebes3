@@ -43,5 +43,5 @@ public interface UserManagerRemote {
 	public Long setUserGroup(User user, Group group);
 	public Boolean deleteGroup(Long id);
 
-	public Boolean deleteTestPlan(Long userId, Long testPlanId);
+	//public Boolean deleteTestPlan(Long userId, Long testPlanId);
 }

@@ -23,6 +23,7 @@ import junit.framework.Assert;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xlab.file.XLabFileManager;
 import org.xlab.utilities.XLabDates;
@@ -68,8 +69,10 @@ public class TestPlanManagerImplITCase {
 
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
-	@Before
-	public void before_testPlanManager() throws Exception {
+	static Long superUserId;
+	
+	@BeforeClass
+	public static void before_testPlanManager() throws Exception {
 		
 		testPlanController = new TestPlanManagerController();
 		Assert.assertNotNull(testPlanController);	
@@ -84,8 +87,6 @@ public class TestPlanManagerImplITCase {
 
 		List<Long> roleIdList = userAdminController.getRoleIdList();
 		Assert.assertTrue(roleIdList.size() == 0);
-		
-		// TODO la creazione e cancellazione dei ruoli possiamo spostarlo nell'EJB come singolo metodo
 		
 		// Prepare 4 user Roles 
 		role1_standard = new Role(Constants.STANDARD_ROLE_NAME, Constants.STANDARD_ROLE_DESCRIPTION, Constants.STANDARD_ROLE_LEVEL);
@@ -107,6 +108,12 @@ public class TestPlanManagerImplITCase {
 		role2_advanced = userAdminController.readRole(id_role2_advanced);
 		role3_admin = userAdminController.readRole(id_role3_admin);
 		role4_superuser = userAdminController.readRole(id_role4_superuser);
+		
+		// Create superuser
+		String superUserEmail = PropertiesUtil.getUser1Email();
+		String superUserPassword = PropertiesUtil.getUser1Password();
+		User superUser = new User("Cristiano", "Novelli", superUserEmail, superUserPassword);
+		superUserId = userAdminController.createUser(superUser, role4_superuser);
 		
 		// Create 2 temporary Users
 		User currentUser = new User("Temp1", "User1", Constants.USER1_EMAIL, Constants.USER1_PASSWORD);	
@@ -132,22 +139,22 @@ public class TestPlanManagerImplITCase {
 		// 5. sceglie un test plan predefinito di sistema, tramite ID, per "farlo suo"
 		// 6. vengono modificati alcuni campi
 		// (quali sono i campi da personalizzare? id, nome utente, datetime)
-		// 7. in particolare, per ogni action, deve specificare il sut o inserirne uno nuovo
-		// (per il momento facciamo che inserisce 1 sut per tutte le action)
+		// 7. in particolare, per ogni action, deve specificare l'EUT o inserirne uno nuovo
 		// 8. il testplan viene scritto in memoria modificando i campi dove occorre
+		// 9. Update TestPlan
+		// 10. Delete TestPlan and user
 		
 		// N.B. l'id dello superuser nei file XML è zero ma quando viene creato, 
 		// questo id cambia a quello che la bancadati gli da'
 		// la cartella 0 rimane l'utente superuser per evitare errori
 		
+		
 		// 1. IMPORT system TPs from XML
 		
-		// Initialize superuser
+
 		String superUserEmail = PropertiesUtil.getUser1Email();
 		String superUserPassword = PropertiesUtil.getUser1Password();
-		User superUser = new User("Cristiano", "Novelli", superUserEmail, superUserPassword);
-		Long superUserId = userAdminController.createUser(superUser, role4_superuser);
-		superUser = userProfileController.login(superUserEmail, superUserPassword);
+		User superUser = userProfileController.login(superUserEmail, superUserPassword);
 		superUserId = superUser.getId();
 		Assert.assertTrue(superUserId.intValue() > 0);
 		superUser = userAdminController.readUser(superUserId);
@@ -173,14 +180,16 @@ public class TestPlanManagerImplITCase {
 			testPlanId = testPlanController.createTestPlan(testPlan, superUserId);
 
 			Assert.assertTrue(testPlanId.intValue() > 0);
-
+/*	
 			// Test the XML adjustment (done into the create)
 			testPlan = testPlanController.readTestPlan(testPlanId);
 			TestPlanDOM tpDOM = new TestPlanDOM();
 			tpDOM.setContent(testPlan.getXml());
 			
 			
-/*			String userIdXML = tpDOM.getRootElement().getAttribute(Constants.USERID_XMLATTRIBUTE_LABEL);
+		
+ * QUESTA PARTE NON DOVREBBE SERVIRE PIU', E' RELATIVA AGLI ID PRESENTI NELL'XML
+ * String userIdXML = tpDOM.getRootElement().getAttribute(Constants.USERID_XMLATTRIBUTE_LABEL);
 
 			Assert.assertTrue(userIdXML.equals(superUserId.toString()));
 
@@ -231,39 +240,34 @@ public class TestPlanManagerImplITCase {
 		selectedTestPlan.setState("draft");
 
 		
-		// TODO 7. Viene impostato per ogni action il sut 
+		// 7. Viene impostato per ogni action l'EUT
+		// N.B. al momento quello di sistema contiene già l'EUT document xml con interaction=website (ovvero upload)
+		// 		a questo livello non c'è bisogno dunque di modificarlo MA in esecuzione DEVE essere letto e usato
 		
 		// 8. SAVE TestPlan for the current user
-		// testPlan.setUser(currentUser);
-		
-		// TODO inglobare nella createTestPlan il current user in modo da spostare lì la join tra testplan e user
-		// e risolvere anche il problema del doppio user
-		
 		Long importedTestPlanId = testPlanController.createTestPlan(selectedTestPlan, currentUserId);	
 		Assert.assertTrue(importedTestPlanId.intValue() > selectedTestPlan.getId().intValue());		
-		
+		// Read Check
 		TestPlan importedTestPlan = testPlanController.readTestPlan(importedTestPlanId);
 		Assert.assertTrue(importedTestPlan.getId().intValue() > 0);
 
-		TestPlanDOM tpDOM2 = new TestPlanDOM();
-		tpDOM2.setContent(importedTestPlan.getXml());
+		// Eventuali verifiche sull'XML
+		//TestPlanDOM tpDOM2 = new TestPlanDOM();
+		//tpDOM2.setContent(importedTestPlan.getXml());
 		
-		
-		// Last Check
+		// Check Current User and its TestPlans
 		currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
 		userTestPlanList = testPlanController.readUserTestPlanList(currentUser);
 		Assert.assertNotNull(userTestPlanList);
 		Assert.assertTrue(userTestPlanList.size() == 1);
 		
+		// Check Super User TestPlans
 		superUserTestPlanList = testPlanController.readUserTestPlanList(superUser);
 		Assert.assertNotNull(superUserTestPlanList);
 		Assert.assertTrue(superUserTestPlanList.size() == 2);		
 		
-		
-		
-		
-		
-		// UPDATE TestPlan
+
+		// 9. UPDATE TestPlan
 		importedTestPlan.setState(Constants.STATE_FINAL);
 		updating = testPlanController.updateTestPlan(importedTestPlan);
 		Assert.assertTrue(updating);	
@@ -272,23 +276,18 @@ public class TestPlanManagerImplITCase {
 		Assert.assertTrue(importedTestPlan.getState().equals(Constants.STATE_FINAL));
 
 
-		// DELETING TestPlan
-		//Boolean deleting = userProfileController.deleteTestPlan(currentUser.getId(), importedTestPlan.getId());
-		//Assert.assertTrue(deleting);
-		
+		// 10. DELETING TestPlan		
 		Boolean deleting = testPlanController.deleteTestPlan(importedTestPlan.getId());
 		Assert.assertTrue(deleting);	
-		
-		/*
+		// Check
 		userTestPlanList = testPlanController.readUserTestPlanList(currentUser);
 		Assert.assertTrue(userTestPlanList.size() == 0);	
-		
-
+		// DELETING Current User
 		Boolean b = userAdminController.deleteUser(currentUser.getId());
-		Assert.assertTrue(b);*/
+		Assert.assertTrue(b);
 	}
-		
-
+	
+	
 	@AfterClass
 	public static void after_testPlanManager() throws Exception {
 
