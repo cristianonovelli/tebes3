@@ -43,6 +43,10 @@ public class SessionManagerImplITCase {
 	@BeforeClass
 	public static void before_testPlanManager() throws Exception {
 		
+		
+		sessionController = new SessionManagerController();
+		Assert.assertNotNull(sessionController);
+		
 		testPlanController = new TestPlanManagerController();
 		Assert.assertNotNull(testPlanController);	
 		
@@ -54,6 +58,10 @@ public class SessionManagerImplITCase {
 		userProfileController = new UserProfileController();
 		Assert.assertNotNull(userProfileController);		
 
+		sutController = new SUTManagerController();
+		Assert.assertNotNull(sutController);
+		
+		
 		List<Long> roleIdList = userAdminController.getRoleIdList();
 		Assert.assertTrue(roleIdList.size() == 0);
 		
