@@ -148,19 +148,22 @@ public class SessionManagerImplITCase {
 		// 10. RIPRENDE LA SECONDA E LA TERMINA	
 		
 		// 1. UTENTE SCEGLIE TESTPLAN e SUT
-/*		List<TestPlan> currentUserTestPlanList = testPlanController.readUserTestPlanList(currentUser);
+		List<TestPlan> currentUserTestPlanList = testPlanController.readUserTestPlanList(currentUser);
 		Assert.assertTrue(currentUserTestPlanList.size() == 1);
+
+
+		// Per avviare una sessione sono neccessarie 3 ID:
+		 
+		// 1. userID
+		currentUserId = currentUser.getId();
+		Assert.assertTrue(currentUserId.intValue()>0);
+		// 2. sutID
 		// Creazione di un SUT
 		SUTInteraction interaction = new SUTInteraction(Constants.INTERACTION_WEBSITE);
 		SUT sut = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.UBL, Constants.UBLSCHEMA, interaction, "XML document1 uploaded by web interface");
-
-		// Per avviare una sessione sono neccessarie 3 cose:
-		// 1. userId
-		currentUserId = currentUser.getId();
-		// 2. sutID
 		Long sutId = sutController.createSUT(sut, currentUser);
-		Assert.assertTrue(sutId.intValue()>0);		
-		// 3. TestPlan
+		Assert.assertNotNull(sutId);		
+		/*// 3. TestPlan
 		selectedTestPlan = currentUserTestPlanList.get(0);
 		Assert.assertNotNull(selectedTestPlan);
 		Long selectedTestPlanId = selectedTestPlan.getId();
