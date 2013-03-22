@@ -12,7 +12,7 @@ import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.TestRule;
-import it.enea.xlab.tebes.rule.RuleManagerImpl;
+import it.enea.xlab.tebes.test.rule.RuleManagerImpl;
 
 
 @Stateless

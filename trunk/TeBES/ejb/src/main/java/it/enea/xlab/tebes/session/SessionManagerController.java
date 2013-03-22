@@ -14,22 +14,18 @@ public class SessionManagerController implements SessionManagerRemote {
 		sessionManagerBean = JNDIServices.getSessionManagerService();
 	}
 
-	public Session reactivateSession(Long sessionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Long createSession(Session session) {
-		
-		return sessionManagerBean.createSession(session);
-	}
-
 	public Session readSession(Long sessionId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return sessionManagerBean.readSession(sessionId);
 	}
 
-	public List<Session> readSessionListbyUserId(Long userId) {
+	/*public List<Session> readSessionListbyUserId(Long userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}*/
+
+	
+/*	public Session reactivateSession(Long sessionId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -37,6 +33,11 @@ public class SessionManagerController implements SessionManagerRemote {
 	public Boolean deleteSession(Long sessionId) {
 		// TODO Auto-generated method stub
 		return null;
+	}*/
+
+	public Long run(Long userId, Long sutId, Long testPlanId) {
+		
+		return sessionManagerBean.run(userId, sutId, testPlanId);
 	}
 
 }

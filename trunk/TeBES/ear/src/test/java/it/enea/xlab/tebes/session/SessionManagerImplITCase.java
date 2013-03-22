@@ -4,10 +4,11 @@ import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
-import it.enea.xlab.tebes.entity.SUTInteraction;
+import it.enea.xlab.tebes.entity.Interaction;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.model.Report;
 import it.enea.xlab.tebes.sut.SUTManagerController;
 import it.enea.xlab.tebes.testplan.TestPlanManagerController;
 import it.enea.xlab.tebes.users.UserAdminController;
@@ -159,43 +160,64 @@ public class SessionManagerImplITCase {
 		List<TestPlan> currentUserTestPlanList = testPlanController.readUserTestPlanList(currentUser);
 		Assert.assertTrue(currentUserTestPlanList.size() == 1);
 
-
 		// Per avviare una sessione sono neccessarie 3 ID:
 		 
-		// 1. userID
+		// 1.1 userID
 		currentUserId = currentUser.getId();
 		Assert.assertTrue(currentUserId.intValue()>0);
-		// 2. sutID
+		
+		// 1.2 sutID
 		// Creazione di un SUT
-		SUTInteraction interaction = new SUTInteraction(Constants.INTERACTION_WEBSITE);
+		Interaction interaction = new Interaction(Constants.INTERACTION_WEBSITE);
 		SUT sut = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.UBL, Constants.UBLSCHEMA, interaction, "XML document1 uploaded by web interface");
 		Long sutId = sutController.createSUT(sut, currentUser);
 		Assert.assertNotNull(sutId);		
-		/*// 3. TestPlan
+		
+		// 1.3 TestPlan
 		selectedTestPlan = currentUserTestPlanList.get(0);
-		Assert.assertNotNull(selectedTestPlan);
+		
 		Long selectedTestPlanId = selectedTestPlan.getId();
+		Assert.assertTrue(selectedTestPlan.getId().intValue()>0);
+		
 		
 		// 2. UTENTE AVVIA ESECUZIONE DEL PROPRIO TESTPLAN CREANDO UNA NUOVA SESSIONE
-		Session currentSession = new Session(currentUserId, sutId, selectedTestPlanId);
-
-		Long sessionId = sessionController.createSession(currentSession);
-		Assert.assertTrue(sessionId.intValue()>0);*/
 		
+		Long sessionId = sessionController.run(currentUserId, sutId, selectedTestPlanId);
+		Assert.assertNotNull(sessionId);
+		Assert.assertTrue(sessionId.intValue()>0);
 		
-		
-		
-		
-		//boolean actionWorkflowExecutionResult = actionManager.executeActionWorkflow(testPlan);
-		
-		
+		// N.B. 
+		// PER IL MOMENTO VIENE AVVIATO IL TESTPLAN E NON C'E' INTERAZIONE
+		// SUCCESSIVAMENTE
+		// DA QUESTO MOMENTO IN POI IL SISTEMA AVVIA IL TEST E IL CLIENT ATTENDE 
+		// 2.1. RICHIESTE DI INTERAZIONE
+		// OPPURE
+		// 2.2. RISULTATO FINALE
+		// IN CHE MODO? TRAMITE IL SESSION ID, ATTRAVERSO IL QUALE E' POSSIBILE SAPERE COSA STA SUCCEDENDO.
+		// PER ORA SALTIAMO I SEGUENTI PUNTI
 		// 3. PER OGNI ACTION L'UTENTE HA UN FEEDBACK E (EVENTUALMENTE) UNA RICHIESTA DI INTERAZIONE
 		// 4. DOPO LA PRIMA ACTION, L'UTENTE SALVA LA SESSIONE ED ESCE
 		// 5. L'UTENTE RIENTRA, VEDE LISTA SESSIONI
-		// 6. RIAVVIA QUELLA IN SOSPESO CHE TERMINA
+		// 6. RIAVVIA QUELLA IN SOSPESO CHE TERMINA		
+		Session session = sessionController.readSession(sessionId);
+		Assert.assertNotNull(session);
+		Assert.assertEquals(currentUserId, session.getUserId());
+		Assert.assertEquals(selectedTestPlanId, session.getTestPlanId());
+		Assert.assertEquals(sutId, session.getSutId());
+		
+		//Report currentReport = sessionController.getReport(sessionId);
+		
+		
+		// boolean actionWorkflowExecutionResult = actionManager.executeActionWorkflow(testPlan);
+		
+		
+
+		
+		
+		// SALTIAMO AL PUNTO 7
 		// 7. L'UTENTE VEDE LISTA SESSIONI
 		// 8. AVVIA NUOVA SESSIONE STESSO TESTPLAN E LA SOSPENDE
-		// 9. CANCELLA LA PRIMA (IN TEORIA DOVREBBERO RIMANERE TUTTE MA VOLENDO PUO' CANCELLARLE?)
+		// 9. CANCELLA LA PRIMA (IN TEORIA DOVREBBERO RIMANERE TUTTE MA VOLENDO PUO' CANCELLARLE)
 		// 10. RIPRENDE LA SECONDA E LA TERMINA	
 		
 		// CREATE REPORT --> REPORT MANAGER

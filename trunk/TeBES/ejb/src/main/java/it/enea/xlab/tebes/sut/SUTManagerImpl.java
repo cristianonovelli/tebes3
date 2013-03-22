@@ -2,6 +2,9 @@ package it.enea.xlab.tebes.sut;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Interaction;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
@@ -46,16 +49,18 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		try {
 			if (existingSUT == null) {
 					
-				System.out.println("SUTSUT: pre");
-				//sut.addToUser(user);
+
+				//TODO sut.addToUser(user); prendi spunto da Test Plan
 				eM.persist(sut);	
 				
-				 if(sut == null)
-			        	System.out.println("SUTSUT: null");
-			        else
-			        	System.out.println("SUTSUT: " + sut.getId());
-				 
-				return sut.getId();
+				Long interactionId = this.createInteraction(sut.getInteraction());
+				
+				Long adding = this.addInteractionToSUT(interactionId, sut.getId());
+				
+				if (adding.intValue()>0)
+					return sut.getId();
+				else
+					return new Long(-3);
 			}
 			else {
 				return new Long(-1);
@@ -69,6 +74,51 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	}
 	
 	
+	private Long addInteractionToSUT(Long interactionId, Long sutId) {
+
+		try {
+			
+			// READ
+			Interaction i = this.readInteraction(interactionId);
+			SUT s = this.readSUT(sutId);
+			
+			try {
+				
+				// ADDING
+				i.addToSUT(s);
+				eM.persist(s);
+				
+			} catch (Exception e) {				
+				e.printStackTrace();
+				return new Long(-2);
+			}
+		} catch (Exception e) {			
+			e.printStackTrace();
+			return new Long(-1);
+		}
+
+		return new Long(1);
+	}
+
+
+	private Interaction readInteraction(Long interactionId) {
+		
+		return eM.find(Interaction.class, interactionId);
+	}
+
+
+	private Long createInteraction(Interaction interaction) {
+
+		try {
+				eM.persist(interaction);
+				return interaction.getId();
+		}
+		catch(Exception e) {
+			return new Long(-1);
+		}	
+	}
+
+
 	/**
 	 * READ SUT
 	 */	

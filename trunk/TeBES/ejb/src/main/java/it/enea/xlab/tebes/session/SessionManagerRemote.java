@@ -8,16 +8,18 @@ import javax.ejb.Remote;
 public interface SessionManagerRemote {
 
 	// Reactivation (Ripristino)
-	public Session reactivateSession(Long sessionId);
+	//public Session reactivateSession(Long sessionId);
 	
 	// Create Session
-	public Long createSession(Session session);
+	//public Long createSession(Session session);
 	
 	// Read Session
 	public Session readSession(Long sessionId);
-	public List<Session> readSessionListbyUserId(Long userId);
+	// public List<Session> readSessionListbyUserId(Long userId);
 	
 	// Delete Session
-	public Boolean deleteSession(Long sessionId);
+	//public Boolean deleteSession(Long sessionId);
+
+	public Long run(Long userId, Long sutId, Long testPlanId);
 
 }
