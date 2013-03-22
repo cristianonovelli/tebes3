@@ -31,6 +31,33 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	/**
+	 * RUN / CREATE Session
+	 * 
+	 * @return	sessionId > 0
+	 * 			-1 createSession error
+	 */
+	public Long run(Long userId, Long sutId, Long testPlanId) {
+		
+		// Create Session JPA objest
+		Session currentSession = new Session(userId, sutId, testPlanId);
+		Long sessionId = this.createSession(currentSession);
+				
+		if ( (sessionId != null) && (sessionId > 0) ) {
+			
+			// TODO create Report
+			
+			// TODO EXE TestPlan
+			
+			
+			
+			
+			return sessionId;
+		}
+		else		
+			return new Long(-1);
+	}
 	
 	/**
 	 * CREATE Session
@@ -38,7 +65,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	 * @return 	sessionID if created
 	 * 			-1 otherwise
 	 */
-	public Long createSession(Session session) {
+	private Long createSession(Session session) {
 
 		Session existingSession = this.readSessionByUserTestPlanAndSUT(session.getUserId(), session.getTestPlanId(), session.getSutId());
 		
@@ -115,5 +142,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		
 		return true;
 	}
+
+
 	
 }

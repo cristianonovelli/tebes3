@@ -22,10 +22,17 @@ public class Session implements Serializable {
 	@Column(name="id")
 	private Long id;
 
-	private final String STATE1_WORKING = "working";
-	private final String STATE2_SUSPENDED = "suspended";
-	private final String STATE3_ABORTED = "aborted";
-	private final String STATE4_DONE = "done";
+	// State
+	// WORKING (in elaborazione, interrogando altre strtture dati possiamo sapere a che punto siamo)
+	// WAITING (in attesa di input dall’utente, interrogando … possiamo sapere cosa dobbiamo fare)
+	// SUSPENDED (sospesa dall’utente, può essere ripresa)
+	// ABORTED (annullata, può essere riavviata ma da capo generando una nuova sessione)
+	// DONE (finito, è possibile esaminare il report finale)
+	private static final String WORKING_STATE = "working";
+	private static final String WAITING_STATE = "waiting";
+	private static final String SUSPENDED_STATE = "suspended";
+	private static final String ABORTED_STATE = "aborted";
+	private static final String DONE_STATE = "done";
 
 
 	
@@ -48,11 +55,17 @@ public class Session implements Serializable {
 	private Long testPlanId;
 	private Long sutId;
 	
-	// TODO meglio una relazione con l'entity report
+	// TODO relazione con l'entity report?
 	private Long reportId;
 	
 	private String state;
-	
+
+
+	public Session() {
+
+	}
+
+
 	// Costruttore
 	public Session(Long userId, Long sutId, Long testPlanId) {
 
@@ -60,9 +73,12 @@ public class Session implements Serializable {
 		this.sutId = sutId;
 		this.testPlanId = testPlanId;
 
-		// TODO Inizializzare Nuovo Report
+		// TODO Inizializzare Nuovo Report??
 		
-		this.setWorkingState();
+		
+		
+		// Set state to "working"
+		this.setState(getWorkingState());
 	}
 
 	
@@ -110,20 +126,35 @@ public class Session implements Serializable {
 		return state;
 	}
 
-	public void setWorkingState() {
-		this.state = this.STATE1_WORKING;
+
+	public static String getWorkingState() {
+		return WORKING_STATE;
 	}
-	
-	public void setSuspendedState() {
-		this.state = this.STATE2_SUSPENDED;
+
+
+	public static String getWaitingState() {
+		return WAITING_STATE;
 	}
-	
-	public void setAbortedState() {
-		this.state = this.STATE3_ABORTED;
+
+
+	public static String getSuspendedState() {
+		return SUSPENDED_STATE;
 	}
-	
-	public void setDoneState() {
-		this.state = this.STATE4_DONE;
-	}	
+
+
+	public static String getAbortedState() {
+		return ABORTED_STATE;
+	}
+
+
+	public static String getDoneState() {
+		return DONE_STATE;
+	}
+
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
 
 }

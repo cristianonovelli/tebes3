@@ -3,7 +3,7 @@ package it.enea.xlab.tebes.sut;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
-import it.enea.xlab.tebes.entity.SUTInteraction;
+import it.enea.xlab.tebes.entity.Interaction;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.users.UserAdminController;
 import it.enea.xlab.tebes.users.UserProfileController;
@@ -108,7 +108,7 @@ public class SUTManagerImplITCase {
 		
 
 		// 2. CREATE two generic SUTs
-		SUTInteraction interaction = new SUTInteraction(Constants.INTERACTION_WEBSITE);
+		Interaction interaction = new Interaction(Constants.INTERACTION_WEBSITE);
 		SUT sut1 = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.UBL, Constants.UBLSCHEMA, interaction, "XML document1 uploaded by web interface");
 		Long sutId1 = sutManagerController.createSUT(sut1, tempUser);
 		

@@ -4,12 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
 public class SUT implements Serializable {
@@ -37,7 +39,9 @@ public class SUT implements Serializable {
 	
 	// interazioni possibili: website (upload), email, ws, cpa
 	//@OneToOne
-	private SUTInteraction interaction;
+	//@PrimaryKeyJoinColumn(name="id", referencedColumnName="interaction_sut_id")
+	@OneToOne(mappedBy="sut",cascade = CascadeType.ALL)
+	private Interaction interaction;
 	
 	// descrizione testuale
 	private String description;
@@ -55,7 +59,7 @@ public class SUT implements Serializable {
 	/**
 	 * Constructor without id.
 	 */
-	public SUT(String name, String type, String language, String reference, SUTInteraction interaction, String description) {
+	public SUT(String name, String type, String language, String reference, Interaction interaction, String description) {
 
 		this.setName(name);
 		this.setType(type);
@@ -145,12 +149,12 @@ public class SUT implements Serializable {
 	}
 
 
-	public SUTInteraction getInteraction() {
+	public Interaction getInteraction() {
 		return interaction;
 	}
 
 
-	public void setInteraction(SUTInteraction interaction) {
+	public void setInteraction(Interaction interaction) {
 		this.interaction = interaction;
 	}
 
