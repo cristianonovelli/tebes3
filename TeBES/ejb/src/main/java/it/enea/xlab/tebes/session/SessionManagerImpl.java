@@ -1,11 +1,17 @@
 package it.enea.xlab.tebes.session;
 
+import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Session;
+import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
+import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -23,6 +29,11 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
+	@EJB
+	private TestPlanManagerRemote testPlanManager; 
+	
+	@EJB
+	private ActionManagerRemote actionManager; 
 	
 	/**
 	 * REACTIVATION (RIPRISTINO) Session
@@ -48,8 +59,15 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			
 			// TODO create Report
 			
-			// TODO EXE TestPlan
 			
+			
+			// TODO EXE TestPlan
+			TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);
+			
+			ActionWorkflow workflow = testPlan.getWorkflow();
+			//System.out.println("AAAAAAAAAAAAAAAAAAA: " + workflow.getActions().size());
+			
+			//Boolean actionWorkflowExecutionResult = actionManager.executeActionWorkflow(workflow);
 			
 			
 			

@@ -199,16 +199,19 @@ public class SessionManagerImplITCase {
 		// 4. DOPO LA PRIMA ACTION, L'UTENTE SALVA LA SESSIONE ED ESCE
 		// 5. L'UTENTE RIENTRA, VEDE LISTA SESSIONI
 		// 6. RIAVVIA QUELLA IN SOSPESO CHE TERMINA		
+		
+		// E PASSIAMO A LEGGERE LA SESSIONE
 		Session session = sessionController.readSession(sessionId);
 		Assert.assertNotNull(session);
 		Assert.assertEquals(currentUserId, session.getUserId());
 		Assert.assertEquals(selectedTestPlanId, session.getTestPlanId());
 		Assert.assertEquals(sutId, session.getSutId());
 		
+		// E IL REPORT GENERATO
 		//Report currentReport = sessionController.getReport(sessionId);
 		
 		
-		// boolean actionWorkflowExecutionResult = actionManager.executeActionWorkflow(testPlan);
+		
 		
 		
 
