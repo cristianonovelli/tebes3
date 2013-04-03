@@ -175,6 +175,13 @@ public class UserAdminController {
 
 
 
+	public List<Long> getActionIdList() {
+		
+		return userManagerBean.getActionIdList();
+	}
+
+
+
 
 }
 

@@ -1,7 +1,14 @@
 package it.enea.xlab.tebes.testplan;
 
+import it.enea.xlab.tebes.common.Constants;
+import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.entity.Role;
+import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.users.UserAdminController;
+import it.enea.xlab.tebes.users.UserProfileController;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -9,24 +16,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
-import it.enea.xlab.tebes.common.Constants;
-import it.enea.xlab.tebes.common.PropertiesUtil;
-import it.enea.xlab.tebes.entity.Role;
-import it.enea.xlab.tebes.entity.SUT;
-import it.enea.xlab.tebes.entity.TestPlan;
-import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.sut.SUTManagerController;
-import it.enea.xlab.tebes.users.UserAdminController;
-import it.enea.xlab.tebes.users.UserProfileController;
 import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.xlab.file.XLabFileManager;
-import org.xlab.utilities.XLabDates;
 import org.xml.sax.SAXException;
 
 
@@ -178,7 +173,10 @@ public class TestPlanManagerImplITCase {
 			
 			// Create TestPlan Entity
 			testPlanId = testPlanController.createTestPlan(testPlan, superUserId);
-
+			// N.B. dovrebbe essere incorporato nella CREATE
+			Long adding = testPlanController.addTestPlanToUser(testPlanId, superUserId);
+			Assert.assertTrue(adding.intValue()>0);	
+			
 			Assert.assertTrue(testPlanId.intValue() > 0);
 /*	
 			// Test the XML adjustment (done into the create)
@@ -247,6 +245,8 @@ public class TestPlanManagerImplITCase {
 		// 8. SAVE TestPlan for the current user
 		Long importedTestPlanId = testPlanController.createTestPlan(selectedTestPlan, currentUserId);	
 		Assert.assertTrue(importedTestPlanId.intValue() > selectedTestPlan.getId().intValue());		
+		Long adding2 = testPlanController.addTestPlanToUser(importedTestPlanId, currentUserId);
+		Assert.assertTrue(adding2.intValue()>0);	
 		// Read Check
 		TestPlan importedTestPlan = testPlanController.readTestPlan(importedTestPlanId);
 		Assert.assertTrue(importedTestPlan.getId().intValue() > 0);

@@ -152,13 +152,6 @@ public class TestPlanDOM extends JXLabDOM {
 
 		return this.getAttribute(attributeLabel, node);
 		
-/*		String attributeValue = null;
-		
-		if (node != null) 
-			attributeValue = ((Element) node).getAttribute(attributeLabel);
-		else
-			System.out.println("r2d2: node null 153");
-		return attributeValue;*/
 	}
 
 

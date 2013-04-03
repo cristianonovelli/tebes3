@@ -12,8 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
+@Table(name="testplan")
 public class TestPlan implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -47,9 +52,10 @@ public class TestPlan implements Serializable {
 	
 	/**
 	 * WORKFLOW del TestPlan
-	 * Ogni TestPlan ha un workflow di actions => OneToOne 
+	 * Ogni TestPlan ha un workflow di actions => OneToOne
+	 * , fetch = FetchType.EAGER 
 	 */
-	@OneToOne(mappedBy="testPlan",cascade = CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.ALL)
 	ActionWorkflow workflow;
 
 
@@ -64,9 +70,19 @@ public class TestPlan implements Serializable {
 		this.xml = xml;
 		this.datetime = datetime;
 		this.state = state;
-		this.location = location;
-		
-		this.workflow = null;
+		this.location = location;		
+
+	}
+	
+	public TestPlan(String xml, String datetime, String state, String location, ActionWorkflow workflow) {
+
+		//this.testPlanId = testPlanId;
+		//this.userIdXML = userId;
+		this.xml = xml;
+		this.datetime = datetime;
+		this.state = state;
+		this.location = location;		
+		this.setWorkflow(workflow);
 	}
 	
 

@@ -1,78 +1,195 @@
 package it.enea.xlab.tebes.action;
 
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Group;
+import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.test.TestManagerImpl;
 
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 
 @Stateless
 @Interceptors({Profile.class})
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ActionManagerImpl implements ActionManagerRemote {
 
+	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
+	private EntityManager eM; 
 	
-	
-	
-	// cicla su ogni action e trovo action da eseguire da cui estraggo Test
 
-	// chiamo metodo test manager su Test da eseguire dipendentemente dal tipo
-
-	public ActionManagerImpl() {
-
-		// TODO Auto-generated constructor stub
-	}
-
+	//////////////////////
+	/// ACTION METHODS ///
+	//////////////////////
 
 	/**
-	 * Actions Workflow Engine
-	 * TODO supporto di un workflow più articolato, per ora è lineare e si risolve con un semplice for
-	 * @return 	true if all actions return true
-	 * 			false if one action return false
+	 * CREATE Action
+	 * @return 	id of Action if created
+	 * 			-1 if a persist exception occours
 	 */
-	public boolean executeActionWorkflow(ActionWorkflow workflow) {
-		
-		boolean result = true;
+	public Long createAction(Action action) {
 
-		
-		// io credo dovrei fare una ricerca del tipo readActionByWorkflowId
-		// eseguire questa action e una volta eseguita, eliminarla dal DB o settarla come "done"
-		List<Action> actionList = workflow.getActions();
-		Action a;
-		
-		for (int k=0;k<actionList.size();k++) {
+		try {
+				eM.persist(action);
+				return action.getId();
+		}
+		catch(Exception e) {
 			
-			a =	(Action) actionList.get(k);
-			
-			if (a != null)
-				result = result && execute(a);
-			else 
-				result = false;
-			}
-		
-		
-		//for (int i = 0 ; i < workflow.size(); i++) {
-		//	
-		//	result = result && execute((Action) workflow.get(i));
-		//}
-		
-		return result;
+			e.printStackTrace();
+			return new Long(-1);
+		}
 	}
 	
 	
 	/**
+	 * READ Action
+	 * @return 	Action if reading is OK
+	 */
+	public Action readAction(Long id) {
+		
+		return eM.find(Action.class, id);
+	}
+
+	
+	/**
+	 * DELETE Action
+	 * @return 	true if deleting is OK
+	 */
+	public Boolean deleteAction(Long id) {
+		
+		Action a = this.readAction(id);
+		
+		if (a == null)
+			return false;
+		
+		try {
+			eM.remove(a);
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		} catch (Exception e2) {
+			return null;
+		}
+	}	
+	
+
+	/**
+	 * ADD Action to ActionWorkflow
+	 */
+	public void addActionToWorkflow(Long actionId, Long workflowId) {
+
+		Action a = this.readAction(actionId);
+		ActionWorkflow wf = this.readWorkflow(workflowId);
+		
+		a.addToWorkflow(wf);
+		eM.persist(wf);
+
+		return;
+	}
+	
+
+	
+	////////////////////////
+	/// WORKFLOW METHODS ///
+	////////////////////////
+
+	/**
+	 * CREATE Workflow
+	 * @return 	id of Workflow if created
+	 * 			-1 if a persist exception occours
+	 */
+	public Long createWorkflow(ActionWorkflow workflow) {
+
+		try {
+				eM.persist(workflow);
+				return workflow.getId();
+		}
+		catch(Exception e) {
+			
+			e.printStackTrace();
+			return new Long(-1);
+		}
+	}
+	
+	
+	/**
+	 * READ Workflow by TestPlan
+	 */
+	public ActionWorkflow readWorkflow(Long id) {
+		
+		return eM.find(ActionWorkflow.class, id);
+	}
+	
+	public Long readWorkflowByTestPlan(TestPlan tp) {
+		
+        String queryString = "SELECT w FROM ActionWorkflow AS w";
+        
+        Query query = eM.createQuery(queryString);
+
+		try {
+			@SuppressWarnings("unchecked")
+			List<ActionWorkflow> wfList = query.getResultList();
+			
+			// TODO TROPPO INEFFICIENTE
+			for(int i=0; i<wfList.size(); i++) {
+				if (wfList.get(0).getTestPlan().getId().intValue()==tp.getId().intValue())
+					return wfList.get(0).getId();
+			}
+			
+		} catch (Exception e) {
+			return new Long(-1);
+		}
+        
+		return new Long(-2);
+	}
+
+	/**
+	 * DELETE Workflow
+	 * @return 	true if deleting is OK
+	 */
+	public Boolean deleteWorkflow(Long id) {
+		
+		ActionWorkflow wf = this.readWorkflow(id);
+		
+		if (wf == null)
+			return false;
+		
+		try {
+			eM.remove(wf);
+			return true;
+		} catch (IllegalArgumentException e) {
+			return false;
+		} catch (Exception e2) {
+			return null;
+		}
+	}	
+	
+
+	
+	///////////////////
+	/// RUN METHODS ///
+	///////////////////
+	
+	/**
+	 * RUN Action
 	 * Generic Test Action Execution
 	 * checks the lg attribute and call the executor of the test language specified (p.es TAML)
 	 * 
 	 * @return 	true if type is equal to one of the three permitted values: "TestSuite", "TestCase", "TestAssertion"
 	 * 			false otherwise
 	 */
-	public boolean execute(Action action) {
+	public boolean runAction(Action action) {
 	
 		boolean result = false;
 		
@@ -110,7 +227,44 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		
 		return result;
 	}
+	
+	/**
+	 * RUN Workflow
+	 * Actions Workflow Engine
+	 * TODO supporto di un workflow più articolato, per ora è lineare e si risolve con un semplice for
+	 * @return 	true if all actions return true
+	 * 			false if one action return false
+	 */
+	public boolean runWorkflow(ActionWorkflow workflow) {
+		
+		boolean result = true;
 
+		
+		// io credo dovrei fare una ricerca del tipo readActionByWorkflowId
+		// eseguire questa action e una volta eseguita, eliminarla dal DB o settarla come "done"
+		List<Action> actionList = workflow.getActions();
+		Action a;
+		
+		for (int k=0;k<actionList.size();k++) {
+			
+			a =	(Action) actionList.get(k);
+			
+			if (a != null)
+				result = result && runAction(a);
+			else 
+				result = false;
+			}
+		
+		
+		//for (int i = 0 ; i < workflow.size(); i++) {
+		//	
+		//	result = result && execute((Action) workflow.get(i));
+		//}
+		
+		return result;
+	}
 	
 	
 }
+
+

@@ -6,6 +6,7 @@ import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
@@ -30,52 +31,77 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	private EntityManager eM; 
 	
 	@EJB
-	private TestPlanManagerRemote testPlanManager; 
+	private ReportManagerRemote reportManager; 
 	
-	@EJB
-	private ActionManagerRemote actionManager; 
+	//@EJB
+	//private TestPlanManagerRemote testPlanManager; 
 	
-	/**
+	//@EJB
+	//private ActionManagerRemote actionManager; 
+	
+/*	*//**
 	 * REACTIVATION (RIPRISTINO) Session
-	 */
+	 *//*
 	public Session reactivateSession(Long sessionId) {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}*/
 
 	/**
 	 * RUN / CREATE Session
 	 * 
 	 * @return	sessionId > 0
-	 * 			-1 createSession error
+	 * 			-1 one or more ID isn't a valid identifier
+	 * 			-2 an unexpected exception happened
 	 */
 	public Long run(Long userId, Long sutId, Long testPlanId) {
 		
-		// Create Session JPA objest
-		Session currentSession = new Session(userId, sutId, testPlanId);
-		Long sessionId = this.createSession(currentSession);
+		
+		if ( (userId.intValue()>0) && (userId.intValue()>0) && (userId.intValue()>0) ) {
+		
+
+			
+			try {
+				// Create Session JPA objest
+				Session currentSession = new Session(userId, sutId, testPlanId);
+				Long sessionId = this.createSession(currentSession);
 				
-		if ( (sessionId != null) && (sessionId > 0) ) {
-			
-			// TODO create Report
-			
-			
-			
-			// TODO EXE TestPlan
-			TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);
-			
-			ActionWorkflow workflow = testPlan.getWorkflow();
-			//System.out.println("AAAAAAAAAAAAAAAAAAA: " + workflow.getActions().size());
-			
-			//Boolean actionWorkflowExecutionResult = actionManager.executeActionWorkflow(workflow);
-			
-			
-			
-			return sessionId;
+				
+				if ( (sessionId != null) && (sessionId > 0) ) {
+					
+					// TODO create Report
+					Long reportId = reportManager.createReport(sessionId);
+					
+					// TODO EXE TestPlan
+					//TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);
+					
+					//ActionWorkflow workflow = testPlan.getWorkflow();
+					
+					//Boolean actionWorkflowExecutionResult = actionManager.executeActionWorkflow(workflow);
+					
+					
+					
+					return sessionId;
+				}
+				else		
+					// @return -3 createSession error
+					return new Long(-3);
+				
+				
+			} catch (Exception e) {
+				
+				e.printStackTrace();
+				
+				// @return -2 an unexpected exception happened
+				return new Long(-2);
+			}	
+
 		}
-		else		
+		else
+			// @return -1 one or more ID isn't a valid identifier
 			return new Long(-1);
 	}
+	
 	
 	/**
 	 * CREATE Session

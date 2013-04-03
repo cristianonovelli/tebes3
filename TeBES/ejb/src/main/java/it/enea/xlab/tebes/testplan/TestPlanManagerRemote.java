@@ -24,7 +24,7 @@ public interface TestPlanManagerRemote {
 	public List<TestPlan>  readTestPlanByDatetimeAndUserId(String datetime, Long userId);
 	public Vector<String> getSystemXMLTestPlanList();
 	public List<TestPlan> readUserTestPlanList(User user);
-	
+	public List<TestPlan> readSystemTestPlanList();	
 	
 	public TestPlan getTestPlanFromXML(String testPlanAbsFileName);
 
@@ -41,15 +41,16 @@ public interface TestPlanManagerRemote {
 	public Long insertWorkflow(ActionWorkflow workflow, Long testPlan_id);
 	public ActionWorkflow readWorkflow(Long workflowId);
 
-	public Long createAction(Action action);
+	//public Long createAction(Action action);
 
-	public Action readAction(Long id_action);
+	//public Action readAction(Long id_action);
 
-	public void addActionToWorkflow(Long actionId, Long workflowId);
+	//public void addActionToWorkflow(Long actionId, Long workflowId);
 
 	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId);
 	public Long addTestPlanToUser(Long testPlanId, Long userId);
-	public List<TestPlan> readSystemTestPlanList();
+
+	
 	
 	
 	

@@ -1,5 +1,12 @@
 package it.enea.xlab.tebes.testplan;
 
+import it.enea.xlab.tebes.action.ActionManagerRemote;
+import it.enea.xlab.tebes.common.JNDIServices;
+import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.User;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -7,21 +14,13 @@ import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import junit.framework.Assert; 
-
 import org.xml.sax.SAXException;
-
-import it.enea.xlab.tebes.common.JNDIServices;
-import it.enea.xlab.tebes.common.PropertiesUtil;
-import it.enea.xlab.tebes.entity.Action;
-import it.enea.xlab.tebes.entity.ActionWorkflow;
-import it.enea.xlab.tebes.entity.SUT;
-import it.enea.xlab.tebes.entity.TestPlan;
-import it.enea.xlab.tebes.entity.User;
 
 public class TestPlanManagerController {
 
 	private TestPlanManagerRemote testPlanManagerService;
+	
+	private ActionManagerRemote actionManagerService;
 	
 	// CONTROLLER Constructor
 	public TestPlanManagerController() throws Exception {
@@ -34,7 +33,10 @@ public class TestPlanManagerController {
 			try {
 				
 				// GET SERVICE
-				testPlanManagerService = JNDIServices.getTestPlanManagerService();
+				testPlanManagerService = JNDIServices.getTestPlanManagerService(); 
+				
+				actionManagerService = JNDIServices.getActionManagerService();
+				
 				
 				guard = 5;
 			} catch (Exception e) {
@@ -97,18 +99,18 @@ public class TestPlanManagerController {
 
 	public Long createAction(Action action) {
 		
-		return testPlanManagerService.createAction(action);
+		return actionManagerService.createAction(action);
 	}
 
-	public Action readAction(Long actionId) {
+	/*public Action readAction(Long actionId) {
 		
 		return testPlanManagerService.readAction(actionId);
-	}
+	}*/
 
-	public void addActionToWorkflow(Long actionId, Long workflowId) {
+/*	public void addActionToWorkflow(Long actionId, Long workflowId) {
 		
 		testPlanManagerService.addActionToWorkflow(actionId, workflowId);		
-	}
+	}*/
 
 	public Boolean updateWorkflow(ActionWorkflow workflow) {
 		
@@ -146,6 +148,44 @@ public class TestPlanManagerController {
 
 		return testPlanManagerService.readSystemTestPlanList();
 	}
+
+
+
+	public Long createWorkflow(ActionWorkflow wf) {
+		
+		return actionManagerService.createWorkflow(wf);
+	}
+
+
+
+	public void addActionToWorkflow(Long actionId, Long workflowId) {
+		
+		actionManagerService.addActionToWorkflow(actionId, workflowId);
+		return;
+	}
+
+
+
+	public Long readWorkflowByTestPlan(TestPlan tp) {
+		
+		return actionManagerService.readWorkflowByTestPlan(tp);
+	}
+
+
+
+	public Boolean deleteAction(Long id) {
+		
+		return actionManagerService.deleteAction(id);
+	}
+
+
+
+	public Boolean deleteWorkflow(Long id) {
+		return actionManagerService.deleteWorkflow(id);
+	}
+
+
+
 	
 	
 	
