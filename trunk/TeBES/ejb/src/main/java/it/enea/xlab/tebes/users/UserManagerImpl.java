@@ -57,8 +57,6 @@ public class UserManagerImpl implements UserManagerRemote {
 		}	
 	}
 	
-	
-	
 	/**
 	 * READ User
 	 */
@@ -67,7 +65,6 @@ public class UserManagerImpl implements UserManagerRemote {
 		return eM.find(User.class, id);
 	}
 
-	
 	/**
 	 * UPDATE User
 	 */
@@ -139,6 +136,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		return result;
 	}
 
+	
 	/**
 	 * GET User LIST
 	 */
@@ -171,13 +169,6 @@ public class UserManagerImpl implements UserManagerRemote {
 	/**
 	 * Add SUT to User's SUT list.
 	 */
-/*	public void addSUTToUser(SUT sut, User user) {
-
-		sut.addToUser(user);
-		eM.persist(user);
-
-		return;
-	}*/
 	public void addSUTToUser(Long sutId, Long userId) {
 
 		User user = this.readUser(userId);
@@ -534,6 +525,16 @@ public class UserManagerImpl implements UserManagerRemote {
 		}
 		
 		return true;
+	}
+
+	public List<Long> getActionIdList() {
+        String queryString = "SELECT a.id FROM Action AS a";   
+        Query query = eM.createQuery(queryString);
+        
+        @SuppressWarnings("unchecked")
+		List<Long> userIdList = query.getResultList();
+
+        return userIdList;
 	}
 
 

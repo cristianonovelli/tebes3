@@ -1,5 +1,6 @@
 package it.enea.xlab.tebes.common;
 
+import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
@@ -20,12 +21,13 @@ public class JNDIServices {
 	private static SUTManagerRemote sutManager = null;
 	private static SessionManagerRemote sessionManager = null;
 	private static TestPlanManagerRemote testPlanManager = null;
+	private static ActionManagerRemote actionManager = null;
 	
 	private static String UserManagerServiceName = "TeBES-ear/UserManagerImpl/remote";
 	private static String SUTManagerServiceName = "TeBES-ear/SUTManagerImpl/remote";
 	private static String SessionManagerServiceName = "TeBES-ear/SessionManagerImpl/remote";
 	private static String TestPlanManagerServiceName = "TeBES-ear/TestPlanManagerImpl/remote";
-	
+	private static String ActionManagerServiceName = "TeBES-ear/ActionManagerImpl/remote";
 	
 	
 	
@@ -74,6 +76,16 @@ public class JNDIServices {
 				testPlanManager = (TestPlanManagerRemote) ctx.lookup(TestPlanManagerServiceName);
 		}
 		return testPlanManager;
+	}
+
+	public static ActionManagerRemote getActionManagerService() throws NamingException {
+		
+		if (actionManager == null) {
+
+			InitialContext ctx = new InitialContext();
+			actionManager = (ActionManagerRemote) ctx.lookup(ActionManagerServiceName);
+		}
+		return actionManager;
 	}
 		
 	

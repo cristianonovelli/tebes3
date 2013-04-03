@@ -13,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 
 @Entity
 public class ActionWorkflow implements Serializable {
@@ -21,23 +24,28 @@ public class ActionWorkflow implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
 	private Long id;
 
-	private String commnet;
+	private String comment;
 	
 	@OneToOne
 	TestPlan testPlan;
 	
 	@OneToMany(mappedBy="workflow", 
 			cascade = {CascadeType.ALL,CascadeType.MERGE },fetch = FetchType.EAGER)
+	//@OneToMany(mappedBy="workflow", cascade=CascadeType.ALL)
+	//@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Action> actions;
 
 
 	public ActionWorkflow() {
 
 	}
+	
+	public ActionWorkflow(List<Action> actions) {
 
+		this.setActions(actions);
+	}
 
 	public Long getId() {
 		return id;
@@ -59,15 +67,15 @@ public class ActionWorkflow implements Serializable {
 	}
 
 
-	public String getCommnet() {
-		return commnet;
+
+
+	public String getComment() {
+		return comment;
 	}
 
-
-	public void setCommnet(String commnet) {
-		this.commnet = commnet;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
-
 
 	public void addToTestPlan(TestPlan tp) {
 		

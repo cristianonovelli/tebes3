@@ -6,11 +6,13 @@ import it.enea.xlab.tebes.common.Constants;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -20,7 +22,6 @@ public class Action implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
 	private Long id;
 	
 	//private String actionId;
@@ -33,7 +34,9 @@ public class Action implements Serializable {
 	private boolean jumpTurnedON;
 	private String Description;
 	
-	@ManyToOne
+	//@ManyToOne
+	@ManyToOne(cascade=CascadeType.MERGE)
+	@JoinColumn(name="workflow_id")
 	ActionWorkflow workflow;
 	
 	
