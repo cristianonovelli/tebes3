@@ -1,6 +1,7 @@
 package it.enea.xlab.tebes.action;
 
 import it.enea.xlab.tebes.common.Constants;
+import it.enea.xlab.tebes.common.HibernateBindings;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
@@ -70,10 +71,13 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		
 		Action a = this.readAction(id);
 		
+		
+		
 		if (a == null)
 			return false;
 		
 		try {
+			HibernateBindings.detach(eM, a);
 			eM.remove(a);
 			return true;
 		} catch (IllegalArgumentException e) {

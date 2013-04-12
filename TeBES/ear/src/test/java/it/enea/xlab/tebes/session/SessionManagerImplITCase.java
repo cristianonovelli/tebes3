@@ -15,6 +15,7 @@ import it.enea.xlab.tebes.users.UserAdminController;
 import it.enea.xlab.tebes.users.UserProfileController;
 
 import java.util.List;
+import java.util.Vector;
 
 import junit.framework.Assert;
 
@@ -105,7 +106,7 @@ public class SessionManagerImplITCase {
 	
 	
 	@Test
-	public void test_manualCreation() {
+	public void test1_manualCreation() {
 		
 		//String superUserEmail = PropertiesUtil.getUser1Email();
 		//String superUserPassword = PropertiesUtil.getUser1Password();
@@ -119,6 +120,7 @@ public class SessionManagerImplITCase {
 		Long tpid = testPlanController.createTestPlan(tp, currentUserId);
 		Assert.assertTrue(tpid.intValue()>0);	
 		
+		//
 		Action a = new Action(1, "nome", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
 		Action a2 = new Action(2, "nome2", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
 		
@@ -143,13 +145,15 @@ public class SessionManagerImplITCase {
 		testPlanController.addActionToWorkflow(actionId2, workflowId);
 		
 		testPlanController.addWorkflowToTestPlan(workflowId, tpid);
-		
+		//
 		
 		Long adding = testPlanController.addTestPlanToUser(tpid, currentUserId);
 		Assert.assertTrue(adding.intValue()>0);	
 		
 		
 		currentUser = userProfileController.login(currentUser.geteMail(), currentUser.getPassword());
+		
+		// TODO se questo funziona non c'è bisogno dei metodi...
 		tp = currentUser.getTestPlans().get(0);
 		Assert.assertNotNull(tp);
 		
@@ -179,18 +183,105 @@ public class SessionManagerImplITCase {
 		Assert.assertNotNull(sessionId);
 		Assert.assertTrue(sessionId.intValue()>0);
 		
+		// TODO LA SESSIONE AL MOMENTO NON FA NULLA E INVECE DOVREBBE:
+		// 1. ESEGUIRE IL TESTPLAN CARICANDOLO IN MEMORIA,
+		// 2. INVOCARE I VALIDATORI NECESSARI A ESEGUIRE I TEST E
+		// 3. CREARE IL RELATIVO REPORT
+		
+		Boolean deleting;
+		
+
+		
 		
 		// DELETE Workflow > DELETE relative Actions
-		Boolean deleting = testPlanController.deleteWorkflow(wf.getId());
+		deleting = testPlanController.deleteWorkflow(wf.getId());
 		Assert.assertTrue(deleting);
+
+		// TODO PROBLEMA CON CANCELLAZIONE ACTION, PERCHE'?
+		//deleting = testPlanController.deleteAction(actionId);
+		//Assert.assertTrue(deleting);
+		
+		// TODO IL SEGUENTE TEST HA SUCCESSO MA IN REALTA' LE ACTION CI SONO, SOLO NON SONO LINKATE AL WF!
 		
 		// Get Action List (only superuser)
-		List<Long> actionIdList = userAdminController.getActionIdList();
-		Assert.assertTrue(actionIdList.size()==0);
-		// TODO N.B. the metod deleteAction is useless
+		//List<Long> actionIdList = userAdminController.getActionIdList();
+		//Assert.assertTrue(actionIdList.size()==0);
+		
+		// TODO N.B. the metod deleteAction is useless, doesn't work...
 	}
 	
 	
+	
+	//@Test
+	public void test2_autoCreation() {
+		
+		String superUserEmail = PropertiesUtil.getUser1Email();
+		String superUserPassword = PropertiesUtil.getUser1Password();
+		User superUser = userProfileController.login(superUserEmail, superUserPassword);
+		Long superUserId = superUser.getId();
+		superUser = userAdminController.readUser(superUserId);
+		Vector<String> systemTestPlanList = testPlanController.getSystemXMLTestPlanList();
+		TestPlan testPlan = null;
+		Long testPlanId;
+		String testPlanAbsPathName;
+		String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlanDir();
+		Boolean updating;	
+		
+		
+		
+		
+		Long adding;
+		for (int i=0; i<systemTestPlanList.size();i++) {
+			
+			// GET TestPlan structure from XML
+			testPlanAbsPathName = superUserTestPlanDir.concat(systemTestPlanList.elementAt(i));
+			testPlan = testPlanController.getTestPlanFromXML(testPlanAbsPathName);
+			Assert.assertNotNull(testPlan);
+			
+			Assert.assertNotNull(testPlan.getWorkflow());
+			Assert.assertNotNull(testPlan.getWorkflow().getActions());
+			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));	
+			
+			// Persist TestPlan structure from XML
+			testPlanId = testPlanController.createTestPlan(testPlan, superUserId);
+			Assert.assertTrue(testPlanId.intValue()>0);	
+			adding = testPlanController.addTestPlanToUser(testPlanId, superUserId);
+			Assert.assertTrue(adding.intValue()>0);	
+			
+			// Check it
+			testPlan = testPlanController.readTestPlan(testPlanId);
+			Assert.assertNotNull(testPlan.getWorkflow());
+			Assert.assertNotNull(testPlan.getWorkflow().getActions());
+			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));			
+		}	
+		
+		
+/*		List<TestPlan> superUserTestPlanList = testPlanController.readUserTestPlanList(superUser);
+		
+		User currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
+		Long currentUserId = currentUser.getId();
+		
+		superUserTestPlanList = testPlanController.readSystemTestPlanList();
+		TestPlan selectedTestPlan = superUserTestPlanList.get(0);
+		Assert.assertNotNull(selectedTestPlan);
+		
+		Long wfId = testPlanController.readWorkflowByTestPlan(selectedTestPlan);
+		Assert.assertTrue(wfId.intValue()>0);
+		
+		ActionWorkflow wf = testPlanController.readWorkflow(wfId);		
+		Assert.assertNotNull(wf);
+		
+		List<Action> actionList = wf.getActions();
+		Assert.assertNotNull(actionList);
+		
+		Assert.assertNotNull(actionList.get(0));
+		Assert.assertTrue(actionList.get(0).getId().intValue()>0);*/
+		
+		
+		
+	
+	}
+		
 
 	@AfterClass
 	public static void after_testPlanManager() throws Exception {
