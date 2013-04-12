@@ -527,7 +527,9 @@ public class UserManagerImpl implements UserManagerRemote {
 		return true;
 	}
 
+	
 	public List<Long> getActionIdList() {
+		
         String queryString = "SELECT a.id FROM Action AS a";   
         Query query = eM.createQuery(queryString);
         

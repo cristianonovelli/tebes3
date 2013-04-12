@@ -107,39 +107,33 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 					eM.persist(testPlanResult);	
 					
-					/*
-					ActionWorkflow wf = testPlanResult.getWorkflow();
-					eM.persist(wf);	
-					System.out.println("KKKKKKKKKKKKKKK12");
-					List<Action> actionList = wf.getActions();
-					Action a;
-					Long aid;
-					for (int i=0; i<actionList.size(); i++) {
-						System.out.println("KKKKKKKKKKKKKKK13");
-						a = actionList.get(i);
-						wf = actionManager.readWorkflow(wf.getId());
-						System.out.println("KKKKKKKKKKKKKKK: " + wf.getId());
-						aid = actionManager.createAction(a, wf);
-						
-						
-						
-						a.addToWorkflow(wf);
-						eM.persist(wf);
-						
-						System.out.println("postKK: " + aid.toString());
-					}*/
+
+					//
+					/*Action a = new Action(1, "nome", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
+					Action a2 = new Action(2, "nome2", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
 					
-						
+					Long actionId = actionManager.createAction(a);
+					Assert.assertTrue(actionId.intValue()>0);	
+					Long actionId2 = actionManager.createAction(a2);
+					Assert.assertTrue(actionId2.intValue()>0);			
+
+					
+					//Vector<Action> actionList = new Vector<Action>();
+					//actionList.add(a);
+					//actionList.add(a2);
+					ActionWorkflow wf = new ActionWorkflow();
+					// ADD A TO WF
 					
 					
+					// queste dovrebbero essere azioni "interne"
+					Long workflowId = actionManager.createWorkflow(wf);
+					Assert.assertTrue(workflowId.intValue()>0);	
 					
-					// Set new TestPlan/@id
-					//while (testPlanResult.getId() == null)
-					//	Thread.sleep(50);
+					actionManager.addActionToWorkflow(actionId, workflowId);
+					actionManager.addActionToWorkflow(actionId2, workflowId);
 					
-					// Add Test Plan to User
-					
-					
+					this.addWorkflowToTestPlan(workflowId, testPlanResult.getId());*/
+					//
 					
 					
 					
