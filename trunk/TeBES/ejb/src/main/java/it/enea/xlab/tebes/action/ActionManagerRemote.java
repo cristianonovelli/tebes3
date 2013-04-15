@@ -16,7 +16,7 @@ public interface ActionManagerRemote {
 	
 	public void addActionToWorkflow(Long actionId, Long workflowId);
 	
-	public Long readWorkflowByTestPlan(TestPlan tp);
+	//public Long readWorkflowByTestPlan(TestPlan tp);
 
 	public Boolean deleteAction(Long id);
 
