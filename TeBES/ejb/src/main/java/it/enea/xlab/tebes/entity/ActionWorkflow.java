@@ -28,8 +28,8 @@ public class ActionWorkflow implements Serializable {
 
 	private String comment;
 	
-	@OneToOne
-	TestPlan testPlan;
+	//@OneToOne
+	//TestPlan testPlan;
 	
 	@OneToMany(mappedBy="workflow", 
 			cascade = {CascadeType.ALL,CascadeType.MERGE },fetch = FetchType.EAGER)
@@ -77,7 +77,7 @@ public class ActionWorkflow implements Serializable {
 		this.comment = comment;
 	}
 
-	public void addToTestPlan(TestPlan tp) {
+/*	public void addToTestPlan(TestPlan tp) {
 		
 		this.testPlan = tp;
 	}
@@ -90,7 +90,7 @@ public class ActionWorkflow implements Serializable {
 
 	public void setTestPlan(TestPlan testPlan) {
 		this.testPlan = testPlan;
-	}
+	}*/
 
 
 	

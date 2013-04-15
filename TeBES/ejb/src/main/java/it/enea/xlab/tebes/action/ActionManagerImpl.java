@@ -135,7 +135,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		return eM.find(ActionWorkflow.class, id);
 	}
 	
-	public Long readWorkflowByTestPlan(TestPlan tp) {
+/*	public Long readWorkflowByTestPlan(TestPlan tp) {
 		
         String queryString = "SELECT w FROM ActionWorkflow AS w";
         
@@ -156,7 +156,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		}
         
 		return new Long(-2);
-	}
+	}*/
 
 	/**
 	 * DELETE Workflow

@@ -166,10 +166,10 @@ public class TestPlanManagerController {
 
 
 
-	public Long readWorkflowByTestPlan(TestPlan tp) {
+	/*public Long readWorkflowByTestPlan(TestPlan tp) {
 		
 		return actionManagerService.readWorkflowByTestPlan(tp);
-	}
+	}*/
 
 
 
