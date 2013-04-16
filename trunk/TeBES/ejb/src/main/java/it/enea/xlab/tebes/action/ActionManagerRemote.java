@@ -20,6 +20,8 @@ public interface ActionManagerRemote {
 
 	public Boolean deleteAction(Long id);
 
+	public ActionWorkflow readWorkflow(Long id);
+	
 	public Boolean deleteWorkflow(Long id);
 
 	public Action readAction(Long id);
