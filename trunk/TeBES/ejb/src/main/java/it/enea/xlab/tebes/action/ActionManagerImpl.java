@@ -14,6 +14,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 
 
@@ -60,7 +61,16 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	 */
 	public Action readAction(Long id) {
 		
-		return eM.find(Action.class, id);
+		Action result;
+		try {
+			
+			result = eM.find(Action.class, id);
+			
+		} catch (EntityNotFoundException e) {
+			result = null;
+		}
+		
+		return result;
 	}
 
 	
@@ -78,8 +88,12 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			return false;
 		
 		try {
-
-			eM.remove(eM.merge(a));
+			
+			a.getWorkflow().getActions().remove(a);
+			
+			//a.removeFromWorkflow();
+			
+			eM.remove(a);
 			return true;
 		} catch (IllegalArgumentException e) {
 			return false;
@@ -98,8 +112,12 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		ActionWorkflow wf = this.readWorkflow(workflowId);
 		
 		a.addToWorkflow(wf);
+		/*if ( !wf.getActions().contains(a) )
+			wf.getActions().add(a);*/
+		
 		eM.persist(wf);
-
+		//eM.merge(wf);
+		
 		return;
 	}
 	

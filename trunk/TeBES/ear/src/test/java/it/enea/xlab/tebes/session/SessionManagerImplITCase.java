@@ -158,7 +158,7 @@ public class SessionManagerImplITCase {
 		// TODO se questo funziona non c'è bisogno del metodo per prelevare il testplan dato lo user
 		tp = currentUser.getTestPlans().get(0);
 		Assert.assertNotNull(tp);
-		
+		System.out.println("AAAAA:" + tp.getDatetime());
 		
 		
 		//workflowId = testPlanController.readWorkflowByTestPlan(tp);
@@ -170,10 +170,7 @@ public class SessionManagerImplITCase {
 		
 		List<Action> actionList = wf.getActions();
 		Assert.assertNotNull(actionList);
-		
-		Assert.assertNotNull(actionList.get(1));
-		Assert.assertTrue(actionList.get(1).getId().intValue()>0);
-		Assert.assertTrue(actionList.get(1).getActionName().equals("nome2"));
+		Assert.assertTrue(actionList.size()>0);
 		
 		
 		// Creazione di un SUT
@@ -196,6 +193,31 @@ public class SessionManagerImplITCase {
 		Boolean deleting;
 		
 
+		TestPlan tpFulvio = testPlanController.readTestPlan(tp.getId());
+		Assert.assertNotNull(tpFulvio);
+		
+		ActionWorkflow wfFulvio = tpFulvio.getWorkflow();
+		Assert.assertNotNull(wfFulvio);
+		
+		Long actionIdFulvio = wfFulvio.getActions().get(0).getId();
+		Action aFulvio = testPlanController.readAction(actionIdFulvio);
+		Assert.assertNotNull(aFulvio);
+		
+		/*if ( wfFulvio.getActions().contains(aFulvio) ) {
+			System.out.println("AAAAAAAA" + aFulvio.getId());
+			wfFulvio.getActions().remove(aFulvio);
+			Assert.assertTrue(testPlanController.updateWorkflow(wfFulvio));
+		}*/
+		
+		aFulvio = testPlanController.readAction(actionIdFulvio);
+		System.out.println("AAAAAAAAAAAAAA:" + aFulvio.getId());
+		deleting = testPlanController.deleteAction(aFulvio.getId());
+		Action aFulvio2 = testPlanController.readAction(actionIdFulvio);
+		Assert.assertNull(aFulvio2);
+		
+		//System.out.println("FFFFFFFF: " + aFulvio.getId());
+		//deleting = testPlanController.deleteAction(aFulvio.getId());
+		//Assert.assertTrue(deleting);		
 		
 		
 		// DELETE Workflow > DELETE relative Actions

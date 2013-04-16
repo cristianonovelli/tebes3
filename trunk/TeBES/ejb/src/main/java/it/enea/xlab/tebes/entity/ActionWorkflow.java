@@ -31,8 +31,7 @@ public class ActionWorkflow implements Serializable {
 	//@OneToOne
 	//TestPlan testPlan;
 	
-	@OneToMany(mappedBy="workflow", 
-			cascade = {CascadeType.ALL,CascadeType.MERGE },fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="workflow", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	//@OneToMany(mappedBy="workflow", cascade=CascadeType.ALL)
 	//@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Action> actions;

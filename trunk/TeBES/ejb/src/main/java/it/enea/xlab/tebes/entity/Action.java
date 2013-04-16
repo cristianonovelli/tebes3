@@ -7,7 +7,6 @@ import it.enea.xlab.tebes.common.Constants;
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -90,6 +89,11 @@ public class Action implements Serializable {
 		this.workflow = workflow;
 	}
 
+	public void removeFromWorkflow() {
+		
+		this.workflow = null;
+	}
+	
 /*	public String getActionId() {
 		return actionId;
 	}
@@ -176,6 +180,34 @@ public class Action implements Serializable {
 
 	public void setWorkflow(ActionWorkflow workflow) {
 		this.workflow = workflow;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + actionNumber;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Action other = (Action) obj;
+		if (actionNumber != other.actionNumber)
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 	
 }
