@@ -97,9 +97,9 @@ public class TestPlanManagerController {
 		return testPlanManagerService.getActionsFromXML(id);
 	}
 
-	public Long createAction(Action action) {
+	public Long createAction(Action action, Long workflowId) {
 		
-		return actionManagerService.createAction(action);
+		return actionManagerService.createAction(action, workflowId);
 	}
 
 	/*public Action readAction(Long actionId) {
@@ -182,6 +182,14 @@ public class TestPlanManagerController {
 
 	public Boolean deleteWorkflow(Long id) {
 		return actionManagerService.deleteWorkflow(id);
+	}
+
+
+
+
+	public Action readAction(Long actionId) {
+		// TODO Auto-generated method stub
+		return actionManagerService.readAction(actionId);
 	}
 
 

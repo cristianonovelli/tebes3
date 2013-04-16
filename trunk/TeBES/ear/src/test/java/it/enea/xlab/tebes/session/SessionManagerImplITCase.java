@@ -116,44 +116,47 @@ public class SessionManagerImplITCase {
 		User currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
 		Long currentUserId = currentUser.getId();
 		
-		TestPlan tp = new TestPlan("xml", "datetime", "state", "location");
-		Long tpid = testPlanController.createTestPlan(tp, currentUserId);
-		Assert.assertTrue(tpid.intValue()>0);	
-		
-		//
-		Action a = new Action(1, "nome", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
-		Action a2 = new Action(2, "nome2", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
-		
-		Long actionId = testPlanController.createAction(a);
-		Assert.assertTrue(actionId.intValue()>0);	
-		Long actionId2 = testPlanController.createAction(a2);
-		Assert.assertTrue(actionId2.intValue()>0);			
 
 		
-		//Vector<Action> actionList = new Vector<Action>();
-		//actionList.add(a);
-		//actionList.add(a2);
+
+		// CREATE ActionWorkflow
 		ActionWorkflow wf = new ActionWorkflow();
-		// ADD A TO WF
-		
-		
-		// queste dovrebbero essere azioni "interne"
+		wf.setComment("mycomment");		
 		Long workflowId = testPlanController.createWorkflow(wf);
+		wf = testPlanController.readWorkflow(workflowId);
 		Assert.assertTrue(workflowId.intValue()>0);	
 		
-		testPlanController.addActionToWorkflow(actionId, workflowId);
-		testPlanController.addActionToWorkflow(actionId2, workflowId);
+
+		// Preparo manualmente le Action
+		Action a = new Action(1, "nome", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
+		Action a2 = new Action(2, "nome2", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");	
+
 		
+		
+		
+		// CREATE Actions
+		Long actionId = testPlanController.createAction(a, workflowId);
+		Assert.assertTrue(actionId.intValue()>0);	
+		Long actionId2 = testPlanController.createAction(a2, workflowId);
+		Assert.assertTrue(actionId2.intValue()>0);		
+		
+		// CREATE TestPlan
+		TestPlan tp = new TestPlan("xml", "datetime", "state", "location");
+		Long tpid = testPlanController.createTestPlan(tp, currentUserId);
+		Assert.assertTrue(tpid.intValue()>0);			
+		
+		// ADD Workflow to TestPlan
 		testPlanController.addWorkflowToTestPlan(workflowId, tpid);
-		//
 		
+		// ADD TestPlan to User
 		Long adding = testPlanController.addTestPlanToUser(tpid, currentUserId);
 		Assert.assertTrue(adding.intValue()>0);	
 		
 		
+		
 		currentUser = userProfileController.login(currentUser.geteMail(), currentUser.getPassword());
 		
-		// TODO se questo funziona non c'è bisogno dei metodi...
+		// TODO se questo funziona non c'è bisogno del metodo per prelevare il testplan dato lo user
 		tp = currentUser.getTestPlans().get(0);
 		Assert.assertNotNull(tp);
 		
@@ -201,7 +204,8 @@ public class SessionManagerImplITCase {
 		//Assert.assertTrue(deleting);
 
 		// TODO PROBLEMA CON CANCELLAZIONE ACTION, PERCHE'?
-		//deleting = testPlanController.deleteAction(actionId);
+		//a = testPlanController.readAction(actionId);
+		//deleting = testPlanController.deleteAction(a.getId());
 		//Assert.assertTrue(deleting);
 		
 		// TODO IL SEGUENTE TEST HA SUCCESSO MA IN REALTA' LE ACTION CI SONO, SOLO NON SONO LINKATE AL WF!
@@ -286,7 +290,7 @@ public class SessionManagerImplITCase {
 	}
 		
 
-	//@AfterClass
+	@AfterClass
 	public static void after_testPlanManager() throws Exception {
 
 		Boolean deleting;

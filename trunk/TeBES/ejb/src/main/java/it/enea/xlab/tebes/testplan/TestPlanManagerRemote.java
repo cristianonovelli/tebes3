@@ -50,6 +50,7 @@ public interface TestPlanManagerRemote {
 	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId);
 	public Long addTestPlanToUser(Long testPlanId, Long userId);
 
+
 	
 	
 	

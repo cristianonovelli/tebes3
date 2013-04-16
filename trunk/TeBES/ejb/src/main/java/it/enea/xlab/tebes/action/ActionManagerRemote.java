@@ -9,7 +9,7 @@ import javax.ejb.Remote;
 @Remote
 public interface ActionManagerRemote {
 
-	public Long createAction(Action action);
+	public Long createAction(Action action, Long workflowId);
 	
 	public Long createWorkflow(ActionWorkflow workflow);
 	
@@ -21,12 +21,12 @@ public interface ActionManagerRemote {
 	public Boolean deleteAction(Long id);
 
 	public Boolean deleteWorkflow(Long id);
+
+	public Action readAction(Long id);
 	
 /*	public boolean runAction(Action action);
 	
 	public boolean runWorkflow(ActionWorkflow workflow);
-
-	public Action readAction(Long id);
 	
 	
 	public ActionWorkflow readWorkflow(Long id);*/

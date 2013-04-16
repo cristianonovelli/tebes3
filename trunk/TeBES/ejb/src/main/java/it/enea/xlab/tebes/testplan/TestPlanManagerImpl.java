@@ -1,20 +1,15 @@
 package it.enea.xlab.tebes.testplan;
 
 import it.enea.xlab.tebes.action.ActionManagerRemote;
-import it.enea.xlab.tebes.common.Constants; 
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
-import it.enea.xlab.tebes.entity.Group;
-import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.users.UserAdminController;
-import it.enea.xlab.tebes.users.UserManagerImpl;
 import it.enea.xlab.tebes.users.UserManagerRemote;
-import it.enea.xlab.tebes.users.UserProfileController;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -28,11 +23,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-
-import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -67,7 +58,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	
 	/**
 	 * CREATE Test Plan
-	 * La createTestPlan crea un nuovo TestPlan solo se non esistono per questo utente TestPlan con lo stesso datetime
+	 * Se ha un id settato ne crea una copia, altrimenti ne fa la semplice persistenza
 	 * @return 	id of TestPlan if created
 	 * 			-1 if a persist exception occurs
 	 * 			-2 if an addTestPlanToUser error occours
@@ -91,7 +82,6 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 					
 					if ( testPlan.getId() != null ) {
 						
-						
 							// COPY TESTPLAN
 							TestPlan testPlan2 = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, null, null);
 							testPlanResult = testPlan2;
@@ -106,6 +96,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 
 					eM.persist(testPlanResult);	
+					
+					
 					
 
 					//
@@ -135,7 +127,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 					this.addWorkflowToTestPlan(workflowId, testPlanResult.getId());*/
 					//
 					
-					
+		
 					
 						return testPlanResult.getId();
 							
@@ -584,7 +576,6 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		return new Long(1);	
 	}
 
-	
 
 
 
