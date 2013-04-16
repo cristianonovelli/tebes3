@@ -25,6 +25,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.xml.parsers.ParserConfigurationException;
 
+import junit.framework.Assert;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -59,90 +61,64 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	/**
 	 * CREATE Test Plan
 	 * Se ha un id settato ne crea una copia, altrimenti ne fa la semplice persistenza
+	 * @param testPlanResult 
 	 * @return 	id of TestPlan if created
-	 * 			-1 if a persist exception occurs
-	 * 			-2 if an addTestPlanToUser error occours
+	 * 			-1 if an exception occurs
+	 * 			
+	 * 
 	 */
 	public Long createTestPlan(TestPlan testPlan, Long userId) {
 
-		TestPlan testPlanResult = null;
-		
-		
-		
-		// sto creando un testplan e quindi creo un nuovo datetime!
-		// N.B. a meno che non sia l'import iniziale dello superuser!
-		//List<TestPlan> testPlanList = this.readTestPlanByDatetimeAndUserId(testPlan.getDatetime(), userId);
+		TestPlan testPlan2 = null;
 
-			//if ( (testPlanList == null) || (testPlanList.size() == 0) ) {
-				
+		
 				try {
 
 					String datetime = XLabDates.getCurrentUTC();
 					
-					
-					if ( testPlan.getId() != null ) {
+					// TODO creare prima le action e persistere il WF
+					if ( testPlan.getId() == null ) {
 						
-							// COPY TESTPLAN
-							TestPlan testPlan2 = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, null, null);
-							testPlanResult = testPlan2;
-							//this.cloneTestPlan(testPlan);
+						// Creo il TestPlan SENZA il Workflow
+						testPlan2 = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, null, null);
+						eM.persist(testPlan2);	
+						
+						// TODO CREATE Workflow
+						ActionWorkflow wf = testPlan.getWorkflow();
+						ActionWorkflow wf2 = new ActionWorkflow();	
+						Long wf2Id = actionManager.createWorkflow(wf2);
+						wf2 = actionManager.readWorkflow(wf2Id);
+						
+						Vector<Action> actionList = (Vector<Action>) wf.getActions();
+						for (int i=0; i<actionList.size(); i++) 					
+							actionManager.createAction(actionList.get(i), wf2Id);
+						
+						
+						
+						// ADD Workflow to TestPlan
+						this.addWorkflowToTestPlan(wf2Id, testPlan2.getId());
+
+						return testPlan2.getId();
 					}
-					else 
-						testPlanResult = testPlan;
+					else {
+						
+						// TODO QUESTO E' IL CASO IN CUI STO FACENDO UNA COPIA DI TEST PLAN
+						// IN QUESTO MODO PERO' NON STO COPIANDO IL WORKFLOW, E' DA GESTIRE
+						testPlan2 = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, null, null);
+						eM.persist(testPlan2);							
+						
+						return testPlan2.getId();
+						
+					}
 					
-					
-					testPlanResult.setDatetime(datetime);
-					
-
-
-					eM.persist(testPlanResult);	
-					
-					
-					
-
-					//
-					/*Action a = new Action(1, "nome", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
-					Action a2 = new Action(2, "nome2", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
-					
-					Long actionId = actionManager.createAction(a);
-					Assert.assertTrue(actionId.intValue()>0);	
-					Long actionId2 = actionManager.createAction(a2);
-					Assert.assertTrue(actionId2.intValue()>0);			
-
-					
-					//Vector<Action> actionList = new Vector<Action>();
-					//actionList.add(a);
-					//actionList.add(a2);
-					ActionWorkflow wf = new ActionWorkflow();
-					// ADD A TO WF
-					
-					
-					// queste dovrebbero essere azioni "interne"
-					Long workflowId = actionManager.createWorkflow(wf);
-					Assert.assertTrue(workflowId.intValue()>0);	
-					
-					actionManager.addActionToWorkflow(actionId, workflowId);
-					actionManager.addActionToWorkflow(actionId2, workflowId);
-					
-					this.addWorkflowToTestPlan(workflowId, testPlanResult.getId());*/
-					//
-					
-		
-					
-						return testPlanResult.getId();
-							
 				}
 				catch(Exception e) {
 					e.printStackTrace();
 					return new Long(-1);
 				}
-			//}
-			//else
-			//	return new Long(-3);
-				
-
 	}
 
+	
 	
 	private TestPlan cloneTestPlan(TestPlan testPlan1) {
 		

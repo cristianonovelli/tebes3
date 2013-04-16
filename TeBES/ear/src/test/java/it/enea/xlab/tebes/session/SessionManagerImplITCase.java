@@ -120,33 +120,32 @@ public class SessionManagerImplITCase {
 		
 
 		// CREATE ActionWorkflow
-		ActionWorkflow wf = new ActionWorkflow();
+		ActionWorkflow wf = new ActionWorkflow(new Vector<Action>());
 		wf.setComment("mycomment");		
-		Long workflowId = testPlanController.createWorkflow(wf);
-		wf = testPlanController.readWorkflow(workflowId);
-		Assert.assertTrue(workflowId.intValue()>0);	
+		//Long workflowId = testPlanController.createWorkflow(wf);
+		//wf = testPlanController.readWorkflow(workflowId);
+		//Assert.assertTrue(workflowId.intValue()>0);	
 		
 
-		// Preparo manualmente le Action
+		// CREATE Actions
 		Action a = new Action(1, "nome", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
 		Action a2 = new Action(2, "nome2", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");	
-
-		
-		
-		
-		// CREATE Actions
-		Long actionId = testPlanController.createAction(a, workflowId);
+		/*Long actionId = testPlanController.createAction(a, workflowId);
 		Assert.assertTrue(actionId.intValue()>0);	
 		Long actionId2 = testPlanController.createAction(a2, workflowId);
-		Assert.assertTrue(actionId2.intValue()>0);		
+		Assert.assertTrue(actionId2.intValue()>0);	*/	
+		wf.getActions().add(a);
+		wf.getActions().add(a2);
 		
 		// CREATE TestPlan
-		TestPlan tp = new TestPlan("xml", "datetime", "state", "location");
+		// TODO la persistenza di questo TestPlan con questo workflow, non gli piace
+		// dovrei farne la persistenza senza e poi attaccarlo!
+		TestPlan tp = new TestPlan("xml", "datetime", "state", "location", wf);
 		Long tpid = testPlanController.createTestPlan(tp, currentUserId);
 		Assert.assertTrue(tpid.intValue()>0);			
 		
 		// ADD Workflow to TestPlan
-		testPlanController.addWorkflowToTestPlan(workflowId, tpid);
+		//testPlanController.addWorkflowToTestPlan(workflowId, tpid);
 		
 		// ADD TestPlan to User
 		Long adding = testPlanController.addTestPlanToUser(tpid, currentUserId);
@@ -290,7 +289,7 @@ public class SessionManagerImplITCase {
 	}
 		
 
-	@AfterClass
+	//@AfterClass
 	public static void after_testPlanManager() throws Exception {
 
 		Boolean deleting;
