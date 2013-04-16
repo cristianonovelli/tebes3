@@ -1,12 +1,9 @@
 package it.enea.xlab.tebes.action;
 
 import it.enea.xlab.tebes.common.Constants;
-import it.enea.xlab.tebes.common.HibernateBindings;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
-import it.enea.xlab.tebes.entity.Group;
-import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.test.TestManagerImpl;
 
@@ -18,7 +15,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 
 @Stateless
@@ -39,10 +35,15 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	 * @return 	id of Action if created
 	 * 			-1 if a persist exception occours
 	 */
-	public Long createAction(Action action) {
+	public Long createAction(Action action, Long workflowId) {
 
 		try {
 				eM.persist(action);
+				
+				
+				this.addActionToWorkflow(action.getId(), workflowId);
+				
+				
 				return action.getId();
 		}
 		catch(Exception e) {
@@ -77,8 +78,8 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			return false;
 		
 		try {
-			HibernateBindings.detach(eM, a);
-			eM.remove(a);
+
+			eM.remove(eM.merge(a));
 			return true;
 		} catch (IllegalArgumentException e) {
 			return false;
