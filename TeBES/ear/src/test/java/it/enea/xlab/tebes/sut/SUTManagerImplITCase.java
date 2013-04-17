@@ -5,8 +5,10 @@ import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Interaction;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.users.UserAdminController;
-import it.enea.xlab.tebes.users.UserProfileController;
+import it.enea.xlab.tebes.utilities.WebControllersUtilities;
+import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
+import it.enea.xlab.tebes.controllers.users.UserAdminController;
+import it.enea.xlab.tebes.controllers.users.UserProfileController;
 
 import java.util.List;
 
@@ -45,17 +47,15 @@ public class SUTManagerImplITCase {
 	@BeforeClass
 	public static void before_sutManager() throws Exception {
 
-		// Get SUTManager Service
-		sutManagerController = new SUTManagerController();			
-		Assert.assertNotNull(sutManagerController);
-		
-		// Get UserAdmin Service
-		userAdminController = new UserAdminController();
+		// Get Services
+		userAdminController = (UserAdminController) WebControllersUtilities.getManager(UserAdminController.CONTROLLER_NAME);
 		Assert.assertNotNull(userAdminController);
 
-		// Get UserProfile service for the Test
-		userProfileController = new UserProfileController();
-		Assert.assertNotNull(userProfileController);
+		userProfileController = (UserProfileController) WebControllersUtilities.getManager(UserProfileController.CONTROLLER_NAME);
+		Assert.assertNotNull(userProfileController);		
+
+		sutManagerController = (SUTManagerController) WebControllersUtilities.getManager(SUTManagerController.CONTROLLER_NAME);
+		Assert.assertNotNull(sutManagerController);
 		
 		
 		// Prepare 4 user Roles 

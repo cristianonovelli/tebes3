@@ -2,6 +2,11 @@ package it.enea.xlab.tebes.session;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.controllers.session.SessionManagerController;
+import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
+import it.enea.xlab.tebes.controllers.testplan.TestPlanManagerController;
+import it.enea.xlab.tebes.controllers.users.UserAdminController;
+import it.enea.xlab.tebes.controllers.users.UserProfileController;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Interaction;
@@ -9,10 +14,7 @@ import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.sut.SUTManagerController;
-import it.enea.xlab.tebes.testplan.TestPlanManagerController;
-import it.enea.xlab.tebes.users.UserAdminController;
-import it.enea.xlab.tebes.users.UserProfileController;
+import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
 import java.util.List;
 import java.util.Vector;
@@ -29,9 +31,8 @@ public class SessionManagerImplITCase {
 	// Logger
 	private static Logger logger = Logger.getLogger(SessionManagerImplITCase.class);
 	
-	// Interface Declaration
+	// Interface Declarations
 	static SessionManagerController sessionController;
-	
 	static TestPlanManagerController testPlanController;
 	static UserAdminController userAdminController;
 	static UserProfileController userProfileController;
@@ -39,27 +40,24 @@ public class SessionManagerImplITCase {
 	
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
-	//static Long superUserId;
 	
+
 	@BeforeClass
 	public static void before_testPlanManager() throws Exception {
 		
-		
-		sessionController = new SessionManagerController();
+		sessionController = (SessionManagerController) WebControllersUtilities.getManager(SessionManagerController.CONTROLLER_NAME);
 		Assert.assertNotNull(sessionController);
 		
-		testPlanController = new TestPlanManagerController();
+		testPlanController = (TestPlanManagerController) WebControllersUtilities.getManager(TestPlanManagerController.CONTROLLER_NAME);
 		Assert.assertNotNull(testPlanController);	
 		
-		// Get UserAdmin Service
-		userAdminController = new UserAdminController();
+		userAdminController = (UserAdminController) WebControllersUtilities.getManager(UserAdminController.CONTROLLER_NAME);
 		Assert.assertNotNull(userAdminController);
 
-		// Get UserProfile service for the Test
-		userProfileController = new UserProfileController();
+		userProfileController = (UserProfileController) WebControllersUtilities.getManager(UserProfileController.CONTROLLER_NAME);
 		Assert.assertNotNull(userProfileController);		
 
-		sutController = new SUTManagerController();
+		sutController = (SUTManagerController) WebControllersUtilities.getManager(SUTManagerController.CONTROLLER_NAME);
 		Assert.assertNotNull(sutController);
 		
 		
@@ -158,7 +156,7 @@ public class SessionManagerImplITCase {
 		// TODO se questo funziona non c'è bisogno del metodo per prelevare il testplan dato lo user
 		tp = currentUser.getTestPlans().get(0);
 		Assert.assertNotNull(tp);
-		System.out.println("AAAAA:" + tp.getDatetime());
+		
 		
 		
 		//workflowId = testPlanController.readWorkflowByTestPlan(tp);
@@ -210,10 +208,24 @@ public class SessionManagerImplITCase {
 		}*/
 		
 		aFulvio = testPlanController.readAction(actionIdFulvio);
-		System.out.println("AAAAAAAAAAAAAA:" + aFulvio.getId());
+		
 		deleting = testPlanController.deleteAction(aFulvio.getId());
 		Action aFulvio2 = testPlanController.readAction(actionIdFulvio);
 		Assert.assertNull(aFulvio2);
+		
+		
+		wfFulvio = tpFulvio.getWorkflow();
+		Assert.assertNotNull(wfFulvio);
+		if ( wfFulvio.getActions().size()>0 ) {
+			aFulvio = wfFulvio.getActions().get(1);
+			
+			deleting = testPlanController.deleteAction(aFulvio.getId());
+			Assert.assertTrue(deleting);
+			Action aFulvio3 = testPlanController.readAction(aFulvio.getId());
+			Assert.assertNull(aFulvio3);		
+		}
+		
+		
 		
 		//System.out.println("FFFFFFFF: " + aFulvio.getId());
 		//deleting = testPlanController.deleteAction(aFulvio.getId());
@@ -311,7 +323,7 @@ public class SessionManagerImplITCase {
 	}
 		
 
-	//@AfterClass
+	@AfterClass
 	public static void after_testPlanManager() throws Exception {
 
 		Boolean deleting;
@@ -354,6 +366,8 @@ public class SessionManagerImplITCase {
 		userIdList = userAdminController.getUserIdList();
 		Assert.assertTrue(userIdList.size() == 0);
 	}
+	
+	
 	
 }
 

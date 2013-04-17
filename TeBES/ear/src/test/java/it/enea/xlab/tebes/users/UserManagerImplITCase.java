@@ -3,10 +3,13 @@ package it.enea.xlab.tebes.users;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
+import it.enea.xlab.tebes.controllers.users.UserAdminController;
+import it.enea.xlab.tebes.controllers.users.UserProfileController;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.sut.SUTManagerController;
+import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
 import java.util.List;
 
@@ -30,17 +33,16 @@ public class UserManagerImplITCase {
 	@BeforeClass
 	public static void before_userManager() throws Exception {
 		
-		// Get UserProfileManager Service
-		userProfileController = new UserProfileController();
-		Assert.assertNotNull(userProfileController);
-		
-		// Get UserAdminManager Service
-		userAdminController = new UserAdminController();
+		// Get Services
+		userAdminController = (UserAdminController) WebControllersUtilities.getManager(UserAdminController.CONTROLLER_NAME);
 		Assert.assertNotNull(userAdminController);
-		
-		// Get SUTManagerController Service
-		sutManagerController = new SUTManagerController();
+
+		userProfileController = (UserProfileController) WebControllersUtilities.getManager(UserProfileController.CONTROLLER_NAME);
+		Assert.assertNotNull(userProfileController);		
+
+		sutManagerController = (SUTManagerController) WebControllersUtilities.getManager(SUTManagerController.CONTROLLER_NAME);
 		Assert.assertNotNull(sutManagerController);
+		
 		
 		// Create EJB linked to interface UserManagerRemote
 		// InitialContext ctx = new InitialContext();

@@ -2,11 +2,13 @@ package it.enea.xlab.tebes.testplan;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.controllers.testplan.TestPlanManagerController;
+import it.enea.xlab.tebes.controllers.users.UserAdminController;
+import it.enea.xlab.tebes.controllers.users.UserProfileController;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.users.UserAdminController;
-import it.enea.xlab.tebes.users.UserProfileController;
+import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,16 +71,16 @@ public class TestPlanManagerImplITCase {
 	@BeforeClass
 	public static void before_testPlanManager() throws Exception {
 		
-		testPlanController = new TestPlanManagerController();
+		// Get Services
+		testPlanController = (TestPlanManagerController) WebControllersUtilities.getManager(TestPlanManagerController.CONTROLLER_NAME);
 		Assert.assertNotNull(testPlanController);	
 		
-		// Get UserAdmin Service
-		userAdminController = new UserAdminController();
+		userAdminController = (UserAdminController) WebControllersUtilities.getManager(UserAdminController.CONTROLLER_NAME);
 		Assert.assertNotNull(userAdminController);
 
-		// Get UserProfile service for the Test
-		userProfileController = new UserProfileController();
-		Assert.assertNotNull(userProfileController);		
+		userProfileController = (UserProfileController) WebControllersUtilities.getManager(UserProfileController.CONTROLLER_NAME);
+		Assert.assertNotNull(userProfileController);	
+		
 
 		List<Long> roleIdList = userAdminController.getRoleIdList();
 		Assert.assertTrue(roleIdList.size() == 0);

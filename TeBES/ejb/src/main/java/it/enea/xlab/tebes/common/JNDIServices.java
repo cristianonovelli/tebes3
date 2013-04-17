@@ -1,5 +1,8 @@
 package it.enea.xlab.tebes.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;
@@ -29,9 +32,30 @@ public class JNDIServices {
 	private static String TestPlanManagerServiceName = "TeBES-ear/TestPlanManagerImpl/remote";
 	private static String ActionManagerServiceName = "TeBES-ear/ActionManagerImpl/remote";
 	
+	private static final Map<String, Object> EJB_CACHE = new HashMap<String, Object>();
+
 	
 	
-	 
+	@SuppressWarnings("unchecked")
+	public static <T> T retrieveEJB(String key, String name) {
+		T ejbBean = null;
+
+		if (EJB_CACHE.containsKey(key)) {
+			ejbBean = (T) EJB_CACHE.get(key);
+		} else {
+			try {
+				InitialContext context = new InitialContext();
+				ejbBean = (T) context.lookup(name);
+				EJB_CACHE.put(key, ejbBean);
+			} catch (NamingException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return ejbBean;
+	}
 	
 
 	public static UserManagerRemote getUserManagerService() throws NamingException {
