@@ -4,6 +4,7 @@ import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.test.TestManagerImpl;
 
@@ -204,6 +205,44 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	/// RUN METHODS ///
 	///////////////////
 	
+	
+	/**
+	 * RUN Workflow
+	 * Actions Workflow Engine
+	 * TODO supporto di un workflow più articolato, per ora è lineare e si risolve con un semplice for
+	 * @return 	true if all actions return true
+	 * 			false if one action return false
+	 */
+	public boolean runWorkflow(ActionWorkflow workflow, Session session) {
+		
+		boolean result = true;
+
+		
+		// io credo dovrei fare una ricerca del tipo readActionByWorkflowId
+		// eseguire questa action e una volta eseguita, eliminarla dal DB o settarla come "done"
+		List<Action> actionList = workflow.getActions();
+		Action a;
+		
+		for (int k=0;k<actionList.size();k++) {
+			
+			a =	(Action) actionList.get(k);
+			
+			if (a != null)
+				result = result && runAction(a, session);
+			else 
+				result = false;
+			}
+		
+		
+		//for (int i = 0 ; i < workflow.size(); i++) {
+		//	
+		//	result = result && execute((Action) workflow.get(i));
+		//}
+		
+		return result;
+	}
+	
+	
 	/**
 	 * RUN Action
 	 * Generic Test Action Execution
@@ -212,7 +251,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	 * @return 	true if type is equal to one of the three permitted values: "TestSuite", "TestCase", "TestAssertion"
 	 * 			false otherwise
 	 */
-	public boolean runAction(Action action) {
+	public boolean runAction(Action action, Session session) {
 	
 		boolean result = false;
 		
@@ -251,41 +290,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		return result;
 	}
 	
-	/**
-	 * RUN Workflow
-	 * Actions Workflow Engine
-	 * TODO supporto di un workflow più articolato, per ora è lineare e si risolve con un semplice for
-	 * @return 	true if all actions return true
-	 * 			false if one action return false
-	 */
-	public boolean runWorkflow(ActionWorkflow workflow) {
-		
-		boolean result = true;
 
-		
-		// io credo dovrei fare una ricerca del tipo readActionByWorkflowId
-		// eseguire questa action e una volta eseguita, eliminarla dal DB o settarla come "done"
-		List<Action> actionList = workflow.getActions();
-		Action a;
-		
-		for (int k=0;k<actionList.size();k++) {
-			
-			a =	(Action) actionList.get(k);
-			
-			if (a != null)
-				result = result && runAction(a);
-			else 
-				result = false;
-			}
-		
-		
-		//for (int i = 0 ; i < workflow.size(); i++) {
-		//	
-		//	result = result && execute((Action) workflow.get(i));
-		//}
-		
-		return result;
-	}
 	
 	
 }

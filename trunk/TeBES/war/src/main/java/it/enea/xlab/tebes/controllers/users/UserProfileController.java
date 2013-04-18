@@ -87,10 +87,10 @@ public class UserProfileController extends WebController {
 	
 	// ADD SUT TO USER
 	// TODO questa dovrebbe stare nel sut manager
-	public void addSUTToUser(Long sutId, Long userId) throws Exception {
+	/*public void addSUTToUser(Long sutId, Long userId) throws Exception {
 
 		userManagerBean.addSUTToUser(sutId, userId);
-	}
+	}*/
 
 
 /*	public Boolean deleteTestPlan(Long userId, Long testPlanId) {

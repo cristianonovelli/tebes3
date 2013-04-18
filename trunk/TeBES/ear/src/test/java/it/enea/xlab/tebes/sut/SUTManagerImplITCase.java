@@ -136,11 +136,11 @@ public class SUTManagerImplITCase {
 		// 3.1 READ SUT (to prepare the updating)
 		sut1 = sutManagerController.readSUT(sutId1);
 		Assert.assertNotNull(sut1);
-		userProfileController.addSUTToUser(sut1.getId(), tempUser.getId());
+		//userProfileController.addSUTToUser(sut1.getId(), tempUser.getId());
 		
 		sut2 = sutManagerController.readSUT(sutId2);
 		Assert.assertNotNull(sut2);
-		userProfileController.addSUTToUser(sut2.getId(), tempUser.getId());		
+		//userProfileController.addSUTToUser(sut2.getId(), tempUser.getId());		
 
 		tempUser = userProfileController.login(tempUser.geteMail(), tempUser.getPassword());
 		

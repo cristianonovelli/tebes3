@@ -103,7 +103,7 @@ public class SessionManagerImplITCase {
 	}
 	
 	
-	@Test
+	//@Test
 	public void test1_manualCreation() {
 		
 		//String superUserEmail = PropertiesUtil.getUser1Email();
@@ -125,8 +125,8 @@ public class SessionManagerImplITCase {
 		
 
 		// CREATE Actions
-		Action a = new Action(1, "nome", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
-		Action a2 = new Action(2, "nome2", "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");	
+		Action a = new Action(1, "nome", Action.getTodoState(),"taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
+		Action a2 = new Action(2, "nome2", Action.getTodoState(), "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");	
 		/*Long actionId = testPlanController.createAction(a, workflowId);
 		Assert.assertTrue(actionId.intValue()>0);	
 		Long actionId2 = testPlanController.createAction(a2, workflowId);
@@ -175,6 +175,7 @@ public class SessionManagerImplITCase {
 		SUT sut = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.UBL, Constants.UBLSCHEMA, interaction, "XML document1 uploaded by web interface");
 		Long sutId = sutController.createSUT(sut, currentUser);
 		Assert.assertNotNull(sutId);	
+		Assert.assertTrue(sutId.intValue()>0);
 		
 		
 		// CREATE SESSION
@@ -316,20 +317,20 @@ public class SessionManagerImplITCase {
 		
 		
 		
-		/*// Creazione di un SUT
+		// Creazione di un SUT
 		Interaction interaction = new Interaction(Constants.INTERACTION_WEBSITE);
 		SUT sut = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.UBL, Constants.UBLSCHEMA, interaction, "XML document1 uploaded by web interface");
 		Long sutId = sutController.createSUT(sut, currentUser);
 		Assert.assertNotNull(sutId);	
-		
+		Assert.assertTrue(sutId.intValue()>0);	
 		
 		// CREATE SESSION
-		Long sessionId = sessionController.run(currentUserId, sutId, tp.getId());
+		Long sessionId = sessionController.run(currentUserId, sutId, testPlanId);
 		Assert.assertNotNull(sessionId);
-		Assert.assertTrue(sessionId.intValue()>0);*/
+		Assert.assertTrue(sessionId.intValue()>0);
 		
 		
-	
+		
 	}
 		
 

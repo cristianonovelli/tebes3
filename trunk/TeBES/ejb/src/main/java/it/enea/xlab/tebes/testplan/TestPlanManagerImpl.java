@@ -176,6 +176,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		Action action2 = new Action(
 				action1.getActionNumber(), 
 				action1.getActionName(), 
+				action1.getState(),
 				action1.getTestLanguage(), 
 				action1.getTestType(), 
 				action1.getTestLocation(),
@@ -268,6 +269,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			return false;
 		
 		try {
+			
+			testPlan.getUser().getTestPlans().remove(testPlan);
 			
 			eM.remove(testPlan);
 			
@@ -392,7 +395,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 			location = TeBESDAO.url2localLocation(location);
 
-			Action action = new Action(number, name, lg, type, location, value, jump, description);
+			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, jump, description);
 			//Long actionId = this.insertAction(action);
 			
 			//System.out.println(action.getActionSummaryString());

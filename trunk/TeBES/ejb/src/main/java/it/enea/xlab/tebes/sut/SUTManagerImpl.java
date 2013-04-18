@@ -8,9 +8,11 @@ import it.enea.xlab.tebes.entity.Interaction;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -27,6 +29,9 @@ public class SUTManagerImpl implements SUTManagerRemote {
 
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
+	
+	@EJB
+	private UserManagerRemote userManager; 
 	
 	// TODO 
 	// 1. createSUT dovrebbe essere capace di "linkarsi" all'utente
@@ -57,8 +62,13 @@ public class SUTManagerImpl implements SUTManagerRemote {
 				
 				Long adding = this.addInteractionToSUT(interactionId, sut.getId());
 				
-				if (adding.intValue()>0)
+				if (adding.intValue()>0) {
+					
+					// ADD SUT to User
+					userManager.addSUTToUser(sut.getId(), user.getId());
+					
 					return sut.getId();
+				}
 				else
 					return new Long(-3);
 			}
@@ -203,6 +213,9 @@ public class SUTManagerImpl implements SUTManagerRemote {
 			return false;
 		
 		try {
+			
+			sut.getUser().getSutList().remove(sut);
+			
 			eM.remove(sut);
 		} catch (IllegalArgumentException e) {
 			return false;
