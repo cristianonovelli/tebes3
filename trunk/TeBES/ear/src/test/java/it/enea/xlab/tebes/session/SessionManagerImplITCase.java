@@ -103,7 +103,7 @@ public class SessionManagerImplITCase {
 	}
 	
 	
-	//@Test
+	@Test
 	public void test1_manualCreation() {
 		
 		//String superUserEmail = PropertiesUtil.getUser1Email();
@@ -145,8 +145,8 @@ public class SessionManagerImplITCase {
 		//testPlanController.addWorkflowToTestPlan(workflowId, tpid);
 		
 		// ADD TestPlan to User
-		Long adding = testPlanController.addTestPlanToUser(tpid, currentUserId);
-		Assert.assertTrue(adding.intValue()>0);	
+		//Long adding = testPlanController.addTestPlanToUser(tpid, currentUserId);
+		//Assert.assertTrue(adding.intValue()>0);	
 		
 		
 		
@@ -284,8 +284,8 @@ public class SessionManagerImplITCase {
 			// Persist TestPlan structure from XML
 			testPlanId = testPlanController.createTestPlan(testPlan, superUserId);
 			Assert.assertTrue(testPlanId.intValue()>0);	
-			adding = testPlanController.addTestPlanToUser(testPlanId, superUserId);
-			Assert.assertTrue(adding.intValue()>0);	
+			//adding = testPlanController.addTestPlanToUser(testPlanId, superUserId);
+			//Assert.assertTrue(adding.intValue()>0);	
 			
 			// Check it
 			testPlan = testPlanController.readTestPlan(testPlanId);
@@ -311,8 +311,23 @@ public class SessionManagerImplITCase {
 		testPlanId = testPlanController.cloneTestPlan(selectedTestPlan, currentUserId);
 		Assert.assertTrue(testPlanId.intValue()>0);			
 		
-		adding = testPlanController.addTestPlanToUser(testPlanId, currentUserId);
-		Assert.assertTrue(adding.intValue()>0);	
+		//adding = testPlanController.addTestPlanToUser(testPlanId, currentUserId);
+		//Assert.assertTrue(adding.intValue()>0);	
+		
+		
+		
+		/*// Creazione di un SUT
+		Interaction interaction = new Interaction(Constants.INTERACTION_WEBSITE);
+		SUT sut = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.UBL, Constants.UBLSCHEMA, interaction, "XML document1 uploaded by web interface");
+		Long sutId = sutController.createSUT(sut, currentUser);
+		Assert.assertNotNull(sutId);	
+		
+		
+		// CREATE SESSION
+		Long sessionId = sessionController.run(currentUserId, sutId, tp.getId());
+		Assert.assertNotNull(sessionId);
+		Assert.assertTrue(sessionId.intValue()>0);*/
+		
 		
 	
 	}
