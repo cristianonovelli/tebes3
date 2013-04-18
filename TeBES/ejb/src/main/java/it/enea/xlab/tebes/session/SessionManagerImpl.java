@@ -33,11 +33,11 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	@EJB
 	private ReportManagerRemote reportManager; 
 	
-	//@EJB
-	//private TestPlanManagerRemote testPlanManager; 
+	@EJB
+	private TestPlanManagerRemote testPlanManager; 
 	
-	//@EJB
-	//private ActionManagerRemote actionManager; 
+	@EJB
+	private ActionManagerRemote actionManager; 
 	
 /*	*//**
 	 * REACTIVATION (RIPRISTINO) Session
@@ -65,7 +65,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				// Create Session JPA objest
 				Session currentSession = new Session(userId, sutId, testPlanId);
 				Long sessionId = this.createSession(currentSession);
-				
+				currentSession = this.readSession(sessionId);
 				
 				if ( (sessionId != null) && (sessionId > 0) ) {
 					
@@ -73,11 +73,11 @@ public class SessionManagerImpl implements SessionManagerRemote {
 					Long reportId = reportManager.createReport(sessionId);
 					
 					// TODO EXE TestPlan
-					//TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);
+					TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);					
+					ActionWorkflow workflow = testPlan.getWorkflow();
+					Boolean actionWorkflowExecutionResult = actionManager.runWorkflow(workflow, currentSession);
 					
-					//ActionWorkflow workflow = testPlan.getWorkflow();
 					
-					//Boolean actionWorkflowExecutionResult = actionManager.executeActionWorkflow(workflow);
 					
 					
 					

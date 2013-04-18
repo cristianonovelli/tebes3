@@ -17,7 +17,10 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Action implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	public static final long serialVersionUID = 1L;
+	
+	private static final String TODO_STATE = "todo";
+	private static final String DONE_STATE = "done";
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,6 +29,7 @@ public class Action implements Serializable {
 	//private String actionId;
 	private int actionNumber;
 	private String actionName;
+	private String state;
 	private String testLanguage;
 	private String testType;
 	private String testLocation;
@@ -43,11 +47,16 @@ public class Action implements Serializable {
 		
 	}
 	
-	public Action(int number, String name, String lg, String type, String location, String value, boolean jumpTurnedON, String description) {
+	public Action(int number, String name, String state, String lg, String type, String location, String value, boolean jumpTurnedON, String description) {
 		
 		//this.setActionId(actionId);
 		this.setActionNumber(number);
 		this.setActionName(name);
+		
+		if (state.equals(Action.getDoneState()))
+			this.setState(Action.getDoneState());
+		else
+			this.setState(Action.getTodoState());
 		
 		this.setTestLanguage(lg);
 		this.setTestLocation(location);
@@ -208,6 +217,22 @@ public class Action implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public static String getDoneState() {
+		return DONE_STATE;
+	}
+
+	public static String getTodoState() {
+		return TODO_STATE;
 	}
 	
 }
