@@ -176,8 +176,8 @@ public class TestPlanManagerImplITCase {
 			// Create TestPlan Entity
 			testPlanId = testPlanController.createTestPlan(testPlan, superUserId);
 			// N.B. dovrebbe essere incorporato nella CREATE
-			Long adding = testPlanController.addTestPlanToUser(testPlanId, superUserId);
-			Assert.assertTrue(adding.intValue()>0);	
+			//Long adding = testPlanController.addTestPlanToUser(testPlanId, superUserId);
+			//Assert.assertTrue(adding.intValue()>0);	
 			
 			Assert.assertTrue(testPlanId.intValue() > 0);
 /*	
@@ -249,8 +249,8 @@ public class TestPlanManagerImplITCase {
 		// TODO QUESTO NON COPIA IL WORKFLOW
 		Long importedTestPlanId = testPlanController.createTestPlan(selectedTestPlan, currentUserId);	
 		Assert.assertTrue(importedTestPlanId.intValue() > 0);		
-		Long adding2 = testPlanController.addTestPlanToUser(importedTestPlanId, currentUserId);
-		Assert.assertTrue(adding2.intValue()>0);	
+		//Long adding2 = testPlanController.addTestPlanToUser(importedTestPlanId, currentUserId);
+		//Assert.assertTrue(adding2.intValue()>0);	
 		// Read Check
 		TestPlan importedTestPlan = testPlanController.readTestPlan(importedTestPlanId);
 		Assert.assertTrue(importedTestPlan.getId().intValue() > 0);

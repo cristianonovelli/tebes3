@@ -98,6 +98,9 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				
 				// ADD Workflow to TestPlan
 				this.addWorkflowToTestPlan(wf2Id, testPlan2.getId());
+				
+				// ADD TestPlan to User
+				this.addTestPlanToUser(testPlan2.getId(), userId);
 
 				return testPlan2.getId();
 			}
