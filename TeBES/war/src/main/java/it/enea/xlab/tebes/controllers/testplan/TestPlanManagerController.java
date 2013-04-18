@@ -183,6 +183,12 @@ public class TestPlanManagerController extends WebController {
 	}
 
 
+	public Long cloneTestPlan(TestPlan testPlan, Long userId) {
+		
+		return testPlanManagerService.cloneTestPlan(testPlan, userId);
+	}
+
+
 
 	
 	

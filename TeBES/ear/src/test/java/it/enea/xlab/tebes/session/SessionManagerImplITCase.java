@@ -103,7 +103,7 @@ public class SessionManagerImplITCase {
 	}
 	
 	
-	@Test
+	//@Test
 	public void test1_manualCreation() {
 		
 		//String superUserEmail = PropertiesUtil.getUser1Email();
@@ -115,7 +115,6 @@ public class SessionManagerImplITCase {
 		Long currentUserId = currentUser.getId();
 		
 
-		
 
 		// CREATE ActionWorkflow
 		ActionWorkflow wf = new ActionWorkflow(new Vector<Action>());
@@ -252,7 +251,7 @@ public class SessionManagerImplITCase {
 	
 	
 	
-	//@Test
+	@Test
 	public void test2_autoCreation() {
 		
 		String superUserEmail = PropertiesUtil.getUser1Email();
@@ -295,29 +294,25 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));			
 		}	
 		
+		// Lista dei TestPlan disponibili nel sistema
+		// N.B. l'importazione deve essere stata fatta in fase di Setup della piattaforma
+		List<TestPlan> superUserTestPlanList = testPlanController.readSystemTestPlanList();
+		Assert.assertTrue(superUserTestPlanList.size()>0);
 		
-/*		List<TestPlan> superUserTestPlanList = testPlanController.readUserTestPlanList(superUser);
-		
+		// Login User generico
 		User currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
 		Long currentUserId = currentUser.getId();
 		
-		superUserTestPlanList = testPlanController.readSystemTestPlanList();
+		// Selezione di un TestPlan generico
 		TestPlan selectedTestPlan = superUserTestPlanList.get(0);
 		Assert.assertNotNull(selectedTestPlan);
+
+		// Copia e importazione del TestPlan scelto
+		testPlanId = testPlanController.cloneTestPlan(selectedTestPlan, currentUserId);
+		Assert.assertTrue(testPlanId.intValue()>0);			
 		
-		Long wfId = testPlanController.readWorkflowByTestPlan(selectedTestPlan);
-		Assert.assertTrue(wfId.intValue()>0);
-		
-		ActionWorkflow wf = testPlanController.readWorkflow(wfId);		
-		Assert.assertNotNull(wf);
-		
-		List<Action> actionList = wf.getActions();
-		Assert.assertNotNull(actionList);
-		
-		Assert.assertNotNull(actionList.get(0));
-		Assert.assertTrue(actionList.get(0).getId().intValue()>0);*/
-		
-		
+		adding = testPlanController.addTestPlanToUser(testPlanId, currentUserId);
+		Assert.assertTrue(adding.intValue()>0);	
 		
 	
 	}
