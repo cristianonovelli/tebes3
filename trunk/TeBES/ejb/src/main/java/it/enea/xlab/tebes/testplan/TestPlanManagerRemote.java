@@ -29,6 +29,7 @@ public interface TestPlanManagerRemote {
 	public TestPlan getTestPlanFromXML(String testPlanAbsFileName);
 
 	public Long createTestPlan(TestPlan testPlan, Long userId);
+	public Long cloneTestPlan(TestPlan testPlan, Long userId);
 	
 	public Boolean updateTestPlan(TestPlan testPlan);
 	public Boolean deleteTestPlan(Long testPlanId);
@@ -49,6 +50,7 @@ public interface TestPlanManagerRemote {
 
 	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId);
 	public Long addTestPlanToUser(Long testPlanId, Long userId);
+	
 
 
 	

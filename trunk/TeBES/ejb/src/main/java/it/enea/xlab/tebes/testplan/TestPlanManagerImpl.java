@@ -72,55 +72,75 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		TestPlan testPlan2 = null;
 
 		
-				try {
+		try {
 
-					String datetime = XLabDates.getCurrentUTC();
-					
-					// TODO creare prima le action e persistere il WF
-					if ( testPlan.getId() == null ) {
-						
-						// Creo il TestPlan SENZA il Workflow
-						testPlan2 = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, null, null);
-						eM.persist(testPlan2);	
-						
-						// TODO CREATE Workflow
-						ActionWorkflow wf = testPlan.getWorkflow();
-						ActionWorkflow wf2 = new ActionWorkflow();	
-						Long wf2Id = actionManager.createWorkflow(wf2);
-						wf2 = actionManager.readWorkflow(wf2Id);
-						
-						Vector<Action> actionList = (Vector<Action>) wf.getActions();
-						for (int i=0; i<actionList.size(); i++) 					
-							actionManager.createAction(actionList.get(i), wf2Id);
-						
-						
-						
-						// ADD Workflow to TestPlan
-						this.addWorkflowToTestPlan(wf2Id, testPlan2.getId());
+			String datetime = XLabDates.getCurrentUTC();
+			
+			// TODO creare prima le action e persistere il WF
+			if ( testPlan.getId() == null ) {
+				
+				// Creo il TestPlan SENZA il Workflow
+				testPlan2 = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, null, null);
+				eM.persist(testPlan2);	
+				
+				// TODO CREATE Workflow
+				ActionWorkflow wf = testPlan.getWorkflow();
+				ActionWorkflow wf2 = new ActionWorkflow();	
+				wf2.setComment(wf.getComment());
+				Long wf2Id = actionManager.createWorkflow(wf2);
+				wf2 = actionManager.readWorkflow(wf2Id);
+				
+				Vector<Action> actionList = (Vector<Action>) wf.getActions();
+				for (int i=0; i<actionList.size(); i++) 					
+					actionManager.createAction(actionList.get(i), wf2Id);
+				
+				
+				
+				// ADD Workflow to TestPlan
+				this.addWorkflowToTestPlan(wf2Id, testPlan2.getId());
 
-						return testPlan2.getId();
-					}
-					else {
-						
-						// TODO QUESTO E' IL CASO IN CUI STO FACENDO UNA COPIA DI TEST PLAN
-						// IN QUESTO MODO PERO' NON STO COPIANDO IL WORKFLOW, E' DA GESTIRE
-						testPlan2 = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, null, null);
-						eM.persist(testPlan2);							
-						
-						return testPlan2.getId();
-						
-					}
-					
-				}
-				catch(Exception e) {
-					e.printStackTrace();
-					return new Long(-1);
-				}
+				return testPlan2.getId();
+			}
+			else {
+				
+				// Qui chiamo la CLONE
+				return this.cloneTestPlan(testPlan, userId);			
+			}
+			
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return new Long(-1);
+		}
 	}
 
 	
 	
-	private TestPlan cloneTestPlan(TestPlan testPlan1) {
+	public Long cloneTestPlan(TestPlan testPlan, Long userId) {
+		
+		TestPlan testPlanClone;
+		
+		String datetime = XLabDates.getCurrentUTC();
+		
+		ActionWorkflow wfClone = new ActionWorkflow(new Vector<Action>());
+		wfClone.setComment("clone");	
+		
+		List<Action> actionList = testPlan.getWorkflow().getActions();
+		
+		for (int i=0; i<actionList.size(); i++) {				
+			
+			wfClone.getActions().add(cloneAction(actionList.get(i)));		
+		}
+
+		testPlanClone = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, testPlan.getLocation(), wfClone);
+		Long testPlanCloneId = this.createTestPlan(testPlanClone, userId);	
+
+		return testPlanCloneId;
+	}
+
+
+	
+	private TestPlan cloneTestPlanBean(TestPlan testPlan1) {
 		
 		return new TestPlan(
 				testPlan1.getXml(), 
@@ -129,6 +149,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				testPlan1.getLocation(), 
 				this.cloneWorkflow(testPlan1.getWorkflow()));
 	}
+	
 	
 	
 	private ActionWorkflow cloneWorkflow(ActionWorkflow workflow1) {
@@ -182,22 +203,22 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
         	if (tempTestPlanList.get(i).getUser().getId().intValue()==user.getId().intValue())
         		testPlanListResult.add(tempTestPlanList.get(i));*/
 
-		System.out.println("-AAAAAAAAAA: readUserTestPlanList");
+		//System.out.println("-AAAAAAAAAA: readUserTestPlanList");
         List<TestPlan> testPlanList = (List<TestPlan>) eM.createQuery("SELECT t FROM TestPlan t").getResultList(); 
-        System.out.println("-AAAAAAAAAA: readUserTestPlanList: " + testPlanList.size());
+        //System.out.println("-AAAAAAAAAA: readUserTestPlanList: " + testPlanList.size());
         Iterator<TestPlan> i = testPlanList.iterator();
         TestPlan tpTemp;
         while (i.hasNext()) {
-        	System.out.println("-AAAAAAAAAA: pre");
+        	//System.out.println("-AAAAAAAAAA: pre");
         	tpTemp = (TestPlan) i.next();
         	
             if (tpTemp.getUser().getId().intValue()==user.getId()){
             	testPlanListResult.add(tpTemp);
-            	System.out.println("-AAAAAAAAAA: bingo!");
+            	//System.out.println("-AAAAAAAAAA: bingo!");
             }
-            System.out.println("-AAAAAAAAAA: post");
+            //System.out.println("-AAAAAAAAAA: post");
         }
-        System.out.println("-AAAAAAAAAA: readUserTestPlanList: " + testPlanListResult.size());
+        //System.out.println("-AAAAAAAAAA: readUserTestPlanList: " + testPlanListResult.size());
         
         return testPlanListResult;
 	}
@@ -551,7 +572,6 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		return new Long(1);	
 	}
-
 
 
 
