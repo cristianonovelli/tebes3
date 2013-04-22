@@ -10,6 +10,7 @@ import it.enea.xlab.tebes.controllers.users.UserProfileController;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Interaction;
+import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.TestPlan;
@@ -191,44 +192,44 @@ public class SessionManagerImplITCase {
 		Boolean deleting;
 		
 
-		TestPlan tpFulvio = testPlanController.readTestPlan(tp.getId());
-		Assert.assertNotNull(tpFulvio);
+		TestPlan tpBis = testPlanController.readTestPlan(tp.getId());
+		Assert.assertNotNull(tpBis);
 		
-		ActionWorkflow wfFulvio = tpFulvio.getWorkflow();
-		Assert.assertNotNull(wfFulvio);
+		ActionWorkflow wfBis = tpBis.getWorkflow();
+		Assert.assertNotNull(wfBis);
 		
-		Long actionIdFulvio = wfFulvio.getActions().get(0).getId();
-		Action aFulvio = testPlanController.readAction(actionIdFulvio);
-		Assert.assertNotNull(aFulvio);
+		Long actionIdBis = wfBis.getActions().get(0).getId();
+		Action aBis = testPlanController.readAction(actionIdBis);
+		Assert.assertNotNull(aBis);
 		
-		/*if ( wfFulvio.getActions().contains(aFulvio) ) {
-			System.out.println("AAAAAAAA" + aFulvio.getId());
-			wfFulvio.getActions().remove(aFulvio);
-			Assert.assertTrue(testPlanController.updateWorkflow(wfFulvio));
+		/*if ( wfBis.getActions().contains(aBis) ) {
+			System.out.println("AAAAAAAA" + aBis.getId());
+			wfBis.getActions().remove(aBis);
+			Assert.assertTrue(testPlanController.updateWorkflow(wfBis));
 		}*/
 		
-		aFulvio = testPlanController.readAction(actionIdFulvio);
+		aBis = testPlanController.readAction(actionIdBis);
 		
-		deleting = testPlanController.deleteAction(aFulvio.getId());
-		Action aFulvio2 = testPlanController.readAction(actionIdFulvio);
-		Assert.assertNull(aFulvio2);
+		deleting = testPlanController.deleteAction(aBis.getId());
+		Action aBis2 = testPlanController.readAction(actionIdBis);
+		Assert.assertNull(aBis2);
 		
 		
-		wfFulvio = tpFulvio.getWorkflow();
-		Assert.assertNotNull(wfFulvio);
-		if ( wfFulvio.getActions().size()>0 ) {
-			aFulvio = wfFulvio.getActions().get(1);
+		wfBis = tpBis.getWorkflow();
+		Assert.assertNotNull(wfBis);
+		if ( wfBis.getActions().size()>0 ) {
+			aBis = wfBis.getActions().get(1);
 			
-			deleting = testPlanController.deleteAction(aFulvio.getId());
+			deleting = testPlanController.deleteAction(aBis.getId());
 			Assert.assertTrue(deleting);
-			Action aFulvio3 = testPlanController.readAction(aFulvio.getId());
-			Assert.assertNull(aFulvio3);		
+			Action aBis3 = testPlanController.readAction(aBis.getId());
+			Assert.assertNull(aBis3);		
 		}
 		
 		
 		
-		//System.out.println("FFFFFFFF: " + aFulvio.getId());
-		//deleting = testPlanController.deleteAction(aFulvio.getId());
+		//System.out.println("FFFFFFFF: " + aBis.getId());
+		//deleting = testPlanController.deleteAction(aBis.getId());
 		//Assert.assertTrue(deleting);		
 		
 		
@@ -324,17 +325,36 @@ public class SessionManagerImplITCase {
 		Assert.assertNotNull(sutId);	
 		Assert.assertTrue(sutId.intValue()>0);	
 		
+		
+		// NEL MOMENTO IN CUI UN UTENTE AVVIA L'ESECUSIONE DI TEST:
+		// 1. VIENE AVVIATO IL TEST
+		// 2. UTENTE PUO' A QUESTO PUNTO FARE POLLING SULLA PROPRIA SESSIONE PER  
+		// 2.1 MONITORARE ESECUZIONE ACTIONS
+		// 2.2 RISPONDERE A UNA RICHIESTA DI INTERAZIONE
+		// 2.3 OTTENERE L'OUTPUT DEI TEST 
+		
+		
 		// CREATE SESSION
 		Long sessionId = sessionController.run(currentUserId, sutId, testPlanId);
 		Assert.assertNotNull(sessionId);
 		Assert.assertTrue(sessionId.intValue()>0);
+		
+		// CICLO PER ATTENDERE RICHIESTA DI INTERAZIONE O FINE DEL WORKFLOW 
+		// IL WORKFLOW DOVREBBE AVERE CAMPI TIPO:
+		// nextAction (dove -1 indica che ha finito)
+		
+		Report report = sessionController.getReport(sessionId);
+		Assert.assertTrue(report.getState().equals(Report.getFinalState()));
+		System.out.println("REPORT");
+		System.out.println(report.getState());
+		System.out.println(report.getTestResult());
 		
 		
 		
 	}
 		
 
-	@AfterClass
+	//@AfterClass
 	public static void after_testPlanManager() throws Exception {
 
 		Boolean deleting;

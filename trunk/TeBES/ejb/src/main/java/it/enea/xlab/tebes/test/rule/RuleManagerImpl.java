@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.test.rule;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.model.TestRule;
 
 import javax.ejb.Stateless;
@@ -12,26 +13,28 @@ import javax.interceptor.Interceptors;
 @Interceptors({Profile.class})
 public class RuleManagerImpl implements RuleManagerRemote {
 	
-	public boolean executeTestRule(TestRule testRule) {
+	public Report executeTestRule(TestRule testRule, Report report) {
 		
-		boolean result = false;
+		//boolean result = false;
+		
 		
 		String xmlString = "TODO";
 		
-		System.out.println("- Prerequisite OK... EXE Predicate");
-		System.out.println("- Language: " + testRule.getLanguage());
-		System.out.println("- Value: " + testRule.getValue());
+		report.addToFullDescription("\n- Prerequisite OK... EXE Predicate");
+		report.addToFullDescription("\n- Language: " + testRule.getLanguage());
+		report.addToFullDescription("\n- Value: " + testRule.getValue());
 		
 		if (testRule.getLanguage().equals(Constants.XPATH))
-			result = xPathValidation(xmlString, testRule.getValue());
+			report.setPartialResultSuccessfully(xPathValidation(xmlString, testRule.getValue()));
 			
 		if (testRule.getLanguage().equals(Constants.SCHEMATRON))
-			result = schematronValidation(xmlString, testRule.getValue());
+			report.setPartialResultSuccessfully(schematronValidation(xmlString, testRule.getValue()));
 			
 		
-		System.out.println("TODO: Schematron or XPath Execution");
+		report.addToFullDescription("\nTODO: Schematron or XPath Execution");
 		
-		return result;
+		//return result;
+		return report;
 	}
 	
 	

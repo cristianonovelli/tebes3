@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.controllers.session;
 
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.controllers.common.WebController;
+import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 
@@ -28,12 +29,12 @@ public class SessionManagerController extends WebController {
 	}
 	
 	
-	public Session readSession(Long sessionId) {
+	public Session getSession(Long sessionId) {
 		
 		return sessionManagerBean.readSession(sessionId);
 	}
 
-	/*public List<Session> readSessionListbyUserId(Long userId) {
+	/*public List<Session> getSessionList(Long userId) {
 		// TODO Auto-generated method stub
 		return null;
 	}*/
@@ -52,6 +53,12 @@ public class SessionManagerController extends WebController {
 	public Long run(Long userId, Long sutId, Long testPlanId) {
 		
 		return sessionManagerBean.run(userId, sutId, testPlanId);
+	}
+
+
+	public Report getReport(Long sessionId) {
+		
+		return this.getSession(sessionId).getReport();
 	}
 
 }

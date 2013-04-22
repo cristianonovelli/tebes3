@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.action;
 
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 
@@ -24,8 +25,8 @@ public interface ActionManagerRemote {
 	public void addActionToWorkflow(Long actionId, Long workflowId);
 	
 	
-	public boolean runAction(Action action, Session session);
-	public boolean runWorkflow(ActionWorkflow workflow, Session session);
+	public Report runAction(Action action, Report report);
+	public Report runWorkflow(ActionWorkflow workflow, Report report);
 	
 
 }

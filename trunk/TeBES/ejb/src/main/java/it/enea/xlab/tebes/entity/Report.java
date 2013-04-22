@@ -13,6 +13,8 @@ public class Report implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
+	private static final String DRAFT_STATE = "draft";
+	private static final String FINAL_STATE = "final";
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -21,11 +23,19 @@ public class Report implements Serializable {
 
 	private String state;
 
+	@Column(length=99999) 
+	private String fullDescription;
+	
+	
+	private boolean partialResultSuccessfully;
+	private boolean finalResultSuccessfully;
+	
+	
 	
 	public Report() {
 
+		fullDescription = "";
 	}
-
 
 	
 	public Long getId() {
@@ -45,6 +55,55 @@ public class Report implements Serializable {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+
+	public static String getDraftState() {
+		return DRAFT_STATE;
+	}
+
+
+	public static String getFinalState() {
+		return FINAL_STATE;
+	}
+
+
+	public String getTestResult() {
+		return fullDescription;
+	}
+
+
+	public String getFullDescription() {
+		return fullDescription;
+	}
+
+
+	public void setFullDescription(String fullDescription) {
+		this.fullDescription = fullDescription;
+	}
+
+	public void addToFullDescription(String furtherDescription) {
+		this.fullDescription = fullDescription.concat(furtherDescription);
+	}
+
+
+	public boolean isPartialResultSuccessfully() {
+		return partialResultSuccessfully;
+	}
+
+
+	public void setPartialResultSuccessfully(boolean partialResultSuccessfully) {
+		this.partialResultSuccessfully = partialResultSuccessfully;
+	}
+
+
+	public boolean isFinalResultSuccessfully() {
+		return finalResultSuccessfully;
+	}
+
+
+	public void setFinalResultSuccessfully(boolean finalResultSuccessfully) {
+		this.finalResultSuccessfully = finalResultSuccessfully;
 	}
 
 	

@@ -2,11 +2,13 @@ package it.enea.xlab.tebes.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * Test Session (Sessione di Test)
@@ -55,11 +57,19 @@ public class Session implements Serializable {
 	private Long testPlanId;
 	private Long sutId;
 	
-	// TODO relazione con l'entity report?
-	private Long reportId;
+	// relazione con l'entity report?
+	@OneToOne(cascade=CascadeType.ALL)
+	Report report;
+	
 	
 	private String state;
 
+	private String starteDateTime;
+	private String lastDateTime;
+	private String endDateTime;
+	
+	
+	
 
 	public Session() {
 
@@ -72,11 +82,7 @@ public class Session implements Serializable {
 		this.userId = userId;
 		this.sutId = sutId;
 		this.testPlanId = testPlanId;
-
-		// TODO Inizializzare Nuovo Report??
-		
-		
-		
+				
 		// Set state to "working"
 		this.setState(getWorkingState());
 	}
@@ -114,14 +120,6 @@ public class Session implements Serializable {
 		this.testPlanId = testPlanId;
 	}
 
-	public Long getReportId() {
-		return reportId;
-	}
-
-	public void setReportId(Long reportId) {
-		this.reportId = reportId;
-	}
-
 	public String getState() {
 		return state;
 	}
@@ -154,6 +152,46 @@ public class Session implements Serializable {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+
+	public Report getReport() {
+		return report;
+	}
+
+
+	public void setReport(Report report) {
+		this.report = report;
+	}
+
+
+	public String getStarteDateTime() {
+		return starteDateTime;
+	}
+
+
+	public void setStarteDateTime(String starteDateTime) {
+		this.starteDateTime = starteDateTime;
+	}
+
+
+	public String getLastDateTime() {
+		return lastDateTime;
+	}
+
+
+	public void setLastDateTime(String lastDateTime) {
+		this.lastDateTime = lastDateTime;
+	}
+
+
+	public String getEndDateTime() {
+		return endDateTime;
+	}
+
+
+	public void setEndDateTime(String endDateTime) {
+		this.endDateTime = endDateTime;
 	}
 
 
