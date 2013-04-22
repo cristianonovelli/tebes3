@@ -36,7 +36,11 @@ public class ActionWorkflow implements Serializable {
 	//@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Action> actions;
 
-
+	// Indica la prossima azione da eseguire con un numero che va da 1 a actions.size()
+	private int nextActionMark;	
+	
+	
+	
 	public ActionWorkflow() {
 
 	}
@@ -44,6 +48,7 @@ public class ActionWorkflow implements Serializable {
 	public ActionWorkflow(List<Action> actions) {
 
 		this.setActions(actions);
+		this.setNextActionMark(1);
 	}
 
 	public Long getId() {
@@ -74,6 +79,14 @@ public class ActionWorkflow implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public int getNextActionMark() {
+		return nextActionMark;
+	}
+
+	public void setNextActionMark(int nextActionMark) {
+		this.nextActionMark = nextActionMark;
 	}
 
 /*	public void addToTestPlan(TestPlan tp) {

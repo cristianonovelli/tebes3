@@ -7,6 +7,7 @@ import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 
 import java.rmi.NotBoundException;
+import java.util.List;
 
 import javax.naming.NamingException;
 
@@ -59,6 +60,18 @@ public class SessionManagerController extends WebController {
 	public Report getReport(Long sessionId) {
 		
 		return this.getSession(sessionId).getReport();
+	}
+
+
+	public List<Long> getSessionIdList() {
+		
+		return sessionManagerBean.getSessionIdList();
+	}
+
+
+	public Boolean deleteSession(Long id) {
+		
+		return sessionManagerBean.deleteSession(id);
 	}
 
 }
