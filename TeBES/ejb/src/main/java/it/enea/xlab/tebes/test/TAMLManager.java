@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * @param action
  * @return
  */
-public class TAMLManager extends TestManagerImpl implements TestManagerLocal {
+public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 
 
 	
@@ -49,9 +49,6 @@ public class TAMLManager extends TestManagerImpl implements TestManagerLocal {
 	public TAF buildTAF(Action action) {
 
 		TAF taf = new TAF();
-
-		System.out.println("---");
-		System.out.println("START TAMLManager.buildTestAssertionTAF: " + action.getActionName());
 		
 		// Test Suite Execution
 		if (action.getTestType().equals(Constants.TS)) {
@@ -72,15 +69,11 @@ public class TAMLManager extends TestManagerImpl implements TestManagerLocal {
 			taf = buildTestAssertionTAF(action);
 		}
 		
-		System.out.println("END TAMLManager.buildTestAssertionTAF: " + action.getActionName());
-		System.out.println("---");
-		
-		
 		return taf;
 	}
 
 
-
+	
 	private TAF buildTestSuiteTAF(Action action) {
 		
 		return null;
@@ -233,8 +226,10 @@ public class TAMLManager extends TestManagerImpl implements TestManagerLocal {
 	
 					// Normalize Prerequisite 
 					prerequisites = this.normalize(testRuleList, variableHashtable, taHashtable, taRefHashtable, true);
+					
 				}
 			}
+
 			
 			 Vector<TestRule> testRuleList2 = new Vector<TestRule>();
 			 testRuleList2.add(predicate);
@@ -415,6 +410,9 @@ public class TAMLManager extends TestManagerImpl implements TestManagerLocal {
 		
 		return result;
 	}
+
+
+
 	
 
 

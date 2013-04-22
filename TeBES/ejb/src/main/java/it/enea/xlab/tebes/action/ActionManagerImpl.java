@@ -4,12 +4,15 @@ import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.model.TAF;
+import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.test.TestManagerImpl;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -27,7 +30,9 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
-
+	@EJB
+	private ReportManagerRemote reportManager; 
+	
 	//////////////////////
 	/// ACTION METHODS ///
 	//////////////////////
@@ -213,10 +218,10 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	 * @return 	true if all actions return true
 	 * 			false if one action return false
 	 */
-	public boolean runWorkflow(ActionWorkflow workflow, Session session) {
+	public Report runWorkflow(ActionWorkflow workflow, Report report) {
 		
-		boolean result = true;
-
+		//boolean result = true;
+		report.setFinalResultSuccessfully(true);
 		
 		// io credo dovrei fare una ricerca del tipo readActionByWorkflowId
 		// eseguire questa action e una volta eseguita, eliminarla dal DB o settarla come "done"
@@ -227,10 +232,15 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			
 			a =	(Action) actionList.get(k);
 			
-			if (a != null)
-				result = result && runAction(a, session);
+			if (a != null) {
+				//result = result && runAction(a, report);
+				report = runAction(a, report);
+				report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
+				// interaction?
+				
+			}
 			else 
-				result = false;
+				report.setFinalResultSuccessfully(false);
 			}
 		
 		
@@ -239,7 +249,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		//	result = result && execute((Action) workflow.get(i));
 		//}
 		
-		return result;
+		return report;
 	}
 	
 	
@@ -251,31 +261,39 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	 * @return 	true if type is equal to one of the three permitted values: "TestSuite", "TestCase", "TestAssertion"
 	 * 			false otherwise
 	 */
-	public boolean runAction(Action action, Session session) {
+	public Report runAction(Action action, Report report) {
 	
-		boolean result = false;
+		//boolean result = false;
+		report.setPartialResultSuccessfully(false);
+
 		
-		System.out.println("");
-		System.out.println("-- Start Execution of Action: " + action.getActionName() + "--");
+		report.addToFullDescription("\n");
+		report.addToFullDescription("\n");
+		report.addToFullDescription("\n-- Start Execution of Action: " + action.getActionName() + "--");
 
 		try {
 			
 			TestManagerImpl testManager = new TestManagerImpl();
 			
 			// TAF Building
-			System.out.println("Building TAF for action: " + action.getActionName());
+			report.addToFullDescription("\nBuilding TAF for action: " + action.getActionName());
 			TAF taf = testManager.buildTAF(action);
 			
 			
 			// TAF Execution
 			if (taf != null) {
-				System.out.println("Built TAF " + taf.getName() + " successful.");
-				System.out.println("Start execution TAF " + taf.getName());
-				result = testManager.executeTAF(taf);
-				System.out.println("Result: " + result);
+				
+				report.addToFullDescription("\nBuilt TAF " + taf.getName() + " successful.");
+				report.addToFullDescription("\nStart execution TAF " + taf.getName());
+				
+				// EXECUTE TAF
+				report = testManager.executeTAF(taf, report);
+				//report.setPartialResultSuccessfully(tafResult);
+				
+				report.addToFullDescription("\nResult: " + report.isPartialResultSuccessfully());
 			}
 			else
-				System.out.println("Built TAF Failure.");
+				report.addToFullDescription("\nBuilt TAF Failure.");
 
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
@@ -285,9 +303,23 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			e.printStackTrace();
 		}
 
-		System.out.println("-- End Execution of Action: " + action.getActionName() + "--");
+		report.addToFullDescription("\n-- End Execution of Action: " + action.getActionName() + "--");
 		
-		return result;
+		// Persist Report
+		report.setState(Report.getFinalState());
+		boolean updating = reportManager.updateReport(report);
+		
+		
+		// SET Action as DONE
+		action = this.readAction(action.getId());
+		action.setState(Action.getDoneState());
+		eM.persist(action);
+		
+		
+		report.setPartialResultSuccessfully(report.isPartialResultSuccessfully() && updating);
+		
+		return report;
+		//return result && updating;
 	}
 	
 

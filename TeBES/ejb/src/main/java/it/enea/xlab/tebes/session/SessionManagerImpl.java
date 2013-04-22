@@ -4,6 +4,7 @@ import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
@@ -39,13 +40,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	@EJB
 	private ActionManagerRemote actionManager; 
 	
-/*	*//**
-	 * REACTIVATION (RIPRISTINO) Session
-	 *//*
-	public Session reactivateSession(Long sessionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}*/
+	
 
 	/**
 	 * RUN / CREATE Session
@@ -62,26 +57,49 @@ public class SessionManagerImpl implements SessionManagerRemote {
 
 			
 			try {
-				// Create Session JPA objest
+				
+				// CREATE Report
+				Report report = new Report();
+				report.setState(Report.getDraftState());
+
+				Long reportId = reportManager.createReport(report);				
+				report = reportManager.readReport(reportId);
+
+				
+				// CREATE Session
 				Session currentSession = new Session(userId, sutId, testPlanId);
 				Long sessionId = this.createSession(currentSession);
 				currentSession = this.readSession(sessionId);
 				
+				
+				// ADD Report To Session
+				this.addReportToSession(report.getId(), currentSession.getId());
+
+				
 				if ( (sessionId != null) && (sessionId > 0) ) {
 					
-					// TODO create Report
-					Long reportId = reportManager.createReport(sessionId);
+
 					
-					// TODO EXE TestPlan
+					// GET Workflow from TestPlan
 					TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);					
 					ActionWorkflow workflow = testPlan.getWorkflow();
-					Boolean actionWorkflowExecutionResult = actionManager.runWorkflow(workflow, currentSession);
+					
+					// RUN ActionWorkflow
+					report = actionManager.runWorkflow(workflow, report);
 					
 					
 					
+					// TODO questo avviene quando sono finite le action del workflow
+					report.setState(Report.getFinalState());
+					boolean updating = reportManager.updateReport(report);
 					
 					
-					return sessionId;
+					if (updating)
+						return sessionId;
+					else
+						// runWorkflow returns false
+						return new Long(-4);
+								
 				}
 				else		
 					// @return -3 createSession error
@@ -121,6 +139,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			return new Long(-1);
 	}
 	
+	
 	/**
 	 * READ Session
 	 */	
@@ -129,6 +148,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		return eM.find(Session.class, sessionID);
 	}	
 		
+	
 	/**
 	 * READ Session by userId, testplanId and sutId
 	 * @return 	session if present
@@ -151,6 +171,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
         	return null;
 	}
 		
+	
 	/**
 	 * READ Session List by userId
 	 * @return 	Session List
@@ -166,6 +187,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
         return query.getResultList();
 	}
 		
+	
 	/**
 	 * DELETE Session
 	 */
@@ -187,6 +209,21 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		return true;
 	}
 
+	
+	public void addReportToSession(Long reportId, Long sessionId) {
+		
+		Report report = reportManager.readReport(reportId);
+		Session session = this.readSession(sessionId);
+
+		session.setReport(report);
+		
+		eM.merge(session);
+		
+		return;
+	}
 
 	
 }
+
+
+

@@ -4,14 +4,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Vector;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.TestRule;
+import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.test.rule.RuleManagerImpl;
 
 
@@ -38,6 +43,7 @@ public class TestManagerImpl implements TestManagerRemote {
 		TAF result = null;
 
 		try {
+			
 			String thisPackage = this.getClass().getPackage().getName();
 			Class extendedManager = Class.forName(thisPackage.concat(".").concat(action.getTestLanguage().toUpperCase().concat(TESTMANAGER_POSTFIX)));
 			Method xMethod = extendedManager.getMethod(BUILDTAF_METHOD, Action.class);
@@ -70,12 +76,13 @@ public class TestManagerImpl implements TestManagerRemote {
 	}
 	
 	
-	public boolean executeTAF(TAF taf) {
+	public Report executeTAF(TAF taf, Report report) {
 		
 		boolean okPrerequisites = false, okPredicate = false;
 		
-		System.out.println("----");
-		System.out.println("START executeTAF: " + taf.getName());
+		
+		report.addToFullDescription("\n----");
+		report.addToFullDescription("\nSTART executeTAF: " + taf.getName());
 		
 		
 		// Qui sto considerando che la TAF sia una Test Assertion, 
@@ -87,7 +94,7 @@ public class TestManagerImpl implements TestManagerRemote {
 		Vector<Action> prerequisites = taf.getTests();
 		if ( !taf.isJumpTurnedON() && (prerequisites != null) ) {
 		
-			System.out.println("There are Prerequisites");
+			report.addToFullDescription("\nThere are Prerequisites");
 			
 			// Ciclo sui prerequisites
 			int i=0;
@@ -97,19 +104,22 @@ public class TestManagerImpl implements TestManagerRemote {
 				// Prerequisite Action
 				Action a = prerequisites.elementAt(i);
 				
-				System.out.println("Prerequisite: " + a.getActionName());
-				System.out.println("Building TAF from: " + a.getActionName());
+				report.addToFullDescription("\nPrerequisite: " + a.getActionName());
+				report.addToFullDescription("\nBuilding TAF from: " + a.getActionName());
 				
 				// Prerequisite TAF from Action
 				TAF t = this.buildTAF(a);
 
 				// Recursive execution
-				System.out.println("---> Recursive execution");
-				boolean singleResult = this.executeTAF(t);
-				sumPrerequisites = sumPrerequisites && singleResult;
+				report.addToFullDescription("\n---> Recursive execution");
+				
+				//boolean singleResult = this.executeTAF(t, report);
+				report = this.executeTAF(t, report);
+				
+				sumPrerequisites = sumPrerequisites && report.isPartialResultSuccessfully();
 				
 				// Se il prerequisito è andato male ed era obbligatorio... esco
-				if (!singleResult && t.getPrescription().equals(Constants.MANDATORY))
+				if (!report.isPartialResultSuccessfully() && t.getPrescription().equals(Constants.MANDATORY))
 					i = prerequisites.size();
 				
 				i++;
@@ -120,9 +130,9 @@ public class TestManagerImpl implements TestManagerRemote {
 		else {
 			
 			if (taf.isJumpTurnedON())
-				System.out.println("Jump Prerequisite turned ON");
+				report.addToFullDescription("\nJump Prerequisite turned ON");
 			else
-				System.out.println("Jump Prerequisite turned OFF but there is not prerequisites");
+				report.addToFullDescription("\nJump Prerequisite turned OFF but there is not prerequisites");
 			
 			okPrerequisites = true;
 		}
@@ -136,21 +146,26 @@ public class TestManagerImpl implements TestManagerRemote {
 			
 			
 			// TODO Execution of Predicate
-			okPredicate = testRuleManager.executeTestRule(predicate);
+			report = testRuleManager.executeTestRule(predicate, report);
+			//report.setPartialResultSuccessfully(okPredicate);
 			
 			// TODO Gestione Report
-			System.out.println("Report Message: " + taf.getReportFragments().get("pass").getMessage());
-			System.out.println("Report Fragment: " + taf.getReportFragments().get("pass").getDescription());	
+			report.addToFullDescription("\nReport Message: " + taf.getReportFragments().get("pass").getMessage());
+			report.addToFullDescription("\nReport Fragment: " + taf.getReportFragments().get("pass").getDescription());	
 		
 		}
 		else {
-			System.out.println("The Execution of Predicate of TAF: " + taf.getName());
+			report.addToFullDescription("\nThe Execution of Predicate of TAF: " + taf.getName());
 		}
 		
-		System.out.println("END executeTAF: " + taf.getName());
-		System.out.println("----");
+		report.addToFullDescription("\nEND executeTAF: " + taf.getName());
+		report.addToFullDescription("\n----\n");
 		
-		return okPredicate;
+// TODO QUI IL REPORT NON VIENE PERSISISTITO (POSSO RICHIAMARE DA QUESTA CLASSE L'EJB?)
+		// FORSE IN QUESTO CASO E' MEGLIO RITORNARLO COME VALORE DI RITORNO
+		
+		//return okPredicate;
+		return report;
 	}
 	
 	

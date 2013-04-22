@@ -62,26 +62,13 @@ public class TestPlan implements Serializable {
 	public TestPlan() {
 
 	}
-
-	public TestPlan(String xml, String datetime, String state, String location) {
-
-		//this.testPlanId = testPlanId;
-		//this.userIdXML = userId;
-		this.xml = xml;
-		this.datetime = datetime;
-		this.state = state;
-		this.location = location;		
-
-	}
 	
 	public TestPlan(String xml, String datetime, String state, String location, ActionWorkflow workflow) {
 
-		//this.testPlanId = testPlanId;
-		//this.userIdXML = userId;
-		this.xml = xml;
-		this.datetime = datetime;
-		this.state = state;
-		this.location = location;		
+		this.setXml(xml);
+		this.setDatetime(datetime);
+		this.setState(state);
+		this.setLocation(location);		
 		this.setWorkflow(workflow);
 	}
 	
