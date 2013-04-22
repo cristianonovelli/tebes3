@@ -87,6 +87,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				ActionWorkflow wf = testPlan.getWorkflow();
 				ActionWorkflow wf2 = new ActionWorkflow();	
 				wf2.setComment(wf.getComment());
+				wf2.setNextActionMark(1);
 				Long wf2Id = actionManager.createWorkflow(wf2);
 				wf2 = actionManager.readWorkflow(wf2Id);
 				
@@ -166,6 +167,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			actionList2.add(this.cloneAction(actionList1.get(i)));
 		
 		workflow2.setActions(actionList2);
+		workflow2.setNextActionMark(workflow1.getNextActionMark());
 		
 		return workflow2;
 	}

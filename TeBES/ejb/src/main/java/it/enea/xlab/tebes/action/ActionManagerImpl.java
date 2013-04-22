@@ -226,22 +226,31 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		// io credo dovrei fare una ricerca del tipo readActionByWorkflowId
 		// eseguire questa action e una volta eseguita, eliminarla dal DB o settarla come "done"
 		List<Action> actionList = workflow.getActions();
+		int actionListSize = workflow.getActions().size();
 		Action a;
 		
-		for (int k=0;k<actionList.size();k++) {
+		int nextActionMark = workflow.getNextActionMark(); 
+		while (nextActionMark <= actionListSize) {
+		// for (int k=0;k<actionList.size();k++) {
 			
-			a =	(Action) actionList.get(k);
+			a =	(Action) actionList.get(nextActionMark-1);
 			
 			if (a != null) {
 				//result = result && runAction(a, report);
 				report = runAction(a, report);
 				report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
-				// interaction?
 				
+				
+				// interaction?
 			}
 			else 
 				report.setFinalResultSuccessfully(false);
-			}
+			
+			nextActionMark++;
+		}
+		
+		
+		// TODO incremento marker del workflow e persisto
 		
 		
 		//for (int i = 0 ; i < workflow.size(); i++) {

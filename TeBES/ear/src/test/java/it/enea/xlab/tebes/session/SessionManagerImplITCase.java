@@ -354,7 +354,7 @@ public class SessionManagerImplITCase {
 	}
 		
 
-	//@AfterClass
+	@AfterClass
 	public static void after_testPlanManager() throws Exception {
 
 		Boolean deleting;
@@ -396,6 +396,22 @@ public class SessionManagerImplITCase {
 		List<Long> userIdList = userAdminController.getUserIdList();
 		userIdList = userAdminController.getUserIdList();
 		Assert.assertTrue(userIdList.size() == 0);
+		
+		
+		// Get Session List
+		List<Long> sessionIdList = sessionController.getSessionIdList();
+		Assert.assertTrue(sessionIdList.size() > 0);
+		
+
+		
+		// Cancello ogni ruolo
+		for (int s=0;s<sessionIdList.size();s++) {
+
+						
+			// DELETE Role
+			deleting = sessionController.deleteSession(sessionIdList.get(s));
+			Assert.assertTrue(deleting);			
+		}		
 	}
 	
 	

@@ -222,6 +222,18 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		return;
 	}
 
+
+	public List<Long> getSessionIdList() {
+
+        String queryString = "SELECT s.id FROM Session AS s";   
+        Query query = eM.createQuery(queryString);
+        
+        @SuppressWarnings("unchecked")
+		List<Long> sessionIdList = query.getResultList();
+
+        return sessionIdList;
+	}
+
 	
 }
 

@@ -22,4 +22,8 @@ public interface SessionManagerRemote {
 
 	public Long run(Long userId, Long sutId, Long testPlanId);
 
+	public List<Long> getSessionIdList();
+
+	public Boolean deleteSession(Long id);
+
 }
