@@ -211,13 +211,13 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	///////////////////
 	
 	
-	/**
+/*	*//**
 	 * RUN Workflow
 	 * Actions Workflow Engine
 	 * TODO supporto di un workflow più articolato, per ora è lineare e si risolve con un semplice for
 	 * @return 	true if all actions return true
 	 * 			false if one action return false
-	 */
+	 *//*
 	public Report runWorkflow(ActionWorkflow workflow, Report report) {
 		
 		//boolean result = true;
@@ -259,7 +259,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		//}
 		
 		return report;
-	}
+	}*/
 	
 	
 	/**
@@ -330,9 +330,77 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		return report;
 		//return result && updating;
 	}
+
+
+	public Session runWorkflow(ActionWorkflow workflow, Session session) {
+		
+		//boolean result = true;
+		
+		Report report = session.getReport();
+		
+				
+		// io credo dovrei fare una ricerca del tipo readActionByWorkflowId
+		// eseguire questa action e una volta eseguita, eliminarla dal DB o settarla come "done"
+		List<Action> actionList = workflow.getActions();
+		int actionListSize = workflow.getActions().size();
+
+		
+		int nextActionMark = workflow.getNextActionMark(); 
+		/*while (nextActionMark <= actionListSize) {*/
+		// for (int k=0;k<actionList.size();k++) {
+			
+
+		Action a = (Action) actionList.get(nextActionMark-1);
+			
+		if (a != null) {
+			
+			//result = result && runAction(a, report);
+			report = runAction(a, report);
+			report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
+			
+			
+			
+		}
+		else 
+			report.setFinalResultSuccessfully(false);
+		
+		nextActionMark++;
+		
+		workflow.setNextActionMark(nextActionMark);
+		
+		// Se questa era l'ultima azione il Report è concluso
+		// e la sessione di Test termina
+		if (workflow.getNextActionMark() > workflow.getActions().size()) {
+			
+			report.setState(Report.getFinalState());
+			
+		}
+		
+		// TODO persistere: workflow, report e aggiornare session
+		boolean updating = this.updateWorkflow(workflow);
+		
+		updating = updating && reportManager.updateReport(report);
+
+		
+		
+		return session;
+	}
 	
 
-	
+	public Boolean updateWorkflow(ActionWorkflow workflow) {
+		
+		Boolean result = false;
+
+		 if ( (workflow != null) && (workflow.getId() != null) ) {
+			 workflow = eM.merge(workflow);
+			 //eM.persist(user);
+			 
+			 if (workflow != null)
+				 result = true;
+		 }
+
+		 return result;
+	}
 	
 }
 

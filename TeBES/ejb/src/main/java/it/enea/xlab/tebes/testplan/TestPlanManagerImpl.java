@@ -432,20 +432,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	}*/
 
 
-	public Boolean updateWorkflow(ActionWorkflow workflow) {
-		
-		Boolean result = false;
 
-		 if ( (workflow != null) && (workflow.getId() != null) ) {
-			 workflow = eM.merge(workflow);
-			 //eM.persist(user);
-			 
-			 if (workflow != null)
-				 result = true;
-		 }
-
-		 return result;
-	}
 
 
 	public Long insertWorkflow(ActionWorkflow workflow, Long testPlan_id) {

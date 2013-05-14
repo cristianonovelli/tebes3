@@ -76,34 +76,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				this.addReportToSession(report.getId(), currentSession.getId());
 
 				
-				if ( (sessionId != null) && (sessionId > 0) ) {
-					
-
-					
-					// GET Workflow from TestPlan
-					TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);					
-					ActionWorkflow workflow = testPlan.getWorkflow();
-					
-					// RUN ActionWorkflow
-					report = actionManager.runWorkflow(workflow, report);
-					
-					
-					
-					// TODO questo avviene quando sono finite le action del workflow
-					report.setState(Report.getFinalState());
-					boolean updating = reportManager.updateReport(report);
-					
-					
-					if (updating)
-						return sessionId;
-					else
-						// runWorkflow returns false
-						return new Long(-4);
-								
-				}
-				else		
-					// @return -3 createSession error
-					return new Long(-3);
+				return sessionId;
 				
 				
 			} catch (Exception e) {
@@ -143,9 +116,9 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	/**
 	 * READ Session
 	 */	
-	public Session readSession(Long sessionID) {
+	public Session readSession(Long id) {
 		
-		return eM.find(Session.class, sessionID);
+		return eM.find(Session.class, id);
 	}	
 		
 	

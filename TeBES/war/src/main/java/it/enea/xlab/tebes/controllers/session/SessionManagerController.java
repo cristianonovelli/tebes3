@@ -74,5 +74,11 @@ public class SessionManagerController extends WebController {
 		return sessionManagerBean.deleteSession(id);
 	}
 
+
+	public Session readSession(Long id) {
+		
+		return sessionManagerBean.readSession(id);
+	}
+
 }
 

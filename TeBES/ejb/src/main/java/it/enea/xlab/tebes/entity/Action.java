@@ -36,6 +36,7 @@ public class Action implements Serializable {
 	private String testValue;
 	private boolean jumpTurnedON;
 	private String Description;
+	private Long sutId;
 	
 	//@ManyToOne
 	@ManyToOne(cascade=CascadeType.MERGE)
@@ -85,9 +86,14 @@ public class Action implements Serializable {
 		result = result.concat("Test Value: " + this.getTestValue() +"\n");
 		result = result.concat("Test Jump Prerequisites: " + this.isJumpTurnedON() +"\n");
 		result = result.concat("Test Location: " + this.getTestLocation() +"\n");
+		result = result.concat("Test Location: " + this.getTestLocation() +"\n");
+		
+		if (this.getSutId() == null) 			
+			result = result.concat("User SUT: MISSING!\n");
+		else
+			result = result.concat("User SUT: " + this.getSutId() +"\n");
 		
 		result = result.concat("------------------------");
-		
 		
 		return result;
 	}
@@ -233,6 +239,14 @@ public class Action implements Serializable {
 
 	public static String getTodoState() {
 		return TODO_STATE;
+	}
+
+	public Long getSutId() {
+		return sutId;
+	}
+
+	public void setSutId(Long sutId) {
+		this.sutId = sutId;
 	}
 	
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+
+<svrl:schematron-output title="" schemaVersion=""
+	xmlns:svrl="http://purl.oclc.org/dsdl/svrl">
+	<svrl:ns-prefix-in-attribute-values
+		prefix="cac"
+		uri="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"></svrl:ns-prefix-in-attribute-values>
+	<svrl:ns-prefix-in-attribute-values
+		prefix="cbc"
+		uri="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"></svrl:ns-prefix-in-attribute-values>
+	<svrl:ns-prefix-in-attribute-values
+		prefix="in" uri="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"></svrl:ns-prefix-in-attribute-values>
+</svrl:schematron-output>
+

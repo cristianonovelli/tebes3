@@ -56,7 +56,7 @@
             <taml:textSourceItem></taml:textSourceItem>
         </taml:normativeSource>
         
-        <taml:var vname="EUGEN-UBL-T10" vtype="http://purl.oclc.org/dsdl/schematron">http://www.ubl-italia.org/TeBES/schematrons/UBL-T10/eugen/schematron/UBL/EUGEN-UBL-T10.sch</taml:var>
+        <taml:var vname="EUGEN-UBL-T10" vtype="http://purl.oclc.org/dsdl/schematron">http://winter.bologna.enea.it/peppol_schema_rep/schematron/eugen/UBL/EUGEN-UBL-T10.sch</taml:var>
 
         <taml:var vname="TA-001_TC-001_TS-002" vtype="http://docs.oasis-open.org/ns/tag/taml-201002/">taml:TA-001_TC-001_TS-002 eq 'pass'</taml:var>
         <taml:var vname="TA-002_TC-001_TS-002" vtype="http://docs.oasis-open.org/ns/tag/taml-201002/">taml:TA-002_TC-001_TS-002 eq 'pass'</taml:var>

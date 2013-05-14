@@ -49,7 +49,7 @@
 
         <taml:var vname="TA-001_TC-001_TS-004" vtype="http://docs.oasis-open.org/ns/tag/taml-201002/">taml:TA-001_TC-001_TS-004 eq 'pass'</taml:var>
 
-        <taml:var vname="SDI-UBL" vtype="http://purl.oclc.org/dsdl/schematron">http://www.ubl-italia.org/TeBES/schematrons/UBL-T10/sdi/schematron/UBL/SDI-UBL.sch</taml:var>
+        <taml:var vname="SDI-UBL" vtype="http://purl.oclc.org/dsdl/schematron">http://winter.bologna.enea.it/peppol_schema_rep/schematron/sdi/UBL/SDI-UBL.sch</taml:var>
 
         <taml:target type="xml">document</taml:target>
   

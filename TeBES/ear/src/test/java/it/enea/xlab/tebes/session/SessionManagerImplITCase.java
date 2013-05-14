@@ -13,6 +13,7 @@ import it.enea.xlab.tebes.entity.Interaction;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.utilities.WebControllersUtilities;
@@ -339,15 +340,129 @@ public class SessionManagerImplITCase {
 		Assert.assertNotNull(sessionId);
 		Assert.assertTrue(sessionId.intValue()>0);
 		
-		// CICLO PER ATTENDERE RICHIESTA DI INTERAZIONE O FINE DEL WORKFLOW 
-		// IL WORKFLOW DOVREBBE AVERE CAMPI TIPO:
-		// nextAction (dove -1 indica che ha finito)
+		// GET Current Session
+		Session currentSession = sessionController.readSession(sessionId);
+		Assert.assertNotNull(currentSession);
+		Assert.assertTrue(currentSession.getId().intValue() > 0);
+			
+		// TODO: PRE-EXECUTION
+		// Devo collegare un SUT alle action
+		// SE C'è SOLO UN SUT DI TIPO DOCUMENT, OK
+		// SE CE NE SONO N COME LI COLLEGO ALLE ACTION?
+		// MOSTRO LE N ACTION, IL TIPO E UN MENU' A TENDINA CON I SUT DISPONIBILI DI QUEL TIPO PER OGNI ACTION
+		// SALVO IL COLLEGAMENTO NELLA ACTION SOTTO LA VOCE SUTID.
+		
+	
+		// GET Workflow from TestPlan
+		selectedTestPlan = testPlanController.readTestPlan(testPlanId);					
+		Assert.assertNotNull(selectedTestPlan);
+		Assert.assertTrue(selectedTestPlan.getId().intValue() > 0);
+			
+		
+		// TODO CICLO WHILE: finchè non ho finito le action... 
+		
+		
+		
+		// RUN ActionWorkflow
+		ActionWorkflow workflow = selectedTestPlan.getWorkflow();
+		//Long workflowId = workflow.getId();
+		//int nextAction = workflow.getNextActionMark();
+		
+		
+		System.out.println();
+		
+		Action action;
+		
+		// CICLO
+		// finchè:
+		// 1. le azioni da eseguire non sono finite
+		// 2. non ho ricevuto l'interazione dell'utente necessaria a continuare
+		// 3. l'utente non decide di sospendere la sessione di test
+		while (workflow.getNextActionMark() <= workflow.getActions().size()) {
+		
+			
+			System.out.println("RUNNING WORKFLOW...");
+			System.out.println("YOU ARE EXECUTING THE ACTION " + workflow.getNextActionMark() + " OF " + workflow.getActions().size());
+			
+			action = workflow.getActions().get(workflow.getNextActionMark()-1);
+			System.out.println(action.getActionSummaryString());
+
+			
+			// TODO if action.sutId is NULL the user have to use the sutManager and declare the support for this type
+			// then
+			// 1. document: upload or send now
+			// 2. transport: ...
+			// 3. ebBP: ...
+			
+			//if (action.getSutId() == null) 			
+			//	;
+			
+			
+			// c'è bisogno di un input sempre?
+			// se l'ho già inserito, voglio usare quello usato nella precedente action?
+			// dove metto il mio input?
+			// PER ORA
+			// Session.input di tipo File?
+			
+			
+			
+			// RUN Workflow
+			currentSession = testPlanController.runWorkflow(workflow, currentSession);
+			
+			// a questo punto l'azione potrebbe anche ssere in corso
+			// ed è così che permetto l'interazione
+			// devo passare alla prossima action solo quando conclusa
+			
+			
+			
+			//currentSession.getReport().isPartialResultSuccessfully()
+			//currentSession.getReport().setFinalResultSuccessfully(finalResultSuccessfully)
+			//report.setFinalResultSuccessfully(true);
+			
+			
+			
+			System.out.println("END ACTION: "  + workflow.getNextActionMark() + " OF " + workflow.getActions().size());
+			System.out.println();
+			
+			// REFRESH Workflow lato client
+			selectedTestPlan = testPlanController.readTestPlan(currentSession.getTestPlanId());	
+			workflow = selectedTestPlan.getWorkflow();
+			
+			
+		}
+		
+		// TODO quando si chiude la sessione di test?
+		// TODO closeSession
+		// TODO session.setEndDateTime(endDateTime);
+		//sessionController.setState(Session.getDoneState());
+			
+		
+		//boolean updating = reportManager.updateReport(report);
+			
+			
+
+
+
+		
+		// TODO CICLO PER ATTENDERE RICHIESTA DI INTERAZIONE O FINE DEL WORKFLOW 
+		// Prima di far partire il workflow l'utente dovrebbe visualizzare:
+		// 1. lista delle action che verranno eseguite;
+		// 2. prossima azione (con eventuali requisiti)
+		// 3. eventuale interazione richiesta per cominciare
+		
+		// TODO report.setState(Report.getFinalState());
+		
 		
 		Report report = sessionController.getReport(sessionId);
 		Assert.assertTrue(report.getState().equals(Report.getFinalState()));
 		System.out.println("REPORT");
 		System.out.println(report.getState());
 		System.out.println(report.getTestResult());
+		
+		
+		// TODO chiusura della sessione di test
+		// possibilità di download del report
+		
 		
 		
 		

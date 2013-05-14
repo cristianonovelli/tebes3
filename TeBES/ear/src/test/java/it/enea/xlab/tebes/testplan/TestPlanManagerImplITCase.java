@@ -245,9 +245,7 @@ public class TestPlanManagerImplITCase {
 		// 		a questo livello non c'è bisogno dunque di modificarlo MA in esecuzione DEVE essere letto e usato
 		
 		// 8. SAVE TestPlan for the current user
-		// set to null the id to copy? the testplan
-		// TODO QUESTO NON COPIA IL WORKFLOW
-		Long importedTestPlanId = testPlanController.createTestPlan(selectedTestPlan, currentUserId);	
+		Long importedTestPlanId = testPlanController.cloneTestPlan(selectedTestPlan, currentUserId);	
 		Assert.assertTrue(importedTestPlanId.intValue() > 0);		
 		//Long adding2 = testPlanController.addTestPlanToUser(importedTestPlanId, currentUserId);
 		//Assert.assertTrue(adding2.intValue()>0);	
@@ -255,6 +253,8 @@ public class TestPlanManagerImplITCase {
 		TestPlan importedTestPlan = testPlanController.readTestPlan(importedTestPlanId);
 		Assert.assertTrue(importedTestPlan.getId().intValue() > 0);
 
+		
+		
 		// Eventuali verifiche sull'XML
 		//TestPlanDOM tpDOM2 = new TestPlanDOM();
 		//tpDOM2.setContent(importedTestPlan.getXml());
