@@ -28,9 +28,10 @@ public class SUT implements Serializable {
 	private String type;
 	
 	// linguaggi possibili:
-	// xml: se sto effettuando validazione schema o schematron
-	// ebms: se sto effettuando validazione sulla transazione
-	// ebbp: se sto effettuando validazione sul processo
+	// xml: se sto effettuando validazione schema o schematron generica
+	// ubl: se sto effettuando validazione schema o schematron UBL
+	// ebms: se sto effettuando validazione sulla transazione con ebMS
+	// ebbp: se sto effettuando validazione sul processo descritto con ebBP
 	private String language;
 	
 	// riferimento alla descrizione delle regole che descrivono il linguaggio usato

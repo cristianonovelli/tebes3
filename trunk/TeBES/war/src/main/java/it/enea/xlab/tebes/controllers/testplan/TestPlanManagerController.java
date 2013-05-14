@@ -5,6 +5,7 @@ import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
@@ -104,7 +105,7 @@ public class TestPlanManagerController extends WebController {
 
 	public Boolean updateWorkflow(ActionWorkflow workflow) {
 		
-		return testPlanManagerService.updateWorkflow(workflow);
+		return actionManagerService.updateWorkflow(workflow);
 	}
 
 	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId) {
@@ -186,6 +187,12 @@ public class TestPlanManagerController extends WebController {
 	public Long cloneTestPlan(TestPlan testPlan, Long userId) {
 		
 		return testPlanManagerService.cloneTestPlan(testPlan, userId);
+	}
+
+
+	public Session runWorkflow(ActionWorkflow workflow, Session session) {
+		
+		return actionManagerService.runWorkflow(workflow, session);
 	}
 
 

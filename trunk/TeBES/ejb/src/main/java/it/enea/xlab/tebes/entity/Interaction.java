@@ -22,7 +22,16 @@ public class Interaction implements Serializable {
 
 	@OneToOne
 	private SUT sut;
-	
+
+	/* From XML File
+	 * <!-- L'elemento complesso tebes:interaction specifica l'interazione con la piattaforma di test:
+		- website: interazione tramite interfaccia del sito web, upload e download;
+		- email: interazione tramite protocollo pop/smtp;
+		- webservice: interazione tramite servizio web;
+		- ebxmlcpa: interazione descritta tramite standard ebXML CPA.
+		A seconda del tipo di interazione scelta l'elemento può contenere altri parametri,
+		come per esempio tebes:endpoint
+	-->*/
 	private String type;
 	
 	

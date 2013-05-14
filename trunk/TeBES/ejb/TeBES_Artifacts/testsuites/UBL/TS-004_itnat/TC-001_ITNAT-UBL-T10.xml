@@ -48,7 +48,7 @@
 
         <taml:var vname="TA-001_TC-001_TS-003" vtype="http://docs.oasis-open.org/ns/tag/taml-201002/">taml:TA-001_TC-001_TS-003 eq 'pass'</taml:var>
         
-        <taml:var vname="ITNAT-UBL-T10" vtype="http://purl.oclc.org/dsdl/schematron">http://www.ubl-italia.org/TeBES/schematrons/UBL-T10/itnat/schematron/UBL/ITNAT-UBL-T10.sch</taml:var>
+        <taml:var vname="ITNAT-UBL-T10" vtype="http://purl.oclc.org/dsdl/schematron">http://winter.bologna.enea.it/peppol_schema_rep/schematron/itnat/UBL/ITNAT-UBL-T10.sch</taml:var>
 
         <taml:target type="xml">document</taml:target>
  

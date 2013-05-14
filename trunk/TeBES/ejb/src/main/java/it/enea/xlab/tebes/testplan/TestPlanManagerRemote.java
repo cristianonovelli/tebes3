@@ -38,7 +38,7 @@ public interface TestPlanManagerRemote {
 
 	//public TestPlan findTestPlanByTestPlanId(String testPlanId);
 
-	public Boolean updateWorkflow(ActionWorkflow workflow);
+
 	public Long insertWorkflow(ActionWorkflow workflow, Long testPlan_id);
 	public ActionWorkflow readWorkflow(Long workflowId);
 
