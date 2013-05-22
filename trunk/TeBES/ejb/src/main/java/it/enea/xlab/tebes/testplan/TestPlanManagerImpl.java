@@ -87,7 +87,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				ActionWorkflow wf = testPlan.getWorkflow();
 				ActionWorkflow wf2 = new ActionWorkflow();	
 				wf2.setComment(wf.getComment());
-				wf2.setNextActionMark(1);
+				wf2.setActionMark(1);
 				Long wf2Id = actionManager.createWorkflow(wf2);
 				wf2 = actionManager.readWorkflow(wf2Id);
 				
@@ -167,7 +167,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			actionList2.add(this.cloneAction(actionList1.get(i)));
 		
 		workflow2.setActions(actionList2);
-		workflow2.setNextActionMark(workflow1.getNextActionMark());
+		workflow2.setActionMark(workflow1.getActionMark());
 		
 		return workflow2;
 	}
@@ -326,18 +326,20 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	public TestPlan getTestPlanFromXML(String testPlanAbsFileName) {
 		
 		TestPlan testPlan = null;	
-		
+		System.out.println("azaza3: " + testPlanAbsFileName);
 		try {
 
 			TestPlanDOM testPlanDOM = new TestPlanDOM(testPlanAbsFileName);			
-			 
+			System.out.println("2");	 
 			if ( testPlanDOM.root == null ) {
 				System.out.println("XReport: " + testPlanDOM.getReport().getErrorMessage());	
 			}
 			else {
-				
+				System.out.println("3");
 				ActionWorkflow workflow = new ActionWorkflow(this.getActionsFromXML(testPlanDOM));
 				
+				System.out.println("4:" + testPlanDOM.getXMLString());
+				System.out.println("4:" + testPlanDOM.getRootDatetimeAttribute());
 				testPlan = new TestPlan(testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, workflow);
 			}
 		} catch (Exception e) {
@@ -349,6 +351,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	}
 
 
+	
 	
 	public Vector<Action> getActionsFromXML(Long testPlanId) throws SAXException, ParserConfigurationException, IOException {
 		
@@ -520,7 +523,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		String systemTestPlanAbsDirName = null;
 		
 		try {		
-			systemTestPlanAbsDirName = PropertiesUtil.getSuperUserTestPlanDir();
+			systemTestPlanAbsDirName = PropertiesUtil.getSuperUserTestPlanDir();			
+			//System.out.println("systemTestPlanAbsDirName:" + systemTestPlanAbsDirName);
 			
 			if (XLabFileManager.isFileOrDirectoryPresent(systemTestPlanAbsDirName) ) 
 

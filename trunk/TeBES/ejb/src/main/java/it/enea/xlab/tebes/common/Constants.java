@@ -66,7 +66,9 @@ public class Constants {
 	// References of schema languages
 	public static final String XPATH = "http://www.w3.org/TR/xpath20/";
 	public static final String SCHEMATRON = "http://purl.oclc.org/dsdl/schematron";
+	public static final String XMLSCHEMA = "http://www.w3.org/2001/XMLSchema";
 	public static final String UBLSCHEMA = "http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd";
+	public static final String TAMLSCHEMA = "http://docs.oasis-open.org/tag/taml/v1.0/cs02/xsd/testAssertionMarkupLanguage.xsd";
 	
 	// Test Artifact Types
 	public static final String TA = "TestAssertion";
@@ -84,7 +86,7 @@ public class Constants {
 	
 	// Other Values
 	public static final String MANDATORY = "mandatory";
-	
+	public static final int COUNTER_MAX = 20;
 	
 	
 	

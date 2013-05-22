@@ -315,7 +315,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		report.addToFullDescription("\n-- End Execution of Action: " + action.getActionName() + "--");
 		
 		// Persist Report
-		report.setState(Report.getFinalState());
+		//report.setState(Report.getFinalState());
 		boolean updating = reportManager.updateReport(report);
 		
 		
@@ -345,12 +345,14 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		int actionListSize = workflow.getActions().size();
 
 		
-		int nextActionMark = workflow.getNextActionMark(); 
-		/*while (nextActionMark <= actionListSize) {*/
-		// for (int k=0;k<actionList.size();k++) {
+		int actionMark = workflow.getActionMark(); 
+		
+		System.out.println("actionMark: " + actionMark);
+		
+		System.out.println("actionListSize: " + actionListSize);
 			
 
-		Action a = (Action) actionList.get(nextActionMark-1);
+		Action a = (Action) actionList.get(actionMark-1);
 			
 		if (a != null) {
 			
@@ -358,19 +360,26 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			report = runAction(a, report);
 			report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
 			
+			if ( report.isPartialResultSuccessfully() ) {
+				
+				actionMark++;				
+				workflow.setActionMark(actionMark);
+			}
+				
 			
 			
 		}
 		else 
 			report.setFinalResultSuccessfully(false);
 		
-		nextActionMark++;
+		System.out.println("actionMark2: " + actionMark);
 		
-		workflow.setNextActionMark(nextActionMark);
+		System.out.println("actionListSize2: " + actionListSize);		
+
 		
 		// Se questa era l'ultima azione il Report è concluso
 		// e la sessione di Test termina
-		if (workflow.getNextActionMark() > workflow.getActions().size()) {
+		if (actionMark > actionListSize) {
 			
 			report.setState(Report.getFinalState());
 			

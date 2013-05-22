@@ -58,9 +58,8 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			
 			try {
 				
-				// CREATE Report
+				// CREATE Report (DRAFT state by default)
 				Report report = new Report();
-				report.setState(Report.getDraftState());
 
 				Long reportId = reportManager.createReport(report);				
 				report = reportManager.readReport(reportId);

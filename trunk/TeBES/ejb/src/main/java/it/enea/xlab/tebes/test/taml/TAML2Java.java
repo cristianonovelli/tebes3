@@ -3,6 +3,8 @@ package it.enea.xlab.tebes.test.taml;
 
 import java.util.Hashtable;
 
+import javax.xml.transform.TransformerException;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -231,6 +233,51 @@ public class TAML2Java {
 		}
 		
 		return actionTable;
+	}
+
+
+	public Hashtable<String, String> getCommonNamespacesHashtable(TAMLDOM tamlDOM) {
+		
+		Hashtable<String, String> commonNamespacesTable = new Hashtable<String, String>();
+		
+		NodeList namespacesNodeList = null;
+
+			try {
+				namespacesNodeList = tamlDOM.getCommonNamespacesNodeList();
+				
+				if ( namespacesNodeList.getLength() > 0 )
+					System.out.println("qwqw5");
+				
+				
+				for (int i = 0; i < namespacesNodeList.getLength(); i++) {
+							
+							Node nsNode = namespacesNodeList.item(i);
+							String label = nsNode.getAttributes().item(0).getLocalName();
+							
+							if ((label != null) && !label.equals("")) {
+							
+							// TODO la stringa "xmlns:" andrebbe isolata in una costante
+							String value = tamlDOM.getNodeAttribute(nsNode, "xmlns:".concat(label));
+							
+								if ((value != null) && !value.equals("")) {
+							
+									System.out.println("label:" + label);
+									System.out.println("value:" + value);
+									
+									// Insert into the Hashtable
+									commonNamespacesTable.put(label, value);
+								}
+							
+							}
+				}				
+
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				commonNamespacesTable = null;
+			}
+
+		return commonNamespacesTable;
 	}
 
 	

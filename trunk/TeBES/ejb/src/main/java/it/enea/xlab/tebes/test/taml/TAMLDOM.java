@@ -65,6 +65,20 @@ public class TAMLDOM extends JXLabDOM {
 		return this.root.getElementsByTagName("taml:testAssertionRef");
 	}
 	
+	public NodeList getCommonNamespacesNodeList() 
+			throws TransformerException {
+		
+		NodeList taNodeList = null;
+		
+		String xpath = "/*/taml:common/taml:namespaces";
+
+		taNodeList = XPathAPI.selectNodeList(this.doc, xpath);
+
+		return taNodeList;		
+		
+	}
+
+	
 	// TODO questo sarebbe da spostare nella JXLabDOM
 	public String getNodeValue(Node node) {
 
@@ -219,7 +233,7 @@ public class TAMLDOM extends JXLabDOM {
 	}
 
 	// Get generic node Attribute
-	private String getNodeAttribute(Node node, String attributeLabel) {
+	public String getNodeAttribute(Node node, String attributeLabel) {
 
 		String attributeValue = null;
 		
@@ -228,6 +242,10 @@ public class TAMLDOM extends JXLabDOM {
 
 		return attributeValue;
 	}
+
+
+	
+
 
 
 
