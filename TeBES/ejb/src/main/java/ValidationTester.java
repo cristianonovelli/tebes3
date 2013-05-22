@@ -1,11 +1,3 @@
-import org.xlab.file.XLabFileManager;
-import org.xlab.utilities.XLabUtilities;
-
-import exception.LocalFileNotFoundException;
-import exception.SchemaParserException;
-import schemavalidator.SchemaMainValidator;
-import schemavalidator.SchemaMainValidatorImpl;
-import validator.ErrorMessage;
 
 
 public class ValidationTester {
@@ -15,8 +7,8 @@ public class ValidationTester {
 	 */
 	public static void main(String[] args) {
 		
-		System.out.println("1...");
-		String fullXmlFileName = "ubl-invoice.xml";
+	/*	System.out.println("1...");
+		String fullXmlFileName = "TeBES_Artifacts/users/1/docs/ubl-invoice.xml";
 		//String xsdFile = "http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd";
 		String xsdFile = "http://winter.bologna.enea.it/peppol_schema_rep/xsd/maindoc/UBL-Invoice-2.0.xsd";
 		//String xsdFile = "http://winter.bologna.enea.it/peppol_schema_rep/schematron/sdi/UBL/SDI-UBL.sch";
@@ -62,7 +54,7 @@ public class ValidationTester {
 		else
 			System.out.println("Test no");
 
-		
+		*/
 	}
 
 }

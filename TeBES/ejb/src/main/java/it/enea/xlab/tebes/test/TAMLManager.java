@@ -193,12 +193,16 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			// Get TestAssertion Hashtable from TAML
 			taHashtable = t2j.getTestAssertionHashtable(tamlDOM);
 			
+			
 			// Get testAssertion Node from TAML
 			testAssertionNode = tamlDOM.getTestAssertionNode((action.getTestValue()));
 
 			// Get Variables Hashtable from TAML
 			variableHashtable = t2j.getVariableHashtable(tamlDOM, testAssertionNode);
 
+			// Get CommonNamespaces Hashtable from TAML
+			Hashtable<String, String> commonNamespacesHashtable = t2j.getCommonNamespacesHashtable(tamlDOM);	
+			
 			// Get Target
 			target = t2j.getTarget(tamlDOM, testAssertionNode);
 
@@ -218,14 +222,16 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 				if (prerequisite != null) {
 					
 					// TODO SE PRESENTI CONNETTORI LOGICI AND O OR AL MOMENTO RITORNA NULL
+					
 					// altrimenti ritorna un vettore con il solo prerequisite passato.
 					 Vector<TestRule> testRuleList = this.andSplitTestRule(prerequisite);				
 			
 					// Get TestAssertionRef Hashtable from TAML
 					taRefHashtable = t2j.getTestAssertionRefHashtable(tamlDOM);			
-	
+					
+					
 					// Normalize Prerequisite 
-					prerequisites = this.normalize(testRuleList, variableHashtable, taHashtable, taRefHashtable, true);
+					prerequisites = this.normalize(testRuleList, variableHashtable, taHashtable, taRefHashtable, commonNamespacesHashtable, true);
 					
 				}
 			}
@@ -237,7 +243,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			// Normalize Predicate
 			// Se il predicato TAML rispetta il profilo TAML4TeBES
 			// allora il predicato è sicuramente un'espressione XPath o Schematron
-			Vector<Action> predicates = this.normalize(testRuleList2, variableHashtable, taHashtable, taRefHashtable, action.isJumpTurnedON());
+			Vector<Action> predicates = this.normalize(testRuleList2, variableHashtable, taHashtable, taRefHashtable, commonNamespacesHashtable, action.isJumpTurnedON());
 			
 			// Get Report Hashtable from TAML
 			Hashtable<String, ReportFragment> reportHashtable = t2j.getReportHashtable(tamlDOM, testAssertionNode);			
@@ -246,10 +252,13 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			// Adjust Predicate Test Rule
 			// TODO Si assume che il predicato sia 1 ed 1 soltanto
 			Action predicateAction = (Action) predicates.firstElement();
-			predicate.setLanguage(predicateAction.getTestLanguage());
-			predicate.setValue(predicateAction.getTestLocation());
-			predicate.setLogicConnectorIsPresent(false);
 			
+			System.out.println("");
+			
+			predicate.setLanguage(predicateAction.getTestLanguage());
+			predicate.setValue(predicateAction.getTestValue());
+			predicate.setLogicConnectorIsPresent(false);
+
 			///// Creazione della TAF ///// 			
 			taf = new TAF(action.getActionName(), target, predicate, prerequisites, action.isJumpTurnedON(), prescription, reportHashtable, null);
 			
@@ -294,7 +303,10 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	 * @param jump
 	 * @return
 	 */
-	private Vector<Action> normalize(Vector<TestRule> testRuleList, Hashtable<String, Variable> variableHashtable, Hashtable<String, Action> taHashtable, Hashtable<String, Action> taRefHashtable, boolean jump) {
+	private Vector<Action> normalize(Vector<TestRule> testRuleList, 
+			Hashtable<String, Variable> variableHashtable, Hashtable<String, Action> taHashtable, Hashtable<String, Action> taRefHashtable, Hashtable<String, String> namespacesHashtable, boolean jump) {
+		
+		
 		
 		Vector<Action> result = null;
 		
@@ -357,13 +369,19 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 					
 					if (var.getType().equals(TAML2Java.XPATH_TYPE)) {
 						
-						Action xpath = new Action(i+1, var.getName(), Action.getTodoState(), TAML2Java.XPATH_TYPE, Constants.TA, var.getValue(), var.getValue(), jump, null);
+						Action xpathAction = new Action(i+1, var.getName(), Action.getTodoState(), TAML2Java.XPATH_TYPE, Constants.TA, var.getValue(), var.getValue(), jump, null);
 						
-						result.add(xpath);
+						if ( xpathAction.getTestValue().startsWith("count(//") && xpathAction.getTestValue().endsWith(") ge 1")) {
+							
+							xpathAction = this.normalizeXPathToXMLSChema(xpathAction, namespacesHashtable);
+						}
+						
+						result.add(xpathAction);
 					}
 				} 
 				// Se il linguaggio è XPATH (senza passare dalla variabile)
 				else if (singleTestRule.getLanguage().equals(TAML2Java.XPATH_TYPE)) {
+					
 					
 					String xpathId = "xpath".concat((new Integer(i+1)).toString());
 					Action xpath = new Action(i+1, xpathId, Action.getTodoState(), TAML2Java.XPATH_TYPE, Constants.TA, singleTestRule.getValue(), singleTestRule.getValue(), jump, null);
@@ -382,6 +400,31 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 		
 	} // end normalize method
 
+	
+	private Action normalizeXPathToXMLSChema(Action xpathAction, Hashtable<String, String> namespacesHashtable) {
+		
+		
+		
+		
+		// 1. Ricavo ublin dalla stringa
+		String value = xpathAction.getTestValue();
+		if ( value.startsWith("count(//") && value.endsWith(") ge 1")) {
+			
+			// Recupero namespace dalla Action
+			String nsName = value.substring(value.lastIndexOf("/")+1, value.lastIndexOf(":"));
+			
+			// Recupero URL XML Schema dalla namespacesHashtable utilizzando come chiave il namespace ricavato
+			String nsURL = namespacesHashtable.get(nsName);
+			
+			if (nsURL != null) {
+				xpathAction.setTestLanguage(Constants.XMLSCHEMA);
+				xpathAction.setTestType(Constants.XMLSCHEMA);
+				xpathAction.setTestValue(nsURL);
+			}
+		}
+
+		return xpathAction;
+	}
 	
 	// TODO : è supportato solo AND
 	// PER ORA NON EFFETTUA NIENTE E SE CONTIENE AND O OR RITORNA NULL!!!

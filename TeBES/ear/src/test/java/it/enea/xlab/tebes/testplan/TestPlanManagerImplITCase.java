@@ -170,6 +170,7 @@ public class TestPlanManagerImplITCase {
 		for (int i=0; i<systemTestPlanList.size();i++) {
 
 			testPlanAbsPathName = superUserTestPlanDir.concat(systemTestPlanList.elementAt(i));
+			System.out.println("testPlanAbsPathName:" + testPlanAbsPathName);
 			testPlan = testPlanController.getTestPlanFromXML(testPlanAbsPathName);
 			Assert.assertNotNull(testPlan);
 			

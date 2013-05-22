@@ -25,7 +25,7 @@
     -->
     <taml:common>
         <taml:namespaces 
-            xmlns:ublin="http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd" />
+            xmlns:ublin="http://winter.bologna.enea.it/peppol_schema_rep/xsd/maindoc/UBL-Invoice-2.0.xsd" />
     </taml:common>
     
     <taml:testAssertion 

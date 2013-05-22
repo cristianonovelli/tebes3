@@ -68,7 +68,8 @@ public class Session implements Serializable {
 	private String lastDateTime;
 	private String endDateTime;
 	
-	
+	@Column(length=9999) 
+	private String messageStore;
 	
 
 	public Session() {
@@ -192,6 +193,16 @@ public class Session implements Serializable {
 
 	public void setEndDateTime(String endDateTime) {
 		this.endDateTime = endDateTime;
+	}
+
+
+	public String getMessageStore() {
+		return messageStore;
+	}
+
+
+	public void setMessageStore(String messageStore) {
+		this.messageStore = messageStore;
 	}
 
 

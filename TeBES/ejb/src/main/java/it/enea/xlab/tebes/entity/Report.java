@@ -33,7 +33,8 @@ public class Report implements Serializable {
 	
 	
 	public Report() {
-
+		
+		this.setState(DRAFT_STATE);
 		this.setFullDescription("");
 		this.setFinalResultSuccessfully(true);
 	}

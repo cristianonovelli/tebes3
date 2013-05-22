@@ -49,6 +49,15 @@ public class TestManagerImpl implements TestManagerRemote {
 			Method xMethod = extendedManager.getMethod(BUILDTAF_METHOD, Action.class);
 			result = (TAF) xMethod.invoke(extendedManager.newInstance(), action);
 						
+			// TODO Normalize predicate
+			//result.setPredicate(this.normalizeTestRule(result.getPredicate()));
+			
+			
+			// prendo il predicate e se è di tipo xpath e contiene una validazione schema
+			// lo modifico in modo tale che esprima quello
+			// questo è il punto giusto per farlo, perchè non è strettamente relativo a TAML
+			
+			
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,9 +85,23 @@ public class TestManagerImpl implements TestManagerRemote {
 	}
 	
 	
+/*	private TestRule normalizeTestRule(TestRule testRule) {
+		
+		if (testRule.getLanguage().equals(Constants.XPATH)) {
+			
+			// Se l'espressione XPath è una richiesta di validazione
+			if (testRule.getLanguage().startsWith("count(//") && testRule.getLanguage().endsWith(") ge 1")) {
+				
+			}
+		}
+		
+		return testRule;
+	}*/
+
+
 	public Report executeTAF(TAF taf, Report report) {
 		
-		boolean okPrerequisites = false, okPredicate = false;
+		boolean okPrerequisites = false;
 		
 		
 		report.addToFullDescription("\n----");

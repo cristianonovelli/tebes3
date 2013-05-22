@@ -18,6 +18,7 @@ import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
@@ -27,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.xlab.xml.XLabDOM;
 
 public class SessionManagerImplITCase {
 
@@ -263,20 +265,18 @@ public class SessionManagerImplITCase {
 		Long superUserId = superUser.getId();
 		superUser = userAdminController.readUser(superUserId);
 		Vector<String> systemTestPlanList = testPlanController.getSystemXMLTestPlanList();
+		Assert.assertTrue(systemTestPlanList.size() == 2);
 		TestPlan testPlan = null;
 		Long testPlanId;
 		String testPlanAbsPathName;
 		String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlanDir();
-		Boolean updating;	
 		
-		
-		
-		
-		Long adding;
 		for (int i=0; i<systemTestPlanList.size();i++) {
 			
 			// GET TestPlan structure from XML
 			testPlanAbsPathName = superUserTestPlanDir.concat(systemTestPlanList.elementAt(i));
+
+			
 			testPlan = testPlanController.getTestPlanFromXML(testPlanAbsPathName);
 			Assert.assertNotNull(testPlan);
 			
@@ -353,83 +353,138 @@ public class SessionManagerImplITCase {
 		// SALVO IL COLLEGAMENTO NELLA ACTION SOTTO LA VOCE SUTID.
 		
 	
-		// GET Workflow from TestPlan
-		selectedTestPlan = testPlanController.readTestPlan(testPlanId);					
+		
+			
 		Assert.assertNotNull(selectedTestPlan);
 		Assert.assertTrue(selectedTestPlan.getId().intValue() > 0);
 			
 		
-		// TODO CICLO WHILE: finchè non ho finito le action... 
 		
+	
+
 		
+		// WORKFLOW ACTIONS - 
 		
-		// RUN ActionWorkflow
-		ActionWorkflow workflow = selectedTestPlan.getWorkflow();
-		//Long workflowId = workflow.getId();
-		//int nextAction = workflow.getNextActionMark();
+		// Definisco un contatore per evitare che la stessa Action si ripeta all'infinito
+		int failuresForAction = 0;
 		
+		Report report;
+		ActionWorkflow workflow;
+		Action currentAction;
 		
-		System.out.println();
+		// GET Workflow, actionMark and current Action
+		workflow = testPlanController.readTestPlan(testPlanId).getWorkflow();	
 		
-		Action action;
+		int actionsNumber = workflow.getActions().size();
+		int indexTemp;
 		
-		// CICLO
-		// finchè:
+		// Definisco due actionMark:
+		// actionMark aggiornato post-Run
+		int actionMark = workflow.getActionMark();
+		// actionMarkPreRun continua a conservare lo stato pre-Run
+		int actionMarkPreRun;
+		// all'inizio entrambi i marker sono settati a 1
+		Assert.assertTrue(actionMark == 1);
+		
+		// Get First Action to Execute
+		currentAction = workflow.getActions().get(actionMark - 1);
+		
+		// START EXUCUTION WORKFLOW CYCLE
+		// CICLO finchè:
 		// 1. le azioni da eseguire non sono finite
-		// 2. non ho ricevuto l'interazione dell'utente necessaria a continuare
-		// 3. l'utente non decide di sospendere la sessione di test
-		while (workflow.getNextActionMark() <= workflow.getActions().size()) {
+		// 2. l'utente  decide di sospendere la sessione di test
+		// 3. l'utente  decide di annullare la sessione di test
+		// 4. raggiungo il numero massimo di fallimenti per la stessa action
+		boolean running = true;
+		while (running) {
 		
+			actionMarkPreRun = actionMark;
 			
 			System.out.println("RUNNING WORKFLOW...");
-			System.out.println("YOU ARE EXECUTING THE ACTION " + workflow.getNextActionMark() + " OF " + workflow.getActions().size());
-			
-			action = workflow.getActions().get(workflow.getNextActionMark()-1);
-			System.out.println(action.getActionSummaryString());
 
+			System.out.println("YOU ARE EXECUTING THE ACTION " + actionMark + " OF " + actionsNumber);	
+			System.out.println(currentAction.getActionSummaryString());
 			
-			// TODO if action.sutId is NULL the user have to use the sutManager and declare the support for this type
-			// then
-			// 1. document: upload or send now
-			// 2. transport: ...
-			// 3. ebBP: ...
-			
+			// TODO if action.sutId is NULL the user have to use the sutManager and declare the support for this type		
 			//if (action.getSutId() == null) 			
 			//	;
 			
+
+			// TODO prima di chiamare il runworkflow ora faccio il finto upload
+			// PERO' questo dovrebbe eventualmente richiederlo il sistema dopo aver avviato l'action
+			/*XLabDOM xml = null;
+			try {
+				xml = new XLabDOM("C:/Java/workspace-indigo2/TeBES/ejb/ubl-invoice.xml", false, false);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-			// c'è bisogno di un input sempre?
-			// se l'ho già inserito, voglio usare quello usato nella precedente action?
-			// dove metto il mio input?
-			// PER ORA
-			// Session.input di tipo File?
-			
-			
+			currentSession.setMessageStore(xml.toString());*/
 			
 			// RUN Workflow
 			currentSession = testPlanController.runWorkflow(workflow, currentSession);
+
+			// REFRESH Workflow, actionMark and current Action
+			workflow = testPlanController.readTestPlan(testPlanId).getWorkflow();		
+			actionMark = workflow.getActionMark();
 			
-			// a questo punto l'azione potrebbe anche ssere in corso
-			// ed è così che permetto l'interazione
-			// devo passare alla prossima action solo quando conclusa
-			
-			
-			
-			//currentSession.getReport().isPartialResultSuccessfully()
-			//currentSession.getReport().setFinalResultSuccessfully(finalResultSuccessfully)
-			//report.setFinalResultSuccessfully(true);
+					
+			report = currentSession.getReport();
+
 			
 			
 			
-			System.out.println("END ACTION: "  + workflow.getNextActionMark() + " OF " + workflow.getActions().size());
+			
+			
+			// TODO se lo stato della action corrente è working... interrogo la strttura dati
+			if ( actionMark > actionMarkPreRun) {
+				System.out.println("END ACTION: "  + actionMarkPreRun + " OF " + workflow.getActions().size());
+				System.out.println();
+				failuresForAction=0;
+			}
+			// Se actionMark == actionMarkPreRun alora la action ha fallito
+			else {
+				
+				System.out.println("Action Failed or NOT Finished");				
+				System.out.println("REQUEST INPUT TYPE TO PUT...");
+				
+				// TODO leggo che devo caricare QUALCOSA nel MessageStore
+				// questo QUALCOSA dovrebbe essere indicato in una struttura temporanea da interrogare
+				
+				System.out.println();
+				
+				failuresForAction++;
+				
+			}
+			
+
+
+			// 1. le azioni da eseguire non sono finite
+			System.out.println("jjj:" + report.getState());
+			// 2. l'utente  decide di sospendere la sessione di test
+			System.out.println(currentSession.getState());
+			// 3. l'utente  decide di annullare la sessione di test
+			// 4. raggiungo il numero massimo di fallimenti per la stessa action
+			System.out.println("COUNTER: " + failuresForAction);
+			if ( 	report.getState().equals(Report.getFinalState()) ||
+					currentSession.getState().equals(Session.getSuspendedState()) ||
+					currentSession.getState().equals(Session.getAbortedState()) ||
+					(failuresForAction == Constants.COUNTER_MAX)	)	
+				running = false;
+			else
+				currentAction = workflow.getActions().get(actionMark-1);	
+			
 			System.out.println();
-			
-			// REFRESH Workflow lato client
-			selectedTestPlan = testPlanController.readTestPlan(currentSession.getTestPlanId());	
-			workflow = selectedTestPlan.getWorkflow();
-			
-			
 		}
+		
+		Assert.assertTrue(failuresForAction < Constants.COUNTER_MAX);
+		
+		// TODO
+		// la gestione del counter è necessaria solo se non c'è interazione con l'utente
+		// oppure se l'interazione è automatica
+		// in ogni caso un controllo di questo tipo per evitare loop infiniti dovrebbe esserci
+		
 		
 		// TODO quando si chiude la sessione di test?
 		// TODO closeSession
@@ -453,7 +508,7 @@ public class SessionManagerImplITCase {
 		// TODO report.setState(Report.getFinalState());
 		
 		
-		Report report = sessionController.getReport(sessionId);
+		report = sessionController.getReport(sessionId);
 		Assert.assertTrue(report.getState().equals(Report.getFinalState()));
 		System.out.println("REPORT");
 		System.out.println(report.getState());
