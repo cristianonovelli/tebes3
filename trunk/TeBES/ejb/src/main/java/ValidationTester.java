@@ -1,3 +1,8 @@
+import schemavalidator.SchemaMainValidator;
+import schemavalidator.SchemaMainValidatorImpl;
+import validator.ErrorMessage;
+import exception.LocalFileNotFoundException;
+import exception.SchemaParserException;
 
 
 public class ValidationTester {
@@ -7,7 +12,7 @@ public class ValidationTester {
 	 */
 	public static void main(String[] args) {
 		
-	/*	System.out.println("1...");
+		System.out.println("1...");
 		String fullXmlFileName = "TeBES_Artifacts/users/1/docs/ubl-invoice.xml";
 		//String xsdFile = "http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd";
 		String xsdFile = "http://winter.bologna.enea.it/peppol_schema_rep/xsd/maindoc/UBL-Invoice-2.0.xsd";
@@ -54,7 +59,7 @@ public class ValidationTester {
 		else
 			System.out.println("Test no");
 
-		*/
+		
 	}
 
 }
