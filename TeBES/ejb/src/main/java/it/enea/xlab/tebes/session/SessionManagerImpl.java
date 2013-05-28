@@ -7,7 +7,10 @@ import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.report.ReportDOM;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
+import it.enea.xlab.tebes.testplan.TestPlanDOM;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
@@ -22,6 +25,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.w3c.dom.Element;
+import org.xlab.utilities.XLabDates;
+
 
 @Stateless
 @Interceptors({Profile.class})
@@ -33,6 +39,10 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	
 	@EJB
 	private ReportManagerRemote reportManager; 
+
+	
+	@EJB
+	private UserManagerRemote userManager; 
 	
 	@EJB
 	private TestPlanManagerRemote testPlanManager; 
@@ -48,31 +58,90 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	 * @return	sessionId > 0
 	 * 			-1 one or more ID isn't a valid identifier
 	 * 			-2 an unexpected exception happened
+	 * 			-3 report null
+	 * 			-4 reportDOM null
 	 */
 	public Long run(Long userId, Long sutId, Long testPlanId) {
 		
-		
-		if ( (userId.intValue()>0) && (userId.intValue()>0) && (userId.intValue()>0) ) {
+		User user = userManager.readUser(userId);
+
+		if ( (user != null) && (sutId.intValue()>0) && (testPlanId.intValue()>0) ) {
 		
 
 			
 			try {
+
+				// CREATE Session
+				Session session = new Session(userId, sutId, testPlanId);
+				session.setStarteDateTime(XLabDates.getCurrentUTC());
+				session.setLastDateTime(XLabDates.getCurrentUTC());
+				
+				Long sessionId = this.createSession(session);
+				session = this.readSession(sessionId);
+				
 				
 				// CREATE Report (DRAFT state by default)
-				Report report = new Report();
-
-				Long reportId = reportManager.createReport(report);				
-				report = reportManager.readReport(reportId);
-
+				Report report = reportManager.createReportForNewSession(session);				
+				if (report == null)
+					return new Long(-3);
 				
-				// CREATE Session
-				Session currentSession = new Session(userId, sutId, testPlanId);
-				Long sessionId = this.createSession(currentSession);
-				currentSession = this.readSession(sessionId);
 				
+				// When a Report empty is created
+				// the system set up first information
+				// and adjust the XML form
+				String xmlReportPathName = reportManager.getSystemXMLReportAbsPathName();
+				
+				ReportDOM reportDOM = null;
+				
+				try {
+
+					// Get ReportDOM
+					reportDOM = new ReportDOM(xmlReportPathName);			
+					Element rootElement = reportDOM.root;
+					
+					if ( reportDOM.root != null ) {
+						
+						// Aggiorno XML Root
+						reportDOM.setIdAttribute(rootElement, report.getId().toString());
+						reportDOM.setNameAttribute(rootElement, report.getName());
+						reportDOM.setDescriptionAttribute(rootElement, report.getDescription());
+						reportDOM.setSessionIDAttribute(rootElement, report.getSessionID().toString());
+						reportDOM.setStateAttribute(rootElement, report.getState());
+						reportDOM.setDatetimeAttribute(rootElement, report.getDatetime());
+						
+						// Aggiorno XML Session
+						reportDOM.setIdAttribute(reportDOM.getSessionElement(), report.getSessionID().toString());						
+						reportDOM.setSessionStartDateTime(session.getStarteDateTime());
+						reportDOM.setSessionLastDateTime(session.getLastDateTime());
+						
+						// Aggiorno XML User
+						reportDOM.setIdAttribute(reportDOM.getUserElement(), session.getUserId().toString());
+						reportDOM.setUserName(user.getName());
+						reportDOM.setUserName(user.getSurname());
+
+						// sut
+						// testplan
+						
+						
+						
+						
+						
+						report.setXml(reportDOM.getXMLString());
+						reportManager.updateReport(report);
+					}
+					else
+						System.out.println("XReport: " + reportDOM.getReport().getErrorMessage());						
+					
+				} catch (Exception e) {
+					
+					e.printStackTrace();
+				} 
+
+				if (reportDOM == null)
+					return new Long(-4);
 				
 				// ADD Report To Session
-				this.addReportToSession(report.getId(), currentSession.getId());
+				this.addReportToSession(report.getId(), session.getId());
 
 				
 				return sessionId;

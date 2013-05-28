@@ -16,16 +16,26 @@ public class Report implements Serializable {
 	private static final String DRAFT_STATE = "draft";
 	private static final String FINAL_STATE = "final";
 	
+	private static final String REPORTNAME_PREFIX = "TR-";
+	private static final String REPORTDESCRIPTION = "Report ";
+	
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
 	private Long id;
-
+	private String name;
+	private String description;
+	private Long sessionID;
+	private String datetime;
 	private String state;
 
+	
 	@Column(length=99999) 
 	private String fullDescription;
-	
+
+	@Column(length=99999) 
+	private String xml;
 	
 	private boolean partialResultSuccessfully;
 	private boolean finalResultSuccessfully;
@@ -106,6 +116,66 @@ public class Report implements Serializable {
 
 	public void setFinalResultSuccessfully(boolean finalResultSuccessfully) {
 		this.finalResultSuccessfully = finalResultSuccessfully;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getDescription() {
+		return description;
+	}
+
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+
+	public Long getSessionID() {
+		return sessionID;
+	}
+
+
+	public void setSessionID(Long sessionID) {
+		this.sessionID = sessionID;
+	}
+
+
+	public String getDatetime() {
+		return datetime;
+	}
+
+
+	public void setDatetime(String datetime) {
+		this.datetime = datetime;
+	}
+
+
+	public String getXml() {
+		return xml;
+	}
+
+
+	public void setXml(String xml) {
+		this.xml = xml;
+	}
+
+
+	public static String getReportnamePrefix() {
+		return REPORTNAME_PREFIX;
+	}
+
+
+	public static String getReportdescription() {
+		return REPORTDESCRIPTION;
 	}
 
 	

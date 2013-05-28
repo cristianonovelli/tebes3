@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tebes:Report xmlns:tebes="http://www.ubl-italia.org/TeBES"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.ubl-italia.org/TeBES/xmlschemas/TAML http://www.ubl-italia.org/TeBES/xmlschemas/TAML/testAssertionMarkupLanguage.xsd"
+	id="0"
+	name="TR-0"
+	description="Report TR-0"
+	sessionID="0"
+	datetime="2012-06-20T18:43:00"
+    state="draft">
+
+    <tebes:Session id="0">
+        <tebes:State>working</tebes:State>
+        <tebes:StartDateTime>2012-06-16T18:43:00</tebes:StartDateTime>
+        <tebes:LastDateTime>2012-06-18T18:44:00</tebes:LastDateTime>
+        <tebes:User id="0">
+            <tebes:Name>name</tebes:Name>
+            <tebes:Surname>surname</tebes:Surname>
+            <tebes:SUTList>
+                <tebes:SUT id="0">
+                    <tebes:SUTtype>xmldocument</tebes:SUTtype>
+                    <tebes:Modality type="upload" />
+                </tebes:SUT>
+            </tebes:SUTList>
+        </tebes:User>
+        <tebes:TestPlan id="0" version="1">
+            <tebes:DateTime>2012-06-13T18:43:00</tebes:DateTime>
+            <tebes:Name>First Test Plan</tebes:Name>
+            <tebes:Description/>
+        </tebes:TestPlan>
+    </tebes:Session>
+
+    <tebes:TestPlanExecution>
+        <tebes:TestActionList />
+    </tebes:TestPlanExecution>
+
+</tebes:Report>

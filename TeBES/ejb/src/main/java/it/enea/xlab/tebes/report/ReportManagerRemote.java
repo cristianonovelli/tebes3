@@ -1,6 +1,7 @@
 package it.enea.xlab.tebes.report;
 
 import it.enea.xlab.tebes.entity.Report;
+import it.enea.xlab.tebes.entity.Session;
 
 import javax.ejb.Remote;
 
@@ -12,5 +13,9 @@ public interface ReportManagerRemote {
 	Report readReport(Long reportId);
 
 	boolean updateReport(Report report);
+	
+	Report createReportForNewSession(Session session);
+
+	String getSystemXMLReportAbsPathName();
 	
 }

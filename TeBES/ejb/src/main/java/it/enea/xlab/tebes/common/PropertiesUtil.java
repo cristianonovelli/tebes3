@@ -144,6 +144,37 @@ public class PropertiesUtil {
 		
 		return result;
 	}
+
 	
+	/**
+	 * Get Report Dir
+	 */
+	public static String getSuperUserReportDir() {
+		
+		String absUser1Dir = PropertiesUtil.getSuperUserDir();
+		String reportsDir = getConfiguration().getString("reports.dir");
+		
+		String result = absUser1Dir.concat(reportsDir);
+		
+		if (!result.endsWith(SLASH))
+			result = result.concat(SLASH);
+		
+		return result;
+	}	
+	
+	/**
+	 * Get Report PathName
+	 */
+	public static String getSuperUserReportAbsPathName() {
+		
+		
+		String result = PropertiesUtil.getSuperUserReportDir();	
+		
+		String reportFileName = getConfiguration().getString("superuser.report");
+		
+		result = result.concat(reportFileName);
+		
+		return result;
+	}
 }
 

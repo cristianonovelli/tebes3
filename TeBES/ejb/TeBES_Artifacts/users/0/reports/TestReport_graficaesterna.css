@@ -1,0 +1,135 @@
+/*
+background-color:lightgrey;   sfondo dello spazio div grigio chiaro
+color:brown;                  scelta del colore del testo (marrone)
+float:left;                   mettere lo spazio div corrente di galleggiare sul div che lo ospita allineato a sinistra (o a destra)
+font-family:verdana;          scelta del carattere
+font-size:24px;               dimensione in pixel del carattere del testo
+font-weight:bold;             scelta dello stile (grassetto)
+height:30px;                  altezza dello spazio div in pixel rispetto allo schermo (si può anche fornire in %)
+line-height:30px;             scelta di avere spazio per linea di testo (non carattere che sarà font-size) alta 30 pixel (altezza pari ad altezza div pare essere UNICO modo per centrare verticalmente testo in div
+padding:20px;                 cornice del contenuto rispetto allo spazio div di 20px su ogni bordo
+paddign-left:20px;            cornice come sopra ma soltanto lato sinistro (idem per destra,alto,basso)
+text-align:left;              allineamento a sinistra del testo
+width:100%;                   larghezza dello spazio div in percentuale sullo schermo (si può anche fornire in px)
+
+
+*/
+body {
+/*color:black;*/
+/*background-color:white;*/
+font-family:arial;
+font-size:14px;
+white-space:nowrap;
+width:100%;
+
+}
+
+.TP_maintitle{
+font-weight:bold;
+font-size:24px;
+background-color:#9BFF8B;
+padding-left:20px;
+}
+
+.TP_space{
+height:10px;
+}
+
+.TP_maintable{
+width:80%;
+border:1px solid black;
+border-spacing:2px;
+font-size:16px;
+}
+
+.TP_maintableleft{
+width:30%;
+border:1px solid black;
+text-align:center;
+font-family:Comic Sans MS;
+font-weight:bold;
+vertical-align:middle;
+}
+
+.TP_maintableright{
+padding-left:20px;
+border:1px solid black;
+}
+
+.TP_listtitle{
+background-color:#9BFF8B;
+font-size:24px;
+font-weight:bold;
+text-align:left;
+padding-left:20px;
+}
+
+.TP_listitem{
+background-color:lightgrey;
+height:22px;
+text-align:left;
+
+}
+
+.TP_listtable{
+height:auto;
+border:1px solid black;
+border-spacing:2px;
+width:100%;
+
+}
+
+.TP_listtableleft{
+width:45%;
+text-align:center;
+border:1px solid black;
+font-weight:bold;
+line-height:25px;
+vertical-align:middle;
+
+}
+
+.TP_listtableright{
+border:1px solid black;
+line-height:25px;
+padding-left:20px;
+
+}
+
+.TP_listtableright_more{
+width:100%;
+}
+
+.TP_sublisttableleft{
+width:30%;
+text-align:right;
+font-weight:bold;
+line-height:25px;
+vertical-align:middle;
+margin-left:20px;
+
+}
+
+.TP_sublisttableright{
+text-align:left;
+width:30%;
+}
+
+.TP_infoUserSUT{
+height:50px;
+line-height:50px;
+font-family:Courier;
+text-align:center;
+border:1px solid black;
+}
+
+.TP_infoDescription{
+height:50px;
+line-height:50px;
+font-family:Courier;
+text-align:center;
+border:1px solid black;
+}
+
+
+

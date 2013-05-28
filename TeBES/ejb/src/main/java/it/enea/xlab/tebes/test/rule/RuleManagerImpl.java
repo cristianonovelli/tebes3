@@ -89,19 +89,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		System.out.println("xmlSchemaValidation A:" + xmlString);
 		System.out.println("xmlSchemaValidation B:" + xsdString);
 		
-		try {
-			JXLabDOM xml = new JXLabDOM(xmlString, xsdString, false);
-			System.out.println("post JXLabDOM");
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (XLabDOMException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 		
 		
 		/*SchemaMainValidator smv = new SchemaMainValidatorImpl();
