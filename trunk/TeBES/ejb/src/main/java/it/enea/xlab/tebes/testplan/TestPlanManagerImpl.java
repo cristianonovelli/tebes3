@@ -326,20 +326,20 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	public TestPlan getTestPlanFromXML(String testPlanAbsFileName) {
 		
 		TestPlan testPlan = null;	
-		System.out.println("azaza3: " + testPlanAbsFileName);
+		//System.out.println("azaza3: " + testPlanAbsFileName);
 		try {
 
 			TestPlanDOM testPlanDOM = new TestPlanDOM(testPlanAbsFileName);			
-			System.out.println("2");	 
+			//System.out.println("2");	 
 			if ( testPlanDOM.root == null ) {
 				System.out.println("XReport: " + testPlanDOM.getReport().getErrorMessage());	
 			}
 			else {
-				System.out.println("3");
+				//System.out.println("3");
 				ActionWorkflow workflow = new ActionWorkflow(this.getActionsFromXML(testPlanDOM));
 				
-				System.out.println("4:" + testPlanDOM.getXMLString());
-				System.out.println("4:" + testPlanDOM.getRootDatetimeAttribute());
+				//System.out.println("4:" + testPlanDOM.getXMLString());
+				//System.out.println("4:" + testPlanDOM.getRootDatetimeAttribute());
 				testPlan = new TestPlan(testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, workflow);
 			}
 		} catch (Exception e) {

@@ -346,6 +346,7 @@ public class SessionManagerImplITCase {
 		Assert.assertTrue(currentSession.getId().intValue() > 0);
 			
 		// TODO: PRE-EXECUTION
+		//  IL SISTEMA EFFETTUA UNA VERIFICA, C'E' UN SUT COMPATIBILE PER OGNI ACTION? SE NO, SI VA NEL SUT MANAGER
 		// Devo collegare un SUT alle action
 		// SE C'è SOLO UN SUT DI TIPO DOCUMENT, OK
 		// SE CE NE SONO N COME LI COLLEGO ALLE ACTION?
@@ -431,10 +432,11 @@ public class SessionManagerImplITCase {
 			
 					
 			report = currentSession.getReport();
-
+			Assert.assertTrue(report.getName().contains(Report.getReportnamePrefix()));			
+			Assert.assertTrue(report.getXml().getBytes().length > 1000);
 			
 			
-			
+			System.out.println(report.getXml());
 			
 			
 			// TODO se lo stato della action corrente è working... interrogo la strttura dati
@@ -466,6 +468,7 @@ public class SessionManagerImplITCase {
 			System.out.println(currentSession.getState());
 			// 3. l'utente  decide di annullare la sessione di test
 			// 4. raggiungo il numero massimo di fallimenti per la stessa action
+			
 			System.out.println("COUNTER: " + failuresForAction);
 			if ( 	report.getState().equals(Report.getFinalState()) ||
 					currentSession.getState().equals(Session.getSuspendedState()) ||

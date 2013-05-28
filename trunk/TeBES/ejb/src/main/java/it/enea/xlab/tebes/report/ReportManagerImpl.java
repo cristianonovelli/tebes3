@@ -2,7 +2,9 @@ package it.enea.xlab.tebes.report;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Report;
+import it.enea.xlab.tebes.entity.Session;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,12 +15,15 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+import org.xlab.file.XLabFileManager;
+import org.xlab.utilities.XLabDates;
 
 @Stateless
 @Interceptors({Profile.class})
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ReportManagerImpl implements ReportManagerRemote {
 
+	
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
@@ -42,7 +47,6 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			return new Long(-1);
 		}
 	}
-
 	
 	/**
 	 * READ Report
@@ -62,7 +66,9 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		return report;
 	}
 
-
+	/**
+	 * UPDATE Report
+	 */
 	public boolean updateReport(Report report) {
 		
 		boolean result = false;
@@ -87,6 +93,44 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		return result;
 	}
 
+	
+	
+	public Report createReportForNewSession(Session session) {
+		
+		// Create Report by JPA
+		Report report = new Report();
+		Long reportId = this.createReport(report);				
+		report = this.readReport(reportId);
+		
+		// Define report name as "TR-" + [reportId]
+		report.setName(Report.getReportnamePrefix().concat(reportId.toString()));
+		
+		// Define report description as "Report " + [reportName]
+		report.setDescription(Report.getReportdescription().concat(report.getName()));
+		
+		// Set sessionID
+		report.setSessionID(session.getId());
+		
+		// Get and Set current Datetime
+		report.setDatetime(XLabDates.getCurrentUTC());
+		
+		boolean updating = this.updateReport(report);
+		
+		if (updating) 
+			report = this.readReport(reportId);			
+		else
+			report = null;
+		
+		return report;
+	}
+
+	
+	
+	public String getSystemXMLReportAbsPathName() {
+		
+		return PropertiesUtil.getSuperUserReportAbsPathName();	
+	}
+	
 }
 
 
