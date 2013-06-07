@@ -27,7 +27,7 @@ import javax.persistence.PersistenceContext;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ActionManagerImpl implements ActionManagerRemote {
 
-	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
+	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT) 
 	private EntityManager eM; 
 	
 	@EJB

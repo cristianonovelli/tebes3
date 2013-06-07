@@ -66,6 +66,7 @@
 					<classesClassifier>classes</classesClassifier>
 				</configuration>
 			</plugin>
+			
 		</plugins>
 	</build>
 

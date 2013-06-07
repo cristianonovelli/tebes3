@@ -8,6 +8,7 @@ import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
+import it.enea.xlab.tebes.validation.ValidationManagerRemote;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -25,12 +26,16 @@ public class JNDIServices {
 	private static SessionManagerRemote sessionManager = null;
 	private static TestPlanManagerRemote testPlanManager = null;
 	private static ActionManagerRemote actionManager = null;
+	private static ValidationManagerRemote validationManager = null;
 	
 	private static String UserManagerServiceName = "TeBES-ear/UserManagerImpl/remote";
 	private static String SUTManagerServiceName = "TeBES-ear/SUTManagerImpl/remote";
 	private static String SessionManagerServiceName = "TeBES-ear/SessionManagerImpl/remote";
 	private static String TestPlanManagerServiceName = "TeBES-ear/TestPlanManagerImpl/remote";
 	private static String ActionManagerServiceName = "TeBES-ear/ActionManagerImpl/remote";
+	
+	// ESTERNO
+	private static String ValidationManagerServiceName = "Validation-ear/ValidationManagerImpl/remote";
 	
 	private static final Map<String, Object> EJB_CACHE = new HashMap<String, Object>();
 
@@ -112,5 +117,23 @@ public class JNDIServices {
 		return actionManager;
 	}
 		
+	public static ValidationManagerRemote getValidationManagerService() throws NamingException {
+		
+		if (validationManager == null) {
+
+			System.out.println("ctx1");
+				InitialContext ctx = new InitialContext();		
+				System.out.println("ctx2");
+				try {
+					validationManager = (ValidationManagerRemote) ctx.lookup(ValidationManagerServiceName);
+				} catch (Exception e) {
+					System.out.println("ctx4");
+					e.printStackTrace();
+				}
+				System.out.println("ctx3");
+		}		
+		
+		return validationManager;
+	}
 	
 }

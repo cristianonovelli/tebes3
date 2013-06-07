@@ -35,7 +35,7 @@ public class TestPlan implements Serializable {
 	private String datetime;
 	private String state;
 	private String location;
-		
+	private String description;	
 
 	/**
 	 * USER del TestPlan
@@ -55,17 +55,20 @@ public class TestPlan implements Serializable {
 	@OneToOne(cascade=CascadeType.ALL)
 	ActionWorkflow workflow;
 
+	@OneToOne(cascade=CascadeType.MERGE, fetch = FetchType.LAZY)
+	TestPlanXML testplanxml;
 
 	public TestPlan() {
 
 	}
 	
-	public TestPlan(String xml, String datetime, String state, String location, ActionWorkflow workflow) {
+	public TestPlan(String xml, String datetime, String state, String location, String description, ActionWorkflow workflow) {
 
 		this.setXml(xml);
 		this.setDatetime(datetime);
 		this.setState(state);
-		this.setLocation(location);		
+		this.setLocation(location);
+		this.setDescription(description);		
 		this.setWorkflow(workflow);
 	}
 	
@@ -138,6 +141,14 @@ public class TestPlan implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}	
 	
 

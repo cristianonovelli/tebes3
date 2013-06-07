@@ -3,6 +3,7 @@ package it.enea.xlab.tebes.session;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.controllers.session.SessionManagerController;
+import it.enea.xlab.tebes.controllers.session.ValidationController;
 import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
 import it.enea.xlab.tebes.controllers.testplan.TestPlanManagerController;
 import it.enea.xlab.tebes.controllers.users.UserAdminController;
@@ -18,7 +19,6 @@ import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.xlab.xml.XLabDOM;
+
 
 public class SessionManagerImplITCase {
 
@@ -96,11 +96,11 @@ public class SessionManagerImplITCase {
 		Long superUserId = userAdminController.createUser(superUser, role4_superuser);
 		
 		// Create 2 temporary Users
-		User currentUser = new User("Temp1", "User1", Constants.USER1_EMAIL, Constants.USER1_PASSWORD);	
+		User currentUser = new User(Constants.USER1_NAME, Constants.USER1_SURNAME, Constants.USER1_EMAIL, Constants.USER1_PASSWORD);	
 		Long idTempUser1 = userProfileController.registration(currentUser, role1_standard);
 		Assert.assertNotNull(currentUser);
 		Assert.assertTrue(idTempUser1.intValue()>0);
-		User otherUser = new User("Temp2", "User2", Constants.USER2_EMAIL1, Constants.USER2_EMAIL1);
+		User otherUser = new User(Constants.USER2_NAME, Constants.USER2_SURNAME, Constants.USER2_EMAIL1, Constants.USER2_EMAIL1);
 		Long idTempUser2 = userProfileController.registration(otherUser, role1_standard);
 		Assert.assertNotNull(currentUser);
 		Assert.assertTrue(idTempUser2.intValue()>0);
@@ -141,7 +141,7 @@ public class SessionManagerImplITCase {
 		// CREATE TestPlan
 		// TODO la persistenza di questo TestPlan con questo workflow, non gli piace
 		// dovrei farne la persistenza senza e poi attaccarlo!
-		TestPlan tp = new TestPlan("xml", "datetime", "state", "location", wf);
+		TestPlan tp = new TestPlan("xml", "datetime", "state", "location", "description", wf);
 		Long tpid = testPlanController.createTestPlan(tp, currentUserId);
 		Assert.assertTrue(tpid.intValue()>0);			
 		
@@ -259,11 +259,16 @@ public class SessionManagerImplITCase {
 	@Test
 	public void test2_autoCreation() {
 		
+		// Login SuperUser
 		String superUserEmail = PropertiesUtil.getUser1Email();
 		String superUserPassword = PropertiesUtil.getUser1Password();
 		User superUser = userProfileController.login(superUserEmail, superUserPassword);
 		Long superUserId = superUser.getId();
 		superUser = userAdminController.readUser(superUserId);
+		
+		// Get Test Plan List (list of name files)
+		// TODO sarebbe meglio avere una tabella (id,description,location)
+		// TODO sarebbe ANCORA MEGLIO avere una tabella XML a parte e recuperare la lista dei TestPlan
 		Vector<String> systemTestPlanList = testPlanController.getSystemXMLTestPlanList();
 		Assert.assertTrue(systemTestPlanList.size() == 2);
 		TestPlan testPlan = null;
@@ -271,6 +276,8 @@ public class SessionManagerImplITCase {
 		String testPlanAbsPathName;
 		String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlanDir();
 		
+		// Per ogni nome di file
+		// TODO per ogni id
 		for (int i=0; i<systemTestPlanList.size();i++) {
 			
 			// GET TestPlan structure from XML
@@ -526,6 +533,26 @@ public class SessionManagerImplITCase {
 		
 	}
 		
+	
+	//@Test
+	public void test3_validation() throws Exception {
+
+		ValidationController validationManagerController;
+		validationManagerController = (ValidationController) WebControllersUtilities.getManager(ValidationController.CONTROLLER_NAME);
+		Assert.assertNotNull(validationManagerController);	
+		
+		String xmlRelPathFileName = "TeBES_Artifacts/users/1/docs/ubl-invoice.xml";
+		String xsdURL = "http://winter.bologna.enea.it/peppol_schema_rep/xsd/maindoc/UBL-Invoice-2.0.xsd";
+		
+		//ErrorMessage emList[] = null;
+
+		// PROVAAAA
+		//ValidationManagerRemote validationManagerService = JNDIServices.getValidationManagerService(); 	
+		
+		System.out.println("oioioioi:" + validationManagerController.nothing().toString());
+		
+			
+	}
 
 	@AfterClass
 	public static void after_testPlanManager() throws Exception {

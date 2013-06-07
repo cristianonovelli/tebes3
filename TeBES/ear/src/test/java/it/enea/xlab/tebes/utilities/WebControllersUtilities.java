@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.utilities;
 
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.controllers.session.SessionManagerController;
+import it.enea.xlab.tebes.controllers.session.ValidationController;
 import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
 import it.enea.xlab.tebes.controllers.testplan.TestPlanManagerController;
 import it.enea.xlab.tebes.controllers.users.UserAdminController;
@@ -30,7 +31,9 @@ public static WebController getManager(String nome)  {
 
 		if (nome.equals(SessionManagerController.CONTROLLER_NAME))
 			controller = new SessionManagerController();
-		
+
+		if (nome.equals(ValidationController.CONTROLLER_NAME)) 
+			controller = new ValidationController();	
 		
 		int guard = 0;
 		

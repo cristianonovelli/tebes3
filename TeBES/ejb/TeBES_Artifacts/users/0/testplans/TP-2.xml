@@ -7,7 +7,8 @@
 	id="2"
 	userID="0" 
 	datetime="2012-07-14T18:43:00Z" 
-	state="draft">
+	state="draft"
+	description="Test Plan to perform Italian INTERCENT-ER UBL Invoice Validation">
 	
 	<tebes:TestActionList>
 	

@@ -31,11 +31,16 @@ public class Constants {
 	// User1
 	public static final String USER1_EMAIL = "angelo.frascella@enea.it";
 	public static final String USER1_PASSWORD = "xangelo";
+	public static final String USER1_NAME = "Angelo";
+	public static final String USER1_SURNAME = "Frascella";
+	
 	// User2
 	public static final String USER2_EMAIL1 = "arianna.brutti@enea.it";
 	public static final String USER2_EMAIL2 = "arianna2@enea.it";	
 	public static final String USER2_PASSWORD1 = "xpiero";	
 	public static final String USER2_PASSWORD2 = "xarianna";	
+	public static final String USER2_NAME = "Arianna";
+	public static final String USER2_SURNAME = "Brutti";
 
 	// SUT description
 	public static final String SUT_DESCRIPTION = "Static SUT description";

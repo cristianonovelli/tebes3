@@ -5,11 +5,13 @@ import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Report;
+import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.report.ReportDOM;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
+import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanDOM;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
@@ -43,6 +45,9 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	
 	@EJB
 	private UserManagerRemote userManager; 
+
+	@EJB
+	private SUTManagerRemote sutManager; 
 	
 	@EJB
 	private TestPlanManagerRemote testPlanManager; 
@@ -64,8 +69,10 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	public Long run(Long userId, Long sutId, Long testPlanId) {
 		
 		User user = userManager.readUser(userId);
+		SUT sut = sutManager.readSUT(sutId);
+		TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);
 
-		if ( (user != null) && (sutId.intValue()>0) && (testPlanId.intValue()>0) ) {
+		if ( (user != null) && (sut != null) && (testPlan != null) ) {
 		
 
 			
@@ -80,7 +87,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				session = this.readSession(sessionId);
 				
 				
-				// CREATE Report (DRAFT state by default)
+				// CREATE Report Structure (DRAFT state by default)
 				Report report = reportManager.createReportForNewSession(session);				
 				if (report == null)
 					return new Long(-3);
@@ -88,7 +95,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				
 				// When a Report empty is created
 				// the system set up first information
-				// and adjust the XML form
+				// and adjust the XML
 				String xmlReportPathName = reportManager.getSystemXMLReportAbsPathName();
 				
 				ReportDOM reportDOM = null;
@@ -117,15 +124,31 @@ public class SessionManagerImpl implements SessionManagerRemote {
 						// Aggiorno XML User
 						reportDOM.setIdAttribute(reportDOM.getUserElement(), session.getUserId().toString());
 						reportDOM.setUserName(user.getName());
-						reportDOM.setUserName(user.getSurname());
+						reportDOM.setUserSurname(user.getSurname());
 
-						// sut
-						// testplan
+						// Aggiorno XML SUT
+						reportDOM.setSUTId(session.getSutId());
+						reportDOM.setSUTName(sut.getName());
+						reportDOM.setSUTType(sut.getType());
+						reportDOM.setSUTLanguage(sut.getLanguage());
+						reportDOM.setSUTReference(sut.getReference());
+						reportDOM.setSUTInteraction(sut.getInteraction().getType());						
+						reportDOM.setSUTDescription(sut.getDescription());
+								
+						// Aggiorno XML TestPlan
+						reportDOM.setTestPlanId(session.getTestPlanId());
+						reportDOM.setTestPlanDatetime(testPlan.getDatetime());
+						reportDOM.setTestPlanState(testPlan.getState());
 						
+						// TODO location deve contenere la posizione (relativa o assoluta del TP utente)
+						// questo vuol dire che deve essere stato salvato da qualche parte nel momento dell'importazione
+						// TODO import su file, creazione cartella utente ecc.
+						reportDOM.setTestPlanReference(testPlan.getLocation());
+						//reportDOM.setTestPlanReference("TEMP");
 						
+						reportDOM.setTestPlanDescription(testPlan.getDescription());
 						
-						
-						
+
 						report.setXml(reportDOM.getXMLString());
 						reportManager.updateReport(report);
 					}

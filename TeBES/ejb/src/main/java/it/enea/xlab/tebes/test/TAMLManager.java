@@ -41,7 +41,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	public TAMLManager() {
 
 	}
-
+ 
 	
 	/**
 	 * Nel TAML Manager la builTAF gestisce l'action di tipo TAML

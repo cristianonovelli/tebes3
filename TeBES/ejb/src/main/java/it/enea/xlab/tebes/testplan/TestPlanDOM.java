@@ -93,9 +93,17 @@ public class TestPlanDOM extends JXLabDOM {
 		//this.getUserIDAttribute(this.root);
 	}
 	
+	public String getRootDescriptionAttribute() {
+		
+		return this.getDescriptionAttribute(this.root);
+	}
+	
 	////////////////////////////////////////
 	//// Methods to get node ATTRIBUTES ////
 	////////////////////////////////////////
+
+
+
 
 	public String getIdAttribute(Node node) {
 		
@@ -120,6 +128,11 @@ public class TestPlanDOM extends JXLabDOM {
 	public String getStateAttribute(Node node) {
 		
 		return this.getNodeAttribute(node, "state");
+	}
+	
+	private String getDescriptionAttribute(Node node) {
+		
+		return this.getNodeAttribute(node, "description");
 	}
 	
 	public String getNumberAttribute(Node node) {
