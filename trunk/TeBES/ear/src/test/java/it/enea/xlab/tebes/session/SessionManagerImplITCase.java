@@ -16,6 +16,7 @@ import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.TestPlanXML;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
@@ -138,10 +139,12 @@ public class SessionManagerImplITCase {
 		wf.getActions().add(a);
 		wf.getActions().add(a2);
 		
+		TestPlanXML tpXML = new TestPlanXML("xml", "location");
+		
 		// CREATE TestPlan
 		// TODO la persistenza di questo TestPlan con questo workflow, non gli piace
 		// dovrei farne la persistenza senza e poi attaccarlo!
-		TestPlan tp = new TestPlan("xml", "datetime", "state", "location", "description", wf);
+		TestPlan tp = new TestPlan("xml", "datetime", "state", "location", "description", wf, tpXML);
 		Long tpid = testPlanController.createTestPlan(tp, currentUserId);
 		Assert.assertTrue(tpid.intValue()>0);			
 		

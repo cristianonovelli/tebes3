@@ -3,7 +3,6 @@ package it.enea.xlab.tebes.entity;
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -24,8 +23,8 @@ public class TestPlan implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(length=9999) 
-	private String xml;
+	//@Column(length=9999) 
+	//private String xml;
 	
 	// TODO avendo collegato tramite JPA questa classe a user
 	// si è venuto a creare il campo user_id e quindi questo non ha motivo di esistere
@@ -55,28 +54,26 @@ public class TestPlan implements Serializable {
 	@OneToOne(cascade=CascadeType.ALL)
 	ActionWorkflow workflow;
 
-	@OneToOne(cascade=CascadeType.MERGE, fetch = FetchType.LAZY)
+	@OneToOne(cascade=CascadeType.ALL)
 	TestPlanXML testplanxml;
 
 	public TestPlan() {
 
 	}
 	
-	public TestPlan(String xml, String datetime, String state, String location, String description, ActionWorkflow workflow) {
+	public TestPlan(String xml, String datetime, String state, String location, String description, ActionWorkflow workflow, TestPlanXML testPlanXML) {
 
-		this.setXml(xml);
+		//this.setXml(xml);
 		this.setDatetime(datetime);
 		this.setState(state);
 		this.setLocation(location);
 		this.setDescription(description);		
 		this.setWorkflow(workflow);
+		this.setTestplanxml(testPlanXML);
 	}
 	
 
-	public TestPlan(String xml) {
 
-		this.xml = xml;
-	}
 
 	
 	public Long getId() {
@@ -87,13 +84,7 @@ public class TestPlan implements Serializable {
 		this.id = id;
 	}
 
-	public String getXml() {
-		return xml;
-	}
 
-	public void setXml(String xml) {
-		this.xml = xml;
-	}
 
 	public String getDatetime() {
 		return datetime;
@@ -149,6 +140,14 @@ public class TestPlan implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public TestPlanXML getTestplanxml() {
+		return testplanxml;
+	}
+
+	public void setTestplanxml(TestPlanXML testplanxml) {
+		this.testplanxml = testplanxml;
 	}	
 	
 

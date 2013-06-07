@@ -7,7 +7,9 @@ import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Interaction;
 import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.TestPlanXML;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
@@ -80,7 +82,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			if ( testPlan.getId() == null ) {
 				
 				// Creo il TestPlan SENZA il Workflow
-				testPlan2 = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, testPlan.getLocation(), testPlan.getDescription(), null);
+				testPlan2 = new TestPlan(null, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), testPlan.getDescription(), null, null);
 				eM.persist(testPlan2);	
 				
 				// TODO CREATE Workflow
@@ -95,10 +97,18 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				for (int i=0; i<actionList.size(); i++) 					
 					actionManager.createAction(actionList.get(i), wf2Id);
 				
+				// CREATE TestPlanXML
+				TestPlanXML tpXML = testPlan.getTestplanxml();
+				TestPlanXML tpXML2 = new TestPlanXML();
+				tpXML2.setAbsFileName(tpXML.getAbsFileName());
+				tpXML2.setXml(tpXML.getXml());
+				Long tpXML2Id = this.createTestPlanXML(tpXML2);
+				tpXML2 = this.readTestPlanXML(tpXML2Id);
 				
-				
-				// ADD Workflow to TestPlan
+				// ADD Workflow and TestPlanXML to TestPlan
 				this.addWorkflowToTestPlan(wf2Id, testPlan2.getId());
+				this.addTestPlanXMLToTestPlan(tpXML2Id, testPlan2.getId());
+				
 				
 				// ADD TestPlan to User
 				this.addTestPlanToUser(testPlan2.getId(), userId);
@@ -120,6 +130,44 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 	
 	
+	private void addTestPlanXMLToTestPlan(Long testPlanXMLId, Long testPlanId) {
+
+		TestPlanXML tpXML = this.readTestPlanXML(testPlanXMLId);
+		TestPlan testPlan = this.readTestPlan(testPlanId);
+
+		//workflow.addToTestPlan(testPlan);
+		testPlan.setTestplanxml(tpXML);
+		
+		eM.persist(testPlan);
+		
+		return;
+	}
+
+	
+
+
+
+
+
+
+	private TestPlanXML readTestPlanXML(Long id) {
+		
+		return eM.find(TestPlanXML.class, id);
+	}
+
+
+	private Long createTestPlanXML(TestPlanXML testPlanXML) {
+		
+		try {
+			eM.persist(testPlanXML);
+			return testPlanXML.getId();
+		}
+		catch(Exception e) {
+			return new Long(-1);
+		}	
+	}
+
+
 	public Long cloneTestPlan(TestPlan testPlan, Long userId) {
 		
 		TestPlan testPlanClone;
@@ -133,10 +181,12 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		for (int i=0; i<actionList.size(); i++) {				
 			
-			wfClone.getActions().add(cloneAction(actionList.get(i)));		
+			wfClone.getActions().add(this.cloneAction(actionList.get(i)));		
 		}
 
-		testPlanClone = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, testPlan.getLocation(), testPlan.getDescription(), wfClone);
+		TestPlanXML tpXMLClone = this.cloneTestPlanXML(testPlan.getTestplanxml());
+		
+		testPlanClone = new TestPlan(null, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), testPlan.getDescription(), wfClone, tpXMLClone);
 		Long testPlanCloneId = this.createTestPlan(testPlanClone, userId);	
 
 		return testPlanCloneId;
@@ -190,7 +240,12 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		return action2;
 	}	
 	
-	
+	private TestPlanXML cloneTestPlanXML(TestPlanXML tpXML1) {
+		
+		TestPlanXML tpXML2 = new TestPlanXML(tpXML1.getXml(),tpXML1.getAbsFileName());
+
+		return tpXML2;
+	}		
 	
 	
 	
@@ -339,9 +394,11 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				//System.out.println("3");
 				ActionWorkflow workflow = new ActionWorkflow(this.getActionsFromXML(testPlanDOM));
 				
+				TestPlanXML tpXML = new TestPlanXML(testPlanDOM.getXMLString(), testPlanAbsFileName);
+				
 				//System.out.println("4:" + testPlanDOM.getXMLString());
 				//System.out.println("4:" + testPlanDOM.getRootDatetimeAttribute());
-				testPlan = new TestPlan(testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, testPlanDOM.getRootDescriptionAttribute(), workflow);
+				testPlan = new TestPlan(testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, testPlanDOM.getRootDescriptionAttribute(), workflow, tpXML);
 			}
 		} catch (Exception e) {
 			
@@ -360,7 +417,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				//findTestPlanByTestPlanId(testPlanId);
 	
 		TestPlanDOM testPlanDOM = new TestPlanDOM();
-		testPlanDOM.setContent(testPlan.getXml());
+		testPlanDOM.setContent(testPlan.getTestplanxml().getXml());
 		
 		return this.getActionsFromXML(testPlanDOM);
 	}
