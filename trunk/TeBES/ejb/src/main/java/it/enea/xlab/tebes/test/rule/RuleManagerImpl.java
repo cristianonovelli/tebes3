@@ -1,26 +1,31 @@
 package it.enea.xlab.tebes.test.rule;
 
-import java.io.IOException;
-
 import it.enea.xlab.tebes.common.Constants;
+import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.Profile;
+
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.model.TestRule;
+import it.enea.xlab.tebes.users.UserManagerRemote;
+import it.enea.xlab.tebes.validation.ValidationManagerRemote;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
+import javax.naming.NamingException;
 
-import org.xlab.xml.JXLabDOM;
-import org.xlab.xml.XLabDOM;
-import org.xlab.xml.XLabDOMException;
-import org.xml.sax.SAXException;
+import validator.ErrorMessage;
+
 
 
 @Stateless
 @Interceptors({Profile.class})
 public class RuleManagerImpl implements RuleManagerRemote {
 	
-	public Report executeTestRule(TestRule testRule, Report report) {
+	//@EJB
+	//private ValidationManagerRemote validationManager; 
+	 
+	public Report executeTestRule(TestRule testRule, Report report) { 
 		
 		//boolean result = false;
 		
@@ -85,52 +90,43 @@ public class RuleManagerImpl implements RuleManagerRemote {
 	}
 
 	public boolean xmlSchemaValidation(String xmlString, String xsdString) {
+
 		
+
 		System.out.println("xmlSchemaValidation A:" + xmlString);
 		System.out.println("xmlSchemaValidation B:" + xsdString);
 		
 
-		
-		
-		/*SchemaMainValidator smv = new SchemaMainValidatorImpl();
-		smv.setRootDir("/Java/Temp/");
+		/*String xmlRelPathFileName = "TeBES_Artifacts/users/1/docs/ubl-invoice.xml";
+		String xsdURL = "http://winter.bologna.enea.it/peppol_schema_rep/xsd/maindoc/UBL-Invoice-2.0.xsd";
 		
 		ErrorMessage emList[] = null;
-		
 
-		
 		try {
-			emList = smv.reportValidation(xmlString, xsdString);
-
-			
-			int i=0;
-
-			while (i<emList.length){
-				
-				System.out.println("RIGA " + i + ": " + emList[i].getErrorType());
-				System.out.println("RIGA " + i + ": " + emList[i].getLineNumber());
-				System.out.println("RIGA " + i + ": " + emList[i].getDescription());
-				
-				
-				i++;
-			}
-
-			
-			
-		} catch (LocalFileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SchemaParserException e) {
+			validationManager = JNDIServices.getValidationManagerService();
+		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		emList = validationManager.validation(xmlRelPathFileName, xsdURL);
 		
-		if (emList != null)
-			System.out.println("xaz Test ok");
-		else
-			System.out.println("xaz Test no");
 		
-		*/
+		
+		int i=0;
+		System.out.println("PRE While");
+		while (i<emList.length){
+			
+			System.out.println("RIGA " + i + ": " + emList[i].getErrorType());
+			System.out.println("RIGA " + i + ": " + emList[i].getLineNumber());
+			System.out.println("RIGA " + i + ": " + emList[i].getDescription());
+			
+			
+			i++;
+		}
+		System.out.println("POST While");*/
+		
+		
+		
 		return true;
 	}
 }

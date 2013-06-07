@@ -195,7 +195,7 @@ public class ReportDOM extends JXLabDOM {
 		
 		Element startDatetimeElement = (Element) this.getSessionElement().getElementsByTagName("tebes:StartDateTime").item(0);
 		
-		startDatetimeElement.setNodeValue(starteDateTime);
+		startDatetimeElement.getChildNodes().item(0).setNodeValue(starteDateTime);
 	}
 
 
@@ -203,7 +203,7 @@ public class ReportDOM extends JXLabDOM {
 		
 		Element lastDatetimeElement = (Element) this.getSessionElement().getElementsByTagName("tebes:LastDateTime").item(0);
 		
-		lastDatetimeElement.setNodeValue(lastDateTime);
+		lastDatetimeElement.getChildNodes().item(0).setNodeValue(lastDateTime);
 	}
 	
 	
@@ -221,15 +221,110 @@ public class ReportDOM extends JXLabDOM {
 		
 		Element userNameElement = (Element) this.getUserElement().getElementsByTagName("tebes:Name").item(0);
 		
-		userNameElement.setNodeValue(userName);
+		userNameElement.getChildNodes().item(0).setNodeValue(userName);
 	}	
 	
 	public void setUserSurname(String userSurname) {
 		
 		Element userSurnameElement = (Element) this.getUserElement().getElementsByTagName("tebes:Surname").item(0);
 		
-		userSurnameElement.setNodeValue(userSurname);
+		userSurnameElement.getChildNodes().item(0).setNodeValue(userSurname);
+	}
+
+
+	
+	////////////////////////////////////
+	//// Methods to handle SUT Node ////
+	////////////////////////////////////
+	
+	private Element getSUTElement() {
+		
+		return (Element) getRootElement().getElementsByTagName("tebes:SUT").item(0);
+	}
+
+	public void setSUTId(Long sutId) {
+		
+		this.setIdAttribute(this.getSUTElement(), sutId.toString());	
+	}
+
+	private void setSUTChildNode(String nodeTagName, String value) {
+		
+		Element sutChildElement = (Element) this.getSUTElement().getElementsByTagName(nodeTagName).item(0);		
+		sutChildElement.getChildNodes().item(0).setNodeValue(value);	
+	}
+	
+	public void setSUTName(String name) {
+		
+		this.setSUTChildNode("tebes:Name", name);			
+	}
+
+	public void setSUTType(String type) {
+		
+		this.setSUTChildNode("tebes:Type", type);
+	}
+
+	public void setSUTLanguage(String language) {
+		
+		this.setSUTChildNode("tebes:Language", language);
+	}
+
+	public void setSUTReference(String reference) {
+		
+		this.setSUTChildNode("tebes:Reference", reference);	
+	}
+
+	public void setSUTInteraction(String interactionType) {
+		
+		this.setSUTChildNode("tebes:Interaction", interactionType);	
+	}
+
+	public void setSUTDescription(String description) {
+		
+		this.setSUTChildNode("tebes:Description", description);
+	}
+
+	
+	
+	/////////////////////////////////////////
+	//// Methods to handle TestPlan Node ////
+	/////////////////////////////////////////
+	
+	private Element getTestPlanElement() {
+		
+		return (Element) getRootElement().getElementsByTagName("tebes:TestPlan").item(0);
+	}
+
+	public void setTestPlanId(Long testPlanId) {
+		
+		this.setIdAttribute(this.getTestPlanElement(), testPlanId.toString());	
+	}
+
+	private void setTestPlanChildNode(String nodeTagName, String value) {
+		
+		Element tpChildElement = (Element) this.getTestPlanElement().getElementsByTagName(nodeTagName).item(0);		
+		tpChildElement.getChildNodes().item(0).setNodeValue(value);	
+	}
+
+	public void setTestPlanDatetime(String datetime) {
+		
+		this.setTestPlanChildNode("tebes:DateTime", datetime);
+	}
+
+	public void setTestPlanState(String state) {
+
+		this.setTestPlanChildNode("tebes:State", state);
+	}
+
+	public void setTestPlanReference(String location) {
+		
+		this.setTestPlanChildNode("tebes:Reference", location);
+	}
+
+	public void setTestPlanDescription(String description) {
+		
+		this.setTestPlanChildNode("tebes:Description", description);
 	}		
+	
 	
 	
 }

@@ -154,16 +154,21 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
+		<!-- dependency>
 			<groupId>it.enea.xlab</groupId>
 			<artifactId>validation</artifactId>
 			<version>1.0</version>
 			<type>jar</type>
 			<scope>compile</scope>
-		</dependency>
+		</dependency -->
 		<!-- dependency> <groupId>javaee</groupId> <artifactId>javaee-api</artifactId> 
 			<version>5</version> <scope>provided</scope> </dependency -->
-
+		<!--  dependency>
+			<groupId>it.enea.xlab</groupId>
+			<artifactId>saxon9-dom</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
+		</dependency -->
 		<dependency>
 			<groupId>jboss</groupId>
 			<artifactId>jboss-ejb3x</artifactId>

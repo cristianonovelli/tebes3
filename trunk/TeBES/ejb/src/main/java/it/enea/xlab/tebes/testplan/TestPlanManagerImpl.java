@@ -80,7 +80,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			if ( testPlan.getId() == null ) {
 				
 				// Creo il TestPlan SENZA il Workflow
-				testPlan2 = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, null, null);
+				testPlan2 = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, testPlan.getLocation(), testPlan.getDescription(), null);
 				eM.persist(testPlan2);	
 				
 				// TODO CREATE Workflow
@@ -136,7 +136,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			wfClone.getActions().add(cloneAction(actionList.get(i)));		
 		}
 
-		testPlanClone = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, testPlan.getLocation(), wfClone);
+		testPlanClone = new TestPlan(testPlan.getXml(), datetime, Constants.STATE_DRAFT, testPlan.getLocation(), testPlan.getDescription(), wfClone);
 		Long testPlanCloneId = this.createTestPlan(testPlanClone, userId);	
 
 		return testPlanCloneId;
@@ -144,15 +144,16 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 
 	
-	private TestPlan cloneTestPlanBean(TestPlan testPlan1) {
+	/*private TestPlan cloneTestPlanBean(TestPlan testPlan1) {
 		
 		return new TestPlan(
 				testPlan1.getXml(), 
 				testPlan1.getDatetime(), 
 				Constants.STATE_DRAFT, 
 				testPlan1.getLocation(), 
+				testPlan1.getDescription(),
 				this.cloneWorkflow(testPlan1.getWorkflow()));
-	}
+	}*/
 	
 	
 	
@@ -340,7 +341,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				
 				//System.out.println("4:" + testPlanDOM.getXMLString());
 				//System.out.println("4:" + testPlanDOM.getRootDatetimeAttribute());
-				testPlan = new TestPlan(testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, workflow);
+				testPlan = new TestPlan(testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, testPlanDOM.getRootDescriptionAttribute(), workflow);
 			}
 		} catch (Exception e) {
 			

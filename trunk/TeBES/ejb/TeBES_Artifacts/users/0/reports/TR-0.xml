@@ -14,19 +14,24 @@
         <tebes:StartDateTime>2012-06-16T18:43:00</tebes:StartDateTime>
         <tebes:LastDateTime>2012-06-18T18:44:00</tebes:LastDateTime>
         <tebes:User id="0">
-            <tebes:Name>name</tebes:Name>
-            <tebes:Surname>surname</tebes:Surname>
+            <tebes:Name>EMPTY</tebes:Name>
+            <tebes:Surname>EMPTY</tebes:Surname>
             <tebes:SUTList>
                 <tebes:SUT id="0">
-                    <tebes:SUTtype>xmldocument</tebes:SUTtype>
-                    <tebes:Modality type="upload" />
+                <tebes:Name>EMPTY</tebes:Name>
+                    <tebes:Type>EMPTY</tebes:Type>
+                    <tebes:Language>EMPTY</tebes:Language>
+                    <tebes:Reference>EMPTY</tebes:Reference>
+                    <tebes:Interaction>EMPTY</tebes:Interaction>
+                    <tebes:Description>EMPTY</tebes:Description>
                 </tebes:SUT>
             </tebes:SUTList>
         </tebes:User>
         <tebes:TestPlan id="0" version="1">
             <tebes:DateTime>2012-06-13T18:43:00</tebes:DateTime>
-            <tebes:Name>First Test Plan</tebes:Name>
-            <tebes:Description/>
+            <tebes:State>EMPTY</tebes:State>
+            <tebes:Reference>EMPTY</tebes:Reference>
+            <tebes:Description>EMPTY</tebes:Description>
         </tebes:TestPlan>
     </tebes:Session>
 
