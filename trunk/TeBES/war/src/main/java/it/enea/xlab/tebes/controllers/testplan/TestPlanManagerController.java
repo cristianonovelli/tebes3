@@ -114,11 +114,15 @@ public class TestPlanManagerController extends WebController {
 	}
 
 
-	public Vector<String> getSystemXMLTestPlanList() {
+/*	public Vector<String> getSystemXMLTestPlanList() {
 		
-		return testPlanManagerService.getSystemXMLTestPlanList();
-	}
+		return testPlanManagerService.getSystemTestPlanFileList();
+	}*/
 
+	public List<TestPlan> getSystemTestPlanList() {
+		
+		return testPlanManagerService.getSystemTestPlanList();
+	}
 
 
 	public List<TestPlan> readUserTestPlanList(User user) {
@@ -131,13 +135,6 @@ public class TestPlanManagerController extends WebController {
 	public Long addTestPlanToUser(Long testPlanId, Long userId) {
 		
 		return testPlanManagerService.addTestPlanToUser(testPlanId, userId);
-	}
-
-
-
-	public List<TestPlan> readSystemTestPlanList() {
-
-		return testPlanManagerService.readSystemTestPlanList();
 	}
 
 
@@ -194,6 +191,15 @@ public class TestPlanManagerController extends WebController {
 		
 		return actionManagerService.runWorkflow(workflow, session);
 	}
+
+
+	public boolean importSystemTestPlanFile(User superUser) {
+		
+		return testPlanManagerService.importSystemTestPlanFiles(superUser);
+	}
+
+
+
 
 
 

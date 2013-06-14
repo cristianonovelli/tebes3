@@ -5,13 +5,14 @@ import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.User;
 
 import javax.ejb.Remote;
 
 @Remote
 public interface ActionManagerRemote {
 
-
+	
 	public Long createWorkflow(ActionWorkflow workflow);
 	public ActionWorkflow readWorkflow(Long id);
 	public Boolean deleteWorkflow(Long id);
@@ -31,4 +32,6 @@ public interface ActionManagerRemote {
 	public Session runWorkflow(ActionWorkflow workflow, Session session);
 	
 	public Boolean updateWorkflow(ActionWorkflow workflow);
+	
+
 }

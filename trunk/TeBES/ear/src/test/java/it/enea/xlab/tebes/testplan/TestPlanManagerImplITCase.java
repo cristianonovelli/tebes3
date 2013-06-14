@@ -159,49 +159,9 @@ public class TestPlanManagerImplITCase {
 		
 		// Import System Test Plan from XML
 		// TODO è consigliato usare arraylist perchè più performanti e immediatamente "persistibili" da jpa
-		Vector<String> systemTestPlanList = testPlanController.getSystemXMLTestPlanList();
-		Assert.assertTrue(systemTestPlanList.size() == 2);
-		TestPlan testPlan = null;
-		Long testPlanId;
-		String testPlanAbsPathName;
-		String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlanDir();
-		Boolean updating;
 		
-		for (int i=0; i<systemTestPlanList.size();i++) {
-
-			testPlanAbsPathName = superUserTestPlanDir.concat(systemTestPlanList.elementAt(i));
-			System.out.println("testPlanAbsPathName:" + testPlanAbsPathName);
-			testPlan = testPlanController.getTestPlanFromXML(testPlanAbsPathName);
-			Assert.assertNotNull(testPlan);
-			
-			// Create TestPlan Entity
-			testPlanId = testPlanController.createTestPlan(testPlan, superUserId);
-			// N.B. dovrebbe essere incorporato nella CREATE
-			//Long adding = testPlanController.addTestPlanToUser(testPlanId, superUserId);
-			//Assert.assertTrue(adding.intValue()>0);	
-			
-			Assert.assertTrue(testPlanId.intValue() > 0);
-/*	
-			// Test the XML adjustment (done into the create)
-			testPlan = testPlanController.readTestPlan(testPlanId);
-			TestPlanDOM tpDOM = new TestPlanDOM();
-			tpDOM.setContent(testPlan.getXml());
-			
-			
-		
- * QUESTA PARTE NON DOVREBBE SERVIRE PIU', E' RELATIVA AGLI ID PRESENTI NELL'XML
- * String userIdXML = tpDOM.getRootElement().getAttribute(Constants.USERID_XMLATTRIBUTE_LABEL);
-
-			Assert.assertTrue(userIdXML.equals(superUserId.toString()));
-
-			String idXML = tpDOM.getRootElement().getAttribute(Constants.ID_XMLATTRIBUTE_LABEL);
-			Assert.assertTrue(idXML.equals(testPlan.getId().toString()));
-			
-			String datetimeXML = tpDOM.getRootElement().getAttribute(Constants.DATETIME_XMLATTRIBUTE_LABEL);
-			Assert.assertTrue(datetimeXML.equals(testPlan.getDatetime()));	*/		
-			
-		}
-		
+		boolean importing = testPlanController.importSystemTestPlanFile(superUser);
+		Assert.assertTrue(importing);
 		
 		// Check List of PERSISTED System Test Plans		
 		List<TestPlan> superUserTestPlanList = testPlanController.readUserTestPlanList(superUser);
@@ -229,8 +189,8 @@ public class TestPlanManagerImplITCase {
 		// 4. READ System TESTPLAN LIST
 		// il seguente metodo è equivalente a readUserTestPlanList(superUser)
 		// MA non ha bisogno di avere il superuser al di fuori del servizio
-		superUserTestPlanList = testPlanController.readSystemTestPlanList();
-		Assert.assertTrue(systemTestPlanList.size() == 2);
+		superUserTestPlanList = testPlanController.getSystemTestPlanList();
+		Assert.assertTrue(superUserTestPlanList.size() == 2);
 		
 		
 		
@@ -274,7 +234,7 @@ public class TestPlanManagerImplITCase {
 
 		// 9. UPDATE TestPlan
 		importedTestPlan.setState(Constants.STATE_FINAL);
-		updating = testPlanController.updateTestPlan(importedTestPlan);
+		boolean updating = testPlanController.updateTestPlan(importedTestPlan);
 		Assert.assertTrue(updating);	
 
 		importedTestPlan = testPlanController.readTestPlan(importedTestPlan.getId());
