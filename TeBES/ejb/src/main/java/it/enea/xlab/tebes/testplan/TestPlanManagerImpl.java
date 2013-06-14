@@ -7,7 +7,6 @@ import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
-import it.enea.xlab.tebes.entity.Interaction;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.TestPlanXML;
 import it.enea.xlab.tebes.entity.User;
@@ -26,8 +25,6 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.xml.parsers.ParserConfigurationException;
-
-import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -285,16 +282,24 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
         return testPlanListResult;
 	}
 
-	// TODO MODIFICARLO PER CHIAMARE CON LO USER= SUPERUSER
-		public List<TestPlan> readSystemTestPlanList() {
+
+	
+		
+		private User getSuperUser(String email, String password) {
+			
+			User superUser;
 			
 			String superUserEmail = PropertiesUtil.getUser1Email();
 			String superUserPassword = PropertiesUtil.getUser1Password();
-			User superUser = userManager.readUserbyEmailAndPassword(superUserEmail, superUserPassword);
+			
+			if (email.equals(superUserEmail) && password.equals(superUserPassword))
+				superUser = userManager.readUserbyEmailAndPassword(superUserEmail, superUserPassword);
+			else
+				superUser = null;
+			
+			return superUser;
+		}
 		
-	        return this.readUserTestPlanList(superUser);
-		}	
-	
 	/**
 	 * UPDATE Test Plan
 	 */
@@ -572,7 +577,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	}
 
 
-	public Vector<String> getSystemXMLTestPlanList() {
+	private Vector<String> getSystemTestPlanFileList() {
 
 		Vector<String> result = null;
 		
@@ -595,6 +600,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		return result;
 	}
+
 
 
 
@@ -629,6 +635,70 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		return new Long(1);	
 	}
+
+
+	public boolean importSystemTestPlanFiles(User user) {
+		
+		boolean result = true;
+		
+		// Verifico SuperUser
+		User superUser = this.getSuperUser(user.geteMail(), user.getPassword());
+		if ( superUser != null ) {
+		
+			
+			// Cancellare i TestPlan esistenti o effettuare gestione dei duplicati
+			// deleteAllTestPlans(user)
+			// TODO per verificare questa bisognerebbe richiamarlo una seconda volta
+			// anche perchè se è lazy qui la getTestPlan non da nulla.
+			List<TestPlan> testPlanList = user.getTestPlans();
+			for (int tp=0 ;tp<testPlanList.size();tp++) 
+				this.deleteTestPlan(testPlanList.get(tp).getId());
+
+			// Recuperare lista dei file
+			Vector<String> systemTestPlanFileList = this.getSystemTestPlanFileList();
+
+			// System Dir
+			String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlanDir();
+			
+			String testPlanAbsPathName;
+			TestPlan testPlan;
+			Long testPlanId;
+			
+			// Create 
+			for (int i=0; i<systemTestPlanFileList.size();i++) {
+						
+				// GET TestPlan structure from XML
+				testPlanAbsPathName = superUserTestPlanDir.concat(systemTestPlanFileList.elementAt(i));
+
+				// Create
+				testPlan = this.getTestPlanFromXML(testPlanAbsPathName);			
+				testPlanId = this.createTestPlan(testPlan, user.getId());
+	
+				// Se solo un'importazione non va a buon fine il risultato è false
+				if (testPlanId.intValue() < 0 )
+					result = false;
+			}	
+		}
+		else
+			result = false;
+
+		
+		return result;
+	}
+
+
+	public List<TestPlan> getSystemTestPlanList() {
+		
+		String superUserEmail = PropertiesUtil.getUser1Email();
+		String superUserPassword = PropertiesUtil.getUser1Password();
+
+		User superUser = userManager.readUserbyEmailAndPassword(superUserEmail, superUserPassword);
+		
+		List<TestPlan> superUserTestPlanList = superUser.getTestPlans();
+		
+		return superUserTestPlanList;
+	}
+
 
 
 

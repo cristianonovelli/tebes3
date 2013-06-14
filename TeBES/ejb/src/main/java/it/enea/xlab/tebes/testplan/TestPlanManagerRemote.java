@@ -22,9 +22,10 @@ public interface TestPlanManagerRemote {
 	
 	public TestPlan readTestPlan(Long id);
 	public List<TestPlan>  readTestPlanByDatetimeAndUserId(String datetime, Long userId);
-	public Vector<String> getSystemXMLTestPlanList();
+	//public Vector<String> getSystemTestPlanFileList();
+
 	public List<TestPlan> readUserTestPlanList(User user);
-	public List<TestPlan> readSystemTestPlanList();	
+	//public List<TestPlan> readSystemTestPlanList();	
 	
 	public TestPlan getTestPlanFromXML(String testPlanAbsFileName);
 
@@ -50,11 +51,10 @@ public interface TestPlanManagerRemote {
 
 	public void addWorkflowToTestPlan(Long workflowId, Long testPlanId);
 	public Long addTestPlanToUser(Long testPlanId, Long userId);
+	public boolean importSystemTestPlanFiles(User superUser);
+	public List<TestPlan> getSystemTestPlanList();
 	
 
-
-	
-	
 	
 	
 }

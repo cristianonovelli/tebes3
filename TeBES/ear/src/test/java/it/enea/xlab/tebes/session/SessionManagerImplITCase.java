@@ -269,36 +269,40 @@ public class SessionManagerImplITCase {
 		Long superUserId = superUser.getId();
 		superUser = userAdminController.readUser(superUserId);
 		
-		// Get Test Plan List (list of name files)
-		// TODO sarebbe meglio avere una tabella (id,description,location)
-		// TODO sarebbe ANCORA MEGLIO avere una tabella XML a parte e recuperare la lista dei TestPlan
-		Vector<String> systemTestPlanList = testPlanController.getSystemXMLTestPlanList();
-		Assert.assertTrue(systemTestPlanList.size() == 2);
+		// Importazione dei Test Plan per lo SuperUser
+		// N.B. questa operazione viene fatta in fase di setup del sistema
+		// 1. SuperUser Get Test Plan List (list of name files)
+		// 2. SuperUser Import TestPlan
+		// 3. Get List from User
+		boolean importing = testPlanController.importSystemTestPlanFile(superUser);
+		Assert.assertTrue(importing);
+
+		
+		//Vector<String> systemTestPlanXMLFileList = testPlanController.getSystemXMLTestPlanList();
+		//Assert.assertTrue(systemTestPlanXMLFileList.size() == 2);
 		TestPlan testPlan = null;
 		Long testPlanId;
-		String testPlanAbsPathName;
-		String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlanDir();
+		//String testPlanAbsPathName;
+		//String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlanDir();
 		
-		// Per ogni nome di file
-		// TODO per ogni id
+		
+		// Lista dei TestPlan disponibili nel sistema
+		// N.B. l'importazione deve essere stata fatta in fase di Setup della piattaforma		
+		List<TestPlan> systemTestPlanList = testPlanController.getSystemTestPlanList();
+		Assert.assertTrue(systemTestPlanList.size()>0);
+		
+		// Per ogni TestPlan... lo verifico
 		for (int i=0; i<systemTestPlanList.size();i++) {
-			
-			// GET TestPlan structure from XML
-			testPlanAbsPathName = superUserTestPlanDir.concat(systemTestPlanList.elementAt(i));
 
-			
-			testPlan = testPlanController.getTestPlanFromXML(testPlanAbsPathName);
+			testPlan = systemTestPlanList.get(i);
 			Assert.assertNotNull(testPlan);
 			
 			Assert.assertNotNull(testPlan.getWorkflow());
 			Assert.assertNotNull(testPlan.getWorkflow().getActions());
 			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));	
 			
-			// Persist TestPlan structure from XML
-			testPlanId = testPlanController.createTestPlan(testPlan, superUserId);
+			testPlanId = testPlan.getId();
 			Assert.assertTrue(testPlanId.intValue()>0);	
-			//adding = testPlanController.addTestPlanToUser(testPlanId, superUserId);
-			//Assert.assertTrue(adding.intValue()>0);	
 			
 			// Check it
 			testPlan = testPlanController.readTestPlan(testPlanId);
@@ -307,17 +311,14 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));			
 		}	
 		
-		// Lista dei TestPlan disponibili nel sistema
-		// N.B. l'importazione deve essere stata fatta in fase di Setup della piattaforma
-		List<TestPlan> superUserTestPlanList = testPlanController.readSystemTestPlanList();
-		Assert.assertTrue(superUserTestPlanList.size()>0);
-		
+
+
 		// Login User generico
 		User currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
 		Long currentUserId = currentUser.getId();
 		
 		// Selezione di un TestPlan generico
-		TestPlan selectedTestPlan = superUserTestPlanList.get(0);
+		TestPlan selectedTestPlan = systemTestPlanList.get(0);
 		Assert.assertNotNull(selectedTestPlan);
 
 		// Copia e importazione del TestPlan scelto
