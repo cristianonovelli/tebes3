@@ -108,7 +108,7 @@ public class SessionManagerImplITCase {
 	}
 	
 	
-	//@Test
+	/*//@Test
 	public void test1_manualCreation() {
 		
 		//String superUserEmail = PropertiesUtil.getUser1Email();
@@ -132,10 +132,10 @@ public class SessionManagerImplITCase {
 		// CREATE Actions
 		Action a = new Action(1, "nome", Action.getTodoState(),"taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
 		Action a2 = new Action(2, "nome2", Action.getTodoState(), "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");	
-		/*Long actionId = testPlanController.createAction(a, workflowId);
+		Long actionId = testPlanController.createAction(a, workflowId);
 		Assert.assertTrue(actionId.intValue()>0);	
 		Long actionId2 = testPlanController.createAction(a2, workflowId);
-		Assert.assertTrue(actionId2.intValue()>0);	*/	
+		Assert.assertTrue(actionId2.intValue()>0);		
 		wf.getActions().add(a);
 		wf.getActions().add(a2);
 		
@@ -208,11 +208,11 @@ public class SessionManagerImplITCase {
 		Action aBis = testPlanController.readAction(actionIdBis);
 		Assert.assertNotNull(aBis);
 		
-		/*if ( wfBis.getActions().contains(aBis) ) {
+		if ( wfBis.getActions().contains(aBis) ) {
 			System.out.println("AAAAAAAA" + aBis.getId());
 			wfBis.getActions().remove(aBis);
 			Assert.assertTrue(testPlanController.updateWorkflow(wfBis));
-		}*/
+		}
 		
 		aBis = testPlanController.readAction(actionIdBis);
 		
@@ -255,7 +255,7 @@ public class SessionManagerImplITCase {
 		//Assert.assertTrue(actionIdList.size()==0);
 		
 		// TODO N.B. the metod deleteAction is useless, doesn't work...
-	}
+	}*/
 	
 	
 	
@@ -351,6 +351,7 @@ public class SessionManagerImplITCase {
 		Assert.assertNotNull(sessionId);
 		Assert.assertTrue(sessionId.intValue()>0);
 		
+		
 		// GET Current Session
 		Session currentSession = sessionController.readSession(sessionId);
 		Assert.assertNotNull(currentSession);
@@ -369,10 +370,6 @@ public class SessionManagerImplITCase {
 			
 		Assert.assertNotNull(selectedTestPlan);
 		Assert.assertTrue(selectedTestPlan.getId().intValue() > 0);
-			
-		
-		
-	
 
 		
 		// WORKFLOW ACTIONS - 
@@ -478,6 +475,7 @@ public class SessionManagerImplITCase {
 			// 2. l'utente  decide di sospendere la sessione di test
 			System.out.println(currentSession.getState());
 			// 3. l'utente  decide di annullare la sessione di test
+			
 			// 4. raggiungo il numero massimo di fallimenti per la stessa action
 			
 			System.out.println("COUNTER: " + failuresForAction);
