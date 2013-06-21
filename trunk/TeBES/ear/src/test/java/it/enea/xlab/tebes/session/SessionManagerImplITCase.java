@@ -469,14 +469,15 @@ public class SessionManagerImplITCase {
 
 
 			// 1. le azioni da eseguire non sono finite
-			System.out.println("jjj:" + report.getState());
+			
 			// 2. l'utente  decide di sospendere la sessione di test
-			System.out.println(currentSession.getState());
+			
 			// 3. l'utente  decide di annullare la sessione di test
 			
 			// 4. raggiungo il numero massimo di fallimenti per la stessa action
 			
 			System.out.println("COUNTER: " + failuresForAction);
+			
 			if ( 	report.getState().equals(Report.getFinalState()) ||
 					currentSession.getState().equals(Session.getSuspendedState()) ||
 					currentSession.getState().equals(Session.getAbortedState()) ||
@@ -519,10 +520,11 @@ public class SessionManagerImplITCase {
 		
 		
 		report = sessionController.getReport(sessionId);
+		
 		Assert.assertTrue(report.getState().equals(Report.getFinalState()));
-		System.out.println("REPORT");
-		System.out.println(report.getState());
-		System.out.println(report.getTestResult());
+		//System.out.println("REPORT");
+		//System.out.println(report.getState());
+		//System.out.println(report.getTestResult());
 		
 		
 		// TODO chiusura della sessione di test
