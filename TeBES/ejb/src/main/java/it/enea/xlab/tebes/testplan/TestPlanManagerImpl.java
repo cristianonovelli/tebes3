@@ -670,10 +670,14 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				// GET TestPlan structure from XML
 				testPlanAbsPathName = superUserTestPlanDir.concat(systemTestPlanFileList.elementAt(i));
 
+				System.out.println("zxcv:" + i + ":" + testPlanAbsPathName);
+				
 				// Create
 				testPlan = this.getTestPlanFromXML(testPlanAbsPathName);			
+				System.out.println("zxcv:" + i + ":" + testPlan.getDatetime());
 				testPlanId = this.createTestPlan(testPlan, user.getId());
-	
+				System.out.println("zxcv:" + i + ":" + testPlanId);
+				
 				// Se solo un'importazione non va a buon fine il risultato è false
 				if (testPlanId.intValue() < 0 )
 					result = false;

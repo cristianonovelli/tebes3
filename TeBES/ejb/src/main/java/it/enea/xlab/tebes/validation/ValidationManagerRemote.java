@@ -4,7 +4,6 @@ import javax.ejb.Remote;
 
 import validator.ErrorMessage;
 
-
 @Remote
 public interface ValidationManagerRemote {
 

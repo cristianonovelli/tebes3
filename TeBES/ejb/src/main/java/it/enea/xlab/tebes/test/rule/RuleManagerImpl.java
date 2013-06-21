@@ -22,8 +22,8 @@ import validator.ErrorMessage;
 @Interceptors({Profile.class})
 public class RuleManagerImpl implements RuleManagerRemote {
 	
-	//@EJB
-	//private ValidationManagerRemote validationManager; 
+	@EJB
+	private ValidationManagerRemote validationManager; 
 	 
 	public Report executeTestRule(TestRule testRule, Report report) { 
 		
