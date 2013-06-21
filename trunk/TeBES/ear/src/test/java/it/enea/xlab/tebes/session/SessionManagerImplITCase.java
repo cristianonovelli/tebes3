@@ -16,12 +16,10 @@ import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
-import it.enea.xlab.tebes.entity.TestPlanXML;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
 import java.util.List;
-import java.util.Vector;
 
 import junit.framework.Assert;
 
