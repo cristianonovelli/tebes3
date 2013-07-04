@@ -35,7 +35,7 @@ public class Action implements Serializable {
 	private String testLocation;
 	private String testValue;
 	private boolean jumpTurnedON;
-	private String Description;
+	private String description;
 	private Long sutId;
 	
 	//@ManyToOne
@@ -182,11 +182,11 @@ public class Action implements Serializable {
 	}
 
 	public String getDescription() {
-		return Description;
+		return description;
 	}
 
 	public void setDescription(String description) {
-		Description = description;
+		this.description = description;
 	}
 
 	public ActionWorkflow getWorkflow() {

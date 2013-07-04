@@ -164,6 +164,7 @@ public class PropertiesUtil {
 	
 	/**
 	 * Get Report PathName
+	 * TEMPLATE 0
 	 */
 	public static String getSuperUserReportAbsPathName() {
 		
@@ -176,5 +177,22 @@ public class PropertiesUtil {
 		
 		return result;
 	}
+
+	/**
+	 * Get Report PathName
+	 * TEMPALTE 1 (contiene anche una action)
+	 */
+	public static String getSuperUserReport1AbsPathName() {
+		
+		
+		String result = PropertiesUtil.getSuperUserReportDir();	
+		
+		String reportFileName = getConfiguration().getString("superuser.report1");
+		
+		result = result.concat(reportFileName);
+		
+		return result;
+	}
+	
 }
 

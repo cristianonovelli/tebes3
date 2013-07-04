@@ -6,8 +6,8 @@ import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
-import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.testplan.TestPlanManagerImpl;
 
 import java.util.List;
 
@@ -19,12 +19,18 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
 
-@Stateless
+
+@Stateless(name="UserManagerImpl")  
 @Interceptors({Profile.class})
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class UserManagerImpl implements UserManagerRemote {
 
+	// Logger
+	private static Logger logger = Logger.getLogger(TestPlanManagerImpl.class);
+	
+	
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
@@ -464,8 +470,10 @@ public class UserManagerImpl implements UserManagerRemote {
 			
 			User user = userList.get(0);
 			
-			if (user.getPassword().equals(userPassword))
+			if (user.getPassword().equals(userPassword)) {
 				result = user;
+				logger.warn("LOGIN User: " + user.getName() + " " + user.getSurname() + " with Role: " + user.getRole());
+			}
 		}
 		
 		return result;

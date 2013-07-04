@@ -97,7 +97,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		System.out.println("xmlSchemaValidation B:" + xsdString);
 		
 
-		/*String xmlRelPathFileName = "TeBES_Artifacts/users/1/docs/ubl-invoice.xml";
+		String xmlRelPathFileName = "TeBES_Artifacts/users/1/docs/ubl-invoice.xml";
 		String xsdURL = "http://winter.bologna.enea.it/peppol_schema_rep/xsd/maindoc/UBL-Invoice-2.0.xsd";
 		
 		ErrorMessage emList[] = null;
@@ -108,22 +108,31 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		emList = validationManager.validation(xmlRelPathFileName, xsdURL);
 		
-		
-		
-		int i=0;
-		System.out.println("PRE While");
-		while (i<emList.length){
+		try {
+			emList = validationManager.validation(xmlRelPathFileName, xsdURL);
 			
-			System.out.println("RIGA " + i + ": " + emList[i].getErrorType());
-			System.out.println("RIGA " + i + ": " + emList[i].getLineNumber());
-			System.out.println("RIGA " + i + ": " + emList[i].getDescription());
+			int i=0;
+			System.out.println("PRE While");
+			while (i<emList.length){
+				
+				System.out.println("RIGA " + i + ": " + emList[i].getErrorType());
+				System.out.println("RIGA " + i + ": " + emList[i].getLineNumber());
+				System.out.println("RIGA " + i + ": " + emList[i].getDescription());
+				
+				
+				i++;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			
-			
-			i++;
 		}
-		System.out.println("POST While");*/
+		
+		
+		
+
+		System.out.println("POST While");
 		
 		
 		

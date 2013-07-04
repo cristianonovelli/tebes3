@@ -1,7 +1,10 @@
 package it.enea.xlab.tebes.report;
 
 import it.enea.xlab.tebes.entity.Report;
+import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
+import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.User;
 
 import javax.ejb.Remote;
 
@@ -14,7 +17,7 @@ public interface ReportManagerRemote {
 
 	boolean updateReport(Report report);
 	
-	Report createReportForNewSession(Session session);
+	Report createReportForNewSession(Session session, User user, TestPlan testPlan, SUT sut) throws Exception;
 
 	String getSystemXMLReportAbsPathName();
 	

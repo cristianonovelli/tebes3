@@ -1,10 +1,15 @@
 package it.enea.xlab.tebes.report;
 
+import java.io.IOException;
+
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Report;
+import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
+import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.User;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,10 +18,13 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 import org.xlab.file.XLabFileManager;
 import org.xlab.utilities.XLabDates;
+import org.xml.sax.SAXException;
 
 @Stateless
 @Interceptors({Profile.class})
@@ -96,7 +104,7 @@ public class ReportManagerImpl implements ReportManagerRemote {
 	
 	// TODO forse aggiornerei qui dentro l'XML
 	// essendo parte della struttura
-	public Report createReportForNewSession(Session session) {
+	public Report createReportForNewSession(Session session, User user, TestPlan testPlan, SUT sut) throws Exception {
 		
 		// Create Report by JPA
 		Report report = new Report();
@@ -115,13 +123,72 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		// Get and Set current Datetime
 		report.setDatetime(XLabDates.getCurrentUTC());
 		
-		boolean updating = this.updateReport(report);
+
 		
-		if (updating) 
-			report = this.readReport(reportId);			
-		else
-			report = null;
+		// XML
+		String xmlReportPathName = this.getSystemXMLReportAbsPathName();
 		
+		ReportDOM reportDOM = null;
+
+		// Get ReportDOM
+		reportDOM = new ReportDOM(xmlReportPathName);
+
+		 
+		Element rootElement = reportDOM.root;
+		
+		if ( reportDOM.root != null ) {
+			
+			// Aggiorno XML Root
+			reportDOM.setIdAttribute(rootElement, report.getId().toString());
+			reportDOM.setNameAttribute(rootElement, report.getName());
+			reportDOM.setDescriptionAttribute(rootElement, report.getDescription());
+			//reportDOM.setSessionIDAttribute(rootElement, report.getSessionID().toString());
+			reportDOM.setStateAttribute(rootElement, report.getState());
+			//reportDOM.setDatetimeAttribute(rootElement, report.getDatetime());
+			
+			// Aggiorno XML Session
+			reportDOM.setIdAttribute(reportDOM.getSessionElement(), report.getSessionID().toString());						
+			reportDOM.setSessionCreationDateTime(session.getCreationDateTime());
+			reportDOM.setSessionLastUpdateDateTime(session.getLastUpdateDateTime());
+			
+			// Aggiorno XML User
+			reportDOM.setIdAttribute(reportDOM.getUserElement(), session.getUserId().toString());
+			reportDOM.setUserName(user.getName());
+			reportDOM.setUserSurname(user.getSurname());
+
+			// Aggiorno XML SUT
+			reportDOM.setSUTId(session.getSutId());
+			reportDOM.setSUTName(sut.getName());
+			reportDOM.setSUTType(sut.getType());
+			reportDOM.setSUTLanguage(sut.getLanguage());
+			//reportDOM.setSUTReference(sut.getReference());
+			reportDOM.setSUTInteraction(sut.getInteraction().getType());						
+			reportDOM.setSUTDescription(sut.getDescription());
+					
+			// Aggiorno XML TestPlan		
+			reportDOM.setTestPlanId(session.getTestPlanId());
+			reportDOM.setTestPlanName(testPlan.getName());
+			reportDOM.setTestPlanDescription(testPlan.getDescription());
+			reportDOM.setTestPlanCreationDatetime(testPlan.getCreationDatetime());
+			reportDOM.setTestPlanLastUpdateDatetime(testPlan.getLastUpdateDatetime());
+			reportDOM.setTestPlanState(testPlan.getState());			
+			// TODO location deve contenere la posizione (relativa o assoluta o url pubblico del TP utente)
+			// questo vorrebbe dire che deve essere stato salvato da qualche parte nel momento dell'importazione
+			// valutare se ne vale la pena (import su file, creazione cartella utente ecc.)
+			//reportDOM.setTestPlanReference(testPlan.getLocation());
+			
+			// Set XML into the Report Bean
+			report.setXml(reportDOM.getXMLString());
+		
+			// UPDATING
+			boolean updating = this.updateReport(report);
+			
+			// READING
+			if (updating) 
+				report = this.readReport(reportId);			
+	
+		}
+
 		return report;
 	}
 

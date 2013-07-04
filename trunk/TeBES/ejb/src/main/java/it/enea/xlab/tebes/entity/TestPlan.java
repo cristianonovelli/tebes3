@@ -23,58 +23,61 @@ public class TestPlan implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	//@Column(length=9999) 
-	//private String xml;
-	
-	// TODO avendo collegato tramite JPA questa classe a user
-	// si è venuto a creare il campo user_id e quindi questo non ha motivo di esistere
-	// cancellarlo assicurandosi che l'importazione XML rimanga consistente
-	//private Long userIdXML;
-	
-	private String datetime;
-	private String state;
-	private String location;
+	private String name;	
 	private String description;	
+	private String creationDatetime;
+	private String lastUpdateDatetime;
+	
+	// "state" can take 2 values: "draft" or "final"
+	private String state;
+	
+	private String location;
+	
 
 	/**
-	 * USER del TestPlan
+	 * USER proprietario del TestPlan
 	 * Molti TestPlan hanno lo stesso User => ManyToOne 
 	 */
-	// , fetch = FetchType.LAZY questo fa in modo che non tira su lo User
 	@ManyToOne(cascade=CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
 	private User user;
-	
+	// fetch = FetchType.LAZY questo fa in modo che lo User non venga caricato assieme al TestPlan
 	
 	/**
 	 * WORKFLOW del TestPlan
 	 * Ogni TestPlan ha un workflow di actions => OneToOne
-	 * , fetch = FetchType.EAGER 
 	 */
 	@OneToOne(cascade=CascadeType.ALL)
 	ActionWorkflow workflow;
 
+	/**
+	 * TestPlan completo in formato XML
+	 */
 	@OneToOne(cascade=CascadeType.ALL)
 	TestPlanXML testplanxml;
 
+	
 	public TestPlan() {
 
 	}
 	
-	public TestPlan(String xml, String datetime, String state, String location, String description, ActionWorkflow workflow, TestPlanXML testPlanXML) {
+	public TestPlan(String name, String description, String creationDatetime, String lastUpdateDatetime, String state, String location, ActionWorkflow workflow, TestPlanXML testPlanXML) {
 
-		//this.setXml(xml);
-		this.setDatetime(datetime);
+		this.setName(name);	
+		this.setDescription(description);	
+		this.setCreationDatetime(creationDatetime);
+		this.setLastUpdateDatetime(lastUpdateDatetime);
 		this.setState(state);
-		this.setLocation(location);
-		this.setDescription(description);		
+		this.setLocation(location);	
 		this.setWorkflow(workflow);
 		this.setTestplanxml(testPlanXML);
 	}
 	
-
-
-
+	
+	
+	/**
+	 * GETTERS and SETTERS
+	 */
 	
 	public Long getId() {
 		return id;
@@ -83,15 +86,29 @@ public class TestPlan implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-
-
-	public String getDatetime() {
-		return datetime;
+	
+	public String getName() {
+		return name;
 	}
 
-	public void setDatetime(String datetime) {
-		this.datetime = datetime;
+	public void setName(String name) {
+		this.name = name;
+	}	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getCreationDatetime() {
+		return creationDatetime;
+	}
+
+	public void setCreationDatetime(String datetime) {
+		this.creationDatetime = datetime;
 	}
 
 	public String getState() {
@@ -110,14 +127,6 @@ public class TestPlan implements Serializable {
 		this.location = location;
 	}
 
-/*	public Long getUserIdXML() {
-		return userIdXML;
-	}
-
-	public void setUserIdXML(Long userId) {
-		this.userIdXML = userId;
-	}*/
-
 	public ActionWorkflow getWorkflow() {
 		return workflow;
 	}
@@ -134,21 +143,23 @@ public class TestPlan implements Serializable {
 		this.user = user;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public TestPlanXML getTestplanxml() {
 		return testplanxml;
 	}
 
 	public void setTestplanxml(TestPlanXML testplanxml) {
 		this.testplanxml = testplanxml;
-	}	
+	}
+
+	public String getLastUpdateDatetime() {
+		return lastUpdateDatetime;
+	}
+
+	public void setLastUpdateDatetime(String lastUpdateDatetime) {
+		this.lastUpdateDatetime = lastUpdateDatetime;
+	}
+
+
 	
 
 	

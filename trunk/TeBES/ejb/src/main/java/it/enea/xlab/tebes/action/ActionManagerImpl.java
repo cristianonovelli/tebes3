@@ -7,9 +7,11 @@ import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.model.TAF;
+import it.enea.xlab.tebes.report.ReportDOM;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.test.TestManagerImpl;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -20,6 +22,14 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 
 @Stateless
@@ -276,56 +286,180 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		report.setPartialResultSuccessfully(false);
 
 		
-		report.addToFullDescription("\n");
-		report.addToFullDescription("\n");
-		report.addToFullDescription("\n-- Start Execution of Action: " + action.getActionName() + "--");
 
 		try {
+			ReportDOM reportDOM = new ReportDOM();
+			reportDOM.setContent(report.getXml());
 			
-			TestManagerImpl testManager = new TestManagerImpl();
-			
-			// TAF Building
-			report.addToFullDescription("\nBuilding TAF for action: " + action.getActionName());
-			TAF taf = testManager.buildTAF(action);
-			
-			
-			// TAF Execution
-			if (taf != null) {
-				
-				report.addToFullDescription("\nBuilt TAF " + taf.getName() + " successful.");
-				report.addToFullDescription("\nStart execution TAF " + taf.getName());
-				
-				// EXECUTE TAF
-				report = testManager.executeTAF(taf, report);
-				//report.setPartialResultSuccessfully(tafResult);
-				
-				report.addToFullDescription("\nResult: " + report.isPartialResultSuccessfully());
-			}
-			else
-				report.addToFullDescription("\nBuilt TAF Failure.");
+			// prendo <GlobalResult>empty</GlobalResult>
+			// se è empty
+			// modifico la prima action
+			// altrimenti ne faccio una copia e la modifico
 
+			
+			
+			// Se GlobalResult non è "empty"
+			// clono la action
+			// poi in ogni caso modifico la action
+			NodeList testActionListXML = reportDOM.getTestActionNodeList();
+			System.out.println("poiu testActionListXML:" + testActionListXML.getLength());
+			
+			Node actionNode = testActionListXML.item(0);
+			String globalResult = reportDOM.getGlobalResult();
+			System.out.println("poiu globalResult:" + globalResult);
+			
+			if ( !globalResult.equals(Report.getUndefinedResult()) ) {
+				
+				System.out.println("poiu clono");
+				
+				// 1. Clono actionNode
+				Node actionNodeClone = actionNode.cloneNode(true);
+				actionNodeClone = reportDOM.doc.importNode(actionNodeClone, true); 
+				reportDOM.insertActionNode(actionNodeClone);
+				reportDOM.setNumberAttribute(actionNodeClone, new Integer(action.getActionNumber()).toString());
+				
+				// Ora actionNode punta all'actionNodeClone
+				actionNode = actionNodeClone;
+				
+			}
+			else {
+				// Se GlobalResul è "empty"
+				// dovrò individuare l'unica action contenuta
+				
+				System.out.println("non clono, modifico");
+				
+				Element actionElement = (Element) actionNode;
+				
+				 if ( (testActionListXML.getLength()!=1) || (!actionElement.getAttribute("number").equals("0")) ) {
+					 System.out.println("ERROR: Inconsistent Report Template, GlobalResult is empty but there is an executed action.");
+					 actionNode = null;
+				 }
+				 else
+					 reportDOM.setNumberAttribute(actionNode, new Integer(action.getActionNumber()).toString());
+			}
+			
+			// Modifica dell'action individuata (template o clonata che sia)
+			if (actionNode != null) {
+				
+				// Set Name
+				reportDOM.setActionName(actionNode, action.getActionName());
+				
+				// Set Description
+				reportDOM.setActionDescription(actionNode, action.getDescription());
+				
+				// Set Test Value and attributes
+				reportDOM.setActionTest(actionNode, action.getTestValue());				
+				Node testNode = reportDOM.getTestElement(actionNode);
+				reportDOM.setTestJumpPrerequisitesAttribute(testNode, action.isJumpTurnedON());
+				reportDOM.setTestLgAttribute(testNode, action.getTestLanguage());
+				reportDOM.setTestLocationAttribute(testNode, action.getTestLocation());
+				reportDOM.setTestTypeAttribute(testNode, action.getTestType());
+				
+				// Fine della modifica XML che NON riguarda l'esito dell'action
+				report.setXml(reportDOM.getXMLString());	
+				
+				// ORA SI ESEGUE L'ACTION
+				
+				report.addToFullDescription("\n");
+				report.addToFullDescription("\n");
+				report.addToFullDescription("\n-- Start Execution of Action: " + action.getActionName() + "--");
+	
+				
+				
+				TestManagerImpl testManager = new TestManagerImpl();
+				
+				// TAF Building
+				report.addToFullDescription("\nBuilding TAF for action: " + action.getActionName());
+				TAF taf = testManager.buildTAF(action);
+				
+				
+				// TAF Execution
+				if (taf != null) {
+					
+					report.addToFullDescription("\nBuilt TAF " + taf.getName() + " successful.");
+					report.addToFullDescription("\nStart execution TAF " + taf.getName());
+					
+					// EXECUTE TAF
+					report = testManager.executeTAF(taf, report);
+					//report.setPartialResultSuccessfully(tafResult);
+					
+					report.addToFullDescription("\nResult: " + report.isPartialResultSuccessfully());
+				}
+				else
+					report.addToFullDescription("\nBuilt TAF Failure.");
+	
+				
+				report.addToFullDescription("\n-- End Execution of Action: " + action.getActionName() + "--");
+				
+				if ( report.isPartialResultSuccessfully() ) {
+					reportDOM.setGlobalResult(Report.getSuccessfulResult());
+					report.setXml(reportDOM.getXMLString());	
+				}
+				
+				
+
+				// Persist Report
+				//report.setState(Report.getFinalState());
+				boolean updating = reportManager.updateReport(report);
+				
+				
+				// SET Action as DONE
+				action = this.readAction(action.getId());
+				action.setState(Action.getDoneState());
+				eM.persist(action);
+				
+				
+				report.setPartialResultSuccessfully(report.isPartialResultSuccessfully() && updating);
+					
+
+				
+
+				
+				
+			}
+			else {
+				System.out.println("TODO: SYSTEM ERROR nel Report");
+				
+				report.setPartialResultSuccessfully(false);
+			}
+			
+
+
+			
+			
+			
+			
+			
+			
+			
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerFactoryConfigurationError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		report.addToFullDescription("\n-- End Execution of Action: " + action.getActionName() + "--");
-		
-		// Persist Report
-		//report.setState(Report.getFinalState());
-		boolean updating = reportManager.updateReport(report);
+
+			
+
 		
 		
-		// SET Action as DONE
-		action = this.readAction(action.getId());
-		action.setState(Action.getDoneState());
-		eM.persist(action);
-		
-		
-		report.setPartialResultSuccessfully(report.isPartialResultSuccessfully() && updating);
 		
 		return report;
 		//return result && updating;
@@ -356,7 +490,6 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			
 		if (a != null) {
 			
-			//result = result && runAction(a, report);
 			report = runAction(a, report);
 			report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
 			
@@ -365,9 +498,6 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				actionMark++;				
 				workflow.setActionMark(actionMark);
 			}
-				
-			
-			
 		}
 		else 
 			report.setFinalResultSuccessfully(false);
@@ -390,8 +520,6 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		
 		updating = updating && reportManager.updateReport(report);
 
-		
-		
 		return session;
 	}
 	

@@ -15,6 +15,18 @@ public class Report implements Serializable {
 
 	private static final String DRAFT_STATE = "draft";
 	private static final String FINAL_STATE = "final";
+
+    /*<!-- Global Result can take the following 5 values: 
+		"undefined": result is undefined because no action has been executed; 
+		"success": when every action finished with success result;
+		"warning": when there is at least an action with warning result and no action with failure or error result;
+		"failure": when there is at least an action with failure result and no action with error result; 
+		"error": there is at least an action with error result, this means that a system error happened -->  */   
+	private static final String UNDEFINED_RESULT = "undefined";
+	private static final String SUCCESSFUL_RESULT = "successful";
+	private static final String WARNING_RESULT = "warning";
+	private static final String FAILURE_RESULT = "failure";
+	private static final String ERROR_RESULT = "error";
 	
 	private static final String REPORTNAME_PREFIX = "TR-";
 	private static final String REPORTDESCRIPTION = "Report ";
@@ -178,5 +190,30 @@ public class Report implements Serializable {
 		return REPORTDESCRIPTION;
 	}
 
-	
+
+	public static String getUndefinedResult() {
+		return UNDEFINED_RESULT;
+	}
+
+
+	public static String getWarningResult() {
+		return WARNING_RESULT;
+	}
+
+
+	public static String getSuccessfulResult() {
+		return SUCCESSFUL_RESULT;
+	}
+
+
+	public static String getFailureResult() {
+		return FAILURE_RESULT;
+	}
+
+
+	public static String getErrorResult() {
+		return ERROR_RESULT;
+	}
+
 }
+
