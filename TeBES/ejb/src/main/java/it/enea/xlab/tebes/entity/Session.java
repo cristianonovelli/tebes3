@@ -64,8 +64,8 @@ public class Session implements Serializable {
 	
 	private String state;
 
-	private String starteDateTime;
-	private String lastDateTime;
+	private String creationDateTime;
+	private String lastUpdateDateTime;
 	
 	@Column(length=9999) 
 	private String messageStore;
@@ -165,23 +165,23 @@ public class Session implements Serializable {
 	}
 
 
-	public String getStarteDateTime() {
-		return starteDateTime;
+	public String getCreationDateTime() {
+		return creationDateTime;
 	}
 
 
-	public void setStarteDateTime(String starteDateTime) {
-		this.starteDateTime = starteDateTime;
+	public void setCreationDateTime(String creationDateTime) {
+		this.creationDateTime = creationDateTime;
 	}
 
 
-	public String getLastDateTime() {
-		return lastDateTime;
+	public String getLastUpdateDateTime() {
+		return lastUpdateDateTime;
 	}
 
 
-	public void setLastDateTime(String lastDateTime) {
-		this.lastDateTime = lastDateTime;
+	public void setLastUpdateDateTime(String lastUpdateDateTime) {
+		this.lastUpdateDateTime = lastUpdateDateTime;
 	}
 
 

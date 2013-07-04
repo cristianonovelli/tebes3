@@ -1,4 +1,4 @@
-package it.enea.xlab.tebes.controllers.session;
+/*package it.enea.xlab.tebes.controllers.session;
 
 
 import it.enea.xlab.tebes.common.JNDIServices;
@@ -49,3 +49,4 @@ public class ValidationController extends WebController {
 }
 
 
+*/

@@ -23,29 +23,26 @@ public class SUT implements Serializable {
 	private Long id;
 	
 	private String name;
+
+	
+	// descrizione testuale
+	private String description;
 	
 	// tipi possibili: document, transport, process
 	private String type;
 	
 	// linguaggi possibili:
 	// xml: se sto effettuando validazione schema o schematron generica
-	// ubl: se sto effettuando validazione schema o schematron UBL
-	// ebms: se sto effettuando validazione sulla transazione con ebMS
-	// ebbp: se sto effettuando validazione sul processo descritto con ebBP
 	private String language;
 	
 	// riferimento alla descrizione delle regole che descrivono il linguaggio usato
 	// (p.es. schema ubl, schema ebms, schema ebbp, profilo, ecc.)
-	private String reference;
+	//private String reference;
 	
 	// interazioni possibili: website (upload), email, ws, cpa
-	//@OneToOne
-	//@PrimaryKeyJoinColumn(name="id", referencedColumnName="interaction_sut_id")
 	@OneToOne(mappedBy="sut",cascade = CascadeType.ALL)
 	private Interaction interaction;
-	
-	// descrizione testuale
-	private String description;
+
 
 
 	@ManyToOne(cascade=CascadeType.MERGE)
@@ -60,19 +57,15 @@ public class SUT implements Serializable {
 	/**
 	 * Constructor without id.
 	 */
-	public SUT(String name, String type, String language, String reference, Interaction interaction, String description) {
+	public SUT(String name, String type, String language, Interaction interaction, String description) {
 
 		this.setName(name);
 		this.setType(type);
 		this.setLanguage(language);
-		this.setReference(reference);
 		this.setInteraction(interaction);
 		this.setDescription(description);
 	}
 
-
-
-	
 
 	/*
 	 * Getters and Setters
@@ -84,8 +77,6 @@ public class SUT implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-
 
 	public String getDescription() {
 		return description;
@@ -103,57 +94,38 @@ public class SUT implements Serializable {
 		this.user = user;
 	}
 
-
 	public void addToUser(User tempUser) {
 		
 		this.user = tempUser;
 	}
 
-
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-
 	public String getType() {
 		return type;
 	}
-
 
 	public void setType(String type) {
 		this.type = type;
 	}
 
-
 	public String getLanguage() {
 		return language;
 	}
-
 
 	public void setLanguage(String language) {
 		this.language = language;
 	}
 
-
-	public String getReference() {
-		return reference;
-	}
-
-
-	public void setReference(String reference) {
-		this.reference = reference;
-	}
-
-
 	public Interaction getInteraction() {
 		return interaction;
 	}
-
 
 	public void setInteraction(Interaction interaction) {
 		this.interaction = interaction;

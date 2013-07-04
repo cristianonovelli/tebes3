@@ -109,7 +109,7 @@ public class SUTManagerImplITCase {
 
 		// 2. CREATE two generic SUTs
 		Interaction interaction = new Interaction(Constants.INTERACTION_WEBSITE);
-		SUT sut1 = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.UBL, Constants.UBLSCHEMA, interaction, "XML document1 uploaded by web interface");
+		SUT sut1 = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.XML, interaction, "XML document1 uploaded by web interface");
 		Long sutId1 = sutManagerController.createSUT(sut1, tempUser);
 		
 		if (sutId1 < 0) {
@@ -121,7 +121,7 @@ public class SUTManagerImplITCase {
 		Assert.assertTrue(sutId1 > 0);
 		Assert.assertTrue(sut1.getInteraction().getType().equals(Constants.INTERACTION_WEBSITE)); 
 
-		SUT sut2 = new SUT("sut2", Constants.SUT_TYPE1_DOCUMENT, Constants.UBL, Constants.UBLSCHEMA, interaction, "XML document2 uploaded by web interface");	
+		SUT sut2 = new SUT("sut2", Constants.SUT_TYPE1_DOCUMENT, Constants.XML, interaction, "XML document2 uploaded by web interface");	
 		Long sutId2 = sutManagerController.createSUT(sut2, tempUser);
 		
 		if (sutId2 < 0) {

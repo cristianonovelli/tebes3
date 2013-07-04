@@ -73,110 +73,39 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);
 
 		if ( (user != null) && (sut != null) && (testPlan != null) ) {
-		
-
 			
-			try {
 
 				// CREATE Session
 				Session session = new Session(userId, sutId, testPlanId);
-				session.setStarteDateTime(XLabDates.getCurrentUTC());
-				session.setLastDateTime(XLabDates.getCurrentUTC());
+				session.setCreationDateTime(XLabDates.getCurrentUTC());
+				session.setLastUpdateDateTime(XLabDates.getCurrentUTC());
 				
 				Long sessionId = this.createSession(session);
 				session = this.readSession(sessionId);
 				
 				
 				// CREATE Report Structure (DRAFT state by default)
-				Report report = reportManager.createReportForNewSession(session);				
+				Report report;
+				try {
+					
+					report = reportManager.createReportForNewSession(session, user, testPlan, sut);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new Long(-2);
+				}				
+				
+				
 				if (report == null)
 					return new Long(-3);
 				
-				
-				// When a Report empty is created
-				// the system set up first information
-				// and adjust the XML
-				String xmlReportPathName = reportManager.getSystemXMLReportAbsPathName();
-				
-				ReportDOM reportDOM = null;
-				
-				try {
 
-					// Get ReportDOM
-					reportDOM = new ReportDOM(xmlReportPathName);			
-					Element rootElement = reportDOM.root;
-					
-					if ( reportDOM.root != null ) {
-						
-						// Aggiorno XML Root
-						reportDOM.setIdAttribute(rootElement, report.getId().toString());
-						reportDOM.setNameAttribute(rootElement, report.getName());
-						reportDOM.setDescriptionAttribute(rootElement, report.getDescription());
-						reportDOM.setSessionIDAttribute(rootElement, report.getSessionID().toString());
-						reportDOM.setStateAttribute(rootElement, report.getState());
-						reportDOM.setDatetimeAttribute(rootElement, report.getDatetime());
-						
-						// Aggiorno XML Session
-						reportDOM.setIdAttribute(reportDOM.getSessionElement(), report.getSessionID().toString());						
-						reportDOM.setSessionStartDateTime(session.getStarteDateTime());
-						reportDOM.setSessionLastDateTime(session.getLastDateTime());
-						
-						// Aggiorno XML User
-						reportDOM.setIdAttribute(reportDOM.getUserElement(), session.getUserId().toString());
-						reportDOM.setUserName(user.getName());
-						reportDOM.setUserSurname(user.getSurname());
-
-						// Aggiorno XML SUT
-						reportDOM.setSUTId(session.getSutId());
-						reportDOM.setSUTName(sut.getName());
-						reportDOM.setSUTType(sut.getType());
-						reportDOM.setSUTLanguage(sut.getLanguage());
-						reportDOM.setSUTReference(sut.getReference());
-						reportDOM.setSUTInteraction(sut.getInteraction().getType());						
-						reportDOM.setSUTDescription(sut.getDescription());
-								
-						// Aggiorno XML TestPlan
-						reportDOM.setTestPlanId(session.getTestPlanId());
-						reportDOM.setTestPlanDatetime(testPlan.getDatetime());
-						reportDOM.setTestPlanState(testPlan.getState());
-						
-						// TODO location deve contenere la posizione (relativa o assoluta del TP utente)
-						// questo vuol dire che deve essere stato salvato da qualche parte nel momento dell'importazione
-						// TODO import su file, creazione cartella utente ecc.
-						reportDOM.setTestPlanReference(testPlan.getLocation());
-						//reportDOM.setTestPlanReference("TEMP");
-						
-						reportDOM.setTestPlanDescription(testPlan.getDescription());
-						
-
-						report.setXml(reportDOM.getXMLString());
-						reportManager.updateReport(report);
-					}
-					else
-						System.out.println("XReport: " + reportDOM.getReport().getErrorMessage());						
-					
-				} catch (Exception e) {
-					
-					e.printStackTrace();
-				} 
-
-				if (reportDOM == null)
-					return new Long(-4);
 				
 				// ADD Report To Session
 				this.addReportToSession(report.getId(), session.getId());
 
-				
 				return sessionId;
-				
-				
-			} catch (Exception e) {
-				
-				e.printStackTrace();
-				
-				// @return -2 an unexpected exception happened
-				return new Long(-2);
-			}	
+
 
 		}
 		else

@@ -3,7 +3,6 @@ package it.enea.xlab.tebes.session;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.controllers.session.SessionManagerController;
-import it.enea.xlab.tebes.controllers.session.ValidationController;
 import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
 import it.enea.xlab.tebes.controllers.testplan.TestPlanManagerController;
 import it.enea.xlab.tebes.controllers.users.UserAdminController;
@@ -260,6 +259,8 @@ public class SessionManagerImplITCase {
 	@Test
 	public void test2_autoCreation() {
 		
+		logger.info("Test: test2_autoCreation");
+		
 		// Login SuperUser
 		String superUserEmail = PropertiesUtil.getUser1Email();
 		String superUserPassword = PropertiesUtil.getUser1Password();
@@ -267,29 +268,26 @@ public class SessionManagerImplITCase {
 		Long superUserId = superUser.getId();
 		superUser = userAdminController.readUser(superUserId);
 		
-		// Importazione dei Test Plan per lo SuperUser
+		// Importazione dei Test Plan XML per lo SuperUser (gli utenti li importeranno poi da lui)
 		// N.B. questa operazione viene fatta in fase di setup del sistema
-		// 1. SuperUser Get Test Plan List (list of name files)
-		// 2. SuperUser Import TestPlan
-		// 3. Get List from User
 		boolean importing = testPlanController.importSystemTestPlanFile(superUser);
 		Assert.assertTrue(importing);
 
-		
-		//Vector<String> systemTestPlanXMLFileList = testPlanController.getSystemXMLTestPlanList();
-		//Assert.assertTrue(systemTestPlanXMLFileList.size() == 2);
 		TestPlan testPlan = null;
 		Long testPlanId;
-		//String testPlanAbsPathName;
-		//String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlanDir();
 		
 		
-		// Lista dei TestPlan disponibili nel sistema
-		// N.B. l'importazione deve essere stata fatta in fase di Setup della piattaforma		
+		// ORA SI PASSA ALLO USER GENERICO //
+
+		// Login User generico
+		User currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
+		Long currentUserId = currentUser.getId();
+		
+		// Lista dei TestPlan disponibili nel sistema	
 		List<TestPlan> systemTestPlanList = testPlanController.getSystemTestPlanList();
 		Assert.assertTrue(systemTestPlanList.size()>0);
 		
-		// Per ogni TestPlan... lo verifico
+		// Per ogni TestPlan del sistema... lo verifico
 		for (int i=0; i<systemTestPlanList.size();i++) {
 
 			testPlan = systemTestPlanList.get(i);
@@ -309,28 +307,17 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));			
 		}	
 		
-
-
-		// Login User generico
-		User currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
-		Long currentUserId = currentUser.getId();
-		
-		// Selezione di un TestPlan generico
+		// Selezione di un TestPlan generico per l'utente (currentUser)
 		TestPlan selectedTestPlan = systemTestPlanList.get(0);
 		Assert.assertNotNull(selectedTestPlan);
 
-		// Copia e importazione del TestPlan scelto
+		// Copia e importazione del TestPlan scelto per l'utente (currentUser)
 		testPlanId = testPlanController.cloneTestPlan(selectedTestPlan, currentUserId);
 		Assert.assertTrue(testPlanId.intValue()>0);			
 		
-		//adding = testPlanController.addTestPlanToUser(testPlanId, currentUserId);
-		//Assert.assertTrue(adding.intValue()>0);	
-		
-		
-		
 		// Creazione di un SUT
 		Interaction interaction = new Interaction(Constants.INTERACTION_WEBSITE);
-		SUT sut = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.UBL, Constants.UBLSCHEMA, interaction, "XML document1 uploaded by web interface");
+		SUT sut = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.XML, interaction, "XML document1 uploaded by web interface");
 		Long sutId = sutController.createSUT(sut, currentUser);
 		Assert.assertNotNull(sutId);	
 		Assert.assertTrue(sutId.intValue()>0);	
@@ -349,12 +336,6 @@ public class SessionManagerImplITCase {
 		Assert.assertNotNull(sessionId);
 		Assert.assertTrue(sessionId.intValue()>0);
 		
-		
-		// GET Current Session
-		Session currentSession = sessionController.readSession(sessionId);
-		Assert.assertNotNull(currentSession);
-		Assert.assertTrue(currentSession.getId().intValue() > 0);
-			
 		// TODO: PRE-EXECUTION
 		//  IL SISTEMA EFFETTUA UNA VERIFICA, C'E' UN SUT COMPATIBILE PER OGNI ACTION? SE NO, SI VA NEL SUT MANAGER
 		// Devo collegare un SUT alle action
@@ -362,15 +343,18 @@ public class SessionManagerImplITCase {
 		// SE CE NE SONO N COME LI COLLEGO ALLE ACTION?
 		// MOSTRO LE N ACTION, IL TIPO E UN MENU' A TENDINA CON I SUT DISPONIBILI DI QUEL TIPO PER OGNI ACTION
 		// SALVO IL COLLEGAMENTO NELLA ACTION SOTTO LA VOCE SUTID.
-		
-	
-		
-			
-		Assert.assertNotNull(selectedTestPlan);
-		Assert.assertTrue(selectedTestPlan.getId().intValue() > 0);
 
 		
-		// WORKFLOW ACTIONS - 
+		// GET Current Session
+		Session currentSession = sessionController.readSession(sessionId);
+		Assert.assertNotNull(currentSession);
+		Assert.assertTrue(currentSession.getId().intValue() > 0);
+
+		Assert.assertNotNull(selectedTestPlan);
+		Assert.assertTrue(selectedTestPlan.getId().intValue() > 0);
+		
+		// A questo punto, ho avviato la sessione di test per la tripla (utente, sut, testplan)
+		// EXECUTION OF ACTIONS WORKFLOW 
 		
 		// Definisco un contatore per evitare che la stessa Action si ripeta all'infinito
 		int failuresForAction = 0;
@@ -379,18 +363,19 @@ public class SessionManagerImplITCase {
 		ActionWorkflow workflow;
 		Action currentAction;
 		
-		// GET Workflow, actionMark and current Action
+		// GET Workflow
 		workflow = testPlanController.readTestPlan(testPlanId).getWorkflow();	
 		
 		int actionsNumber = workflow.getActions().size();
 		int indexTemp;
 		
 		// Definisco due actionMark:
-		// actionMark aggiornato post-Run
+		// actionMark aggiornato
 		int actionMark = workflow.getActionMark();
-		// actionMarkPreRun continua a conservare lo stato pre-Run
+		// actionMarkPreRun continua a conservare lo stato prima dell'esecuzione della action
+		// questo ci serve per capire se è variato o meno (varia se l'action è stata eseguita)
 		int actionMarkPreRun;
-		// all'inizio entrambi i marker sono settati a 1
+		// all'inizio entrambi i marker sono settati a 1 (prima action)
 		Assert.assertTrue(actionMark == 1);
 		
 		// Get First Action to Execute
@@ -462,8 +447,7 @@ public class SessionManagerImplITCase {
 				
 				System.out.println();
 				
-				failuresForAction++;
-				
+				failuresForAction++;				
 			}
 			
 
@@ -475,6 +459,10 @@ public class SessionManagerImplITCase {
 			// 3. l'utente  decide di annullare la sessione di test
 			
 			// 4. raggiungo il numero massimo di fallimenti per la stessa action
+			
+			
+			// in ogni caso devo aggiornate gli stati di session e report
+			
 			
 			System.out.println("COUNTER: " + failuresForAction);
 			
@@ -522,9 +510,9 @@ public class SessionManagerImplITCase {
 		report = sessionController.getReport(sessionId);
 		
 		Assert.assertTrue(report.getState().equals(Report.getFinalState()));
-		//System.out.println("REPORT");
-		//System.out.println(report.getState());
-		//System.out.println(report.getTestResult());
+		System.out.println("REPORT");
+		System.out.println(report.getState());
+		System.out.println(report.getTestResult());
 		
 		
 		// TODO chiusura della sessione di test
@@ -537,7 +525,7 @@ public class SessionManagerImplITCase {
 		
 	
 	//@Test
-	public void test3_validation() throws Exception {
+/*	public void test3_validation() throws Exception {
 
 		ValidationController validationManagerController;
 		validationManagerController = (ValidationController) WebControllersUtilities.getManager(ValidationController.CONTROLLER_NAME);
@@ -554,7 +542,7 @@ public class SessionManagerImplITCase {
 		System.out.println("oioioioi:" + validationManagerController.nothing().toString());
 		
 			
-	}
+	}*/
 
 	@AfterClass
 	public static void after_testPlanManager() throws Exception {

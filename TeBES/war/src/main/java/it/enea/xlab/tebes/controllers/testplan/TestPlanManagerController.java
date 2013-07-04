@@ -70,6 +70,7 @@ public class TestPlanManagerController extends WebController {
 	}
 
 	public TestPlan readTestPlan(Long testPlanId) {
+		
 		return testPlanManagerService.readTestPlan(testPlanId);
 	}
 

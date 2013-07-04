@@ -79,7 +79,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			if ( testPlan.getId() == null ) {
 				
 				// Creo il TestPlan SENZA il Workflow
-				testPlan2 = new TestPlan(null, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), testPlan.getDescription(), null, null);
+				testPlan2 = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), null, null);
 				eM.persist(testPlan2);	
 				
 				// TODO CREATE Workflow
@@ -90,7 +90,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				Long wf2Id = actionManager.createWorkflow(wf2);
 				wf2 = actionManager.readWorkflow(wf2Id);
 				
-				Vector<Action> actionList = (Vector<Action>) wf.getActions();
+				Vector<Action> actionList = (Vector<Action>) wf.getActions(); 
 				for (int i=0; i<actionList.size(); i++) 					
 					actionManager.createAction(actionList.get(i), wf2Id);
 				
@@ -110,6 +110,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				// ADD TestPlan to User
 				this.addTestPlanToUser(testPlan2.getId(), userId);
 
+				logger.debug("CREATED TestPlan with ID " + testPlan2.getId() + ": " + testPlan2.getDescription());
+				
 				return testPlan2.getId();
 			}
 			else {
@@ -183,7 +185,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 		TestPlanXML tpXMLClone = this.cloneTestPlanXML(testPlan.getTestplanxml());
 		
-		testPlanClone = new TestPlan(null, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), testPlan.getDescription(), wfClone, tpXMLClone);
+		testPlanClone = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), wfClone, tpXMLClone);
 		Long testPlanCloneId = this.createTestPlan(testPlanClone, userId);	
 
 		return testPlanCloneId;
@@ -264,6 +266,9 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 		//System.out.println("-AAAAAAAAAA: readUserTestPlanList");
         List<TestPlan> testPlanList = (List<TestPlan>) eM.createQuery("SELECT t FROM TestPlan t").getResultList(); 
+        
+        
+        
         //System.out.println("-AAAAAAAAAA: readUserTestPlanList: " + testPlanList.size());
         Iterator<TestPlan> i = testPlanList.iterator();
         TestPlan tpTemp;
@@ -312,8 +317,10 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			 testPlan = eM.merge(testPlan);
 			 //eM.persist(user);
 			 
-			 if (testPlan != null)
+			 if (testPlan != null) {
 				 result = true;
+				 logger.debug("UPDATED TestPlan with ID " + testPlan.getId() + ": " + testPlan.getDescription());
+			 }
 		 }
 		
 		return result;
@@ -336,6 +343,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			testPlan.getUser().getTestPlans().remove(testPlan);
 			
 			eM.remove(testPlan);
+			logger.debug("DELETED TestPlan with ID " + testPlan.getId() + ": " + testPlan.getDescription());
 			
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
@@ -351,7 +359,6 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	
 	
 	
-	
 	public List<TestPlan> readTestPlanByDatetimeAndUserId(String datetime, Long userId) {
 
 		User user = userManager.readUser(userId);
@@ -360,7 +367,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		for(int i=0; i<testPlanList1.size(); i++) {
 			
-			if (testPlanList1.get(i).getDatetime().equals(datetime))
+			if (testPlanList1.get(i).getCreationDatetime().equals(datetime))
 				testPlanList2.add(testPlanList1.get(i));
 			
 		}
@@ -403,7 +410,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				
 				//System.out.println("4:" + testPlanDOM.getXMLString());
 				//System.out.println("4:" + testPlanDOM.getRootDatetimeAttribute());
-				testPlan = new TestPlan(testPlanDOM.getXMLString(), testPlanDOM.getRootDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, testPlanDOM.getRootDescriptionAttribute(), workflow, tpXML);
+				testPlan = new TestPlan(testPlanDOM.getRootNameAttribute(), testPlanDOM.getRootDescriptionAttribute(), testPlanDOM.getRootCreationDatetimeAttribute(), testPlanDOM.getRootLastUpdateDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, workflow, tpXML);
 			}
 		} catch (Exception e) {
 			
@@ -670,13 +677,13 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				// GET TestPlan structure from XML
 				testPlanAbsPathName = superUserTestPlanDir.concat(systemTestPlanFileList.elementAt(i));
 
-				System.out.println("zxcv:" + i + ":" + testPlanAbsPathName);
+				//System.out.println("zxcv:" + i + ":" + testPlanAbsPathName);
 				
 				// Create
 				testPlan = this.getTestPlanFromXML(testPlanAbsPathName);			
-				System.out.println("zxcv:" + i + ":" + testPlan.getDatetime());
+				//System.out.println("zxcv:" + i + ":" + testPlan.getDatetime());
 				testPlanId = this.createTestPlan(testPlan, user.getId());
-				System.out.println("zxcv:" + i + ":" + testPlanId);
+				//System.out.println("zxcv:" + i + ":" + testPlanId);
 				
 				// Se solo un'importazione non va a buon fine il risultato è false
 				if (testPlanId.intValue() < 0 )

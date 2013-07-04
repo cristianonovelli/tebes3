@@ -3,7 +3,9 @@ package it.enea.xlab.tebes.report;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
+import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -42,7 +44,7 @@ public class ReportDOM extends JXLabDOM {
 	//// Methods to handle Actions ////
 	///////////////////////////////////
 	
-	public NodeList getTestActionNodeList() {
+/*	public NodeList getTestActionNodeList() {
 
 		NodeList actionNodes = null;
 		
@@ -67,7 +69,7 @@ public class ReportDOM extends JXLabDOM {
 
 		return actionElement.getElementsByTagName("tebes:Test").item(0);
 	}	
-	
+	*/
 	
 	
 
@@ -92,15 +94,15 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 	
-	public String getRootSessionIDAttribute() {
+/*	public String getRootSessionIDAttribute() {
 		
 		return this.getSessionIDAttribute(this.root);
-	}
+	}*/
 
-	public String getRootDatetimeAttribute() {
+/*	public String getRootDatetimeAttribute() {
 		
 		return this.getNodeAttribute(this.root, "datetime");
-	}
+	}*/
 
 	public String getRootStateAttribute() {
 		
@@ -141,7 +143,7 @@ public class ReportDOM extends JXLabDOM {
 		this.setNodeAttribute(node, "description", description);
 	}
 	
-	public String getSessionIDAttribute(Node node) {
+	/*public String getSessionIDAttribute(Node node) {
 		
 		return this.getNodeAttribute(node, "sessionID");
 	}
@@ -149,9 +151,9 @@ public class ReportDOM extends JXLabDOM {
 	public void setSessionIDAttribute(Node node, String sessionID) {
 		
 		this.setNodeAttribute(node, "sessionID", sessionID);
-	}
+	}*/
 	
-	public String getDatetimeAttribute(Node node) {
+	/*public String getDatetimeAttribute(Node node) {
 		
 		return this.getNodeAttribute(node, "datetime");
 	}
@@ -159,7 +161,7 @@ public class ReportDOM extends JXLabDOM {
 	public void setDatetimeAttribute(Node node, String datetime) {
 		
 		this.setNodeAttribute(node, "datetime", datetime);
-	}
+	}*/
 	
 	public String getStateAttribute(Node node) {
 		
@@ -191,19 +193,19 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
-	public void setSessionStartDateTime(String starteDateTime) {
+	public void setSessionCreationDateTime(String creationDateTime) {
 		
-		Element startDatetimeElement = (Element) this.getSessionElement().getElementsByTagName("tebes:StartDateTime").item(0);
+		Element startDatetimeElement = (Element) this.getSessionElement().getElementsByTagName("tebes:CreationDateTime").item(0);
 		
-		startDatetimeElement.getChildNodes().item(0).setNodeValue(starteDateTime);
+		startDatetimeElement.getChildNodes().item(0).setNodeValue(creationDateTime);
 	}
 
 
-	public void setSessionLastDateTime(String lastDateTime) {
+	public void setSessionLastUpdateDateTime(String lastUpdateDateTime) {
 		
-		Element lastDatetimeElement = (Element) this.getSessionElement().getElementsByTagName("tebes:LastDateTime").item(0);
+		Element lastUpdateDatetimeElement = (Element) this.getSessionElement().getElementsByTagName("tebes:LastUpdateDateTime").item(0);
 		
-		lastDatetimeElement.getChildNodes().item(0).setNodeValue(lastDateTime);
+		lastUpdateDatetimeElement.getChildNodes().item(0).setNodeValue(lastUpdateDateTime);
 	}
 	
 	
@@ -268,10 +270,10 @@ public class ReportDOM extends JXLabDOM {
 		this.setSUTChildNode("tebes:Language", language);
 	}
 
-	public void setSUTReference(String reference) {
+/*	public void setSUTReference(String reference) {
 		
 		this.setSUTChildNode("tebes:Reference", reference);	
-	}
+	}*/
 
 	public void setSUTInteraction(String interactionType) {
 		
@@ -305,11 +307,26 @@ public class ReportDOM extends JXLabDOM {
 		tpChildElement.getChildNodes().item(0).setNodeValue(value);	
 	}
 
-	public void setTestPlanDatetime(String datetime) {
+	public void setTestPlanName(String name) {
 		
-		this.setTestPlanChildNode("tebes:DateTime", datetime);
+		this.setTestPlanChildNode("tebes:Name", name);
+	}
+	
+	public void setTestPlanDescription(String description) {
+		
+		this.setTestPlanChildNode("tebes:Description", description);
+	}
+	
+	public void setTestPlanCreationDatetime(String creationDatetime) {
+		
+		this.setTestPlanChildNode("tebes:CreationDateTime", creationDatetime);
 	}
 
+	public void setTestPlanLastUpdateDatetime(String lastUpdateDatetime) {
+		
+		this.setTestPlanChildNode("tebes:LastUpdateDateTime", lastUpdateDatetime);
+	}
+	
 	public void setTestPlanState(String state) {
 
 		this.setTestPlanChildNode("tebes:State", state);
@@ -320,11 +337,125 @@ public class ReportDOM extends JXLabDOM {
 		this.setTestPlanChildNode("tebes:Reference", location);
 	}
 
-	public void setTestPlanDescription(String description) {
-		
-		this.setTestPlanChildNode("tebes:Description", description);
-	}		
+
+
+
 	
+	//////////////////////////////////////////
+	//// Methods to handle Execution Node ////
+	//////////////////////////////////////////
+
+	public String getGlobalResult() {
+		
+		return this.doc.getElementsByTagName("tebes:GlobalResult").item(0).getFirstChild().getNodeValue();
+	}
+
+
+	public void setNumberAttribute(Node actionXML, String number) {
+		
+		this.setNodeAttribute(actionXML, "number", number);		
+	}
+
+
+	public void insertActionNode(Node actionNodeClone) {
+
+		Node testActionListNode = this.getTestActionListNode();
+		testActionListNode.insertBefore(actionNodeClone, null);
+	}
+
+
+	public Node getTestActionListNode() {
+
+		return this.doc.getElementsByTagName("tebes:TestActionList").item(0);
+	}
+
+
+	public void setGlobalResult(String result) {
+
+		Element globalResultElement = (Element) this.getGlobalResultNode();
+		globalResultElement.getChildNodes().item(0).setNodeValue(result);	
+	
+	}
+
+
+	private Node getGlobalResultNode() {
+
+		return this.doc.getElementsByTagName("tebes:GlobalResult").item(0);
+	}
+
+	public Node getTestElement(Node actionNode) {
+		
+		return ((Element) actionNode).getElementsByTagName("tebes:Test").item(0);
+	}
+
+
+	public NodeList getTestActionNodeList() {
+
+			return this.doc.getElementsByTagName("tebes:TestAction");
+	}
+
+
+	public void setNodeValue(Node rootNode, String nodeLabel, String nodeValue) {
+
+		Element rootElement = (Element) rootNode;
+		Element myElement = (Element) rootElement.getElementsByTagName(nodeLabel).item(0);
+		
+		myElement.getChildNodes().item(0).setNodeValue(nodeValue);
+	}	
+	
+	public void setActionName(Node actionNode, String name) {
+
+		this.setNodeValue(actionNode, "tebes:ActionName", name);
+	}
+
+
+	public void setActionDescription(Node actionNode, String description) {
+
+		this.setNodeValue(actionNode, "tebes:ActionDescription", description);
+	}
+
+
+	public void setActionTest(Node actionNode, String testValue) {
+		
+		this.setNodeValue(actionNode, "tebes:Test", testValue);
+	}
+
+
+	public void setTestJumpPrerequisitesAttribute(Node actionNode,
+			boolean jumpTurnedON) {
+		
+		if (jumpTurnedON)
+			this.setNodeAttribute(actionNode, "jumpPrerequisites", "true");
+		else
+			this.setNodeAttribute(actionNode, "jumpPrerequisites", "false");
+		
+	}
+
+
+	public void setTestLgAttribute(Node actionNode, String testLanguage) {
+		
+		this.setNodeAttribute(actionNode, "lg", testLanguage);
+	}
+
+
+	public void setTestLocationAttribute(Node actionNode, String testLocation) {
+		
+		this.setNodeAttribute(actionNode, "location", testLocation);
+	}
+
+
+	public void setTestTypeAttribute(Node actionNode, String testType) {
+		
+		this.setNodeAttribute(actionNode, "type", testType);
+	}
+
+
+
+
+
+
+
+
 	
 	
 }

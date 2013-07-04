@@ -67,12 +67,22 @@ public class TestPlanDOM extends JXLabDOM {
 	////////////////////////////////////////
 	//// Methods to get Root ATTRIBUTES ////
 	////////////////////////////////////////
-	
-	public String getRootDatetimeAttribute() {
+
+	public String getRootNameAttribute() {
 		
-		return this.getNodeAttribute(this.root, "datetime");
+		return this.getNodeAttribute(this.root, "name");
+	}
+	
+	public String getRootCreationDatetimeAttribute() {
+		
+		return this.getNodeAttribute(this.root, "creationDatetime");
 	}
 
+	public String getRootLastUpdateDatetimeAttribute() {
+		
+		return this.getNodeAttribute(this.root, "lastUpdateDatetime");
+	}
+	
 	public String getRootStateAttribute() {
 		
 		return this.getStateAttribute(this.root);
@@ -90,7 +100,7 @@ public class TestPlanDOM extends JXLabDOM {
 
 	public void setRootUserIDAttribute(String userId) {
 		
-		//this.getUserIDAttribute(this.root);
+		this.getUserIDAttribute(this.root);
 	}
 	
 	public String getRootDescriptionAttribute() {
