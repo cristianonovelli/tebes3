@@ -36,8 +36,6 @@ public class User implements Serializable {
 	 * Lista dei SUT dello User 
 	 * Ogni User ha uno o più SUT => OneToMany
 	 */
-	//,CascadeType.MERGE,CascadeType.REMOVE
-	// , fetch = FetchType.EAGER
 	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<SUT> userSut;
