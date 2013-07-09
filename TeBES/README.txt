@@ -22,4 +22,4 @@ mvn clean install -Pdev-create -DskipTests
 mvn clean install -Pdev-create
 mvn clean install -Pdev-update
 mvn clean install -Pprod
-mvn clean -Dit.test=SessionManagerImplITCase verify
+mvn clean -Pdev-create -Dit.test=SessionManagerImplITCase verify
