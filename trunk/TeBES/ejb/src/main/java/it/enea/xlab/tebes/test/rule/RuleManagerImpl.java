@@ -3,10 +3,8 @@ package it.enea.xlab.tebes.test.rule;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.Profile;
-
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.model.TestRule;
-import it.enea.xlab.tebes.users.UserManagerRemote;
 import it.enea.xlab.tebes.validation.ValidationManagerRemote;
 
 import javax.ejb.EJB;
@@ -16,6 +14,7 @@ import javax.naming.NamingException;
 
 import validator.ErrorMessage;
 
+ 
 
 
 @Stateless
