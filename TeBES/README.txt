@@ -23,3 +23,7 @@ mvn clean install -Pdev-create
 mvn clean install -Pdev-update
 mvn clean install -Pprod
 mvn clean -Pdev-create -Dit.test=SessionManagerImplITCase verify
+
+
+URL APPLICAZIONE WEB
+http://localhost:8080/TeBES-war/index.jsf
