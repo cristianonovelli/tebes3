@@ -63,12 +63,20 @@ public class Session implements Serializable {
 	
 	
 	private String state;
+	
+	// TODO QUALI SONO I TIPI DI INTERAZIONE CHE RICHIEDE UNA ACTION?
+	
+	//private String requestInteraction;
+	
 
 	private String creationDateTime;
 	private String lastUpdateDateTime;
 	
 	@Column(length=9999) 
 	private String messageStore;
+	
+	
+	
 	
 
 	public Session() {

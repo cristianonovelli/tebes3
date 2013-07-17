@@ -397,26 +397,48 @@ public class SessionManagerImplITCase {
 			System.out.println("YOU ARE EXECUTING THE ACTION " + actionMark + " OF " + actionsNumber);	
 			System.out.println(currentAction.getActionSummaryString());
 			
-			// TODO if action.sutId is NULL the user have to use the sutManager and declare the support for this type		
-			//if (action.getSutId() == null) 			
-			//	;
+
+			// PER ORA
+			// 1. Faccio l'upload
+			// 2. salvo il file nel FileManager
+			// 3. lo uso nel mio test
+			
+			// 1. UPLOAD
+			// a livello di Test passo il file al FileController 
+			// che verrà modificato in sede di definizione dell'interfaccia da EPOCA che deciderà il modo migliore per caricarlo
+			// TODO il file deve essere salvato nella locazione utente
+			String absFileName = "C:/Temp/ubl-invoice";
+			
+			// Boolean uploading = fileController.upload(absFileName);
+			
 			
 
-			// TODO prima di chiamare il runworkflow ora faccio il finto upload
-			// PERO' questo dovrebbe eventualmente richiederlo il sistema dopo aver avviato l'action
-			/*XLabDOM xml = null;
-			try {
-				xml = new XLabDOM("C:/Java/workspace-indigo2/TeBES/ejb/ubl-invoice.xml", false, false);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			// TODO prima di chiamare il runworkflow è stato fatto l' upload
+			// PERO' questo dovrebbe  richiederlo il sistema dopo aver avviato l'action in questo modo:
+			// 1. avvio il workflow
+			// 2. il sistema vede che l'action ha bisogno di un file di input (nella tabella di compatibilità sutType-inputAction)
+			// 	 il sistema vede nel messagestore di questa sessione se c'è un file di input, non c'è
+			// il sistema setta Session.interaction con FILE (il typo di sut in ballo)
+			// 3. a questo punto, se Session.interaction = SUTRequired
+			// effettuo l'upload, richiamo la stessa action e setto l'interaction a null
 			
-			currentSession.setMessageStore(xml.toString());*/
+			// TODO discorso diverso quando si hanno più file
+			// ci vorrebbe un file manager in cui precaricare i file e assegnarli agli input del test plan
+			
+			
+			
+
+			
+
 			
 			// RUN Workflow
 			currentSession = testPlanController.runWorkflow(workflow, currentSession);
 
+			
+			
+			
+			
+			
 			// REFRESH Workflow, actionMark and current Action
 			workflow = testPlanController.readTestPlan(testPlanId).getWorkflow();		
 			actionMark = workflow.getActionMark();
@@ -452,6 +474,8 @@ public class SessionManagerImplITCase {
 			
 
 
+			
+			
 			// 1. le azioni da eseguire non sono finite
 			
 			// 2. l'utente  decide di sospendere la sessione di test
