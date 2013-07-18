@@ -268,7 +268,7 @@ public class UserManagerImplITCase {
 	 * The Role deleting implies the User deleting!
 	 * @throws Exception
 	 */
-	@AfterClass
+//	@AfterClass
 	public static void after_clean() throws Exception {
 
 		Boolean deleting;

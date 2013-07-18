@@ -17,7 +17,7 @@ public class SessionManagerController extends WebController {
 	
 	private SessionManagerRemote sessionManagerBean;
 	
-
+	private List<Session> sessionsList;
 
 	public SessionManagerController() {
 				
@@ -29,17 +29,20 @@ public class SessionManagerController extends WebController {
 		sessionManagerBean = JNDIServices.getSessionManagerService();
 	}
 	
-	
 	public Session getSession(Long sessionId) {
 		
 		return sessionManagerBean.readSession(sessionId);
 	}
 
-	/*public List<Session> getSessionList(Long userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}*/
+//	public List<Session> getSessionsList() {
+//		if(sessionsList == null)
+//			
+//		return sessionsList;
+//	}
 
+	public void setSessionsList(List<Session> sessionsList) {
+		this.sessionsList = sessionsList;
+	}
 	
 /*	public Session reactivateSession(Long sessionId) {
 		// TODO Auto-generated method stub
@@ -55,7 +58,6 @@ public class SessionManagerController extends WebController {
 		
 		return sessionManagerBean.run(userId, sutId, testPlanId);
 	}
-
 
 	public Report getReport(Long sessionId) {
 		
