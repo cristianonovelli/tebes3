@@ -1,1 +1,3 @@
-mvn install:install-file -Dfile=xlab-common-1.1.jar -DgroupId=it.enea.xlab -DartifactId=xlab-common -Dversion=1.1 -Dpackaging=jar
+mvn install:install-file -Dfile=xlab-common-1.2.jar -DgroupId=it.enea.xlab -DartifactId=xlab-common -Dversion=1.2 -Dpackaging=jar
+mvn install:install-file -Dfile=validation.jar -DgroupId=it.enea.xlab -DartifactId=validation -Dversion=1.0 -Dpackaging=jar
+mvn install:install-file -Dfile=saxon9-dom.jar -DgroupId=it.enea.xlab -DartifactId=saxon9-dom -Dversion=1.0 -Dpackaging=jar
