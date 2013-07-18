@@ -583,11 +583,14 @@ public class SessionManagerImplITCase {
 		List<Long> roleIdList = userAdminController.getRoleIdList();
 		Assert.assertTrue(roleIdList.size() == 4);
 		
-		Role tempRole;
-		Long tempRoleId;
+		//Role tempRole;
+		//Long tempRoleId;
+		
+		
+		
 		
 		// Cancello ogni ruolo
-		for (int u=0;u<roleIdList.size();u++) {
+/*		for (int u=0;u<roleIdList.size();u++) {
 			
 			tempRoleId = (Long) roleIdList.get(u);
 			Assert.assertTrue(tempRoleId.intValue() > 0);
@@ -598,18 +601,36 @@ public class SessionManagerImplITCase {
 			// DELETE Role
 			deleting = userAdminController.deleteRole(tempRole.getId());
 			Assert.assertTrue(deleting);			
-		}		
+		}		*/
+		
+		List<Long> userIdList = userAdminController.getUserIdList();
+		
+		User tempUser;
+		Long tempUserId;
+		for (int u=0;u<userIdList.size();u++) {
+			
+			tempUserId = (Long) userIdList.get(u);
+			Assert.assertTrue(tempUserId.intValue() > 0);
+
+			tempUser = userAdminController.readUser(tempUserId);			
+			Assert.assertNotNull(tempUser);
+						
+			// DELETE User
+			if (tempUser.getRole().getLevel() != role4_superuser.getLevel() ) {			
+				deleting = userAdminController.deleteUser(tempUser.getId());
+				Assert.assertTrue(deleting);			
+			}
+		}
 
 		
 		// Get Role List
-		roleIdList = userAdminController.getRoleIdList();
-		Assert.assertTrue(roleIdList.size() == 0);
+		//roleIdList = userAdminController.getRoleIdList();
+		//Assert.assertTrue(roleIdList.size() == 0);
 		
 		// Last Check
 		// Sono stati eliminati tutti gli utenti (a cascata)?
-		List<Long> userIdList = userAdminController.getUserIdList();
 		userIdList = userAdminController.getUserIdList();
-		Assert.assertTrue(userIdList.size() == 0);
+		//Assert.assertTrue(userIdList.size() == 1);
 		
 		
 		// Get Session List
@@ -619,13 +640,13 @@ public class SessionManagerImplITCase {
 
 		
 		// Cancello ogni ruolo
-		for (int s=0;s<sessionIdList.size();s++) {
+		/*for (int s=0;s<sessionIdList.size();s++) {
 
 						
 			// DELETE Role
 			deleting = sessionController.deleteSession(sessionIdList.get(s));
 			Assert.assertTrue(deleting);			
-		}		
+		}	*/	
 	}
 	
 	
