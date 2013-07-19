@@ -26,7 +26,7 @@
 	
 	<tebes:TestActionList>
 	
-		<tebes:TestAction number="1">
+		<tebes:TestAction id="TA-1_TP-1" number="1">
 			
 			<tebes:ActionName>XMLSchema-UBL-T10</tebes:ActionName>
 			<tebes:ActionDescription>UBL Invoice XML Schema Validation.</tebes:ActionDescription>
@@ -40,7 +40,10 @@
 				lg="xml"
 				reference="http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd"
 				description="My UBL Invoice">
-				<tebes:interaction type="website" />
+				<tebes:Interactions> 
+					<tebes:Interaction type="website" />
+					<tebes:Interaction type="email" endpoint="msh2.partya@gmail.com" />
+				</tebes:Interactions>
 			</tebes:Input>
 		</tebes:TestAction>
 	
@@ -55,7 +58,7 @@
 				- "TestCase" 
 				- "TestSuite" 
 		-->
-		<tebes:TestAction number="2">
+		<tebes:TestAction id="TA-2_TP-1" number="2">
 			
 			<!-- 
 				The following "tebes:ActionName" element can take different values 
@@ -83,12 +86,7 @@
 			-->
 			<tebes:ActionDescription>Italian INTERCENT-ER UBL Invoice Schematron Validation.</tebes:ActionDescription>
 			
-
-			<!-- 
-				The tebes:ActionTarget is the SUT type 
-			-->
-			<!-- tebes:ActionTarget type="xml" retrieve="upload">document</tebes:ActionTarget -->			
-						
+				
 			<!-- 
 				The tebes:Test element contains the reference to test to execute, 
 				dependent on previous tebes:TestAction/@type attribute:
@@ -113,7 +111,7 @@
 				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml">TA-001_TC-001_TS-005</tebes:Test>
 				
 			<!-- 
-				EUT sta per Element Under Test ed è un elemento del SUT 
+				tebes:Input è un elemento che specifica l'input da parte del SUT 
 				(o il SUT stesso se l'elemento è uno)
 				su cui sarà eseguita quest'action.
 				Nell'action corrente, per esempio, il SUT è la fattura UBL.
@@ -133,41 +131,31 @@
 				reference="http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd"
 				description="My UBL Invoice">
 				
-					<!-- L'elemento complesso tebes:interaction specifica l'interazione con la piattaforma di test:
+					<!-- L'elemento complesso tebes:Interactions specifica le possibili interazioni 
+						con la piattaforma di test:
 						- website: interazione tramite interfaccia del sito web, upload e download;
 						- email: interazione tramite protocollo pop/smtp;
 						- webservice: interazione tramite servizio web;
 						- ebxmlcpa: interazione descritta tramite standard ebXML CPA.
-						A seconda del tipo di interazione scelta l'elemento può contenere altri parametri,
-						come per esempio tebes:endpoint
+						A seconda del tipo di interazione scelta l'elemento può contenere altri attributi,
+						come per esempio endpoint
 					-->
-					<tebes:interaction type="website" />
+					<tebes:Interactions> 
+						<tebes:Interaction type="website" />
+						<tebes:Interaction type="email" endpoint="msh2.partya@gmail.com" />
+					</tebes:Interactions>
 				</tebes:Input>
 		</tebes:TestAction>
 		
-
-
-		<!-- tebes:TestAction number="3">
-			
-			<tebes:ActionName>TC-001_TS-002</tebes:ActionName>
-			<tebes:ActionDescription>Test Case for UBL Invoice BII Schematron validation.</tebes:ActionDescription>
-			<tebes:Test 
-				lg="taml" 
-				type="TestCase" 
-				jumpPrerequisites="true"
-				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-002_bii/TC-001_BII-UBL-T10.xml">TC-001_TS-002</tebes:Test>
-			
-		</tebes:TestAction -->
-		
 	</tebes:TestActionList>
 
-			<!-- 
-				The "tebes:Choreography" element specifies a choreography among the defined test actions. 
-				If this element is empty, the N actions MUST be executed from number 1 to N, sequentially.
-				
-				The choreography XML element is work in progress:
-				a solution to express choreography may be an ebBP-like XML syntax. 
-			-->	
+	<!-- 
+		The "tebes:Choreography" element specifies a choreography among the defined test actions. 
+		If this element is empty, the N actions MUST be executed from number 1 to N, sequentially.
+		
+		The choreography XML element is work in progress:
+		a solution to express choreography may be an ebBP-like XML syntax. 
+	-->	
 	<tebes:Choreography />
 	
 </tebes:TestPlan>
