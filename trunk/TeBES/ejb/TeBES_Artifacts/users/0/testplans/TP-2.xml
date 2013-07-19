@@ -35,13 +35,13 @@
 				type="TestAssertion" 
 				jumpPrerequisites="true"
 				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml">TA-001_TC-001_TS-001</tebes:Test>
-			<tebes:EUT 
+			<tebes:Input 
 				type="document" 
 				lg="xml"
 				reference="http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd"
 				description="My UBL Invoice">
 					<tebes:interaction type="website" />
-				</tebes:EUT>			
+				</tebes:Input>			
 		</tebes:TestAction>
 	
 	
@@ -127,13 +127,13 @@
 				(schema ubl, schema ebms, schema ebbp, profilo, ecc.)
 				- description: descrizione testuale
 			-->
-			<tebes:EUT 
+			<tebes:Input 
 				type="document" 
 				lg="xml"
 				reference="http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd"
 				description="My UBL Invoice">
 				<tebes:interaction type="website" />
-				</tebes:EUT>			
+				</tebes:Input>			
 		</tebes:TestAction>
 		
 	</tebes:TestActionList>
