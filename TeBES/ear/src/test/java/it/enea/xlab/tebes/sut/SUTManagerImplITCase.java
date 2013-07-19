@@ -57,27 +57,33 @@ public class SUTManagerImplITCase {
 		sutManagerController = (SUTManagerController) WebControllersUtilities.getManager(SUTManagerController.CONTROLLER_NAME);
 		Assert.assertNotNull(sutManagerController);
 		
-		
-		// Prepare 4 user Roles 
-		role1_standard = new Role(Constants.STANDARD_ROLE_NAME, Constants.STANDARD_ROLE_DESCRIPTION, Constants.STANDARD_ROLE_LEVEL);
-		role2_advanced = new Role(Constants.ADVANCED_ROLE_NAME, Constants.ADVANCED_ROLE_DESCRIPTION, Constants.ADVANCED_ROLE_LEVEL);
-		role3_admin = new Role(Constants.ADMIN_ROLE_NAME, Constants.ADMIN_ROLE_DESCRIPTION, Constants.ADMIN_ROLE_LEVEL);
-		role4_superuser = new Role(Constants.SUPERUSER_ROLE_NAME, Constants.SUPERUSER_ROLE_DESCRIPTION, Constants.SUPERUSER_ROLE_LEVEL);
-		
-		// Create dei Ruoli che devono già essere fissati come setup del sistema
-		Long id_role1_standard = userAdminController.createRole(role1_standard);
-		Long id_role2_advanced = userAdminController.createRole(role2_advanced);
-		Long id_role3_admin = userAdminController.createRole(role3_admin);
-		Long id_role4_superuser = userAdminController.createRole(role4_superuser);
-
 		// Get Role List
 		List<Long> roleIdList = userAdminController.getRoleIdList();
-		Assert.assertTrue(roleIdList.size() == 4);
-		
-		role1_standard = userAdminController.readRole(id_role1_standard);
-		role2_advanced = userAdminController.readRole(id_role2_advanced);
-		role3_admin = userAdminController.readRole(id_role3_admin);
-		role4_superuser = userAdminController.readRole(id_role4_superuser);
+		Assert.assertTrue( (roleIdList.size() == 0) || (roleIdList.size() == 4) );
+
+		if (roleIdList.size() == 0) {
+			
+			// Prepare 4 user Roles 
+			role1_standard = new Role(Constants.STANDARD_ROLE_NAME, Constants.STANDARD_ROLE_DESCRIPTION, Constants.STANDARD_ROLE_LEVEL);
+			role2_advanced = new Role(Constants.ADVANCED_ROLE_NAME, Constants.ADVANCED_ROLE_DESCRIPTION, Constants.ADVANCED_ROLE_LEVEL);
+			role3_admin = new Role(Constants.ADMIN_ROLE_NAME, Constants.ADMIN_ROLE_DESCRIPTION, Constants.ADMIN_ROLE_LEVEL);
+			role4_superuser = new Role(Constants.SUPERUSER_ROLE_NAME, Constants.SUPERUSER_ROLE_DESCRIPTION, Constants.SUPERUSER_ROLE_LEVEL);
+			
+			// Create dei Ruoli che devono già essere fissati come setup del sistema
+			userAdminController.createRole(role1_standard);
+			userAdminController.createRole(role2_advanced);
+			userAdminController.createRole(role3_admin);
+			userAdminController.createRole(role4_superuser);
+
+			// Get Role List
+			roleIdList = userAdminController.getRoleIdList();
+			Assert.assertTrue(roleIdList.size() == 4);
+		}
+
+		role1_standard = userAdminController.readRole(roleIdList.get(0));
+		role2_advanced = userAdminController.readRole(roleIdList.get(1));
+		role3_admin = userAdminController.readRole(roleIdList.get(2));
+		role4_superuser = userAdminController.readRole(roleIdList.get(3));
 
 
 	}
@@ -175,7 +181,7 @@ public class SUTManagerImplITCase {
 
 		Boolean deleting;
 		
-		// Get Role List
+/*		// Get Role List
 		List<Long> roleIdList = userAdminController.getRoleIdList();
 		Assert.assertTrue(roleIdList.size() == 4);
 		
@@ -194,13 +200,33 @@ public class SUTManagerImplITCase {
 				// DELETE Role
 				deleting = userAdminController.deleteRole(tempRole.getId());
 				Assert.assertTrue(deleting);			
-		}		
+		}	*/	
+
+		
+		List<Long> userIdList = userAdminController.getUserIdList();
+		
+		User tempUser;
+		Long tempUserId;
+		for (int u=0;u<userIdList.size();u++) {
+			
+			tempUserId = (Long) userIdList.get(u);
+			Assert.assertTrue(tempUserId.intValue() > 0);
+
+			tempUser = userAdminController.readUser(tempUserId);			
+			Assert.assertNotNull(tempUser);
+						
+			// DELETE User
+			if (tempUser.getRole().getLevel() != role4_superuser.getLevel() ) {			
+				deleting = userAdminController.deleteUser(tempUser.getId());
+				Assert.assertTrue(deleting);			
+			}
+		}
+		
 		
 		// Last Check
 		// Sono stati eliminati tutti gli utenti?
-		List<Long> userIdList = userAdminController.getUserIdList();
 		userIdList = userAdminController.getUserIdList();
-		Assert.assertTrue(userIdList.size() == 0);
+		Assert.assertTrue(userIdList.size() == 1);
 		
 	}
 }
