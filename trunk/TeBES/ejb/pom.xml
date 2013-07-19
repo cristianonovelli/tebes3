@@ -154,8 +154,9 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		
 		<dependency>
-        <groupId>it.enea.xlab.tebes.validation</groupId>
+        	<groupId>it.enea.xlab.tebes.validation</groupId>
         	<artifactId>Validation</artifactId>
 			<version>1.0-SNAPSHOT</version>
 			<type>jar</type>
