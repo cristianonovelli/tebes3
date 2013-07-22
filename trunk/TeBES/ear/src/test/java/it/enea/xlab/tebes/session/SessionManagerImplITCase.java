@@ -93,6 +93,9 @@ public class SessionManagerImplITCase {
 		User superUser = new User("Cristiano", "Novelli", superUserEmail, superUserPassword);
 		Long superUserId = userAdminController.createUser(superUser, role4_superuser);
 		
+		//
+		
+		
 		// Create 2 temporary Users
 		User currentUser = new User(Constants.USER1_NAME, Constants.USER1_SURNAME, Constants.USER1_EMAIL, Constants.USER1_PASSWORD);	
 		Long idTempUser1 = userProfileController.registration(currentUser, role1_standard);
