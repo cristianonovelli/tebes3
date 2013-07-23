@@ -1,5 +1,7 @@
 package it.enea.xlab.tebes.sut;
 
+import java.util.List;
+
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 
@@ -24,6 +26,8 @@ public interface SUTManagerRemote {
 	
 	// Delete SUT
 	public Boolean deleteSUT(Long idSUT);
+
+	public List<SUT> getSystemSUTSupported();
 
 	
 

@@ -392,6 +392,16 @@ public class UserManagerImpl implements UserManagerRemote {
         return groupIdList;
 	}
 	
+	public List<Group> getGroupList() {
+
+        String queryString = "SELECT g FROM UserGroup AS g";
+        
+        Query query = eM.createQuery(queryString);
+        List<Group> groupList = query.getResultList();
+
+        return groupList;
+	}
+	
 	
 	
 	////////////////////
@@ -488,29 +498,35 @@ public class UserManagerImpl implements UserManagerRemote {
 
 	/**
 	 * SET Group to User
+	 * if Group == null
 	 * @return 	 1 ok
 	 * 			-1 exception1 read error
 	 * 			-2 exception2 persist error
 	 */
 	public Long setUserGroup(User user, Group group) {
-
-		try {
-			User u = this.readUser(user.getId());
-			Group g = this.readGroup(group.getId());
-			
-			try {
-				u.setGroup(g);
-				eM.persist(g);
-			} catch (Exception e2) {
-				e2.printStackTrace();
-				return new Long(-2);
-			}	
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			return new Long(-1);
-		}		
 		
-		return new Long(1);		
+			try {
+				User u = this.readUser(user.getId());
+				
+				Group g;
+				if (group != null) 
+					g = this.readGroup(group.getId());
+				else
+					g = null;
+				
+				try {
+					u.setGroup(g);
+					eM.persist(g);
+				} catch (Exception e2) {
+					e2.printStackTrace();
+					return new Long(-2);
+				}	
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				return new Long(-1);
+			}		
+			
+			return new Long(1);	
 	}
 
 
@@ -546,6 +562,8 @@ public class UserManagerImpl implements UserManagerRemote {
 
         return userIdList;
 	}
+
+
 
 
 

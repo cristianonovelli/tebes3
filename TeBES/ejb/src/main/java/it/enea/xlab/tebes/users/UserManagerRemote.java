@@ -39,11 +39,14 @@ public interface UserManagerRemote {
 	// Group functions
 	public Long createGroup(Group group);
 	public List<Long> getGroupIdList();
+	public List<Group> getGroupList();
 	public Group readGroup(Long id);
 	public Long setUserGroup(User user, Group group);
 	public Boolean deleteGroup(Long id);
 
 	public List<Long> getActionIdList();
+
+	
 
 	//public Boolean deleteTestPlan(Long userId, Long testPlanId);
 }

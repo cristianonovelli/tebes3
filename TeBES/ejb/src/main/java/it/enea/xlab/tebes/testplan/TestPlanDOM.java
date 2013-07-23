@@ -63,6 +63,11 @@ public class TestPlanDOM extends JXLabDOM {
 		return actionElement.getElementsByTagName("tebes:Test").item(0);
 	}	
 	
+	public Node getInputNode(Element actionElement) {
+		
+		return actionElement.getElementsByTagName("tebes:Input").item(0);
+	}
+	
 
 	////////////////////////////////////////
 	//// Methods to get Root ATTRIBUTES ////
@@ -155,6 +160,11 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getNodeAttribute(node, "lg");
 	}
 
+	public String getInteractionAttribute(Node node) {
+		
+		return this.getNodeAttribute(node, "interaction");
+	}
+	
 	public String getTypeAttribute(Node node) {
 		
 		return this.getNodeAttribute(node, "type");
@@ -176,6 +186,12 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getAttribute(attributeLabel, node);
 		
 	}
+
+
+
+
+
+
 
 
 
