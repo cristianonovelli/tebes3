@@ -30,13 +30,18 @@ public class Action implements Serializable {
 	private int actionNumber;
 	private String actionName;
 	private String state;
+	
 	private String testLanguage;
 	private String testType;
 	private String testLocation;
 	private String testValue;
 	private boolean jumpTurnedON;
 	private String description;
-	private Long sutId;
+
+	private String inputType;
+	private String inputLanguage;
+	private String inputInteraction;	
+	
 	
 	//@ManyToOne
 	@ManyToOne(cascade=CascadeType.MERGE)
@@ -48,7 +53,9 @@ public class Action implements Serializable {
 		
 	}
 	
-	public Action(int number, String name, String state, String lg, String type, String location, String value, boolean jumpTurnedON, String description) {
+	public Action(int number, String name, String state, 
+			String lg, String type, String location, String value, boolean jumpTurnedON, String description,
+			String inputType, String inputLanguage, String inputInteraction) {
 		
 		//this.setActionId(actionId);
 		this.setActionNumber(number);
@@ -71,7 +78,9 @@ public class Action implements Serializable {
 		this.setJumpTurnedON(jumpTurnedON);
 		this.setDescription(description);
 		
-		
+		this.setInputType(inputType);
+		this.setInputLanguage(inputLanguage);
+		this.setInputInteraction(inputInteraction);
 	}
 
 	
@@ -87,11 +96,6 @@ public class Action implements Serializable {
 		result = result.concat("Test Jump Prerequisites: " + this.isJumpTurnedON() +"\n");
 		result = result.concat("Test Location: " + this.getTestLocation() +"\n");
 		result = result.concat("Test Location: " + this.getTestLocation() +"\n");
-		
-		if (this.getSutId() == null) 			
-			result = result.concat("User SUT: MISSING!\n");
-		else
-			result = result.concat("User SUT: " + this.getSutId() +"\n");
 		
 		result = result.concat("------------------------");
 		
@@ -241,12 +245,28 @@ public class Action implements Serializable {
 		return TODO_STATE;
 	}
 
-	public Long getSutId() {
-		return sutId;
+	public String getInputType() {
+		return inputType;
 	}
 
-	public void setSutId(Long sutId) {
-		this.sutId = sutId;
+	public void setInputType(String inputType) {
+		this.inputType = inputType;
+	}
+
+	public String getInputLanguage() {
+		return inputLanguage;
+	}
+
+	public void setInputLanguage(String inputLanguage) {
+		this.inputLanguage = inputLanguage;
+	}
+
+	public String getInputInteraction() {
+		return inputInteraction;
+	}
+
+	public void setInputInteraction(String inputInteraction) {
+		this.inputInteraction = inputInteraction;
 	}
 	
 }

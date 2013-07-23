@@ -3,6 +3,7 @@ package it.enea.xlab.tebes.session;
 import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.SUT;
@@ -65,6 +66,8 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	 * 			-2 an unexpected exception happened
 	 * 			-3 report null
 	 * 			-4 reportDOM null
+	 * 			-5 there isn't match testplan-sut of user
+	 * 			-6 there is match testplan-sut of user but it isn't supported in tebes
 	 */
 	public Long run(Long userId, Long sutId, Long testPlanId) {
 		
@@ -75,36 +78,55 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		if ( (user != null) && (sut != null) && (testPlan != null) ) {
 			
 
-				// CREATE Session
-				Session session = new Session(userId, sutId, testPlanId);
-				session.setCreationDateTime(XLabDates.getCurrentUTC());
-				session.setLastUpdateDateTime(XLabDates.getCurrentUTC());
+			// Check match testplan-sut of user
+			boolean matching1 = this.matchTestPlanSUT(testPlan, sut);
+			
+			if (!matching1)
+				return new Long(-5);
+			
+			// Check match testplan-sut of system
+			// Ciclo per ogni SUT del system alla ricerca di almeno uno compatibile
+			List<SUT> systemSUTSupported = sutManager.getSystemSUTSupported();
+			
+			boolean matching2 = false;
+			for (int i=0; i<systemSUTSupported.size();i++) {
 				
-				Long sessionId = this.createSession(session);
-				session = this.readSession(sessionId);
+				if ( this.matchTestPlanSUT(testPlan, systemSUTSupported.get(i)) )
+					matching2 = true;
+			}
+			
+			if (!matching2)
+				return new Long(-6);
+			
+			// CREATE Session
+			Session session = new Session(userId, sutId, testPlanId);
+			session.setCreationDateTime(XLabDates.getCurrentUTC());
+			session.setLastUpdateDateTime(XLabDates.getCurrentUTC());
+			
+			Long sessionId = this.createSession(session);
+			session = this.readSession(sessionId);
+			
+			
+			// CREATE Report Structure (DRAFT state by default)
+			Report report;
+			try {
 				
+				report = reportManager.createReportForNewSession(session, user, testPlan, sut);
 				
-				// CREATE Report Structure (DRAFT state by default)
-				Report report;
-				try {
-					
-					report = reportManager.createReportForNewSession(session, user, testPlan, sut);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-					return new Long(-2);
-				}				
-				
-				
-				if (report == null)
-					return new Long(-3);
-				
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new Long(-2);
+			}				
+			
+			
+			if (report == null)
+				return new Long(-3);
 
-				
-				// ADD Report To Session
-				this.addReportToSession(report.getId(), session.getId());
+			// ADD Report To Session
+			this.addReportToSession(report.getId(), session.getId());
 
-				return sessionId;
+			
+			return sessionId;
 
 
 		}
@@ -114,6 +136,33 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	}
 	
 	
+	private boolean matchTestPlanSUT(TestPlan testPlan, SUT sut) {
+		
+		boolean match = true;
+		
+		// The match is "true" if for each action of test plan:
+		// 1. type="document" 
+		// 2. lg="xml"
+		// 3. interaction type="website"
+		
+		List<Action> actionList = testPlan.getWorkflow().getActions();
+		
+		Action a;
+		for (int i=0; i<actionList.size(); i++) {				
+			
+			a = actionList.get(i);
+			
+			if ( 	( !a.getInputType().equals(sut.getType() ) ) ||
+					( !a.getInputLanguage().equals(sut.getLanguage() ) ) ||
+					( !a.getInputInteraction().equals(sut.getInteraction().getType() ) )  )
+						
+					match = false;
+		}
+		
+		return match;
+	}
+
+
 	/**
 	 * CREATE Session
 	 * If there isn't Session with these user, testplan and sut, it creates the new Session

@@ -34,6 +34,7 @@ public class TestPlan implements Serializable {
 	private String location;
 	
 
+
 	/**
 	 * USER proprietario del TestPlan
 	 * Molti TestPlan hanno lo stesso User => ManyToOne 

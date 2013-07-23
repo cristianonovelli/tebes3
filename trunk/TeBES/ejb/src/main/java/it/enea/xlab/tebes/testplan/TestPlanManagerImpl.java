@@ -234,7 +234,11 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				action1.getTestLocation(),
 				action1.getTestValue(), 
 				action1.isJumpTurnedON(), 
-				action1.getDescription());
+				action1.getDescription(),
+				action1.getInputType(),
+				action1.getInputLanguage(),
+				action1.getInputInteraction()				
+				);
 
 		return action2;
 	}	
@@ -410,7 +414,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				
 				//System.out.println("4:" + testPlanDOM.getXMLString());
 				//System.out.println("4:" + testPlanDOM.getRootDatetimeAttribute());
-				testPlan = new TestPlan(testPlanDOM.getRootNameAttribute(), testPlanDOM.getRootDescriptionAttribute(), testPlanDOM.getRootCreationDatetimeAttribute(), testPlanDOM.getRootLastUpdateDatetimeAttribute(), testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, workflow, tpXML);
+				testPlan = new TestPlan(testPlanDOM.getRootNameAttribute(), testPlanDOM.getRootDescriptionAttribute(), testPlanDOM.getRootCreationDatetimeAttribute(), testPlanDOM.getRootLastUpdateDatetimeAttribute(), 
+						testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, workflow, tpXML);
 			}
 		} catch (Exception e) {
 			
@@ -470,7 +475,15 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 			location = TeBESDAO.url2localLocation(location);
 
-			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, jump, description);
+			// Input
+			Node inputNode = testPlanDOM.getInputNode(actionElement);
+			
+			String inputType = testPlanDOM.getTypeAttribute(inputNode);		
+			String inputLanguage = testPlanDOM.getLgAttribute(inputNode);				
+			String inputInteraction = testPlanDOM.getInteractionAttribute(inputNode);			
+			
+			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, jump, description,
+					inputType, inputLanguage, inputInteraction);
 			//Long actionId = this.insertAction(action);
 			
 			//System.out.println(action.getActionSummaryString());

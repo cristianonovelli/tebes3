@@ -2,11 +2,13 @@ package it.enea.xlab.tebes.sut;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Interaction;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
@@ -49,7 +51,7 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	public Long createSUT(SUT sut, User user) {
 		
 		// TODO qui ci vuole una readSUTByNameAndUser che sia gestito bene
-		SUT existingSUT = this.readSUTByNameAndUser(sut.getName(), user);
+		SUT existingSUT = this.readSUTByName(sut.getName());
 		
 		try {
 			if (existingSUT == null) {
@@ -77,7 +79,7 @@ public class SUTManagerImpl implements SUTManagerRemote {
 			}
 		}
 		catch(Exception e) {
-			
+
 			e.printStackTrace();
 			return new Long(-2);
 		}
@@ -224,6 +226,19 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		}
 		
 		return true;
+	}
+
+
+	public List<SUT> getSystemSUTSupported() {
+
+		String superUserEmail = PropertiesUtil.getUser1Email();
+		String superUserPassword = PropertiesUtil.getUser1Password();
+
+		User superUser = userManager.readUserbyEmailAndPassword(superUserEmail, superUserPassword);
+		
+		List<SUT> superUserSUTList = superUser.getSutList();
+		
+		return superUserSUTList;
 	}
 
 
