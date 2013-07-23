@@ -92,8 +92,17 @@ public class SessionManagerImplITCase {
 		String superUserPassword = PropertiesUtil.getUser1Password();
 		User superUser = new User("Cristiano", "Novelli", superUserEmail, superUserPassword);
 		Long superUserId = userAdminController.createUser(superUser, role4_superuser);
+		superUser = userAdminController.readUser(superUserId);
+		Assert.assertTrue(superUserId.intValue()>0);	
 		
-		//
+		// Create superuser SUTs (SUTs supported by TeBES)
+		Interaction interaction = new Interaction(Constants.INTERACTION_WEBSITE);
+		SUT sut = new SUT("systemSUT1", Constants.SUT_TYPE1_DOCUMENT, Constants.XML, interaction, "System SUT 1: XML document uploaded by web interface");
+		System.out.println("preSUTID:");
+		Long sutId = sutController.createSUT(sut, superUser);
+		System.out.println("SUTID:" + sutId);
+		Assert.assertNotNull(sutId);	
+		Assert.assertTrue(sutId.intValue()>0);			
 		
 		
 		// Create 2 temporary Users
@@ -108,161 +117,8 @@ public class SessionManagerImplITCase {
 	}
 	
 	
-	/*//@Test
-	public void test1_manualCreation() {
-		
-		//String superUserEmail = PropertiesUtil.getUser1Email();
-		//String superUserPassword = PropertiesUtil.getUser1Password();
-		//User superUser = userProfileController.login(superUserEmail, superUserPassword);
-		//superUserId = superUser.getId();
-	
-		User currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
-		Long currentUserId = currentUser.getId();
-		
-
-
-		// CREATE ActionWorkflow
-		ActionWorkflow wf = new ActionWorkflow(new Vector<Action>());
-		wf.setComment("mycomment");		
-		//Long workflowId = testPlanController.createWorkflow(wf);
-		//wf = testPlanController.readWorkflow(workflowId);
-		//Assert.assertTrue(workflowId.intValue()>0);	
-		
-
-		// CREATE Actions
-		Action a = new Action(1, "nome", Action.getTodoState(),"taml", "tc", "www.ciao.it", "3<2", false, "descrizione");
-		Action a2 = new Action(2, "nome2", Action.getTodoState(), "taml", "tc", "www.ciao.it", "3<2", false, "descrizione");	
-		Long actionId = testPlanController.createAction(a, workflowId);
-		Assert.assertTrue(actionId.intValue()>0);	
-		Long actionId2 = testPlanController.createAction(a2, workflowId);
-		Assert.assertTrue(actionId2.intValue()>0);		
-		wf.getActions().add(a);
-		wf.getActions().add(a2);
-		
-		TestPlanXML tpXML = new TestPlanXML("xml", "location");
-		
-		// CREATE TestPlan
-		// TODO la persistenza di questo TestPlan con questo workflow, non gli piace
-		// dovrei farne la persistenza senza e poi attaccarlo!
-		TestPlan tp = new TestPlan("xml", "datetime", "state", "location", "description", wf, tpXML);
-		Long tpid = testPlanController.createTestPlan(tp, currentUserId);
-		Assert.assertTrue(tpid.intValue()>0);			
-		
-		// ADD Workflow to TestPlan
-		//testPlanController.addWorkflowToTestPlan(workflowId, tpid);
-		
-		// ADD TestPlan to User
-		//Long adding = testPlanController.addTestPlanToUser(tpid, currentUserId);
-		//Assert.assertTrue(adding.intValue()>0);	
-		
-		
-		
-		currentUser = userProfileController.login(currentUser.geteMail(), currentUser.getPassword());
-		
-		// TODO se questo funziona non c'è bisogno del metodo per prelevare il testplan dato lo user
-		tp = currentUser.getTestPlans().get(0);
-		Assert.assertNotNull(tp);
-		
-		
-		
-		//workflowId = testPlanController.readWorkflowByTestPlan(tp);
-		//Assert.assertTrue(workflowId.intValue()>0);
-		
-		wf = tp.getWorkflow();
-				//testPlanController.readWorkflow(workflowId);
-		Assert.assertNotNull(wf);
-		
-		List<Action> actionList = wf.getActions();
-		Assert.assertNotNull(actionList);
-		Assert.assertTrue(actionList.size()>0);
-		
-		
-		// Creazione di un SUT
-		Interaction interaction = new Interaction(Constants.INTERACTION_WEBSITE);
-		SUT sut = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.UBL, Constants.UBLSCHEMA, interaction, "XML document1 uploaded by web interface");
-		Long sutId = sutController.createSUT(sut, currentUser);
-		Assert.assertNotNull(sutId);	
-		Assert.assertTrue(sutId.intValue()>0);
-		
-		
-		// CREATE SESSION
-		Long sessionId = sessionController.run(currentUserId, sutId, tp.getId());
-		Assert.assertNotNull(sessionId);
-		Assert.assertTrue(sessionId.intValue()>0);
-		
-		// TODO LA SESSIONE AL MOMENTO NON FA NULLA E INVECE DOVREBBE:
-		// 1. ESEGUIRE IL TESTPLAN CARICANDOLO IN MEMORIA,
-		// 2. INVOCARE I VALIDATORI NECESSARI A ESEGUIRE I TEST E
-		// 3. CREARE IL RELATIVO REPORT
-		
-		Boolean deleting;
-		
-
-		TestPlan tpBis = testPlanController.readTestPlan(tp.getId());
-		Assert.assertNotNull(tpBis);
-		
-		ActionWorkflow wfBis = tpBis.getWorkflow();
-		Assert.assertNotNull(wfBis);
-		
-		Long actionIdBis = wfBis.getActions().get(0).getId();
-		Action aBis = testPlanController.readAction(actionIdBis);
-		Assert.assertNotNull(aBis);
-		
-		if ( wfBis.getActions().contains(aBis) ) {
-			System.out.println("AAAAAAAA" + aBis.getId());
-			wfBis.getActions().remove(aBis);
-			Assert.assertTrue(testPlanController.updateWorkflow(wfBis));
-		}
-		
-		aBis = testPlanController.readAction(actionIdBis);
-		
-		deleting = testPlanController.deleteAction(aBis.getId());
-		Action aBis2 = testPlanController.readAction(actionIdBis);
-		Assert.assertNull(aBis2);
-		
-		
-		wfBis = tpBis.getWorkflow();
-		Assert.assertNotNull(wfBis);
-		if ( wfBis.getActions().size()>0 ) {
-			aBis = wfBis.getActions().get(1);
-			
-			deleting = testPlanController.deleteAction(aBis.getId());
-			Assert.assertTrue(deleting);
-			Action aBis3 = testPlanController.readAction(aBis.getId());
-			Assert.assertNull(aBis3);		
-		}
-		
-		
-		
-		//System.out.println("FFFFFFFF: " + aBis.getId());
-		//deleting = testPlanController.deleteAction(aBis.getId());
-		//Assert.assertTrue(deleting);		
-		
-		
-		// DELETE Workflow > DELETE relative Actions
-		//deleting = testPlanController.deleteWorkflow(wf.getId());
-		//Assert.assertTrue(deleting);
-
-		// TODO PROBLEMA CON CANCELLAZIONE ACTION, PERCHE'?
-		//a = testPlanController.readAction(actionId);
-		//deleting = testPlanController.deleteAction(a.getId());
-		//Assert.assertTrue(deleting);
-		
-		// TODO IL SEGUENTE TEST HA SUCCESSO MA IN REALTA' LE ACTION CI SONO, SOLO NON SONO LINKATE AL WF!
-		
-		// Get Action List (only superuser)
-		//List<Long> actionIdList = userAdminController.getActionIdList();
-		//Assert.assertTrue(actionIdList.size()==0);
-		
-		// TODO N.B. the metod deleteAction is useless, doesn't work...
-	}*/
-	
-	
-	
 	@Test
-	public void test2_autoCreation() {
-		
-		logger.info("Test: test2_autoCreation");
+	public void test_session() {
 		
 		// Login SuperUser
 		String superUserEmail = PropertiesUtil.getUser1Email();
@@ -335,17 +191,27 @@ public class SessionManagerImplITCase {
 		
 		
 		// CREATE SESSION
+		//  IL SISTEMA EFFETTUA UNA VERIFICA, C'E' UN SUT COMPATIBILE PER OGNI ACTION? SE NO, SI VA NEL SUT MANAGER
+		
 		Long sessionId = sessionController.run(currentUserId, sutId, testPlanId);
 		Assert.assertNotNull(sessionId);
-		Assert.assertTrue(sessionId.intValue()>0);
-		
-		// TODO: PRE-EXECUTION
-		//  IL SISTEMA EFFETTUA UNA VERIFICA, C'E' UN SUT COMPATIBILE PER OGNI ACTION? SE NO, SI VA NEL SUT MANAGER
-		// Devo collegare un SUT alle action
-		// SE C'è SOLO UN SUT DI TIPO DOCUMENT, OK
-		// SE CE NE SONO N COME LI COLLEGO ALLE ACTION?
-		// MOSTRO LE N ACTION, IL TIPO E UN MENU' A TENDINA CON I SUT DISPONIBILI DI QUEL TIPO PER OGNI ACTION
-		// SALVO IL COLLEGAMENTO NELLA ACTION SOTTO LA VOCE SUTID.
+		Assert.assertTrue(sessionId.intValue()>0);		
+		/**
+		 * RUN / CREATE Session
+		 * 
+		 * @return	sessionId > 0 if OK
+		 * 			-1 one or more ID isn't a valid identifier
+		 * 			-2 an unexpected exception happened
+		 * 			-3 report null
+		 * 			-4 reportDOM null
+		 * 			-5 there isn't match testplan-sut of user
+		 * 			-6 there is match testplan-sut of user but it isn't supported in tebes
+		 */
+		// NB
+		// Nel caso sia -5 l'utente dovrà modificare o aggiungere un SUT
+		// Nel caso sia ritornato -6 vuol dire che il testplan che si vuole eseguire non è supportato dal sistema
+		// (quest'ultimo caso è impossibile se la piattaforma impedisce di importare testPlan non supportabili o 
+		// se impedisce durante la modifica del testplan di specificare Input non validi)
 
 		
 		// GET Current Session

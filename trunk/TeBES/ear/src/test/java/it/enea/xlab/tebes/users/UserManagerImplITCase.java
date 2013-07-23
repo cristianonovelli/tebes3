@@ -196,6 +196,10 @@ public class UserManagerImplITCase {
 		// Get Group List
 		List<Long> groupIdList = userAdminController.getGroupIdList();
 		Assert.assertTrue(groupIdList.size() == 1);
+		
+		List<Group> groupList = userAdminController.getGroupList();
+		Assert.assertTrue(groupList.size() == 1);
+		
 		Group xlabGroup = userAdminController.readGroup(groupIdList.get(0));
 		Assert.assertNotNull(xlabGroup);
 		
@@ -229,6 +233,12 @@ public class UserManagerImplITCase {
 			Assert.assertTrue(groupSetting>0);
 			tempUser = userAdminController.readUser(tempUserId);	
 			Assert.assertTrue(tempUser.getGroup().getName().equals(Constants.XLAB_GROUP_NAME));
+			
+			// Detach
+			/*groupSetting = userAdminController.setUserGroup(tempUser, null);
+			tempUser = userAdminController.readUser(tempUserId);
+			Assert.assertNull(tempUser.getGroup());*/
+			
 			
 		}
 		
