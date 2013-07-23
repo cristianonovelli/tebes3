@@ -142,6 +142,11 @@ public class UserAdminController extends WebController {
 		return userManagerBean.getGroupIdList();
 	}
 
+	public List<Group> getGroupList() {
+		
+		return userManagerBean.getGroupList();
+	}
+
 
 
 	public Group readGroup(Long id) {
@@ -170,6 +175,7 @@ public class UserAdminController extends WebController {
 		
 		return userManagerBean.getActionIdList();
 	}
+
 
 
 
