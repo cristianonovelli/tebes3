@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import it.enea.xlab.tebes.action.ActionManagerRemote;
+import it.enea.xlab.tebes.file.FileManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
@@ -27,12 +28,14 @@ public class JNDIServices {
 	private static TestPlanManagerRemote testPlanManager = null;
 	private static ActionManagerRemote actionManager = null;
 	private static ValidationManagerRemote validationManager = null;
+	private static FileManagerRemote fileManager = null;
 	
 	private static String UserManagerServiceName = "TeBES-ear/UserManagerImpl/remote";
 	private static String SUTManagerServiceName = "TeBES-ear/SUTManagerImpl/remote";
 	private static String SessionManagerServiceName = "TeBES-ear/SessionManagerImpl/remote";
 	private static String TestPlanManagerServiceName = "TeBES-ear/TestPlanManagerImpl/remote";
 	private static String ActionManagerServiceName = "TeBES-ear/ActionManagerImpl/remote";
+	private static String FileManagerServiceName = "TeBES-ear/FileManagerImpl/remote";
 	
 	// ESTERNO
 	private static String ValidationManagerServiceName = "Validation-ear/ValidationManagerImpl/remote";
@@ -134,6 +137,18 @@ public class JNDIServices {
 		}		
 		
 		return validationManager;
+	}
+
+
+	public static FileManagerRemote getFileManagerService() throws NamingException {
+
+		if (fileManager == null) {
+
+			InitialContext ctx = new InitialContext();
+			fileManager = (FileManagerRemote) ctx.lookup(FileManagerServiceName);
+		}
+		
+		return fileManager;
 	}
 	
 }

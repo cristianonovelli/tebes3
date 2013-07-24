@@ -1,6 +1,7 @@
 package it.enea.xlab.tebes.utilities;
 
 import it.enea.xlab.tebes.controllers.common.WebController;
+import it.enea.xlab.tebes.controllers.file.FileManagerController;
 import it.enea.xlab.tebes.controllers.session.SessionManagerController;
 
 import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
@@ -32,6 +33,9 @@ public static WebController getManager(String nome)  {
 		if (nome.equals(SessionManagerController.CONTROLLER_NAME))
 			controller = new SessionManagerController();
 
+		if (nome.equals(FileManagerController.CONTROLLER_NAME))
+			controller = new FileManagerController();
+		
 		/*if (nome.equals(ValidationController.CONTROLLER_NAME)) 
 			controller = new ValidationController();	*/
 		
