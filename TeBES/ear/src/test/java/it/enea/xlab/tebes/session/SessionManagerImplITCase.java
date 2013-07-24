@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.session;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.controllers.file.FileManagerController;
 import it.enea.xlab.tebes.controllers.session.SessionManagerController;
 import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
 import it.enea.xlab.tebes.controllers.testplan.TestPlanManagerController;
@@ -18,14 +19,21 @@ import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
+import org.hibernate.validator.AssertTrue;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.xlab.xml.JXLabDOM;
+import org.xlab.xml.XLabDOM;
 
 
 public class SessionManagerImplITCase {
@@ -39,6 +47,7 @@ public class SessionManagerImplITCase {
 	static UserAdminController userAdminController;
 	static UserProfileController userProfileController;
 	static SUTManagerController sutController;
+	static FileManagerController fileController;
 	
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
@@ -61,6 +70,9 @@ public class SessionManagerImplITCase {
 
 		sutController = (SUTManagerController) WebControllersUtilities.getManager(SUTManagerController.CONTROLLER_NAME);
 		Assert.assertNotNull(sutController);
+
+		fileController = (FileManagerController) WebControllersUtilities.getManager(FileManagerController.CONTROLLER_NAME);
+		Assert.assertNotNull(fileController);
 		
 		
 		List<Long> roleIdList = userAdminController.getRoleIdList();
@@ -276,12 +288,43 @@ public class SessionManagerImplITCase {
 			// a livello di Test passo il file al FileController 
 			// che verrà modificato in sede di definizione dell'interfaccia da EPOCA che deciderà il modo migliore per caricarlo
 			// TODO il file deve essere salvato nella locazione utente
-			String absFileName = "C:/Temp/ubl-invoice";
+			String absFilePath = "C:/Java/workspace-indigo2/TeBES/ejb/TeBES_Artifacts/users/0/docs/";
+			String fileName = "ubl-invoice.xml";
 			
-			// Boolean uploading = fileController.upload(absFileName);
+			// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
+			// per ora assumo che venga estratta la stringa e gli venga passata quella
+			// 1. apro il file, prendo la stringa			
+			// 2. Boolean uploading = fileController.upload(filename, fileContentString);
+			// 3. il file viene salvato, prosegue il test con questo file impostato nella session
+			// 4. alla prossima action chiedo all'utente se questo file va bene
+			JXLabDOM fileXML = null;
+			String fileXMLString = null;
 			
+			try {
+				// Get XML DOM (è solo un modo per me comodo di ottenere lo "stringone")
+				fileXML = new JXLabDOM(absFilePath.concat(fileName), false, false);
+				// Get File String
+				fileXMLString = fileXML.getXMLString();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerFactoryConfigurationError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
+			Assert.assertNotNull(fileXMLString);
 
+			if (fileXMLString != null)
+				currentSession = fileController.upload(fileName, fileXMLString, currentSession);
+			
+			
+			
+			
 			// TODO prima di chiamare il runworkflow è stato fatto l' upload
 			// PERO' questo dovrebbe  richiederlo il sistema dopo aver avviato l'action in questo modo:
 			// 1. avvio il workflow
