@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+	<f:view>
+		<h:form>
+			<div class="navbar navbar-fixed-top">
+				<div class="navbar-inner">
+					<div class="container-fluid">
+						<button type="button" class="btn btn-navbar"
+							data-toggle="collapse" data-target=".nav-collapse">
+							<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+						<a class="brand" href="index.jsf">TeBES</a>
+						<div class="nav-collapse collapse">
+							<ul class="nav">
+								<li class="active"><a href="index.jsf">Home</a></li>
+								<li><a href="#about">Info</a></li>
+							</ul>
+							<ul class="nav pull-right" id="navbar_logout">
+								<li><h:commandLink value="ESCI"
+										action="#{AuthenticationManagerController.logout}" /></li>
+							</ul>
+						</div>
+						<!--/.nav-collapse -->
+					</div>
+				</div>
+			</div>
+		</h:form>
+	</f:view>
+</ui:composition>
