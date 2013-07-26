@@ -17,6 +17,7 @@
 			<groupId>it.enea.xlab</groupId>
 			<artifactId>TeBES-ejb</artifactId>
 			<version>1.0-SNAPSHOT</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.faces</groupId>

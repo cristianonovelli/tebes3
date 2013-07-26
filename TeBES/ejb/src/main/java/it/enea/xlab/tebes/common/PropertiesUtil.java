@@ -194,5 +194,16 @@ public class PropertiesUtil {
 		return result;
 	}
 	
+	 public static String getJndiHost() {
+		 
+         return getConfiguration().getString("jndi.host");
+         
+	 }
+ 
+	 public static String getJndiPort() {
+		 
+         return getConfiguration().getString("jndi.port");
+         
+	 }
 }
 

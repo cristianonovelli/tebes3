@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import it.enea.xlab.tebes.action.ActionManagerRemote;
+import it.enea.xlab.tebes.authentication.AuthenticationManager;
+import it.enea.xlab.tebes.paging.PagingManager;
 import it.enea.xlab.tebes.file.FileManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;
@@ -21,6 +23,7 @@ import javax.naming.NamingException;
  */
 public class JNDIServices {
 	
+	private static String hostPort = PropertiesUtil.getJndiHost() + ":" + PropertiesUtil.getJndiPort();
 	
 	private static UserManagerRemote userManager = null;
 	private static SUTManagerRemote sutManager = null;
@@ -28,6 +31,8 @@ public class JNDIServices {
 	private static TestPlanManagerRemote testPlanManager = null;
 	private static ActionManagerRemote actionManager = null;
 	private static ValidationManagerRemote validationManager = null;
+	private static AuthenticationManager authenticationManager = null;
+	private static PagingManager pagingManager = null;
 	private static FileManagerRemote fileManager = null;
 	
 	private static String UserManagerServiceName = "TeBES-ear/UserManagerImpl/remote";
@@ -35,14 +40,14 @@ public class JNDIServices {
 	private static String SessionManagerServiceName = "TeBES-ear/SessionManagerImpl/remote";
 	private static String TestPlanManagerServiceName = "TeBES-ear/TestPlanManagerImpl/remote";
 	private static String ActionManagerServiceName = "TeBES-ear/ActionManagerImpl/remote";
+	private static String AuthenticationManagerServiceName = "/AuthenticationManagerImpl/remote";
+	private static String PagingManagerName = "TeBES-ear/PagingManagerImpl/remote";
 	private static String FileManagerServiceName = "TeBES-ear/FileManagerImpl/remote";
 	
 	// ESTERNO
 	private static String ValidationManagerServiceName = "Validation-ear/ValidationManagerImpl/remote";
 	
 	private static final Map<String, Object> EJB_CACHE = new HashMap<String, Object>();
-
-	
 	
 	@SuppressWarnings("unchecked")
 	public static <T> T retrieveEJB(String key, String name) {
@@ -65,13 +70,16 @@ public class JNDIServices {
 		return ejbBean;
 	}
 	
+	private static InitialContext getInitialContext() throws NamingException {
+		
+		return new InitialContext();
+	}
 
 	public static UserManagerRemote getUserManagerService() throws NamingException {
 		
 		if (userManager == null) {
-
-				InitialContext ctx = new InitialContext();		
-				userManager = (UserManagerRemote) ctx.lookup(UserManagerServiceName);
+	
+				userManager = (UserManagerRemote) getInitialContext().lookup(UserManagerServiceName);
 				
 		}
 		
@@ -83,8 +91,7 @@ public class JNDIServices {
 
 		if (sutManager == null) {
 
-				InitialContext ctx = new InitialContext();
-				sutManager = (SUTManagerRemote) ctx.lookup(SUTManagerServiceName);
+				sutManager = (SUTManagerRemote) getInitialContext().lookup(SUTManagerServiceName);
 		}
 		return sutManager;
 	}
@@ -94,8 +101,7 @@ public class JNDIServices {
 
 		if (sessionManager == null) {
 
-				InitialContext ctx = new InitialContext();
-				sessionManager = (SessionManagerRemote) ctx.lookup(SessionManagerServiceName);
+				sessionManager = (SessionManagerRemote) getInitialContext().lookup(SessionManagerServiceName);
 		}
 		return sessionManager;
 	}
@@ -104,8 +110,7 @@ public class JNDIServices {
 
 		if (testPlanManager == null) {
 
-				InitialContext ctx = new InitialContext();
-				testPlanManager = (TestPlanManagerRemote) ctx.lookup(TestPlanManagerServiceName);
+				testPlanManager = (TestPlanManagerRemote) getInitialContext().lookup(TestPlanManagerServiceName);
 		}
 		return testPlanManager;
 	}
@@ -114,8 +119,7 @@ public class JNDIServices {
 		
 		if (actionManager == null) {
 
-			InitialContext ctx = new InitialContext();
-			actionManager = (ActionManagerRemote) ctx.lookup(ActionManagerServiceName);
+			actionManager = (ActionManagerRemote) getInitialContext().lookup(ActionManagerServiceName);
 		}
 		return actionManager;
 	}
@@ -124,11 +128,10 @@ public class JNDIServices {
 		
 		if (validationManager == null) {
 
-			System.out.println("ctx1");
-				InitialContext ctx = new InitialContext();		
+			System.out.println("ctx1");	
 				System.out.println("ctx2");
 				try {
-					validationManager = (ValidationManagerRemote) ctx.lookup(ValidationManagerServiceName);
+					validationManager = (ValidationManagerRemote) getInitialContext().lookup(ValidationManagerServiceName);
 				} catch (Exception e) {
 					System.out.println("ctx4");
 					e.printStackTrace();
@@ -137,6 +140,26 @@ public class JNDIServices {
 		}		
 		
 		return validationManager;
+	}
+
+	public static AuthenticationManager getAuthenticationManagerService() throws NamingException {
+		
+		if (authenticationManager == null) {
+
+			authenticationManager = (AuthenticationManager)getInitialContext().lookup(AuthenticationManagerServiceName);
+		}
+		return authenticationManager;
+	}
+
+	public static PagingManager getPagingManager() {
+		if (pagingManager == null) {
+			try {
+				pagingManager = (PagingManager) getInitialContext().lookup(PagingManagerName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return pagingManager;
 	}
 
 

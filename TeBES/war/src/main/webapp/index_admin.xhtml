@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="layout/layout.xhtml">
+	<ui:define name="menu">
+		<ui:include src="layout/menu_admin.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+		<f:view>
+			<h:form>
+				<div class="hero-unit">
+					<h1>TeBES</h1>
+					<p>Vestibulum viverra consequat fermentum. Quisque a
+						scelerisque massa. Donec eget elit eget massa egestas luctus vel
+						sit amet quam. Sed varius magna sit amet malesuada commodo. Ut
+						ultrices arcu turpis, at hendrerit lorem aliquam quis. Ut nulla
+						lacus, auctor id justo a, suscipit vulputate sapien. In hac
+						habitasse platea dictumst.</p>
+					<p>
+						<a href="#" class="btn btn-primary btn-large">How To</a>
+					</p>
+				</div>
+			</h:form>
+		</f:view>
+	</ui:define>
+</ui:composition>
+</html>
