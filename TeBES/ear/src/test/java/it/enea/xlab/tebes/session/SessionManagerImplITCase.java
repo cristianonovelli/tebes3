@@ -320,7 +320,7 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(fileXMLString);
 
 			if (fileXMLString != null)
-				currentSession = fileController.upload(fileName, fileXMLString, currentSession);
+				currentSession = fileController.upload(fileName, sut.getType(), sut.getLanguage(), fileXMLString, currentSession);
 			
 			
 			

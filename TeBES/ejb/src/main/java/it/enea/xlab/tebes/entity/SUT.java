@@ -23,7 +23,6 @@ public class SUT implements Serializable {
 	private Long id;
 	
 	private String name;
-
 	
 	// descrizione testuale
 	private String description;

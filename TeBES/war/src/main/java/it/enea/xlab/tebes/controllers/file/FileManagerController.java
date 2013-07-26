@@ -30,9 +30,9 @@ public class FileManagerController extends WebController {
 	}
 
 
-	public Session upload(String fileName, String fileString, Session session) {
+	public Session upload(String fileName, String type, String lg, String fileString, Session session) {
 
-		return fileManagerService.upload(fileName, fileString, session);
+		return fileManagerService.upload(fileName, type, lg, fileString, session);
 	}
 	
 	
