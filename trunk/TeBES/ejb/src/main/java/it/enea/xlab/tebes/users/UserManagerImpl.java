@@ -563,6 +563,11 @@ public class UserManagerImpl implements UserManagerRemote {
         return userIdList;
 	}
 
+	public Role readRole(User user) {
+		
+		return (Role) eM.createQuery("SELECT role FROM User user WHERE user.id =:userId").setParameter("userId", user.getId()).getSingleResult();
+	}
+
 
 
 

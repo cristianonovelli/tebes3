@@ -6,14 +6,14 @@
 	<display-name>TeBES</display-name>
 	<description></description>
 	<display-name>TeBES</display-name>
-	
+
 	<welcome-file-list>
 		<welcome-file>index.jsf</welcome-file>
 		<welcome-file>index.xhtml</welcome-file>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
-	
+
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -25,17 +25,47 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
-	
+
 	<!-- uncomment to use Facelets -->
 	<context-param>
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
 		<param-value>.xhtml</param-value>
 	</context-param>
-	
+
 	<security-role>
-      <role-name>super_user</role-name>
-   </security-role>
-	
+		<role-name>super_user</role-name>
+	</security-role>
+	<security-role>
+		<role-name>admin_user</role-name>
+	</security-role>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>index.jsf</web-resource-name>
+			<url-pattern>/index.jsf</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Only allow users from following roles</description>
+			<role-name>super_user</role-name>
+			<role-name>admin_user</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>index_admin.jsf</web-resource-name>
+			<url-pattern>/index_admin.jsf</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Only allow users from following roles</description>
+			<role-name>admin_user</role-name>
+		</auth-constraint>
+	</security-constraint>
+
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>session.jsf</web-resource-name>
@@ -46,15 +76,16 @@
 		<auth-constraint>
 			<description>Only allow users from following roles</description>
 			<role-name>super_user</role-name>
+			<role-name>admin_user</role-name>
 		</auth-constraint>
 	</security-constraint>
-	
+
 	<login-config>
 		<auth-method>FORM</auth-method>
-  		<realm-name>tebes_policy</realm-name>
+		<realm-name>tebes_policy</realm-name>
 		<form-login-config>
 			<form-login-page>/login.jsf</form-login-page>
-			<form-error-page>/loginfail.jsf</form-error-page>
+			<form-error-page>/loginfail.xhtml</form-error-page>
 		</form-login-config>
 	</login-config>
 </web-app>

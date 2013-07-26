@@ -16,6 +16,7 @@ public interface UserManagerRemote {
 	
 	// READ User
 	public User readUser(Long id);	
+	public List<User> readUsersByEmail(String parEmail);
 	public User readUserbyEmailAndPassword(String userEmail, String userPassword);	
 	public List<Long> getUserIdList();
 	public Long getSuperUserId();
@@ -29,7 +30,8 @@ public interface UserManagerRemote {
 	public Boolean deleteUserByEmail(String email);
 
 	// Role functions
-	public Long createRole(Role role);	
+	public Long createRole(Role role);
+	public Role readRole(User user);	
 	public Role readRole(Long idRole);	
 	public Role readRoleByLevel(int level);
 	public List<Long> getRoleIdList();
