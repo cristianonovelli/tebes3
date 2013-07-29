@@ -109,8 +109,11 @@ public class SessionManagerImplITCase {
 		
 		// Create superuser SUTs (SUTs supported by TeBES)
 		Interaction interaction = new Interaction(Constants.INTERACTION_WEBSITE);
+		Interaction interaction2 = new Interaction(Constants.INTERACTION_EMAIL);
 		SUT sut = new SUT("systemSUT1", Constants.SUT_TYPE1_DOCUMENT, Constants.XML, interaction, "System SUT 1: XML document uploaded by web interface");
+		SUT sut2 = new SUT("systemSUT2", Constants.SUT_TYPE1_DOCUMENT, Constants.XML, interaction2, "System SUT 1: XML document uploaded by web interface");
 		Long sutId = sutController.createSUT(sut, superUser);
+		Long sutId2 = sutController.createSUT(sut2, superUser);
 		Assert.assertNotNull(sutId);	
 		Assert.assertTrue(sutId.intValue()>0);			
 		

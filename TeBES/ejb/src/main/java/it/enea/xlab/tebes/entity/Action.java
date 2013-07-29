@@ -43,7 +43,6 @@ public class Action implements Serializable {
 	private String inputLanguage;
 	private String inputInteraction;	
 	
-	private List<Long> files;
 	
 	
 	//@ManyToOne
@@ -272,12 +271,6 @@ public class Action implements Serializable {
 		this.inputInteraction = inputInteraction;
 	}
 
-	public List<Long> getFiles() {
-		return files;
-	}
 
-	public void setFiles(List<Long> files) {
-		this.files = files;
-	}
 	
 }
