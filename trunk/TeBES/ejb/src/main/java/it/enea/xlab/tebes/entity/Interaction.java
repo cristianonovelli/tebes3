@@ -34,7 +34,7 @@ public class Interaction implements Serializable {
 	-->*/
 	private String type;
 	
-	
+
 	
 
 	public Interaction() {
