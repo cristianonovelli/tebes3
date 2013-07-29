@@ -11,6 +11,8 @@ import it.enea.xlab.tebes.controllers.users.UserProfileController;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Interaction;
+import it.enea.xlab.tebes.entity.InteractionEmail;
+import it.enea.xlab.tebes.entity.InteractionWebSite;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
@@ -108,8 +110,8 @@ public class SessionManagerImplITCase {
 		Assert.assertTrue(superUserId.intValue()>0);	
 		
 		// Create superuser SUTs (SUTs supported by TeBES)
-		Interaction interaction = new Interaction(Constants.INTERACTION_WEBSITE);
-		Interaction interaction2 = new Interaction(Constants.INTERACTION_EMAIL);
+		InteractionWebSite interaction = new InteractionWebSite();
+		InteractionEmail interaction2 = new InteractionEmail();
 		SUT sut = new SUT("systemSUT1", Constants.SUT_TYPE1_DOCUMENT, Constants.XML, interaction, "System SUT 1: XML document uploaded by web interface");
 		SUT sut2 = new SUT("systemSUT2", Constants.SUT_TYPE1_DOCUMENT, Constants.XML, interaction2, "System SUT 1: XML document uploaded by web interface");
 		Long sutId = sutController.createSUT(sut, superUser);
@@ -188,7 +190,7 @@ public class SessionManagerImplITCase {
 		Assert.assertTrue(testPlanId.intValue()>0);			
 		
 		// Creazione di un SUT
-		Interaction interaction = new Interaction(Constants.INTERACTION_WEBSITE);
+		InteractionWebSite interaction = new InteractionWebSite();
 		SUT sut = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.XML, interaction, "XML document1 uploaded by web interface");
 		Long sutId = sutController.createSUT(sut, currentUser);
 		Assert.assertNotNull(sutId);	
