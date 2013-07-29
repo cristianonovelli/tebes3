@@ -1,5 +1,7 @@
 package it.enea.xlab.tebes.file;
 
+import java.util.List;
+
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.FileStore;
@@ -12,6 +14,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.xlab.utilities.XLabDates;
 
@@ -26,13 +29,16 @@ public class FileManagerImpl implements FileManagerRemote {
 
 	public Session upload(String fileName, String type, String language, String fileString, Session session) {
 		
+		if (!this.isFilePresent(fileString)) {
+		
+		
 		String datetime = XLabDates.getCurrentUTC();
 		
 		FileStore uploadedFile = new FileStore(fileName, type, language, datetime, fileString);
 		
 		Long fileId = this.createFile(uploadedFile);
 		
-		System.out.println("fileId:" + fileId);
+		System.out.println("fileId2:" + fileId);
 		
 		// TODO avoid the replication
 		// in the case the same file is already present
@@ -40,7 +46,10 @@ public class FileManagerImpl implements FileManagerRemote {
 		// TODO Session e Report, aggiornamento
 		// la Session deve sapere che deve prendere quel file
 		
-
+		}
+		else
+			System.out.println("fileId2:file is already present");
+			
 		return session;
 	}
 
@@ -61,7 +70,20 @@ public class FileManagerImpl implements FileManagerRemote {
 		
 		return eM.find(FileStore.class, fileId);
 	}
-	
+
+	private Boolean isFilePresent(String source) {
+		
+        String queryString = "SELECT f FROM FileStore AS f WHERE f.source = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, source);
+        @SuppressWarnings("unchecked")
+		List<SUT> resultList = query.getResultList();
+        if ((resultList != null) && (resultList.size() > 0))
+        	return true;
+        else
+        	return false;
+	}
 	
 	public Boolean deleteFile(Long fileId) {
 

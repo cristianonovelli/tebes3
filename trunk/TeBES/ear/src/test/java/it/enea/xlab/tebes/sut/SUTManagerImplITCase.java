@@ -223,11 +223,6 @@ public class SUTManagerImplITCase {
 		}
 		
 		
-		// Last Check
-		// Sono stati eliminati tutti gli utenti?
-		userIdList = userAdminController.getUserIdList();
-		Assert.assertTrue(userIdList.size() == 1);
-		
 	}
 }
 
