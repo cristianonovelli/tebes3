@@ -52,12 +52,7 @@ public class Constants {
 	public static final String SUT_TYPE2_TRANSPORT = "transport";
 	public static final String SUT_TYPE3_PROCESS = "process";
 
-	// SUT Interactions
-	// interazioni possibili: website (upload), email, webservice, ebxmlcpa
-	public static final String INTERACTION_WEBSITE = "website";
-	public static final String INTERACTION_EMAIL = "email";
-	public static final String INTERACTION_WS = "webservice";
-	public static final String INTERACTION_CPA = "ebxmlcpa";
+
 	
 	// Supported Test Definition Language Types
 	public static final String TAML = "taml";
