@@ -50,8 +50,8 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	 */
 	public Long createSUT(SUT sut, User user) {
 		
-		// TODO qui ci vuole una readSUTByNameAndUser che sia gestito bene
-		SUT existingSUT = this.readSUTByName(sut.getName());
+		user = userManager.readUser(user.getId());
+		SUT existingSUT = this.readSUTByNameAndUser(sut.getName(), user);
 		
 		try {
 			if (existingSUT == null) {
@@ -159,22 +159,16 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	 * @return the first SUT with that name, if the SUT is present 
 	 * @return null, if the SUT is not present 
 	 */	
-	private SUT readSUTByNameAndUser(String name, User userId) {
+	private SUT readSUTByNameAndUser(String name, User user) {
 
-        String queryString = "SELECT s FROM SUT AS s WHERE s.name = ?1";
+
+		List<SUT> resultList = user.getSutList();
         
-        Query query = eM.createQuery(queryString);
-        query.setParameter(1, name);
-        //query.setParameter(2, userId);
-        @SuppressWarnings("unchecked")
-		List<SUT> resultList = query.getResultList();
-        
-       
-        
-        if ((resultList != null) && (resultList.size() > 0))
-        	return (SUT) resultList.get(0);
-        else
-        	return null;
+		for (int i=0; i<resultList.size(); i++) 	
+			if (resultList.get(i).getName().equals(name))
+				return resultList.get(i);
+		
+		return null;
 	}
 
 	

@@ -5,6 +5,7 @@ package it.enea.xlab.tebes.entity;
 import it.enea.xlab.tebes.common.Constants;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -41,6 +42,8 @@ public class Action implements Serializable {
 	private String inputType;
 	private String inputLanguage;
 	private String inputInteraction;	
+	
+	private List<Long> files;
 	
 	
 	//@ManyToOne
@@ -267,6 +270,14 @@ public class Action implements Serializable {
 
 	public void setInputInteraction(String inputInteraction) {
 		this.inputInteraction = inputInteraction;
+	}
+
+	public List<Long> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<Long> files) {
+		this.files = files;
 	}
 	
 }

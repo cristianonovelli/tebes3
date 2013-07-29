@@ -51,7 +51,7 @@ public class SessionManagerImplITCase {
 	
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
-	
+	 
 
 	@BeforeClass
 	public static void before_testPlanManager() throws Exception {
