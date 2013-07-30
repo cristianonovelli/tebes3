@@ -19,9 +19,11 @@ import java.util.Vector;
 import javax.naming.NamingException;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.xml.sax.SAXException;
 
-public class TestPlanManagerController extends WebController {
+public class TestPlanManagerController extends WebController<TestPlan> {
 
 	public static final String CONTROLLER_NAME = "TestPlanManagerController";
 	
@@ -197,6 +199,27 @@ public class TestPlanManagerController extends WebController {
 	public boolean importSystemTestPlanFile(User superUser) {
 		
 		return testPlanManagerService.importSystemTestPlanFiles(superUser);
+	}
+
+
+	@Override
+	public void resetSearchParameters() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected List<Criterion> determineRestrictions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	protected List<Order> determineOrder() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

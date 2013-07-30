@@ -1,49 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faces-config version="1.2" xmlns="http://java.sun.com/xml/ns/javaee"
-        xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
 
-        <application>
-                <view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
-        </application>
+	<application>
+		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
+	</application>
 
-        <managed-bean>
-                <managed-bean-name>HelloController</managed-bean-name>
-                <managed-bean-class>HelloController</managed-bean-class>
-                <managed-bean-scope>request</managed-bean-scope>
-        </managed-bean>
+	<!-- CONTROLLERS -->
 
-        <managed-bean>
-                <managed-bean-name>AuthenticationManagerController</managed-bean-name>
-                <managed-bean-class>it.enea.xlab.tebes.controllers.authentication.AuthenticationManagerController</managed-bean-class>
-                <managed-bean-scope>session</managed-bean-scope>
-        </managed-bean>
-        
-        <navigation-rule>
-                <navigation-case>
-                        <from-outcome>logout</from-outcome>
-                        <to-view-id>/index.xhtml</to-view-id>
-                        <redirect />
-                </navigation-case>
-                <navigation-case>
-                        <from-outcome>index_admin</from-outcome>
-                        <to-view-id>/index_admin.xhtml</to-view-id>
-                        <redirect />
-                </navigation-case>
-        </navigation-rule>
+	<managed-bean>
+		<managed-bean-name>HelloController</managed-bean-name>
+		<managed-bean-class>HelloController</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
 
-        <application>
-                <locale-config>
-                        <default-locale>en</default-locale>
-                        <supported-locale>pl</supported-locale>
-                </locale-config>
-                <resource-bundle>
-                        <base-name>messages</base-name>
-                        <var>msgs</var>
-                </resource-bundle>
-                <resource-bundle>
-                        <base-name>errors</base-name>
-                        <var>errs</var>
-                </resource-bundle>
-        </application>
+	<managed-bean>
+		<managed-bean-name>AuthenticationManagerController</managed-bean-name>
+		<managed-bean-class>it.enea.xlab.tebes.controllers.authentication.AuthenticationManagerController</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
+		<managed-bean-name>UserAdminController</managed-bean-name>
+		<managed-bean-class>it.enea.xlab.tebes.controllers.users.UserAdminController</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+
+	<!-- NAVIGATION RULES -->
+
+	<!-- generic rules -->
+	<navigation-rule>
+		<navigation-case>
+			<from-outcome>logout</from-outcome>
+			<to-view-id>/index.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>index_admin</from-outcome>
+			<to-view-id>/index_admin.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- admin_manage_users -->
+	<navigation-rule>
+		<from-view-id>/admin_manage_users.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>item_deleted</from-outcome>
+			<to-view-id>/admin_manage_users.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>toItemDetails</from-outcome>
+			<to-view-id>/view_edit_user.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>toItemCreation</from-outcome>
+			<to-view-id>/view_edit_user.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- view_edit_user -->
+	<navigation-rule>
+		<from-view-id>/view_edit_user.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>back</from-outcome>
+			<to-view-id>/admin_manage_users.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>creation_success</from-outcome>
+			<to-view-id>/admin_manage_users.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>creation_fail</from-outcome>
+			<to-view-id>/view_edit_user.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>update_success</from-outcome>
+			<to-view-id>/admin_manage_users.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>update_fail</from-outcome>
+			<to-view-id>/view_edit_user.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<application>
+		<locale-config>
+			<default-locale>en</default-locale>
+			<supported-locale>pl</supported-locale>
+		</locale-config>
+		<resource-bundle>
+			<base-name>messages</base-name>
+			<var>msgs</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>errors</base-name>
+			<var>errs</var>
+		</resource-bundle>
+	</application>
 </faces-config>

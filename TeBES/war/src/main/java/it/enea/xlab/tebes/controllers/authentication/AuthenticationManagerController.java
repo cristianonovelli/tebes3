@@ -1,10 +1,14 @@
 package it.enea.xlab.tebes.controllers.authentication;
 
 import java.rmi.NotBoundException;
+import java.util.List;
 
 import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
+
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 
 import it.enea.xlab.tebes.authentication.AuthenticationManager;
 import it.enea.xlab.tebes.common.Constants;
@@ -13,7 +17,7 @@ import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
-public class AuthenticationManagerController extends WebController {
+public class AuthenticationManagerController {
 
 	public static final String CONTROLLER_NAME = "AuthenticationManagerController";
 	
@@ -30,9 +34,6 @@ public class AuthenticationManagerController extends WebController {
 		this.authenticationManager = JNDIServices.getAuthenticationManagerService();
 		this.userManager = JNDIServices.getUserManagerService();
 	}
-	
-	@Override
-	public void initContext() throws NotBoundException, NamingException {}
 
 	public User getPrincipal() {
 		

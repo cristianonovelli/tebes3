@@ -1,5 +1,7 @@
 package it.enea.xlab.tebes.paging;
 
+import it.enea.xlab.tebes.common.Constants;
+import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.dao.NestedCriterion;
 import it.enea.xlab.tebes.dao.NestedOrder;
 
@@ -8,6 +10,9 @@ import java.util.List;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -18,15 +23,16 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 
-@Stateless
-@Remote
+@Stateless(name="PagingManagerImpl")  
+@Interceptors({Profile.class})
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class PagingManagerImpl implements PagingManager{
 
 
 	protected static Logger logger = Logger.getLogger(PagingManager.class.getName());
 
 
-	@PersistenceContext(unitName="SMPersistenceLayer")
+	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager em;
 
 	public <T>List<T> findByCriteria(Class<T> clazz,int startRow, int pageSize, List<Criterion> restrictions, List<Order> ordersBy) {

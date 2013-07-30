@@ -32,6 +32,58 @@
 		<param-value>.xhtml</param-value>
 	</context-param>
 
+	<!-- Plugging the "Blue Sky" skin into the project -->
+<!-- 	<context-param> -->
+<!-- 		<param-name>org.richfaces.SKIN</param-name> -->
+<!-- 		<param-value>plain</param-value> -->
+<!-- 	</context-param> -->
+	
+	<!-- Making the RichFaces skin spread to standard HTML controls -->
+	<context-param>
+		<param-name>org.richfaces.CONTROL_SKINNING</param-name>
+		<param-value>disable</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>org.richfaces.CONTROL_SKINNING_CLASSES</param-name>
+		<param-value>disable</param-value>
+	</context-param>
+	
+	<!-- Defining and mapping the RichFaces filter -->
+	<filter>
+		<display-name>RichFaces Filter</display-name>
+		<filter-name>richfaces</filter-name>
+		<filter-class>org.ajax4jsf.Filter</filter-class>
+		<init-param>
+			<param-name>createTempFiles</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>maxRequestSize</param-name>
+			<param-value>10000000</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>richfaces</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<context-param>
+		<param-name>org.richfaces.LoadStyleStrategy</param-name>
+		<param-value>ALL</param-value>
+	</context-param>
+	<context-param>
+		<param-name>org.richfaces.LoadScriptStrategy</param-name>
+		<param-value>ALL</param-value>
+	</context-param>
+
+	<!-- end of RICHFACES CONFIGURATION -->
+	
+	<!-- SECURITY -->
+	
 	<security-role>
 		<role-name>super_user</role-name>
 	</security-role>
@@ -39,6 +91,8 @@
 		<role-name>admin_user</role-name>
 	</security-role>
 
+	<!-- Pagine ADMIN e SUPERUSER -->
+	
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>index.jsf</web-resource-name>
@@ -55,6 +109,21 @@
 
 	<security-constraint>
 		<web-resource-collection>
+			<web-resource-name>session.jsf</web-resource-name>
+			<url-pattern>/session.jsf</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Only allow users from following roles</description>
+			<role-name>super_user</role-name>
+			<role-name>admin_user</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<!-- Pagine ADMIN -->
+	<security-constraint>
+		<web-resource-collection>
 			<web-resource-name>index_admin.jsf</web-resource-name>
 			<url-pattern>/index_admin.jsf</url-pattern>
 			<http-method>POST</http-method>
@@ -68,14 +137,26 @@
 
 	<security-constraint>
 		<web-resource-collection>
-			<web-resource-name>session.jsf</web-resource-name>
-			<url-pattern>/session.jsf</url-pattern>
+			<web-resource-name>admin_manage_users.jsf</web-resource-name>
+			<url-pattern>/admin_manage_users.jsf</url-pattern>
 			<http-method>POST</http-method>
 			<http-method>GET</http-method>
 		</web-resource-collection>
 		<auth-constraint>
 			<description>Only allow users from following roles</description>
-			<role-name>super_user</role-name>
+			<role-name>admin_user</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>view_edit_user.jsf</web-resource-name>
+			<url-pattern>/view_edit_user.jsf</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Only allow users from following roles</description>
 			<role-name>admin_user</role-name>
 		</auth-constraint>
 	</security-constraint>

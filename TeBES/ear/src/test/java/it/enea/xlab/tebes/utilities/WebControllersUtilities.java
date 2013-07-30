@@ -11,9 +11,11 @@ import it.enea.xlab.tebes.controllers.users.UserProfileController;
 
 import java.rmi.NotBoundException;
 
+import javax.naming.NamingException;
+
 public class WebControllersUtilities {
 
-public static WebController getManager(String nome)  {	
+public static WebController getManager(String nome) throws NamingException  {	
 		
 		WebController controller = null;
 		

@@ -32,11 +32,13 @@ public interface UserManagerRemote {
 	// Role functions
 	public Long createRole(Role role);
 	public Role readRole(User user);	
-	public Role readRole(Long idRole);	
+	public Role readRole(Long idRole);		
 	public Role readRoleByLevel(int level);
 	public List<Long> getRoleIdList();
 	public void setUserRole(User user, Role role);
 	public Boolean deleteRole(Long id);
+	public List<Role> readAllRoles();
+	public Role readRole(String roleName);
 
 	// Group functions
 	public Long createGroup(Group group);
@@ -45,6 +47,7 @@ public interface UserManagerRemote {
 	public Group readGroup(Long id);
 	public Long setUserGroup(User user, Group group);
 	public Boolean deleteGroup(Long id);
+	public Group readGroup(String groupName);
 
 	public List<Long> getActionIdList();
 

@@ -568,9 +568,20 @@ public class UserManagerImpl implements UserManagerRemote {
 		return (Role) eM.createQuery("SELECT role FROM User user WHERE user.id =:userId").setParameter("userId", user.getId()).getSingleResult();
 	}
 
+	public List<Role> readAllRoles() {
 
+		return eM.createQuery("FROM Role").getResultList();
+	}
 
+	public Role readRole(String roleName) {
+		
+		return (Role) eM.createQuery("SELECT role FROM Role role WHERE role.name =:roleName").setParameter("roleName", roleName).getSingleResult();
+	}
 
+	public Group readGroup(String groupName) {
+
+		return (Group) eM.createQuery("SELECT group FROM UserGroup group WHERE group.name =:groupName").setParameter("groupName", groupName).getSingleResult();
+	}
 
 /*	public Boolean deleteTestPlan(Long userId, Long testPlanId) {
 		
