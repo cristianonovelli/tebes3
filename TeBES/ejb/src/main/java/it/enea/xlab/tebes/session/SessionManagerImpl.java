@@ -4,16 +4,13 @@ import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
-import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.report.ReportDOM;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;
-import it.enea.xlab.tebes.testplan.TestPlanDOM;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
@@ -28,7 +25,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.w3c.dom.Element;
 import org.xlab.utilities.XLabDates;
 
 
@@ -153,7 +149,6 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			a = actionList.get(i);
 			
 			if ( 	( !a.getInputType().equals(sut.getType() ) ) ||
-					( !a.getInputLanguage().equals(sut.getLanguage() ) ) ||
 					( !a.getInputInteraction().equals(sut.getInteraction().getType() ) )  )
 						
 					match = false;

@@ -4,14 +4,12 @@ import java.io.Serializable;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
 public class SUT implements Serializable {
@@ -32,7 +30,7 @@ public class SUT implements Serializable {
 	
 	// linguaggi possibili:
 	// xml: se sto effettuando validazione schema o schematron generica
-	private String language;
+	//private String language;
 	
 	// riferimento alla descrizione delle regole che descrivono il linguaggio usato
 	// (p.es. schema ubl, schema ebms, schema ebbp, profilo, ecc.)
@@ -56,11 +54,10 @@ public class SUT implements Serializable {
 	/**
 	 * Constructor without id.
 	 */
-	public SUT(String name, String type, String language, Interaction interaction, String description) {
+	public SUT(String name, String type, Interaction interaction, String description) {
 
 		this.setName(name);
 		this.setType(type);
-		this.setLanguage(language);
 		this.setInteraction(interaction);
 		this.setDescription(description);
 	}
@@ -112,14 +109,6 @@ public class SUT implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(String language) {
-		this.language = language;
 	}
 
 	public Interaction getInteraction() {
