@@ -11,7 +11,10 @@ import java.util.List;
 
 import javax.naming.NamingException;
 
-public class SessionManagerController extends WebController {
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
+
+public class SessionManagerController extends WebController<Session> {
 
 	public static final String CONTROLLER_NAME = "SessionManagerController";
 	
@@ -80,6 +83,27 @@ public class SessionManagerController extends WebController {
 	public Session readSession(Long id) {
 		
 		return sessionManagerBean.readSession(id);
+	}
+
+
+	@Override
+	public void resetSearchParameters() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected List<Criterion> determineRestrictions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	protected List<Order> determineOrder() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

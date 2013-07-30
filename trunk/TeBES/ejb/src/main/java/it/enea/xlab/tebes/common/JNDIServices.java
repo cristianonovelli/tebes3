@@ -40,7 +40,7 @@ public class JNDIServices {
 	private static String SessionManagerServiceName = "TeBES-ear/SessionManagerImpl/remote";
 	private static String TestPlanManagerServiceName = "TeBES-ear/TestPlanManagerImpl/remote";
 	private static String ActionManagerServiceName = "TeBES-ear/ActionManagerImpl/remote";
-	private static String AuthenticationManagerServiceName = "/AuthenticationManagerImpl/remote";
+	private static String AuthenticationManagerServiceName = "TeBES-ear/AuthenticationManagerImpl/remote";
 	private static String PagingManagerName = "TeBES-ear/PagingManagerImpl/remote";
 	private static String FileManagerServiceName = "TeBES-ear/FileManagerImpl/remote";
 	
@@ -167,8 +167,7 @@ public class JNDIServices {
 
 		if (fileManager == null) {
 
-			InitialContext ctx = new InitialContext();
-			fileManager = (FileManagerRemote) ctx.lookup(FileManagerServiceName);
+			fileManager = (FileManagerRemote) getInitialContext().lookup(FileManagerServiceName);
 		}
 		
 		return fileManager;

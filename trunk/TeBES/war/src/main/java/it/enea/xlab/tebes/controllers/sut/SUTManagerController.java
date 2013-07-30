@@ -1,8 +1,12 @@
 package it.enea.xlab.tebes.controllers.sut;
 
 import java.rmi.NotBoundException;
+import java.util.List;
 
 import javax.naming.NamingException;
+
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.controllers.common.WebController;
@@ -10,7 +14,7 @@ import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;
 
-public class SUTManagerController extends WebController {
+public class SUTManagerController extends WebController<SUT> {
 
 	public static final String CONTROLLER_NAME = "SUTManagerController";
 	
@@ -54,6 +58,27 @@ public class SUTManagerController extends WebController {
 	public Boolean deleteSUT(Long idSUT) {
 		
 		return sutManagerBean.deleteSUT(idSUT);
+	}
+
+
+	@Override
+	public void resetSearchParameters() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected List<Criterion> determineRestrictions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	protected List<Order> determineOrder() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

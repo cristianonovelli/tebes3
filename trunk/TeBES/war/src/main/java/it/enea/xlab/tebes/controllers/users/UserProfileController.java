@@ -8,10 +8,14 @@ import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import java.rmi.NotBoundException;
+import java.util.List;
 
 import javax.naming.NamingException;
 
-public class UserProfileController extends WebController {
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
+
+public class UserProfileController extends WebController<User> {
 
 	private UserManagerRemote userManagerBean;
 	
@@ -81,6 +85,27 @@ public class UserProfileController extends WebController {
 		// Eventuali Controlli
 		
 		return userManagerBean.updateUser(user);
+	}
+
+
+	@Override
+	public void resetSearchParameters() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected List<Criterion> determineRestrictions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	protected List<Order> determineOrder() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
