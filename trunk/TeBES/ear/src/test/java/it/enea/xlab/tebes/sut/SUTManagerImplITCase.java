@@ -1,6 +1,7 @@
 package it.enea.xlab.tebes.sut;
 
 import it.enea.xlab.tebes.common.Constants;
+import it.enea.xlab.tebes.common.SUTConstants;
 import it.enea.xlab.tebes.entity.InteractionWebSite;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
@@ -116,7 +117,7 @@ public class SUTManagerImplITCase {
 
 		// 2. CREATE two generic SUTs
 		InteractionWebSite interaction = new InteractionWebSite();
-		SUT sut1 = new SUT("sut1", Constants.SUT_TYPE1_DOCUMENT, Constants.XML, interaction, "XML document1 uploaded by web interface");
+		SUT sut1 = new SUT("sut1", SUTConstants.SUT_TYPE1_DOCUMENT, interaction, "XML document1 uploaded by web interface");
 		Long sutId1 = sutManagerController.createSUT(sut1, tempUser);
 		
 		if (sutId1 < 0) {
@@ -126,9 +127,9 @@ public class SUTManagerImplITCase {
 		}
 		Assert.assertNotNull(sut1);
 		Assert.assertTrue(sutId1 > 0);
-		Assert.assertTrue(sut1.getInteraction().getType().equals(Interaction.INTERACTION_WEBSITE)); 
+		Assert.assertTrue(sut1.getInteraction().getType().equals(SUTConstants.INTERACTION_WEBSITE)); 
 
-		SUT sut2 = new SUT("sut2", Constants.SUT_TYPE1_DOCUMENT, Constants.XML, interaction, "XML document2 uploaded by web interface");	
+		SUT sut2 = new SUT("sut2", SUTConstants.SUT_TYPE1_DOCUMENT, interaction, "XML document2 uploaded by web interface");	
 		Long sutId2 = sutManagerController.createSUT(sut2, tempUser);
 		
 		if (sutId2 < 0) {
