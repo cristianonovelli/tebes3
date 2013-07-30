@@ -13,13 +13,6 @@ public class Interaction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	// SUT Interactions
-	// interazioni possibili: website (upload), email, webservice, ebxmlcpa
-	public static final String INTERACTION_WEBSITE = "website";
-	public static final String INTERACTION_EMAIL = "email";
-	public static final String INTERACTION_WS = "webservice";
-	public static final String INTERACTION_CPA = "ebxmlcpa";
-	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;	

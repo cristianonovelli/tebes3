@@ -160,8 +160,6 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			reportDOM.setSUTId(session.getSutId());
 			reportDOM.setSUTName(sut.getName());
 			reportDOM.setSUTType(sut.getType());
-			reportDOM.setSUTLanguage(sut.getLanguage());
-			//reportDOM.setSUTReference(sut.getReference());
 			reportDOM.setSUTInteraction(sut.getInteraction().getType());						
 			reportDOM.setSUTDescription(sut.getDescription());
 					

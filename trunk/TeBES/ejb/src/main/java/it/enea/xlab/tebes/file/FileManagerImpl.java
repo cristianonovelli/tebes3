@@ -27,14 +27,14 @@ public class FileManagerImpl implements FileManagerRemote {
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM;
 
-	public Session upload(String fileName, String type, String language, String fileString, Session session) {
+	public Session upload(String fileName, String type, String fileString, Session session) {
 		
 		if (!this.isFilePresent(fileString)) {
 		
 		
 		String datetime = XLabDates.getCurrentUTC();
 		
-		FileStore uploadedFile = new FileStore(fileName, type, language, datetime, fileString);
+		FileStore uploadedFile = new FileStore(fileName, type, datetime, fileString);
 		
 		Long fileId = this.createFile(uploadedFile);
 		

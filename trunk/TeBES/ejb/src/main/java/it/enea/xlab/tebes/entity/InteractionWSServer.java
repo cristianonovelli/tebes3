@@ -5,15 +5,15 @@ import it.enea.xlab.tebes.common.SUTConstants;
 import javax.persistence.Entity;
 
 @Entity
-public class InteractionEmail extends Interaction {
+public class InteractionWSServer extends Interaction {
 
 	private static final long serialVersionUID = 1L;
 
-	// In the e-mail interaction the endpoint is the email address
+	// In the WebService interaction the endpoint is the URL address of WSDL
 	private String endpoint;
 	
-	public InteractionEmail() {
-		super(SUTConstants.INTERACTION_EMAIL);
+	public InteractionWSServer() {
+		super(SUTConstants.INTERACTION_WS_SERVER);
 	}
 
 	public String getEndpoint() {

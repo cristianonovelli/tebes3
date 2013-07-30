@@ -9,11 +9,13 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Action implements Serializable {
@@ -26,8 +28,7 @@ public class Action implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	
-	//private String actionId;
+
 	private int actionNumber;
 	private String actionName;
 	private String state;
@@ -43,12 +44,13 @@ public class Action implements Serializable {
 	private String inputLanguage;
 	private String inputInteraction;	
 	
-	
-	
-	//@ManyToOne
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="workflow_id")
 	ActionWorkflow workflow;
+	
+	
+	//@OneToMany(mappedBy="input", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+	//private List<Input> inputList;
 	
 	
 	public Action() {
