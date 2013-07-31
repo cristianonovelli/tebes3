@@ -4,18 +4,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j">
 
 <ui:composition template="layout/layout.xhtml">
 	<ui:define name="content">
+
+		<f:view>
 
 		<div class="" id="loginModal">
 			<div class="modal-header">
 				<h3>Hai un account?</h3>
 			</div>
-			<div class="modal-body">
 				<div class="well">
-					<ul class="nav nav-tabs">
+					<ul class="nav nav-tabs" id="loginTab">
 						<li class="active"><a href="#login" data-toggle="tab">Login</a></li>
 						<li><a href="#create" data-toggle="tab">Crea un account</a></li>
 					</ul>
@@ -56,21 +58,50 @@
 							</form>
 						</div>
 						<div class="tab-pane fade" id="create">
-							<form id="tab">
-								<label>Username</label> <input type="text" value=""
-									class="input-xlarge" /> <label>Nome</label> <input
-									type="text" value="" class="input-xlarge" /> <label>Cognome</label> <input type="text" value="" class="input-xlarge" /> <label>Email</label>
-								<input type="text" value="" class="input-xlarge" /> <label>E-mail</label>
-								<textarea value="Smith" rows="3" class="input-xlarge"></textarea>
-								<div>
-									<button class="btn btn-primary">Registrati</button>
+							<h:form id="tab">
+								<div class="control-group">
+    								<label class="control-label" for="input_username">Nome</label>
+									<div class="controls">
+										<h:inputText id="input_username" value="#{UserManagerController.user.name}" />
+									</div>
+  								</div>
+								<div class="control-group">
+    								<label class="control-label" for="input_surname">Cognome</label>
+									<div class="controls">
+										<h:inputText id="input_surname" value="#{UserManagerController.user.surname}" />
+									</div>
 								</div>
-							</form>
+								<div class="control-group">
+    								<label class="control-label" for="input_email">E-mail</label>
+									<div class="controls">
+										<h:inputText id="input_email" value="#{UserManagerController.user.eMail}" />
+									</div>
+								</div>
+								<div class="control-group">
+    								<label class="control-label" for="input_password">Password</label>
+									<div class="controls">
+										<h:inputSecret id="input_password" redisplay="true" value="#{UserManagerController.user.password}" />
+									</div>
+								</div>
+								<div class="control-group">
+    								<label class="control-label" for="input_password_confirm">Conferma password</label>
+									<div class="controls">
+										<h:inputSecret id="input_password_confirm" redisplay="true" value="#{UserManagerController.confirmPassword}" />
+									</div>
+								</div>
+								<div>
+      								<h:commandLink styleClass="btn btn-primary" value="Registrati" action="#{UserManagerController.createUser}"/>
+      						
+      								<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true">
+										<h:outputText value="#{UserManagerController.userFormMessage}" rendered="#{UserManagerController.showUserFormMessage}" />
+									</a4j:outputPanel>
+  								</div>
+							</h:form>	
 						</div>
 					</div>
 				</div>
-			</div>
 		</div>
+		</f:view>
 
 	</ui:define>
 </ui:composition>

@@ -10,13 +10,24 @@ $(window).load(function(){});
 
 $(document).ready(function() {
 	
-	$('#login a').click(function (e) {
+	console.log($.cookie('login_tab_cookie'));
+	if($.cookie('login_tab_cookie') == 'login') {
+		console.log('login tab');
+		$('#loginTab a[href="#login"]').tab('show');
+	} else {
+		console.log('create tab');
+		$('#loginTab a[href="#create"]').tab('show');
+	}
+	
+	$('#loginTab a[href="#login"]').click(function (e) {
 		  e.preventDefault();
+		  $.cookie('login_tab_cookie', 'login');
 		  $(this).tab('show');
 		});
 	
-	$('#create a').click(function (e) {
+	$('#loginTab a[href="#create"]').click(function (e) {
 		  e.preventDefault();
+		  $.cookie('login_tab_cookie', 'create');
 		  $(this).tab('show');
 		});
 
