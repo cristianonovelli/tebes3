@@ -35,7 +35,6 @@ public class FileManagerController extends WebController<Report> {
 	}
 
 
-
 	public Session upload(String fileName, String type, String fileString, Session session) {
 
 		return fileManagerService.upload(fileName, type, fileString, session);
