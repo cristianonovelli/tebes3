@@ -7,6 +7,7 @@ import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 import it.enea.xlab.tebes.utils.Messages;
+import it.enea.xlab.tebes.utils.UserUtils;
 
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
@@ -45,13 +46,9 @@ public class UserAdminController extends WebController<User> {
     	private String selectedGroup;
     	private String userFormMessage;
     	private boolean showUserFormMessage;
-    	private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    	private Pattern pattern;
-    	private Matcher matcher;
 
 		public UserAdminController() throws NamingException {
         	userManagerBean = JNDIServices.getUserManagerService();
-			pattern = Pattern.compile(EMAIL_PATTERN);
         }
 
         public void initContext() throws NotBoundException, NamingException {
@@ -232,7 +229,11 @@ public class UserAdminController extends WebController<User> {
 		
 		public String createNewUser() {
 
-			if(checkUserFields()) {
+			String message = UserUtils.checkUserFields(selectedUser.getName(), selectedUser.getSurname(), selectedUser.geteMail(), selectedUser.getPassword(), 
+					currentPasswordConfirm);
+			
+			if(message == null) {
+				
 				User user = new User();
 				user.setName(selectedUser.getName());
 				user.setSurname(selectedUser.getSurname());
@@ -264,14 +265,20 @@ public class UserAdminController extends WebController<User> {
 				
 				this.updateDataModel();
 				return "creation_success";
-			} else
+			} else {
+				this.userFormMessage = message;
+				this.showUserFormMessage = true;
 				return "creation_fail";
+			}
 
 		}
 		
 		public String updateUser() {
 			
-			if(checkUserFields()) {
+			String message = UserUtils.checkUserFields(selectedUser.getName(), selectedUser.getSurname(), selectedUser.geteMail(), selectedUser.getPassword(), currentPasswordConfirm);
+			
+			if(message == null) {
+				
 				User user = this.userManagerBean.readUser(this.selectedUser.getId());
 				
 				if(user == null) {
@@ -305,36 +312,11 @@ public class UserAdminController extends WebController<User> {
 				
 				this.updateDataModel();
 				return "update_success";
-			} else
+			} else {
+				this.userFormMessage = message;
+				this.showUserFormMessage = true;
 				return "update_fail";
-		}
-		
-		private boolean checkUserFields() {
-			
-			if(selectedUser.getName() == null || selectedUser.getName().equals("") || selectedUser.getSurname() == null || selectedUser.getSurname().equals("") ||
-					selectedUser.geteMail() == null || selectedUser.geteMail().equals("") || selectedUser.getPassword() == null || selectedUser.getPassword().equals("") ||
-						currentPasswordConfirm == null || currentPasswordConfirm.equals("")) {
-				
-				this.userFormMessage = Messages.FORM_ERROR_USER_NOT_COMPILED;
-				this.showUserFormMessage = true;
-				return false;
-				
-			} else if (!selectedUser.getPassword().equals(currentPasswordConfirm)) {
-				
-				this.userFormMessage = Messages.FORM_ERROR_USER_PASSWORD_NOT_EQUAL;
-				this.showUserFormMessage = true;
-				return false;
-			} 
-			
-			matcher = pattern.matcher(selectedUser.geteMail());
-			
-			if(!matcher.matches()) {
-				this.userFormMessage = Messages.FORM_ERROR_USER_EMAIL_ERROR;
-				this.showUserFormMessage = true;
-				return false;
 			}
-			
-			return true;
 		}
 		
 		public String cancel() {
