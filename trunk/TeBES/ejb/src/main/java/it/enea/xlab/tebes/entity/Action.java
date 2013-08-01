@@ -19,7 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-@Table(name = "UserAction")
+@Table(name="TestAction")
 public class Action implements Serializable {
 
 	public static final long serialVersionUID = 1L;
