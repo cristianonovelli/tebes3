@@ -10,18 +10,15 @@
 	xmlns:t="http://myfaces.apache.org/tomahawk">
 
 <ui:composition template="layout/layout.xhtml">
-	<ui:define name="menu">
-		<ui:include src="layout/menu_admin.xhtml" />
-	</ui:define>
 	<ui:define name="content">
 		<f:view>
-			<a4j:form ajaxSubmit="true"
-				reRender="utentiList,scrollValidationDown,scroll_1_div">
+			<a4j:form ajaxSubmit="true" reRender="utentiList,scrollValidationDown,scroll_1_div">
 
-				<h3>Gestione Utenti</h3>
-				<h:commandLink styleClass="btn btn-primary pull-right" value="Crea Utente" action="#{UserAdminController.createItem}" />
+				<h3>SUT Manager</h3>
+				<h5>Miei SUT</h5>
+				<h:commandLink styleClass="btn btn-primary pull-right" value="Crea SUT" action="create_sut" />
 
-				<t:dataTable id="utentiList" var="utente" styleClass="table table-striped"
+				<t:dataTable id="sutList" var="sut" styleClass="table table-striped"
 					value="#{UserAdminController.dataModel}" preserveDataModel="false"
 					rows="#{UserAdminController.rowsPerPage}">
 
@@ -29,59 +26,41 @@
 						<f:facet name="header">
 							<h:outputText value="Nome" />
 						</f:facet>
-						<h:outputText value="#{utente.name}" />
+						<h:outputText value="#{sut.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Cognome" />
 						</f:facet>
-						<h:outputText value="#{utente.surname}" />
+						<h:outputText value="#{sut.surname}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="E-mail" />
 						</f:facet>
-						<h:outputText value="#{utente.eMail}" />
+						<h:outputText value="#{sut.eMail}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Ruolo" />
 						</f:facet>
-						<h:outputText value="#{utente.role.name}" />
+						<h:outputText value="#{sut.role.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Gruppo" />
 						</f:facet>
-						<h:outputText value="#{utente.group.name}" />
-					</h:column>
-
-					<h:column>
-						<f:facet name="header">
-							<h:outputText styleClass="headerText" value="Azioni" />
-						</f:facet>
-						<a4j:commandLink id="trashlink"
-							action="#{UserAdminController.deleteItem}">
-							<i class="icon-trash icon-large"></i>
-							<a4j:actionparam name="idItemToDelete" value="#{utente.id}"
-								assignTo="#{UserAdminController.itemToDelete}" />
-						</a4j:commandLink>
-						<rich:toolTip for="trashlink" value="Cancella" />
-						<a4j:commandLink ajaxSingle="true" id="viewlink" style="margin-left: 10px;"
-							action="#{UserAdminController.viewItemDetails}">
-							<i class="icon-folder-open icon-large"></i>
-						</a4j:commandLink>
-						<rich:toolTip for="viewlink" value="Visualizza dettagli" />
+						<h:outputText value="#{sut.group.name}" />
 					</h:column>
 
 				</t:dataTable>
 
 				<t:div id="scroll_1_div">
-					<t:dataScroller id="scrollValidationDown" for="utentiList"
+					<t:dataScroller id="scrollValidationDown" for="sutList"
 						fastStep="10" pageCountVar="pageCount" pageIndexVar="scrollerPage"
 						paginator="true" paginatorMaxPages="9" immediate="true"
 						rendered="#{UserAdminController.dataSize gt 10}">

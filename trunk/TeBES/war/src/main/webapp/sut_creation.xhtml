@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
+
+<ui:composition template="layout/layout.xhtml">
+	<ui:define name="content">
+		<f:view>
+			<h:form styleClass="form-horizontal">
+				<h3>Crea SUT</h3>
+					<div class="control-group">
+    					<label class="control-label" for="input_name">Nome</label>
+						<div class="controls">
+							<h:inputText id="input_name" value="#{UserAdminController.selectedUser.name}" />
+						</div>
+  					</div>
+					<div class="control-group">
+    					<label class="control-label" for="input_description">Descrizione</label>
+						<div class="controls">
+							<h:inputText id="input_description" value="#{UserAdminController.selectedUser.surname}" />
+						</div>
+					</div>
+					<div class="control-group">
+    					<label class="control-label" for="input_type">Tipo</label>
+						<div class="controls">
+							<h:inputText id="input_type" value="#{UserAdminController.selectedUser.eMail}" />
+						</div>
+					</div>
+					<div class="control-group">
+    					<label class="control-label" for="input_language">Linguaggio</label>
+						<div class="controls">
+							<h:inputSecret id="input_language" redisplay="true" value="#{UserAdminController.selectedUser.password}" />
+						</div>
+					</div>
+					<div class="control-group">
+    					<label class="control-label" for="input_interaction">Interazione</label>
+						<div class="controls">
+							<h:inputSecret id="input_interaction" redisplay="true" value="#{UserAdminController.currentPasswordConfirm}" />
+						</div>
+					</div>
+					<div>
+      					<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{UserAdminController.createNewUser}" />
+      					<h:commandLink styleClass="btn" value="Annulla" action="#{UserAdminController.cancel}" style="margin-left: 10px;"/>
+      						
+      					<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true">
+							<h:outputText value="#{UserAdminController.userFormMessage}" rendered="#{UserAdminController.showUserFormMessage}" />
+						</a4j:outputPanel>
+  					</div>
+			</h:form>
+		</f:view>
+	</ui:define>
+</ui:composition>
+</html>

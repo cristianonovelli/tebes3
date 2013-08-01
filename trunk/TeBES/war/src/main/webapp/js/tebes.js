@@ -10,12 +10,9 @@ $(window).load(function(){});
 
 $(document).ready(function() {
 	
-	console.log($.cookie('login_tab_cookie'));
 	if($.cookie('login_tab_cookie') == 'login') {
-		console.log('login tab');
 		$('#loginTab a[href="#login"]').tab('show');
 	} else {
-		console.log('create tab');
 		$('#loginTab a[href="#create"]').tab('show');
 	}
 	

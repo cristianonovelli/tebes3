@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
+
+<ui:composition template="layout/layout.xhtml">
+	<ui:define name="content">
+		<f:view>
+			<a4j:form ajaxSubmit="true"
+				reRender="myTestPlanList,systemTestPlanList,scrollValidationDown,scrollValidationDown2,scroll_1_div,scroll_2_div">
+
+				<h3>Test Plan Manager</h3>
+				<h5>Miei Test Plan</h5>
+
+				<t:dataTable id="myTestPlanList" var="testPlan" styleClass="table table-striped"
+					value="#{MyTestPlanManagerController.dataModel}" preserveDataModel="false"
+					rows="#{MyTestPlanManagerController.rowsPerPage}">
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Nome" />
+						</f:facet>
+						<h:outputText value="#{testPlan.name}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Descrizione" />
+						</f:facet>
+						<h:outputText value="#{testPlan.description}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Data di creazione" />
+						</f:facet>
+						<h:outputText value="#{testPlan.creationDatetime}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Data ultimo aggiornamento" />
+						</f:facet>
+						<h:outputText value="#{testPlan.lastUpdateDatetime}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Stato" />
+						</f:facet>
+						<h:outputText value="#{testPlan.state}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Locazione" />
+						</f:facet>
+						<h:outputText value="#{testPlan.location}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText styleClass="headerText" value="Azioni" />
+						</f:facet>
+						<a4j:commandLink id="viewlink"
+							action="#{UserAdminController.deleteItem}">
+							<i class="icon-folder-open icon-large"></i>
+							<a4j:actionparam name="idItemToDelete" value="#{utente.id}"
+								assignTo="#{UserAdminController.itemToDelete}" />
+						</a4j:commandLink>
+						<rich:toolTip for="viewlink" value="Visualizza dettagli" />
+						<a4j:commandLink id="executelink" style="margin-left: 10px;"
+							action="#{UserAdminController.deleteItem}"> 
+							<i class="icon-play-circle icon-large"></i>
+							<a4j:actionparam name="idItemToDelete" value="#{testPlan.id}"
+								assignTo="#{UserAdminController.itemToDelete}" />
+						</a4j:commandLink>
+						<rich:toolTip for="executelink" value="Esegui" />
+					</h:column>
+
+				</t:dataTable>
+
+				<t:div id="scroll_1_div">
+					<t:dataScroller id="scrollValidationDown" for="myTestPlanList"
+						fastStep="10" pageCountVar="pageCount" pageIndexVar="scrollerPage"
+						paginator="true" paginatorMaxPages="9" immediate="true"
+						rendered="#{MyTestPlanManagerController.dataSize gt 10}">
+
+						<f:facet name="first">
+							<h:graphicImage url="img/first.png" />
+						</f:facet>
+
+						<f:facet name="last">
+							<h:graphicImage url="img/last.png" />
+						</f:facet>
+
+						<f:facet name="previous">
+							<h:graphicImage url="img/previous.png" />
+						</f:facet>
+
+						<f:facet name="next">
+							<h:graphicImage url="img/next.png" />
+						</f:facet>
+					</t:dataScroller>
+				</t:div>
+				
+				<h5>Test Plan di Sistema</h5>
+				
+				<t:dataTable id="systemTestPlanList" var="testPlan" styleClass="table table-striped"
+					value="#{TestPlanManagerController.dataModel}" preserveDataModel="false"
+					rows="#{TestPlanManagerController.rowsPerPage}">
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Nome" />
+						</f:facet>
+						<h:outputText value="#{testPlan.name}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Descrizione" />
+						</f:facet>
+						<h:outputText value="#{testPlan.description}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Data di creazione" />
+						</f:facet>
+						<h:outputText value="#{testPlan.creationDatetime}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Data ultimo aggiornamento" />
+						</f:facet>
+						<h:outputText value="#{testPlan.lastUpdateDatetime}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Stato" />
+						</f:facet>
+						<h:outputText value="#{testPlan.state}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Locazione" />
+						</f:facet>
+						<h:outputText value="#{testPlan.location}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText styleClass="headerText" value="Azioni" />
+						</f:facet>
+						<a4j:commandLink id="importlink"
+							action="#{MyTestPlanManagerController.importTestPlan}">
+							<i class="icon-download icon-large"></i>
+							<a4j:actionparam name="selectedItem" value="#{testPlan.id}"
+								assignTo="#{MyTestPlanManagerController.selectedTestPlanId}" />
+						</a4j:commandLink>
+						<rich:toolTip for="importlink" value="Importa" />
+					</h:column>
+
+				</t:dataTable>
+
+				<t:div id="scroll_2_div">
+					<t:dataScroller id="scrollValidationDown2" for="systemTestPlanList"
+						fastStep="10" pageCountVar="pageCount" pageIndexVar="scrollerPage"
+						paginator="true" paginatorMaxPages="9" immediate="true"
+						rendered="#{TestPlanManagerController.dataSize gt 10}">
+
+						<f:facet name="first">
+							<h:graphicImage url="img/first.png" />
+						</f:facet>
+
+						<f:facet name="last">
+							<h:graphicImage url="img/last.png" />
+						</f:facet>
+
+						<f:facet name="previous">
+							<h:graphicImage url="img/previous.png" />
+						</f:facet>
+
+						<f:facet name="next">
+							<h:graphicImage url="img/next.png" />
+						</f:facet>
+					</t:dataScroller>
+				</t:div>
+				
+			</a4j:form>
+		</f:view>
+	</ui:define>
+</ui:composition>
+</html>

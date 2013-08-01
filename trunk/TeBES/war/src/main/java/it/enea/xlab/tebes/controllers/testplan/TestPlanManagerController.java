@@ -1,26 +1,32 @@
 package it.enea.xlab.tebes.controllers.testplan;
 
 import it.enea.xlab.tebes.action.ActionManagerRemote;
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.controllers.common.WebController;
+import it.enea.xlab.tebes.dao.NestedCriterion;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
+import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.rmi.NotBoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.xml.sax.SAXException;
 
 public class TestPlanManagerController extends WebController<TestPlan> {
@@ -29,11 +35,14 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 	
 	private TestPlanManagerRemote testPlanManagerService;
 	private ActionManagerRemote actionManagerService;
-
+	private UserManagerRemote userManagerService;
 	
 	// CONTROLLER Constructor
-	public TestPlanManagerController() {
-		
+	public TestPlanManagerController() throws NamingException {
+
+		testPlanManagerService = JNDIServices.getTestPlanManagerService(); 
+		actionManagerService = JNDIServices.getActionManagerService();
+		userManagerService = JNDIServices.getUserManagerService();
 	}
 		
 	
@@ -116,7 +125,6 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 		testPlanManagerService.addWorkflowToTestPlan(workflowId, testPlanId);
 	}
 
-
 /*	public Vector<String> getSystemXMLTestPlanList() {
 		
 		return testPlanManagerService.getSystemTestPlanFileList();
@@ -127,27 +135,20 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 		return testPlanManagerService.getSystemTestPlanList();
 	}
 
-
 	public List<TestPlan> readUserTestPlanList(User user) {
 		
 		return testPlanManagerService.readUserTestPlanList(user);
 	}
-
-
-
+	
 	public Long addTestPlanToUser(Long testPlanId, Long userId) {
 		
 		return testPlanManagerService.addTestPlanToUser(testPlanId, userId);
 	}
 
-
-
 	public Long createWorkflow(ActionWorkflow wf) {
 		
 		return actionManagerService.createWorkflow(wf);
 	}
-
-
 
 	public void addActionToWorkflow(Long actionId, Long workflowId) {
 		
@@ -155,52 +156,39 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 		return;
 	}
 
-
-
 	/*public Long readWorkflowByTestPlan(TestPlan tp) {
 		
 		return actionManagerService.readWorkflowByTestPlan(tp);
 	}*/
-
-
 
 	public Boolean deleteAction(Long id) {
 		
 		return actionManagerService.deleteAction(id);
 	}
 
-
-
 	public Boolean deleteWorkflow(Long id) {
 		return actionManagerService.deleteWorkflow(id);
 	}
-
-
-
 
 	public Action readAction(Long actionId) {
 		// TODO Auto-generated method stub
 		return actionManagerService.readAction(actionId);
 	}
 
-
 	public Long cloneTestPlan(TestPlan testPlan, Long userId) {
 		
 		return testPlanManagerService.cloneTestPlan(testPlan, userId);
 	}
-
 
 	public Session runWorkflow(ActionWorkflow workflow, Session session) {
 		
 		return actionManagerService.runWorkflow(workflow, session);
 	}
 
-
 	public boolean importSystemTestPlanFile(User superUser) {
 		
 		return testPlanManagerService.importSystemTestPlanFiles(superUser);
 	}
-
 
 	@Override
 	public void resetSearchParameters() {
@@ -208,26 +196,17 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 		
 	}
 
-
 	@Override
 	protected List<Criterion> determineRestrictions() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Criterion> criterions = new ArrayList<Criterion>();
+		NestedCriterion userCriterion = new NestedCriterion("user", new NestedCriterion("role", Restrictions.eq("name", Constants.SUPERUSER_ROLE_NAME)));
+        criterions.add(userCriterion);
+		return criterions;
 	}
-
 
 	@Override
 	protected List<Order> determineOrder() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-
-
-
-
-	
-	
-	
 }
