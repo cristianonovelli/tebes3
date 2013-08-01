@@ -145,7 +145,7 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getNodeAttribute(node, "state");
 	}
 	
-	private String getDescriptionAttribute(Node node) {
+	public String getDescriptionAttribute(Node node) {
 		
 		return this.getNodeAttribute(node, "description");
 	}
@@ -159,6 +159,11 @@ public class TestPlanDOM extends JXLabDOM {
 		
 		return this.getNodeAttribute(node, "lg");
 	}
+	
+	public String getNameAttribute(Node inputNode) {
+		
+		return this.getNodeAttribute(inputNode, "name");
+	}
 
 	public String getInteractionAttribute(Node node) {
 		
@@ -170,6 +175,11 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getNodeAttribute(node, "type");
 	}
 	
+	public String getIdRefAttribute(Node node) {
+		
+		return this.getNodeAttribute(node, "idRef");
+	}
+
 	public String getLocationAttribute(Node node) {
 		
 		return this.getNodeAttribute(node, "location");
@@ -186,16 +196,6 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getAttribute(attributeLabel, node);
 		
 	}
-
-
-
-
-
-
-
-
-
-
 
 }
 

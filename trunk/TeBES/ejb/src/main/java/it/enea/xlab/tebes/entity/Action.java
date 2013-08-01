@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="TestAction")
@@ -51,8 +51,8 @@ public class Action implements Serializable {
 	ActionWorkflow workflow;
 	
 	
-	//@OneToMany(mappedBy="input", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
-	//private List<Input> inputList;
+	@OneToMany(mappedBy="testAction", cascade=CascadeType.ALL)
+	private List<Input> inputs;
 	
 	
 	public Action() {
@@ -273,6 +273,14 @@ public class Action implements Serializable {
 
 	public void setInputInteraction(String inputInteraction) {
 		this.inputInteraction = inputInteraction;
+	}
+
+	public List<Input> getInputs() {
+		return inputs;
+	}
+
+	public void setInputs(List<Input> inputs) {
+		this.inputs = inputs;
 	}
 
 

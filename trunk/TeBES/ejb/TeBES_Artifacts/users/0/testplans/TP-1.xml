@@ -36,14 +36,12 @@
 				jumpPrerequisites="true"
 				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml">TA-001_TC-001_TS-001</tebes:Test>
 			<tebes:Input 
+				name="UBLInvoice"
+				description="Send UBL Invoice"
 				type="document" 
 				lg="xml"
 				interaction="website"
-				reference="http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd"
-				description="My UBL Invoice">
-				<!--  tebes:Interactions> 
-					<tebes:Interaction type="website" />
-				</tebes:Interactions -->
+				idRef="document-website-1">
 			</tebes:Input>
 		</tebes:TestAction>
 	
@@ -116,35 +114,17 @@
 				su cui sarà eseguita quest'action.
 				Nell'action corrente, per esempio, il SUT è la fattura UBL.
 				I seguenti attributi possono assumere i seguenti valori:
-				- type: "document", "transport", "process";
-				- language:
-				"xml": se sto effettuando validazione schema o schematron
-				"ebms" o "soap": se sto effettuando validazione sulla transazione
-				"ebbp": se sto effettuando validazione sul processo				
-				- reference: uri specifico dello schema di regole che descrive il linguaggio usato
-				(schema ubl, schema ebms, schema ebbp, profilo, ecc.)
+				- type: "document", "transport", "process";			
 				- description: descrizione testuale
 			-->
 			<tebes:Input 
+				name="UBLInvoice"
+				description="Send UBL Invoice"
 				type="document" 
 				lg="xml"
 				interaction="website"
-				reference="http://docs.oasis-open.org/ubl/os-UBL-2.0/xsd/maindoc/UBL-Invoice-2.0.xsd"
-				description="My UBL Invoice">
-				
-					<!-- L'elemento complesso tebes:Interactions specifica le possibili interazioni 
-						con la piattaforma di test:
-						- website: interazione tramite interfaccia del sito web, upload e download;
-						- email: interazione tramite protocollo pop/smtp;
-						- webservice: interazione tramite servizio web;
-						- ebxmlcpa: interazione descritta tramite standard ebXML CPA.
-						A seconda del tipo di interazione scelta l'elemento può contenere altri attributi,
-						come per esempio endpoint
-					-->
-					<!-- tebes:Interactions> 
-						<tebes:Interaction type="website" />
-					</tebes:Interactions -->
-				</tebes:Input>
+				idRef="document-website-1">
+			</tebes:Input>
 		</tebes:TestAction>
 		
 	</tebes:TestActionList>
