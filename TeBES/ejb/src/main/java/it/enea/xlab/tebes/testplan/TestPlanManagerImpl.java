@@ -478,9 +478,12 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			// Input
 			Node inputNode = testPlanDOM.getInputNode(actionElement);
 			
+			String inputName = testPlanDOM.getNameAttribute(inputNode);
+			String inputDescription = testPlanDOM.getDescriptionAttribute(inputNode);	
 			String inputType = testPlanDOM.getTypeAttribute(inputNode);		
 			String inputLanguage = testPlanDOM.getLgAttribute(inputNode);				
-			String inputInteraction = testPlanDOM.getInteractionAttribute(inputNode);			
+			String inputInteraction = testPlanDOM.getInteractionAttribute(inputNode);
+			String inputIdRef = testPlanDOM.getIdRefAttribute(inputNode);		
 			
 			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, jump, description,
 					inputType, inputLanguage, inputInteraction);
