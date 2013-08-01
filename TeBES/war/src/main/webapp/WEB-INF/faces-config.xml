@@ -33,6 +33,18 @@
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 
+	<managed-bean>
+		<managed-bean-name>TestPlanManagerController</managed-bean-name>
+		<managed-bean-class>it.enea.xlab.tebes.controllers.testplan.TestPlanManagerController</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
+		<managed-bean-name>MyTestPlanManagerController</managed-bean-name>
+		<managed-bean-class>it.enea.xlab.tebes.controllers.testplan.MyTestPlanManagerController</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+
 	<!-- NAVIGATION RULES -->
 
 	<!-- generic rules -->
@@ -93,6 +105,29 @@
 		<navigation-case>
 			<from-outcome>update_fail</from-outcome>
 			<to-view-id>/view_edit_user.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- test_plan_manager -->
+	<navigation-rule>
+		<from-view-id>/test_plan_manager.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>import_complete</from-outcome>
+			<to-view-id>/test_plan_manager.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>import_fail</from-outcome>
+			<to-view-id>/test_plan_manager.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- sut_manager -->
+	<navigation-rule>
+		<from-view-id>/sut_manager.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>create_sut</from-outcome>
+			<to-view-id>/sut_creation.xhtml</to-view-id>
+			<redirect />
 		</navigation-case>
 	</navigation-rule>
 

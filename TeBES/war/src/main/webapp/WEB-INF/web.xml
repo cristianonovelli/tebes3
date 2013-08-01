@@ -90,6 +90,12 @@
 	<security-role>
 		<role-name>admin_user</role-name>
 	</security-role>
+	<security-role>
+		<role-name>advanced_user</role-name>
+	</security-role>
+	<security-role>
+		<role-name>standard_user</role-name>
+	</security-role>
 
 	<!-- Pagine ADMIN e SUPERUSER -->
 	
@@ -122,6 +128,7 @@
 	</security-constraint>
 
 	<!-- Pagine ADMIN -->
+	
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>index_admin.jsf</web-resource-name>
@@ -158,6 +165,56 @@
 		<auth-constraint>
 			<description>Only allow users from following roles</description>
 			<role-name>admin_user</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<!-- Pagine STANDARD USER -->
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>test_plan_manager.jsf</web-resource-name>
+			<url-pattern>/test_plan_manager.jsf</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Only allow users from following roles</description>
+			<role-name>admin_user</role-name>
+			<role-name>super_user</role-name>
+			<role-name>advanced_user</role-name>
+			<role-name>standard_user</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>sut_manager.jsf</web-resource-name>
+			<url-pattern>/sut_manager.jsf</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Only allow users from following roles</description>
+			<role-name>admin_user</role-name>
+			<role-name>super_user</role-name>
+			<role-name>advanced_user</role-name>
+			<role-name>standard_user</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>sut_creation.jsf</web-resource-name>
+			<url-pattern>/sut_creation.jsf</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Only allow users from following roles</description>
+			<role-name>admin_user</role-name>
+			<role-name>super_user</role-name>
+			<role-name>advanced_user</role-name>
+			<role-name>standard_user</role-name>
 		</auth-constraint>
 	</security-constraint>
 
