@@ -11,5 +11,6 @@ public class Messages {
 	public static final String FORM_USER_NOT_EXISTING = "Attenzione: l'utente non esiste.";
 	public static final String FORM_ERROR_USER_UPDATE = "Attenzione: errore nel salvataggio dell'utente.";
 	public static final String FORM_ERROR_USER_EMAIL_ERROR = "Attenzione: indirizzo e-mail non corretto.";
+	public static final String FORM_ERROR_SUT_CREATION = "Attenzione: errore nella creazione del SUT.";
 	
 }

@@ -45,6 +45,12 @@
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 
+	<managed-bean>
+		<managed-bean-name>SUTManagerController</managed-bean-name>
+		<managed-bean-class>it.enea.xlab.tebes.controllers.sut.SUTManagerController</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+
 	<!-- NAVIGATION RULES -->
 
 	<!-- generic rules -->
@@ -128,6 +134,25 @@
 			<from-outcome>create_sut</from-outcome>
 			<to-view-id>/sut_creation.xhtml</to-view-id>
 			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- sut_creation -->
+	<navigation-rule>
+		<from-view-id>/sut_creation.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>back</from-outcome>
+			<to-view-id>/sut_manager.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>sut_creation_success</from-outcome>
+			<to-view-id>/sut_manager.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>sut_creation_fail</from-outcome>
+			<to-view-id>/sut_creation.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 

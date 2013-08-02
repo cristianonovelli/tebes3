@@ -16,7 +16,7 @@
 				reRender="myTestPlanList,systemTestPlanList,scrollValidationDown,scrollValidationDown2,scroll_1_div,scroll_2_div">
 
 				<h3>Test Plan Manager</h3>
-				<h5>Miei Test Plan</h5>
+				<h4>Miei Test Plan</h4>
 
 				<t:dataTable id="myTestPlanList" var="testPlan" styleClass="table table-striped"
 					value="#{MyTestPlanManagerController.dataModel}" preserveDataModel="false"
@@ -68,13 +68,6 @@
 						<f:facet name="header">
 							<h:outputText styleClass="headerText" value="Azioni" />
 						</f:facet>
-						<a4j:commandLink id="viewlink"
-							action="#{UserAdminController.deleteItem}">
-							<i class="icon-folder-open icon-large"></i>
-							<a4j:actionparam name="idItemToDelete" value="#{utente.id}"
-								assignTo="#{UserAdminController.itemToDelete}" />
-						</a4j:commandLink>
-						<rich:toolTip for="viewlink" value="Visualizza dettagli" />
 						<a4j:commandLink id="executelink" style="margin-left: 10px;"
 							action="#{UserAdminController.deleteItem}"> 
 							<i class="icon-play-circle icon-large"></i>
@@ -110,7 +103,7 @@
 					</t:dataScroller>
 				</t:div>
 				
-				<h5>Test Plan di Sistema</h5>
+				<h4>Test Plan di Sistema</h4>
 				
 				<t:dataTable id="systemTestPlanList" var="testPlan" styleClass="table table-striped"
 					value="#{TestPlanManagerController.dataModel}" preserveDataModel="false"
