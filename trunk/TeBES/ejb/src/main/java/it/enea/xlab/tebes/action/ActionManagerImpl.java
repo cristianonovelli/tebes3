@@ -4,6 +4,7 @@ import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.model.TAF;
@@ -138,6 +139,56 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	}
 	
 
+	/////////////////////
+	/// INPUT METHODS ///
+	/////////////////////
+
+	/**
+	 * CREATE Input
+	 * @return 	id of Input if created
+	 * 			-1 if a persist exception occours
+	 */
+	public Long createInput(Input input, Long actionId) {
+
+		try {
+				eM.persist(input);
+								
+				this.addInputToAction(input.getId(), actionId);
+								
+				return input.getId();
+		}
+		catch(Exception e) {
+			
+			e.printStackTrace();
+			return new Long(-1);
+		}
+	}
+	
+	/**
+	 * READ Input
+	 * @return 	Input if reading is OK
+	 */	
+	public Input readInput(Long id) {
+
+		return eM.find(Input.class, id);
+	}
+
+
+	/**
+	 * ADD Input to Action
+	 */
+	public void addInputToAction(Long inputId, Long actionId) {
+
+		Input i = this.readInput(inputId);
+		Action a = this.readAction(actionId);
+		
+		i.addToAction(a);
+		
+		eM.persist(a);
+		
+		return;
+	}
+	
 	
 	////////////////////////
 	/// WORKFLOW METHODS ///

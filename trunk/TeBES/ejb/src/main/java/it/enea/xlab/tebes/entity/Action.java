@@ -6,6 +6,7 @@ import it.enea.xlab.tebes.common.Constants;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -51,7 +52,7 @@ public class Action implements Serializable {
 	ActionWorkflow workflow;
 	
 	
-	@OneToMany(mappedBy="testAction", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="testAction")
 	private List<Input> inputs;
 	
 	
@@ -87,6 +88,8 @@ public class Action implements Serializable {
 		this.setInputType(inputType);
 		this.setInputLanguage(inputLanguage);
 		this.setInputInteraction(inputInteraction);
+				
+		this.setInputs(new Vector<Input>());
 	}
 
 	

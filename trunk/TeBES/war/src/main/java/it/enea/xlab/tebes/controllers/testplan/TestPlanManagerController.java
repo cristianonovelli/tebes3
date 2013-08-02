@@ -55,10 +55,10 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 
 
 	
-	public TestPlan getTestPlanFromXML(String testPlanAbsPathName) {
+	/*public TestPlan getTestPlanFromXML(String testPlanAbsPathName) {
 		
 		return testPlanManagerService.getTestPlanFromXML(testPlanAbsPathName);
-	}
+	}*/
 
 	public Long createTestPlan(TestPlan testPlan, Long userId) {
 		
@@ -95,10 +95,10 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 		return testPlanManagerService.readWorkflow(workflowId);
 	}
 
-	public List<Action> getActionsFromXML(Long id) throws FileNotFoundException, SAXException, ParserConfigurationException, IOException {
-		
-		return testPlanManagerService.getActionsFromXML(id);
-	}
+//	public List<Action> getActionsFromXML(Long id) throws FileNotFoundException, SAXException, ParserConfigurationException, IOException {
+//		
+//		return testPlanManagerService.getActionsFromXML(id);
+//	}
 
 	public Long createAction(Action action, Long workflowId) {
 		

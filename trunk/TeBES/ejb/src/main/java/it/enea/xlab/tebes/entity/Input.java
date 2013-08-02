@@ -119,21 +119,21 @@ public class Input implements Serializable {
 	}
 
 
-	/*public void addToAction(Action a) {
+	public void addToAction(Action action) {
 		
-		this.action = a;
+		this.testAction = action;
 	}
 
 
 	public Action getAction() {
-		return action;
+		return this.testAction;
 	}
 
 
 	public void setAction(Action action) {
-		this.action = action;
+		this.testAction = action;
 	}
-*/
+
 
 
 }
