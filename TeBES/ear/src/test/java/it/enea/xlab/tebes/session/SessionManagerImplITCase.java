@@ -2,7 +2,6 @@ package it.enea.xlab.tebes.session;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
-import it.enea.xlab.tebes.common.SUTConstants;
 import it.enea.xlab.tebes.controllers.file.FileManagerController;
 import it.enea.xlab.tebes.controllers.session.SessionManagerController;
 import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
@@ -11,7 +10,6 @@ import it.enea.xlab.tebes.controllers.users.UserAdminController;
 import it.enea.xlab.tebes.controllers.users.UserProfileController;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
-import it.enea.xlab.tebes.entity.Interaction;
 import it.enea.xlab.tebes.entity.InteractionEmail;
 import it.enea.xlab.tebes.entity.InteractionWSClient;
 import it.enea.xlab.tebes.entity.InteractionWSServer;
@@ -34,12 +32,10 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
-import org.hibernate.validator.AssertTrue;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xlab.xml.JXLabDOM;
-import org.xlab.xml.XLabDOM;
 
 
 public class SessionManagerImplITCase {
@@ -123,21 +119,21 @@ public class SessionManagerImplITCase {
 		Vector<SUT> sutList = new Vector<SUT>();
 		
 		// SUT supportati per il tipo "document"
-		sutList.add( new SUT("SystemSUT1", SUTConstants.SUT_TYPE1_DOCUMENT, interactionWebSite, "System SUT 1: Document - WebSite") );
-		sutList.add( new SUT("SystemSUT2", SUTConstants.SUT_TYPE1_DOCUMENT, interactionEmail, "System SUT 2: Document - email") );
-		sutList.add( new SUT("SystemSUT3", SUTConstants.SUT_TYPE1_DOCUMENT, interactionWSClient, "System SUT 3: Document - Web Service Client") );
-		sutList.add( new SUT("SystemSUT4", SUTConstants.SUT_TYPE1_DOCUMENT, interactionWSServer, "System SUT 4: Document - Web Service Server") );
+		sutList.add( new SUT("SystemSUT1", SUT.SUT_TYPE1_DOCUMENT, interactionWebSite, "System SUT 1: Document - WebSite") );
+		sutList.add( new SUT("SystemSUT2", SUT.SUT_TYPE1_DOCUMENT, interactionEmail, "System SUT 2: Document - email") );
+		sutList.add( new SUT("SystemSUT3", SUT.SUT_TYPE1_DOCUMENT, interactionWSClient, "System SUT 3: Document - Web Service Client") );
+		sutList.add( new SUT("SystemSUT4", SUT.SUT_TYPE1_DOCUMENT, interactionWSServer, "System SUT 4: Document - Web Service Server") );
 		
 		// SUT supportati per il tipo "transport"
-		sutList.add( new SUT("SystemSUT5", SUTConstants.SUT_TYPE2_TRANSPORT, interactionEmail, "System SUT 5: Transport - email") );
-		sutList.add( new SUT("SystemSUT6", SUTConstants.SUT_TYPE2_TRANSPORT, interactionWSClient, "System SUT 6: Transport - Web Service Client") );
-		sutList.add( new SUT("SystemSUT7", SUTConstants.SUT_TYPE2_TRANSPORT, interactionWSServer, "System SUT 7: Transport - Web Service Server") );
+		sutList.add( new SUT("SystemSUT5", SUT.SUT_TYPE2_TRANSPORT, interactionEmail, "System SUT 5: Transport - email") );
+		sutList.add( new SUT("SystemSUT6", SUT.SUT_TYPE2_TRANSPORT, interactionWSClient, "System SUT 6: Transport - Web Service Client") );
+		sutList.add( new SUT("SystemSUT7", SUT.SUT_TYPE2_TRANSPORT, interactionWSServer, "System SUT 7: Transport - Web Service Server") );
 		
 		// SUT supportati per il tipo "process"
-		sutList.add( new SUT("SystemSUT8", SUTConstants.SUT_TYPE3_PROCESS, interactionWebSite, "System SUT 8: Process - WebSite") );
-		sutList.add( new SUT("SystemSUT9", SUTConstants.SUT_TYPE3_PROCESS, interactionEmail, "System SUT 9: Process - email") ) ;
-		sutList.add( new SUT("SystemSUT10", SUTConstants.SUT_TYPE3_PROCESS, interactionWSClient, "System SUT 10: Process - Web Service Client") );
-		sutList.add( new SUT("SystemSUT11", SUTConstants.SUT_TYPE3_PROCESS, interactionWSServer, "System SUT 11: Process - Web Service Server") );
+		sutList.add( new SUT("SystemSUT8", SUT.SUT_TYPE3_PROCESS, interactionWebSite, "System SUT 8: Process - WebSite") );
+		sutList.add( new SUT("SystemSUT9", SUT.SUT_TYPE3_PROCESS, interactionEmail, "System SUT 9: Process - email") ) ;
+		sutList.add( new SUT("SystemSUT10", SUT.SUT_TYPE3_PROCESS, interactionWSClient, "System SUT 10: Process - Web Service Client") );
+		sutList.add( new SUT("SystemSUT11", SUT.SUT_TYPE3_PROCESS, interactionWSServer, "System SUT 11: Process - Web Service Server") );
 						
 		Long sutId;
 		for (int i=0; i<sutList.size();i++) {
@@ -193,7 +189,7 @@ public class SessionManagerImplITCase {
 
 			testPlan = systemTestPlanList.get(i);
 			Assert.assertNotNull(testPlan);
-			
+			 
 			Assert.assertNotNull(testPlan.getWorkflow());
 			Assert.assertNotNull(testPlan.getWorkflow().getActions());
 			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));	
@@ -218,7 +214,7 @@ public class SessionManagerImplITCase {
 		
 		// Creazione di un SUT
 		InteractionWebSite interaction = new InteractionWebSite();
-		SUT sut = new SUT("sut1", SUTConstants.SUT_TYPE1_DOCUMENT, interaction, "XML document1 uploaded by web interface");
+		SUT sut = new SUT("sut1", SUT.SUT_TYPE1_DOCUMENT, interaction, "XML document1 uploaded by web interface");
 		Long sutId = sutController.createSUT(sut, currentUser);
 		Assert.assertNotNull(sutId);	
 		Assert.assertTrue(sutId.intValue()>0);	
@@ -557,7 +553,7 @@ public class SessionManagerImplITCase {
 			tempUser = userAdminController.readUser(tempUserId);			
 			Assert.assertNotNull(tempUser);
 						
-			// DELETE User (except superuser)
+			// DELETE User
 			if (tempUser.getRole().getLevel() != role4_superuser.getLevel() ) {			
 				deleting = userAdminController.deleteUser(tempUser.getId());
 				Assert.assertTrue(deleting);			
