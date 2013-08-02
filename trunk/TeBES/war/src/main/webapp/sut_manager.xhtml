@@ -15,12 +15,12 @@
 			<a4j:form ajaxSubmit="true" reRender="utentiList,scrollValidationDown,scroll_1_div">
 
 				<h3>SUT Manager</h3>
-				<h5>Miei SUT</h5>
+				<h4>Miei SUT</h4>
 				<h:commandLink styleClass="btn btn-primary pull-right" value="Crea SUT" action="create_sut" />
 
 				<t:dataTable id="sutList" var="sut" styleClass="table table-striped"
-					value="#{UserAdminController.dataModel}" preserveDataModel="false"
-					rows="#{UserAdminController.rowsPerPage}">
+					value="#{SUTManagerController.dataModel}" preserveDataModel="false"
+					rows="#{SUTManagerController.rowsPerPage}">
 
 					<h:column>
 						<f:facet name="header">
@@ -31,30 +31,23 @@
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Cognome" />
+							<h:outputText value="Descrizione" />
 						</f:facet>
-						<h:outputText value="#{sut.surname}" />
+						<h:outputText value="#{sut.description}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="E-mail" />
+							<h:outputText value="Tipo" />
 						</f:facet>
-						<h:outputText value="#{sut.eMail}" />
+						<h:outputText value="#{sut.type}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Ruolo" />
+							<h:outputText value="Interazione" />
 						</f:facet>
-						<h:outputText value="#{sut.role.name}" />
-					</h:column>
-
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="Gruppo" />
-						</f:facet>
-						<h:outputText value="#{sut.group.name}" />
+						<h:outputText value="#{sut.interaction.type}" />
 					</h:column>
 
 				</t:dataTable>
@@ -63,7 +56,7 @@
 					<t:dataScroller id="scrollValidationDown" for="sutList"
 						fastStep="10" pageCountVar="pageCount" pageIndexVar="scrollerPage"
 						paginator="true" paginatorMaxPages="9" immediate="true"
-						rendered="#{UserAdminController.dataSize gt 10}">
+						rendered="#{SUTManagerController.dataSize gt 10}">
 
 						<f:facet name="first">
 							<h:graphicImage url="img/first.png" />

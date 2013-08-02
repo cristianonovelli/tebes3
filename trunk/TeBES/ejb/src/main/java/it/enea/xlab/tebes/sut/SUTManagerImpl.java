@@ -118,6 +118,11 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		return eM.find(Interaction.class, interactionId);
 	}
 
+	public Interaction readInteraction(String interactionName) {
+		return (Interaction) eM.createQuery("FROM Interaction int WHERE int.type=:interactionName").
+				setParameter("interactionName", interactionName).getSingleResult();
+	}
+
 
 	private Long createInteraction(Interaction interaction) {
 

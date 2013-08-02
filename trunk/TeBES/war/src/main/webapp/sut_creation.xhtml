@@ -17,39 +17,47 @@
 					<div class="control-group">
     					<label class="control-label" for="input_name">Nome</label>
 						<div class="controls">
-							<h:inputText id="input_name" value="#{UserAdminController.selectedUser.name}" />
+							<h:inputText id="input_name" value="#{SUTManagerController.sut.name}" />
 						</div>
   					</div>
 					<div class="control-group">
     					<label class="control-label" for="input_description">Descrizione</label>
 						<div class="controls">
-							<h:inputText id="input_description" value="#{UserAdminController.selectedUser.surname}" />
+							<h:inputText id="input_description" value="#{SUTManagerController.sut.description}" />
 						</div>
 					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_type">Tipo</label>
+						<label for="menu_type" class="control-label">Tipo</label>
 						<div class="controls">
-							<h:inputText id="input_type" value="#{UserAdminController.selectedUser.eMail}" />
+							<h:selectOneMenu id="menu_type" value="#{SUTManagerController.selectedType}">
+								<f:selectItems value="#{SUTManagerController.typeSelection}" />
+							</h:selectOneMenu>
 						</div>
 					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_language">Linguaggio</label>
+						<label for="menu_interaction" class="control-label">Interazione</label>
 						<div class="controls">
-							<h:inputSecret id="input_language" redisplay="true" value="#{UserAdminController.selectedUser.password}" />
+							<h:selectOneMenu id="menu_interaction" value="#{SUTManagerController.selectedInteraction}" >
+								<f:selectItems value="#{SUTManagerController.interactionSelection}" />
+								<a4j:support event="onchange" reRender="endpointPanel" action="#{SUTManagerController.onSelectedInteractionValue}"/>
+							</h:selectOneMenu>
 						</div>
 					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_interaction">Interazione</label>
-						<div class="controls">
-							<h:inputSecret id="input_interaction" redisplay="true" value="#{UserAdminController.currentPasswordConfirm}" />
-						</div>
+						<a4j:outputPanel ajaxRendered="true" id="endpointPanel">
+							<h:outputText for="input_endpoint" id="value_input_endpoint" rendered="#{SUTManagerController.showEndpointInput}" 
+								value="Endpoint" class="control-label" />
+							<div class="controls">
+								<h:inputText id="input_endpoint" value="#{SUTManagerController.endpoint}" rendered="#{SUTManagerController.showEndpointInput}"/>
+							</div>
+						</a4j:outputPanel>
 					</div>
 					<div>
-      					<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{UserAdminController.createNewUser}" />
-      					<h:commandLink styleClass="btn" value="Annulla" action="#{UserAdminController.cancel}" style="margin-left: 10px;"/>
+      					<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SUTManagerController.createNewSUT}" />
+      					<h:commandLink styleClass="btn" value="Annulla" action="#{SUTManagerController.cancel}" style="margin-left: 10px;"/>
       						
       					<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true">
-							<h:outputText value="#{UserAdminController.userFormMessage}" rendered="#{UserAdminController.showUserFormMessage}" />
+							<h:outputText value="#{SUTManagerController.sutFormMessage}" rendered="#{SUTManagerController.showSutFormMessage}" />
 						</a4j:outputPanel>
   					</div>
 			</h:form>
