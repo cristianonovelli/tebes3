@@ -7,6 +7,7 @@ import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.TestPlanXML;
 import it.enea.xlab.tebes.entity.User;
@@ -91,8 +92,24 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				wf2 = actionManager.readWorkflow(wf2Id);
 				
 				Vector<Action> actionList = (Vector<Action>) wf.getActions(); 
-				for (int i=0; i<actionList.size(); i++) 					
-					actionManager.createAction(actionList.get(i), wf2Id);
+				Vector<Input> inputList;
+				Long actionId;
+				Action actionTemp;
+				for (int i=0; i<actionList.size(); i++) {				
+					
+					actionTemp = actionList.get(i);
+					
+					actionId = actionManager.createAction(actionTemp, wf2Id);
+
+					// prendo lista input					
+					inputList = (Vector<Input>) actionTemp.getInputs();
+					
+					// creo input
+					for (int j=0; j<inputList.size(); j++) {	
+						
+						actionManager.createInput(inputList.get(j), actionId);
+					}
+				}			
 				
 				// CREATE TestPlanXML
 				TestPlanXML tpXML = testPlan.getTestplanxml();
@@ -428,7 +445,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 	
 	
-	public Vector<Action> getActionsFromXML(Long testPlanId) throws SAXException, ParserConfigurationException, IOException {
+	/*public Vector<Action> getActionsFromXML(Long testPlanId) throws SAXException, ParserConfigurationException, IOException {
 		
 		TestPlan testPlan = readTestPlan(testPlanId);
 				//findTestPlanByTestPlanId(testPlanId);
@@ -437,7 +454,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		testPlanDOM.setContent(testPlan.getTestplanxml().getXml());
 		
 		return this.getActionsFromXML(testPlanDOM);
-	}
+	}*/
 	
 
 	private Vector<Action> getActionsFromXML(TestPlanDOM testPlanDOM) throws SAXException, ParserConfigurationException, IOException {
@@ -485,8 +502,14 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			String inputInteraction = testPlanDOM.getInteractionAttribute(inputNode);
 			String inputIdRef = testPlanDOM.getIdRefAttribute(inputNode);		
 			
+			Input input = new Input(inputName, inputDescription, inputType, inputInteraction, inputIdRef);
+			Vector<Input> inputList = new Vector<Input>();
+			inputList.add(input);
+			
 			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, jump, description,
 					inputType, inputLanguage, inputInteraction);
+			
+			action.setInputs(inputList);
 			//Long actionId = this.insertAction(action);
 			
 			//System.out.println(action.getActionSummaryString());

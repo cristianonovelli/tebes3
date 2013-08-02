@@ -557,7 +557,7 @@ public class SessionManagerImplITCase {
 			tempUser = userAdminController.readUser(tempUserId);			
 			Assert.assertNotNull(tempUser);
 						
-			// DELETE User
+			// DELETE User (except superuser)
 			if (tempUser.getRole().getLevel() != role4_superuser.getLevel() ) {			
 				deleting = userAdminController.deleteUser(tempUser.getId());
 				Assert.assertTrue(deleting);			
