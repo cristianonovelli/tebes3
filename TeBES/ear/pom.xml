@@ -95,7 +95,7 @@
 						<id>start-container</id>
 						<phase>pre-integration-test</phase>
 						<goals>
-							<!-- >goal>start</goal -->
+							<goal>start</goal>
 
 							<goal>deploy</goal>
 						</goals>
@@ -104,8 +104,8 @@
 						<id>stop-container</id>
 						<phase>post-integration-test</phase>
 						<goals>
-							<!-- goal>undeploy</goal -->
-							<!-- goal>stop</goal -->
+							<goal>undeploy</goal>
+							<goal>stop</goal>
 						</goals>
 					</execution>
 				</executions>
