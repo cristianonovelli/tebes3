@@ -16,26 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-
-import it.enea.xlab.tebes.common.JNDIServices;
-import it.enea.xlab.tebes.common.SUTConstants;
-import it.enea.xlab.tebes.controllers.common.WebController;
-import it.enea.xlab.tebes.dao.NestedCriterion;
-import it.enea.xlab.tebes.entity.Group;
-import it.enea.xlab.tebes.entity.Interaction;
-import it.enea.xlab.tebes.entity.Role;
-import it.enea.xlab.tebes.entity.SUT;
-import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.sut.SUTManagerRemote;
-import it.enea.xlab.tebes.users.UserManagerRemote;
-import it.enea.xlab.tebes.utils.Messages;
 
 public class SUTManagerController extends WebController<SUT> {
 
