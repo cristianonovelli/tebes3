@@ -215,10 +215,10 @@ public class SessionManagerImplITCase {
 		// Creazione di un SUT
 		
 				// 1. Recupero lista dei SUT Type direttamente dall'oggetto SUT
-				String[] systemSUTTypeList = SUT.getSUTTypeList();
+				Vector<String> systemSUTTypeList = sutController.getSUTTypeList();
 				
 				// 2. L'utente seleziona un SUT type
-				String selectedSUTType = systemSUTTypeList[0];
+				String selectedSUTType = systemSUTTypeList.get(0);
 				Assert.assertTrue(selectedSUTType.equals(SUTConstants.SUT_TYPE1_DOCUMENT));
 
 				// 3. richiamo servizio che dato il tipo mi restituisce una lista di possibili interazioni
@@ -241,8 +241,7 @@ public class SessionManagerImplITCase {
 				// 6. Creo SUT e lo persisto per l'utente corrente
 				SUT sut = new SUT("SystemSUT1-1", selectedSUTType, interaction4User, sutDescription);
 				Long sutId = sutController.createSUT(sut, currentUser);
-				Assert.assertNotNull(sutId);
-				System.out.println("SUT ID: " + sutId);
+				Assert.assertNotNull(sutId);				
 				Assert.assertTrue(sutId.intValue()>0);	
 		
 

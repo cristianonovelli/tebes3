@@ -14,6 +14,7 @@ import it.enea.xlab.tebes.utils.Messages;
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -255,6 +256,11 @@ public class SUTManagerController extends WebController<SUT> {
 	public List<SUTInteraction> getSUTInteractionList(String type) {
 		
 		return sutManagerBean.getSystemSUTInteractionListByType(type);
+	}
+
+	public Vector<String>  getSUTTypeList() {
+		
+		return sutManagerBean.getSUTTypeList();
 	}
 
 }

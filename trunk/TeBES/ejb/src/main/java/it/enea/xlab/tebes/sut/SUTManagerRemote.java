@@ -5,6 +5,7 @@ import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.User;
 
 import java.util.List;
+import java.util.Vector;
 
 import javax.ejb.Remote;
 
@@ -32,6 +33,8 @@ public interface SUTManagerRemote {
 
 	//public List<SUTInteraction> getSUTInteractionList(String selectedSUTType);
 	public List<SUTInteraction> getSystemSUTInteractionListByType(String sutType);
+
+	public Vector<String>  getSUTTypeList();
 	
 
 	
