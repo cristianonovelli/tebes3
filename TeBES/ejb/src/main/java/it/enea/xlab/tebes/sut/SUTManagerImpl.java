@@ -264,6 +264,25 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	}
 
 
+	public Vector<String>  getSUTTypeList() {
+
+		Vector<String> result = new Vector<String>();
+		
+		List<SUT> systemSUTList = getSystemSUTSupported();
+		
+		SUT sut;
+		
+		for(int i=0; i<systemSUTList.size(); i++) {
+			
+			sut = systemSUTList.get(i);
+			if (!result.contains(sut.getType()))
+				result.add(sut.getType());			
+		}
+		
+		return result;
+	}
+
+
 
 	
 }
