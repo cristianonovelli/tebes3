@@ -1,5 +1,16 @@
 package it.enea.xlab.tebes.controllers.sut;
 
+import it.enea.xlab.tebes.common.JNDIServices;
+import it.enea.xlab.tebes.common.SUTConstants;
+import it.enea.xlab.tebes.controllers.common.WebController;
+import it.enea.xlab.tebes.dao.NestedCriterion;
+import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.SUTInteraction;
+import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.sut.SUTManagerRemote;
+import it.enea.xlab.tebes.users.UserManagerRemote;
+import it.enea.xlab.tebes.utils.Messages;
+
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +121,7 @@ public class SUTManagerController extends WebController<SUT> {
 		if(currentUser != null && sut != null) {
 
 			if(checkSUTFields()) {
-				Interaction interaction = new Interaction();
+				SUTInteraction interaction = new SUTInteraction();
 				interaction.setType(this.selectedInteraction);
 				sut.setType(this.selectedType);
 				sut.setInteraction(interaction);
@@ -253,6 +264,11 @@ public class SUTManagerController extends WebController<SUT> {
 
 	public boolean getShowEndpointInput() {
 		return showEndpointInput;
+	}
+
+	public List<SUTInteraction> getSUTInteractionList(String type) {
+		
+		return sutManagerBean.getSystemSUTInteractionListByType(type);
 	}
 
 }
