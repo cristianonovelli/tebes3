@@ -3,16 +3,13 @@ package it.enea.xlab.tebes.sut;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
-import it.enea.xlab.tebes.entity.Action;
-import it.enea.xlab.tebes.entity.ActionWorkflow;
-import it.enea.xlab.tebes.entity.Interaction;
-import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
-import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import java.util.List;
+import java.util.Vector;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -53,15 +50,22 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		user = userManager.readUser(user.getId());
 		SUT existingSUT = this.readSUTByNameAndUser(sut.getName(), user);
 		
+
+		
 		try {
 			if (existingSUT == null) {
 					
-
+				System.out.println("--- createSUT ---");
+				System.out.println("user.getId " + user.getId());
+				System.out.println("sut.getname " + sut.getName());
+				
 				//TODO sut.addToUser(user); prendi spunto da Test Plan
-				eM.persist(sut);	
+					
+				eM.persist(sut);
 				
 				Long interactionId = this.createInteraction(sut.getInteraction());
 				
+				System.out.println("sut.getId " + sut.getId());
 				Long adding = this.addInteractionToSUT(interactionId, sut.getId());
 				
 				if (adding.intValue()>0) {
@@ -91,7 +95,7 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		try {
 			
 			// READ
-			Interaction i = this.readInteraction(interactionId);
+			SUTInteraction i = this.readInteraction(interactionId);
 			SUT s = this.readSUT(sutId);
 			
 			try {
@@ -113,18 +117,18 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	}
 
 
-	private Interaction readInteraction(Long interactionId) {
+	private SUTInteraction readInteraction(Long interactionId) {
 		
-		return eM.find(Interaction.class, interactionId);
+		return eM.find(SUTInteraction.class, interactionId);
 	}
 
-	public Interaction readInteraction(String interactionName) {
-		return (Interaction) eM.createQuery("FROM Interaction int WHERE int.type=:interactionName").
+/*	public Interaction readInteraction(String interactionName) {
+		return (SUTInteraction) eM.createQuery("FROM Interaction int WHERE int.type=:interactionName").
 				setParameter("interactionName", interactionName).getSingleResult();
-	}
+	}*/
 
 
-	private Long createInteraction(Interaction interaction) {
+	private Long createInteraction(SUTInteraction interaction) {
 
 		try {
 				eM.persist(interaction);
@@ -239,6 +243,26 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		
 		return superUserSUTList;
 	}
+
+
+	public List<SUTInteraction> getSystemSUTInteractionListByType(String sutType) {
+		
+		Vector<SUTInteraction> result = new Vector<SUTInteraction>();
+		
+		List<SUT> systemSUTList = getSystemSUTSupported();
+		
+		SUT sut;
+		
+		for(int i=0; i<systemSUTList.size(); i++) {
+			
+			sut = systemSUTList.get(i);
+			if (sut.getType().equals(sutType))
+				result.add(sut.getInteraction());			
+		}
+		
+		return result;
+	}
+
 
 
 	

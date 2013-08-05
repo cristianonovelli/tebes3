@@ -2,22 +2,19 @@ package it.enea.xlab.tebes.sut;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.SUTConstants;
-import it.enea.xlab.tebes.entity.InteractionWebSite;
-import it.enea.xlab.tebes.entity.Role;
-import it.enea.xlab.tebes.entity.SUT;
-import it.enea.xlab.tebes.entity.Interaction;
-import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
 import it.enea.xlab.tebes.controllers.users.UserAdminController;
 import it.enea.xlab.tebes.controllers.users.UserProfileController;
+import it.enea.xlab.tebes.entity.Role;
+import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.SUTInteraction;
+import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
 import java.util.List;
 
-import org.apache.bcel.classfile.Constant;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -116,7 +113,7 @@ public class SUTManagerImplITCase {
 		
 
 		// 2. CREATE two generic SUTs
-		InteractionWebSite interaction = new InteractionWebSite();
+		SUTInteraction interaction = new SUTInteraction(SUTConstants.INTERACTION_WEBSITE);
 		SUT sut1 = new SUT("sut1", SUTConstants.SUT_TYPE1_DOCUMENT, interaction, "XML document1 uploaded by web interface");
 		Long sutId1 = sutManagerController.createSUT(sut1, tempUser);
 		

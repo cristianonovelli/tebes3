@@ -1,10 +1,10 @@
 package it.enea.xlab.tebes.sut;
 
-import java.util.List;
-
-import it.enea.xlab.tebes.entity.Interaction;
 import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.User;
+
+import java.util.List;
 
 import javax.ejb.Remote;
 
@@ -29,8 +29,10 @@ public interface SUTManagerRemote {
 	public Boolean deleteSUT(Long idSUT);
 
 	public List<SUT> getSystemSUTSupported();
+
+	//public List<SUTInteraction> getSUTInteractionList(String selectedSUTType);
+	public List<SUTInteraction> getSystemSUTInteractionListByType(String sutType);
 	
-	public Interaction readInteraction(String interactionName);
 
 	
 
