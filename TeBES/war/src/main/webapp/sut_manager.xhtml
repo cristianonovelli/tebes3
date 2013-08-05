@@ -16,7 +16,7 @@
 
 				<h3>SUT Manager</h3>
 				<h4>Miei SUT</h4>
-				<h:commandLink styleClass="btn btn-primary pull-right" value="Crea SUT" action="create_sut" />
+				<h:commandLink styleClass="btn btn-primary pull-right" value="Crea SUT" action="#{SUTManagerController.openCreateSUTView}" />
 
 				<t:dataTable id="sutList" var="sut" styleClass="table table-striped"
 					value="#{SUTManagerController.dataModel}" preserveDataModel="false"

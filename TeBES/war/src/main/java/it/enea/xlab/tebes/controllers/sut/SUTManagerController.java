@@ -130,11 +130,16 @@ public class SUTManagerController extends WebController<SUT> {
 	}
 	
 	public String cancel() {
+		this.resetFields();
 		this.updateDataModel();
 		return "back";
 	}
 
 	public void resetFields() {
+		this.selectedInteraction = "";
+		this.selectedType = "";
+		this.showEndpointInput = false;
+		this.endpoint = "";
 		sut = new SUT();
 	}
 	
@@ -183,6 +188,13 @@ public class SUTManagerController extends WebController<SUT> {
 		else
 			this.showEndpointInput = false;
 		return "";
+	}
+	
+	public String openCreateSUTView() {
+		this.sutFormMessage = "";
+		this.showSutFormMessage = false;
+		this.resetFields();
+		return "create_sut";
 	}
 	
 	public SUT getSut() {
