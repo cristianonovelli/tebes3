@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class SUTInteraction implements Serializable {
@@ -18,6 +19,17 @@ public class SUTInteraction implements Serializable {
 	
 	private String type;
 
+	private String endpoint;
+	
+
+	@OneToOne
+	private SUT sut;
+
+	
+	public SUTInteraction() {
+
+	}	
+	
 	public SUTInteraction(String type) {
 
 		this.setType(type);
@@ -39,7 +51,26 @@ public class SUTInteraction implements Serializable {
 		this.type = type;
 	}
 
+	public String getEndpoint() {
+		return endpoint;
+	}
 
+	public void setEndpoint(String endpoint) {
+		this.endpoint = endpoint;
+	}
+
+	public SUT getSut() {
+		return sut;
+	}
+
+	public void setSut(SUT sut) {
+		this.sut = sut;
+	}
+
+	public void addToSUT(SUT s) {
+		
+		this.sut = s;
+	}
 	
 	
 }

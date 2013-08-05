@@ -1,5 +1,7 @@
 package it.enea.xlab.tebes.entity;
 
+import it.enea.xlab.tebes.common.SUTConstants;
+
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
@@ -13,7 +15,7 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class SUT implements Serializable {
-
+	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -38,7 +40,7 @@ public class SUT implements Serializable {
 	
 	// interazioni possibili: website (upload), email, ws, cpa
 	@OneToOne(mappedBy="sut",cascade = CascadeType.ALL)
-	private Interaction interaction;
+	private SUTInteraction interaction;
 
 
 
@@ -54,7 +56,7 @@ public class SUT implements Serializable {
 	/**
 	 * Constructor without id.
 	 */
-	public SUT(String name, String type, Interaction interaction, String description) {
+	public SUT(String name, String type, SUTInteraction interaction, String description) {
 
 		this.setName(name);
 		this.setType(type);
@@ -111,12 +113,18 @@ public class SUT implements Serializable {
 		this.type = type;
 	}
 
-	public Interaction getInteraction() {
+	public SUTInteraction getInteraction() {
 		return interaction;
 	}
 
-	public void setInteraction(Interaction interaction) {
+	public void setInteraction(SUTInteraction interaction) {
 		this.interaction = interaction;
+	}
+
+
+	public static String[] getSUTTypeList() {
+
+		return new String[]{SUTConstants.SUT_TYPE1_DOCUMENT, SUTConstants.SUT_TYPE2_TRANSPORT, SUTConstants.SUT_TYPE3_PROCESS};
 	}
 
 }
