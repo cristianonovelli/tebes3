@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 /**
@@ -56,6 +57,15 @@ public class Session implements Serializable {
 	private Long userId;
 	private Long testPlanId;
 	private Long sutId;
+
+	@ManyToOne
+	private User user;
+	
+	@ManyToOne
+	private TestPlan testPlan;
+	
+	@ManyToOne
+	private SUT sut;
 	
 	// relazione con l'entity report?
 	@OneToOne(cascade=CascadeType.ALL)
@@ -83,14 +93,24 @@ public class Session implements Serializable {
 
 	}
 
-
 	// Costruttore
-	public Session(Long userId, Long sutId, Long testPlanId) {
+	public Session(User user, TestPlan testPlan, SUT sut) {
+
+		this.user = user;
+		this.testPlan = testPlan;
+		this.sut = sut;
+				
+		// Set state to "working"
+		this.setState(getWorkingState());
+	}
+	
+	// Costruttore
+	public Session(Long userId, Long testPlanId, Long sutId) {
 
 		this.userId = userId;
-		this.sutId = sutId;
 		this.testPlanId = testPlanId;
-				
+		this.sutId = sutId;
+		
 		// Set state to "working"
 		this.setState(getWorkingState());
 	}
@@ -201,6 +221,36 @@ public class Session implements Serializable {
 
 	public void setMessageStore(String messageStore) {
 		this.messageStore = messageStore;
+	}
+
+
+	public User getUser() {
+		return user;
+	}
+
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+	public TestPlan getTestPlan() {
+		return testPlan;
+	}
+
+
+	public void setTestPlan(TestPlan testPlan) {
+		this.testPlan = testPlan;
+	}
+
+
+	public SUT getSut() {
+		return sut;
+	}
+
+
+	public void setSut(SUT sut) {
+		this.sut = sut;
 	}
 
 

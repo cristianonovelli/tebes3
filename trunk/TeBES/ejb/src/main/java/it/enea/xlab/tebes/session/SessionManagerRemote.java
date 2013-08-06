@@ -20,10 +20,12 @@ public interface SessionManagerRemote {
 	// Delete Session
 	//public Boolean deleteSession(Long sessionId);
 
-	public Long run(Long userId, Long sutId, Long testPlanId);
+	public Long createSession(Long userId, Long sutId, Long testPlanId);
 
 	public List<Long> getSessionIdList();
 
 	public Boolean deleteSession(Long id);
+
+	public Long check(Long userId, Long sutId, Long testPlanId);
 
 }

@@ -17,7 +17,7 @@ public interface ReportManagerRemote {
 
 	boolean updateReport(Report report);
 	
-	Report createReportForNewSession(Session session, User user, TestPlan testPlan, SUT sut) throws Exception;
+	Report createReportForNewSession(Session session) throws Exception;
 
 	String getSystemXMLReportAbsPathName();
 	
