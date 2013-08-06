@@ -12,6 +12,7 @@ import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
+import it.enea.xlab.tebes.utils.Messages;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,6 +37,9 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 	private TestPlanManagerRemote testPlanManagerService;
 	private ActionManagerRemote actionManagerService;
 	private UserManagerRemote userManagerService;
+	
+	private String testPlanFormMessage;
+	private boolean showTestPlanFormMessage = false;
 
 	private Long selectedTestPlanId;
 	
@@ -220,9 +224,26 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 		if(selectedTestPlan != null && currentUser != null) {
 			this.cloneTestPlan(selectedTestPlan, currentUser.getId());
 			this.updateDataModel();
-			return "import_complete";
-		} else 
-			return "import_fail";
+			this.testPlanFormMessage = Messages.FORM_TEST_PLAN_IMPORT_SUCCESS;
+			this.showTestPlanFormMessage = true;
+			
+		} else {
+			this.testPlanFormMessage = Messages.FORM_TEST_PLAN_IMPORT_FAIL;
+			this.showTestPlanFormMessage = true;
+		}
+		return "";
+	}
+	
+	public String showTestPlanManagerView() {
+		this.showTestPlanFormMessage = false;
+		this.testPlanFormMessage = "";
+		return "open_test_plan_view";
+	}
+	
+	public String openCreateSessionViewFromTestPlan() {
+		this.showTestPlanFormMessage = false;
+		this.testPlanFormMessage = "";
+		return "create_session";
 	}
 
 	public Long getSelectedTestPlanId() {
@@ -231,6 +252,20 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 
 	public void setSelectedTestPlanId(Long selectedTestPlanId) {
 		this.selectedTestPlanId = selectedTestPlanId;
+	}
+
+	public String getTestPlanFormMessage() {
+		return testPlanFormMessage;
+	}
+
+	public void setTestPlanFormMessage(String testPlanFormMessage) {
+		this.testPlanFormMessage = testPlanFormMessage;
+		if(testPlanFormMessage.equals(""))
+			this.showTestPlanFormMessage = false;
+	}
+
+	public boolean getShowTestPlanFormMessage() {
+		return showTestPlanFormMessage;
 	}
 
 }

@@ -1,10 +1,18 @@
-
-<div class="well sidebar-nav">
-	<ul class="nav nav-list">
-		<li class="nav-header">TEBES</li>
-		<li><a href="session.jsf">Sessioni</a></li>
-		<li><a href="test_plan_manager.jsf">Test Plans</a></li>
-		<li><a href="sut_manager.jsf">System Under Test</a></li>
-	</ul>
-</div>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+	<f:view>
+		<h:form>
+			<div class="well sidebar-nav">
+				<ul class="nav nav-list">
+					<li class="nav-header">TEBES</li>
+					<li><a href="session_manager.jsf">Sessioni</a></li>
+					<li><h:commandLink value="Test Plans" action="#{MyTestPlanManagerController.showTestPlanManagerView}"/></li>
+					<li><a href="sut_manager.jsf">System Under Test</a></li>
+				</ul>
+			</div>
+		</h:form>
+	</f:view>
+</ui:composition>
 

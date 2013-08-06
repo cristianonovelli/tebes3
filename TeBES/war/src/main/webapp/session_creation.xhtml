@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
+
+<ui:composition template="layout/layout.xhtml">
+	<ui:define name="content">
+		<f:view>
+			<h:form styleClass="form-horizontal">
+				<h3>Creazione di una nuova sessione</h3>
+					<div class="control-group">
+						<label for="menu_type" class="control-label">Test Plan</label>
+						<div class="controls">
+							<h:selectOneMenu id="menu_type" value="#{SessionManagerController.selectedTestPlan}">
+								<f:selectItems value="#{SessionManagerController.testPlanSelection}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div class="control-group">
+						<label for="menu_interaction" class="control-label">SUT</label>
+						<div class="controls">
+							<h:selectOneMenu id="menu_interaction" value="#{SessionManagerController.selectedSUT}" >
+								<f:selectItems value="#{SessionManagerController.SUTSelection}" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					<div>
+      					<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SessionManagerController.createSession}" />
+      					<h:commandLink styleClass="btn" value="Annulla" action="#{SessionManagerController.cancel}" style="margin-left: 10px;"/>
+      						
+      					<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true">
+							<h:outputText value="#{SessionManagerController.sessionFormMessage}" rendered="#{SessionManagerController.showSessionFormMessage}" />
+						</a4j:outputPanel>
+  					</div>
+			</h:form>
+		</f:view>
+	</ui:define>
+</ui:composition>
+</html>

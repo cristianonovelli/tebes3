@@ -256,11 +256,11 @@ public class UserAdminController extends WebController<User> {
 				if(result == -1) {
 					this.userFormMessage = Messages.FORM_ERROR_USER_ALREADY_EXISTING;
 					this.showUserFormMessage = true;
-					return "creation_fail";
+					return "";
 				} else if(result == -2) {
 					this.userFormMessage = Messages.FORM_ERROR_USER_CREATION;
 					this.showUserFormMessage = true;
-					return "creation_fail";
+					return "";
 				}
 				
 				this.updateDataModel();
@@ -268,7 +268,7 @@ public class UserAdminController extends WebController<User> {
 			} else {
 				this.userFormMessage = message;
 				this.showUserFormMessage = true;
-				return "creation_fail";
+				return "";
 			}
 
 		}
@@ -284,7 +284,7 @@ public class UserAdminController extends WebController<User> {
 				if(user == null) {
 					this.userFormMessage = Messages.FORM_USER_NOT_EXISTING;
 					this.showUserFormMessage = true;
-					return "update_fail";
+					return "";
 				}
 				
 				user.setName(selectedUser.getName());
@@ -307,7 +307,7 @@ public class UserAdminController extends WebController<User> {
 				if(!this.userManagerBean.updateUser(user)) {
 					this.userFormMessage = Messages.FORM_ERROR_USER_UPDATE;
 					this.showUserFormMessage = true;
-					return "update_fail";
+					return "";
 				}
 				
 				this.updateDataModel();
@@ -315,7 +315,7 @@ public class UserAdminController extends WebController<User> {
 			} else {
 				this.userFormMessage = message;
 				this.showUserFormMessage = true;
-				return "update_fail";
+				return "";
 			}
 		}
 		

@@ -17,7 +17,11 @@
 
 				<h3>Test Plan Manager</h3>
 				<h4>Miei Test Plan</h4>
-
+				
+				<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true">
+					<h:outputText id="formMessage" value="#{MyTestPlanManagerController.testPlanFormMessage}" rendered="#{MyTestPlanManagerController.showTestPlanFormMessage}" />
+				</a4j:outputPanel>
+				
 				<t:dataTable id="myTestPlanList" var="testPlan" styleClass="table table-striped"
 					value="#{MyTestPlanManagerController.dataModel}" preserveDataModel="false"
 					rows="#{MyTestPlanManagerController.rowsPerPage}">
@@ -68,13 +72,13 @@
 						<f:facet name="header">
 							<h:outputText styleClass="headerText" value="Azioni" />
 						</f:facet>
-						<a4j:commandLink id="executelink" style="margin-left: 10px;"
-							action="#{UserAdminController.deleteItem}"> 
+						<a4j:commandLink id="createSessionlink" style="margin-left: 10px;"
+							action="#{MyTestPlanManagerController.openCreateSessionViewFromTestPlan}"> 
 							<i class="icon-play-circle icon-large"></i>
-							<a4j:actionparam name="idItemToDelete" value="#{testPlan.id}"
-								assignTo="#{UserAdminController.itemToDelete}" />
+							<a4j:actionparam name="selectedTestPlanName" value="#{testPlan.name}"
+								assignTo="#{SessionManagerController.selectedTestPlan}" />
 						</a4j:commandLink>
-						<rich:toolTip for="executelink" value="Esegui" />
+						<rich:toolTip for="createSessionlink" value="Crea Sessione" />
 					</h:column>
 
 				</t:dataTable>
