@@ -77,10 +77,16 @@ public class SessionManagerController extends WebController<Session> {
 		return null;
 	}*/
 
-	public Long run(Long userId, Long sutId, Long testPlanId) {
+	public Long createSession(Long userId, Long sutId, Long testPlanId) {
 		
-		return sessionManagerBean.run(userId, sutId, testPlanId);
-	}
+		
+		Long result = sessionManagerBean.check(userId, sutId, testPlanId);
+		
+		if (result.intValue()>0)
+			return sessionManagerBean.createSession(userId, sutId, testPlanId);
+		else
+			return new Long(-1);
+	} 
 
 	public Report getReport(Long sessionId) {
 		
