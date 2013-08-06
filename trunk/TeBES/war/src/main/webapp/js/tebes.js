@@ -20,13 +20,25 @@ $(document).ready(function() {
 		  e.preventDefault();
 		  $.cookie('login_tab_cookie', 'login');
 		  $(this).tab('show');
-		});
+	});
 	
 	$('#loginTab a[href="#create"]').click(function (e) {
 		  e.preventDefault();
 		  $.cookie('login_tab_cookie', 'create');
 		  $(this).tab('show');
-		});
+	});
+	
+	$('#admin_navbar').click(function (e) {
+		$(this).toggleClass('active');
+		$('#info_navbar').removeClass('active');
+		$('#home_navbar').removeClass('active');
+	});
+	
+	$('#home_navbar').click(function (e) {
+		$(this).toggleClass('active');
+		$('#info_navbar').removeClass('active');
+		$('#admin_navbar').removeClass('active');
+	});
 
 }); // END OF DOCUMENT READY
 

@@ -13,11 +13,11 @@
 								class="icon-bar"></span>
 						</button>
 						<a class="brand" href="index.jsf">TeBES</a>
-						<div class="nav-collapse collapse">
+						<div class="nav-collapse collapse" id="navbar">
 							<ul class="nav">
-								<li class="active"><a href="index.jsf">Home</a></li>
-								<li><a href="#about">Info</a></li>
-								<li><h:commandLink value="Admin" rendered="#{AuthenticationManagerController.isAdmin}" action="index_admin"/></li>
+								<li id="home_navbar"><a href="index.jsf">Home</a></li>
+								<li id="info_navbar"><a href="#about">Info</a></li>
+								<li id="admin_navbar"><h:commandLink value="Admin" rendered="#{AuthenticationManagerController.isAdmin}" action="index_admin"/></li>
 							</ul>
 							<ul class="nav pull-right" id="navbar_logout">
 								<li><h:commandLink value="ESCI" action="#{AuthenticationManagerController.logout}" /></li>

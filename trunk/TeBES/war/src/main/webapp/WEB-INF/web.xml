@@ -218,6 +218,54 @@
 		</auth-constraint>
 	</security-constraint>
 
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>session_manager.jsf</web-resource-name>
+			<url-pattern>/session_manager.jsf</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Only allow users from following roles</description>
+			<role-name>admin_user</role-name>
+			<role-name>super_user</role-name>
+			<role-name>advanced_user</role-name>
+			<role-name>standard_user</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>session_creation.jsf</web-resource-name>
+			<url-pattern>/session_creation.jsf</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Only allow users from following roles</description>
+			<role-name>admin_user</role-name>
+			<role-name>super_user</role-name>
+			<role-name>advanced_user</role-name>
+			<role-name>standard_user</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>session_info.jsf</web-resource-name>
+			<url-pattern>/session_info.jsf</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Only allow users from following roles</description>
+			<role-name>admin_user</role-name>
+			<role-name>super_user</role-name>
+			<role-name>advanced_user</role-name>
+			<role-name>standard_user</role-name>
+		</auth-constraint>
+	</security-constraint>
+
 	<login-config>
 		<auth-method>FORM</auth-method>
 		<realm-name>tebes_policy</realm-name>

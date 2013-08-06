@@ -13,6 +13,7 @@ import it.enea.xlab.tebes.utils.Messages;
 
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -40,6 +41,7 @@ public class SUTManagerController extends WebController<SUT> {
 	private String selectedInteraction;
 	private String endpoint;
 	private boolean showEndpointInput = false;
+	private boolean showInteractionMenu = false;
 	
 	public SUTManagerController() throws NamingException {
 		sutManagerBean = JNDIServices.getSUTManagerService();
@@ -118,12 +120,12 @@ public class SUTManagerController extends WebController<SUT> {
 				this.updateDataModel();
 				return "sut_creation_success";
 			} else
-				return "sut_creation_fail";
+				return "";
 
 		} else {
 			this.sutFormMessage = Messages.FORM_ERROR_SUT_CREATION;
 			this.showSutFormMessage = true;
-			return "sut_creation_fail";
+			return "";
 		}
 	}
 	
@@ -137,31 +139,33 @@ public class SUTManagerController extends WebController<SUT> {
 		this.selectedInteraction = "";
 		this.selectedType = "";
 		this.showEndpointInput = false;
+		this.showInteractionMenu = false;
 		this.endpoint = "";
 		sut = new SUT();
 	}
 	
 	private void updateTypes() {
 		
-		typeSelection = new ArrayList<SelectItem>();
-		typeSelection.add(new SelectItem(SUTConstants.SUT_TYPE1_DOCUMENT));
-		typeSelection.add(new SelectItem(SUTConstants.SUT_TYPE2_TRANSPORT));
-		typeSelection.add(new SelectItem(SUTConstants.SUT_TYPE3_PROCESS));
+		if(typeSelection == null || typeSelection.size() == 0) {
+			typeSelection = new ArrayList<SelectItem>();
+			for (String type : this.getSUTTypeList()) {
+				typeSelection.add(new SelectItem(type));
+			}
+		}
 	}
 	
 	private void updateInteractions() {
-		
 		interactionSelection = new ArrayList<SelectItem>();
-		interactionSelection.add(new SelectItem(SUTConstants.INTERACTION_EMAIL));
-		interactionSelection.add(new SelectItem(SUTConstants.INTERACTION_WEBSITE));
-		interactionSelection.add(new SelectItem(SUTConstants.INTERACTION_WS_CLIENT));
-		interactionSelection.add(new SelectItem(SUTConstants.INTERACTION_WS_SERVER));
+		List<SUTInteraction> interactions = getSUTInteractionList(this.selectedType);
+		for (SUTInteraction sutInteraction : interactions) {
+			interactionSelection.add(new SelectItem(sutInteraction.getType()));
+		}
 	}
 	
 	private boolean checkSUTFields() {
 
 		if(this.sut.getName() != null && !this.getSut().getName().equals("") && this.getSut().getDescription() != null && 
-				!this.getSut().getDescription().equals("")) {
+				!this.getSut().getDescription().equals("") && this.selectedInteraction != null && !this.selectedInteraction.equals("")) {
 			
 			if(!this.selectedInteraction.equals(SUTConstants.INTERACTION_WEBSITE)) {
 				if(this.endpoint == null || this.endpoint.equals("")) {
@@ -185,6 +189,13 @@ public class SUTManagerController extends WebController<SUT> {
 			this.showEndpointInput = true;
 		else
 			this.showEndpointInput = false;
+		return "";
+	}
+	
+	public String onSelectedTypeValue() {
+		this.showInteractionMenu = true;
+		this.showEndpointInput = false;
+		this.endpoint = "";
 		return "";
 	}
 	
@@ -220,8 +231,7 @@ public class SUTManagerController extends WebController<SUT> {
 	}
 
 	public List<SelectItem> getInteractionSelection() {
-		if(this.interactionSelection == null || this.interactionSelection.size() == 0)
-			this.updateInteractions();
+		this.updateInteractions();
 		return interactionSelection;
 	}
 
@@ -254,12 +264,14 @@ public class SUTManagerController extends WebController<SUT> {
 	}
 
 	public List<SUTInteraction> getSUTInteractionList(String type) {
-		
 		return sutManagerBean.getSystemSUTInteractionListByType(type);
 	}
 
-	public Vector<String>  getSUTTypeList() {
-		
+	public boolean getShowInteractionMenu() {
+		return showInteractionMenu;
+	}
+
+	public Vector<String> getSUTTypeList() {
 		return sutManagerBean.getSUTTypeList();
 	}
 

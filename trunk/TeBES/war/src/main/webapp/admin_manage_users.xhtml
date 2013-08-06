@@ -64,11 +64,9 @@
 						<f:facet name="header">
 							<h:outputText styleClass="headerText" value="Azioni" />
 						</f:facet>
-						<a4j:commandLink id="trashlink"
-							action="#{UserAdminController.deleteItem}">
+						<a4j:commandLink ajaxSingle="true" id="trashlink" oncomplete="#{rich:component('deletePanel')}.show()">
 							<i class="icon-trash icon-large"></i>
-							<a4j:actionparam name="idItemToDelete" value="#{utente.id}"
-								assignTo="#{UserAdminController.itemToDelete}" />
+							<a4j:actionparam name="idItemToDelete" value="#{utente.id}" assignTo="#{UserAdminController.itemToDelete}" />
 						</a4j:commandLink>
 						<rich:toolTip for="trashlink" value="Cancella" />
 						<a4j:commandLink ajaxSingle="true" id="viewlink" style="margin-left: 10px;"
@@ -105,6 +103,32 @@
 
 					</t:dataScroller>
 				</t:div>
+
+				<rich:modalPanel id="deletePanel" autosized="true" width="250">
+					<f:facet name="header">
+						<h:outputText value="Eliminare questo elemento?" />
+					</f:facet>
+					<br />
+					<table width="100%">
+						<tbody>
+							<tr>
+								<td align="center" width="20%">
+									<i class="icon-warning-sign icon-3x red"></i>
+								</td>
+								<td align="center" width="40%">
+									<a4j:commandLink value="Elimina" styleClass="inputBtn inputBtn-blue"
+										oncomplete="#{rich:component('deletePanel')}.hide();return true;"
+										action="#{UserAdminController.deleteItem}" />
+								</td>
+								<td align="center" width="40%">
+									<a4j:commandLink
+										value="Annulla" styleClass="inputBtn inputBtn-grey"
+										onclick="#{rich:component('deletePanel')}.hide();return false;" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</rich:modalPanel>
 			</a4j:form>
 		</f:view>
 	</ui:define>
