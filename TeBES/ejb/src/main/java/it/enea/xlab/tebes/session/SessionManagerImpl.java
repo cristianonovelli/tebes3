@@ -53,19 +53,15 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	private ActionManagerRemote actionManager; 
 	
 	
-
 	/**
-	 * RUN / CREATE Session
+	 * CHECK
 	 * 
-	 * @return	sessionId > 0
+	 * @return	 1 if OK
 	 * 			-1 one or more ID isn't a valid identifier
-	 * 			-2 an unexpected exception happened
-	 * 			-3 report null
-	 * 			-4 reportDOM null
-	 * 			-5 there isn't match testplan-sut of user
-	 * 			-6 there is match testplan-sut of user but it isn't supported in tebes
+	 * 			-2 there isn't match testplan-sut of user
+	 * 			-3 there is match testplan-sut of user but it isn't supported in tebes
 	 */
-	public Long run(Long userId, Long sutId, Long testPlanId) {
+	public Long check(Long userId, Long sutId, Long testPlanId) {
 		
 		User user = userManager.readUser(userId);
 		SUT sut = sutManager.readSUT(sutId);
@@ -78,7 +74,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			boolean matching1 = this.matchTestPlanSUT(testPlan, sut);
 			
 			if (!matching1)
-				return new Long(-5);
+				return new Long(-2);
 			
 			// Check match testplan-sut of system
 			// Ciclo per ogni SUT del system alla ricerca di almeno uno compatibile
@@ -92,10 +88,31 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			}
 			
 			if (!matching2)
-				return new Long(-6);
+				return new Long(-3);
 			
+			return new Long(1);
+		}
+		else
+			// @return -1 one or more ID isn't a valid identifier
+			return new Long(-1);
+	}
+	
+	/**
+	 * CREATE Session
+	 * 
+	 * @return	sessionId > 0
+
+	 * 			-2 an unexpected exception happened
+	 * 			-3 report null
+	 */
+	public Long createSession(Long userId, Long sutId, Long testPlanId) {
+		
+		User user = userManager.readUser(userId);
+		SUT sut = sutManager.readSUT(sutId);
+		TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);
+
 			// CREATE Session
-			Session session = new Session(userId, sutId, testPlanId);
+			Session session = new Session(user, testPlan, sut);
 			session.setCreationDateTime(XLabDates.getCurrentUTC());
 			session.setLastUpdateDateTime(XLabDates.getCurrentUTC());
 			
@@ -107,7 +124,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			Report report;
 			try {
 				
-				report = reportManager.createReportForNewSession(session, user, testPlan, sut);
+				report = reportManager.createReportForNewSession(session);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -124,11 +141,6 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			
 			return sessionId;
 
-
-		}
-		else
-			// @return -1 one or more ID isn't a valid identifier
-			return new Long(-1);
 	}
 	
 	
@@ -166,14 +178,15 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	 */
 	private Long createSession(Session session) {
 
-		Session existingSession = this.readSessionByUserTestPlanAndSUT(session.getUserId(), session.getTestPlanId(), session.getSutId());
+		// una sessione con questi 3 parametri è possibile
+		//Session existingSession = this.readSessionByUserTestPlanAndSUT(session.getUserId(), session.getTestPlanId(), session.getSutId());
 		
-		if (existingSession == null) {
+		//if (existingSession == null) {
 			eM.persist(session);		
 			return session.getId();
-		}
-		else 
-			return new Long(-1);
+		//}
+		//else 
+		//	return new Long(-1);
 	}
 	
 	

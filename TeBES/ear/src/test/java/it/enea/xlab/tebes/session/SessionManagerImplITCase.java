@@ -212,73 +212,69 @@ public class SessionManagerImplITCase {
 		testPlanId = testPlanController.cloneTestPlan(selectedTestPlan, currentUserId);
 		Assert.assertTrue(testPlanId.intValue()>0);			
 		
-		// Creazione di un SUT
 		
-				// 1. Recupero lista dei SUT Type direttamente dall'oggetto SUT
-				Vector<String> systemSUTTypeList = sutController.getSUTTypeList();
-				
-				// 2. L'utente seleziona un SUT type
-				String selectedSUTType = systemSUTTypeList.get(0);
-				Assert.assertTrue(selectedSUTType.equals(SUTConstants.SUT_TYPE1_DOCUMENT));
-
-				// 3. richiamo servizio che dato il tipo mi restituisce una lista di possibili interazioni
-				// Get supported Interaction for the selected SUT Type
-				List<SUTInteraction> sutInteractionList = sutController.getSUTInteractionList(selectedSUTType);
-				Assert.assertTrue(sutInteractionList.size() == 4);		
-				
-				// 4. l'utente sceglie un'interazione tra quelle disponibili, deve avvenire un cast
-				SUTInteraction selectedInteraction = (SUTInteraction) sutInteractionList.get(0);
-				Assert.assertTrue(selectedInteraction.getType().equals(SUTConstants.INTERACTION_WEBSITE));
-
-				// 5. creo l'interazione utente con il tipo scelto
-				SUTInteraction interaction4User= new SUTInteraction(selectedInteraction.getType());
-				interaction4User.setEndpoint(null);
-				
-				
-				// 5. inserisce una descrizione
-				String sutDescription = "XML document1 uploaded by email";
-
-				// 6. Creo SUT e lo persisto per l'utente corrente
-				SUT sut = new SUT("SystemSUT1-1", selectedSUTType, interaction4User, sutDescription);
-				Long sutId = sutController.createSUT(sut, currentUser);
-				Assert.assertNotNull(sutId);				
-				Assert.assertTrue(sutId.intValue()>0);	
+		// CREAZIONE SUT
 		
+		// 1. Recupero lista dei SUT Type direttamente dall'oggetto SUT
+		Vector<String> systemSUTTypeList = sutController.getSUTTypeList();
+		
+		// 2. L'utente seleziona un SUT type
+		String selectedSUTType = systemSUTTypeList.get(0);
+		Assert.assertTrue(selectedSUTType.equals(SUTConstants.SUT_TYPE1_DOCUMENT));
 
+		// 3. richiamo servizio che dato il tipo mi restituisce una lista di possibili interazioni
+		// Get supported Interaction for the selected SUT Type
+		List<SUTInteraction> sutInteractionList = sutController.getSUTInteractionList(selectedSUTType);
+		Assert.assertTrue(sutInteractionList.size() == 4);		
+		
+		// 4. l'utente sceglie un'interazione tra quelle disponibili, deve avvenire un cast
+		SUTInteraction selectedInteraction = (SUTInteraction) sutInteractionList.get(0);
+		Assert.assertTrue(selectedInteraction.getType().equals(SUTConstants.INTERACTION_WEBSITE));
+
+		// 5. creo l'interazione utente con il tipo scelto
+		SUTInteraction interaction4User= new SUTInteraction(selectedInteraction.getType());
+		interaction4User.setEndpoint(null);
+			
+		// 6. inserisce una descrizione
+		String sutDescription = "XML document1 uploaded by email";
+
+		// 7. Creo SUT e lo persisto per l'utente corrente
+		SUT sut = new SUT("SystemSUT1-1", selectedSUTType, interaction4User, sutDescription);
+		Long sutId = sutController.createSUT(sut, currentUser);
+		Assert.assertNotNull(sutId);				
+		Assert.assertTrue(sutId.intValue()>0);	
 		
 
 		
-		// NEL MOMENTO IN CUI UN UTENTE AVVIA L'ESECUSIONE DI TEST:
+		// PRE-RUN (metodo check che si trova nel controller)
+		// Nel momento in cui l'utente avvia il test
+		// il sistema effettua prima una verifica di consistenza
+		// verificando che Test Plan e SUT siano compatibili
+		// 1. tra loro
+		// 2. con quanto supportato dal sistema
+		// SE questa funzione ha successo si passa alla run()
+		// ALTRIMENTI è necessario specificare/creare un altro SUT (probabile) o scegliere un diverso TestPlan (improbabile)
+		
+
+		// Nel caso fosse minore di zero si dovrebbe modificare il testplan o il sut scelti
+		
+		
+		// createSession
+		Long sessionId = sessionController.createSession(currentUserId, sutId, testPlanId);
+		Assert.assertNotNull(sessionId);
+		System.out.println("sessionId:" + sessionId);
+		Assert.assertTrue(sessionId.intValue()>0);		
+		
+	
+		
+		
+		// NEL MOMENTO IN CUI UN UTENTE AVVIA L'ESECUZIONE DI TEST:
 		// 1. VIENE AVVIATO IL TEST
 		// 2. UTENTE PUO' A QUESTO PUNTO FARE POLLING SULLA PROPRIA SESSIONE PER  
 		// 2.1 MONITORARE ESECUZIONE ACTIONS
 		// 2.2 RISPONDERE A UNA RICHIESTA DI INTERAZIONE
 		// 2.3 OTTENERE L'OUTPUT DEI TEST 
 		
-		
-		// CREATE SESSION
-		//  IL SISTEMA EFFETTUA UNA VERIFICA, C'E' UN SUT COMPATIBILE PER OGNI ACTION? SE NO, SI VA NEL SUT MANAGER
-		
-		Long sessionId = sessionController.run(currentUserId, sutId, testPlanId);
-		Assert.assertNotNull(sessionId);
-		System.out.println("sessionId:" + sessionId);
-		Assert.assertTrue(sessionId.intValue()>0);		
-		/**
-		 * RUN / CREATE Session
-		 * 
-		 * @return	sessionId > 0 if OK
-		 * 			-1 one or more ID isn't a valid identifier
-		 * 			-2 an unexpected exception happened
-		 * 			-3 report null
-		 * 			-4 reportDOM null
-		 * 			-5 there isn't match testplan-sut of user
-		 * 			-6 there is match testplan-sut of user but it isn't supported in tebes
-		 */
-		// NB
-		// Nel caso sia -5 l'utente dovrà modificare o aggiungere un SUT
-		// Nel caso sia ritornato -6 vuol dire che il testplan che si vuole eseguire non è supportato dal sistema
-		// (quest'ultimo caso è impossibile se la piattaforma impedisce di importare testPlan non supportabili o 
-		// se impedisce durante la modifica del testplan di specificare Input non validi)
 
 		
 		// GET Current Session
@@ -288,6 +284,9 @@ public class SessionManagerImplITCase {
 
 		Assert.assertNotNull(selectedTestPlan);
 		Assert.assertTrue(selectedTestPlan.getId().intValue() > 0);
+		
+		// Check, provo a prendere un valore dall'oggetto sut contenuto in session
+		Assert.assertTrue(currentSession.getSut().getInteraction().getType().equals(SUTConstants.INTERACTION_WEBSITE) );
 		
 		// A questo punto, ho avviato la sessione di test per la tripla (utente, sut, testplan)
 		// EXECUTION OF ACTIONS WORKFLOW 
@@ -316,6 +315,8 @@ public class SessionManagerImplITCase {
 		
 		// Get First Action to Execute
 		currentAction = workflow.getActions().get(actionMark - 1);
+		
+		
 		
 		// START EXUCUTION WORKFLOW CYCLE
 		// CICLO finchè:
@@ -602,7 +603,7 @@ public class SessionManagerImplITCase {
 		
 		// Get Session List
 		List<Long> sessionIdList = sessionController.getSessionIdList();
-		Assert.assertTrue(sessionIdList.size() > 0);
+		Assert.assertTrue(sessionIdList.size() == 0);
 		
 
 		

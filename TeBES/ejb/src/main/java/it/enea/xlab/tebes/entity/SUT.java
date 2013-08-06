@@ -3,6 +3,7 @@ package it.enea.xlab.tebes.entity;
 import it.enea.xlab.tebes.common.SUTConstants;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,7 +12,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class SUT implements Serializable {
@@ -47,6 +52,13 @@ public class SUT implements Serializable {
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="user_id")
 	private User user;
+
+	
+	@OneToMany(mappedBy="sut")
+	@LazyCollection(LazyCollectionOption.TRUE)
+	private List<Session> sessions;
+	
+	
 	
 	public SUT() {
 		

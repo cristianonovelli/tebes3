@@ -60,6 +60,8 @@ public class User implements Serializable {
 	private Group group;
 	
 	
+	
+	
 	/**
 	 * Lista dei TEST PLANS dello User 
 	 * Ogni User ha zero o più TestPlans => OneToMany
@@ -68,6 +70,11 @@ public class User implements Serializable {
 	@OneToMany(mappedBy="user",cascade = {CascadeType.ALL})
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<TestPlan> testPlans;
+	
+
+	@OneToMany(mappedBy="user", cascade = {CascadeType.ALL})
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<Session> sessions;
 	
 	
 	
@@ -192,6 +199,16 @@ public class User implements Serializable {
 
 	public void setTestPlans(List<TestPlan> testPlans) {
 		this.testPlans = testPlans;
+	}
+
+
+	public List<Session> getSessions() {
+		return sessions;
+	}
+
+
+	public void setSessions(List<Session> sessions) {
+		this.sessions = sessions;
 	}
 
 

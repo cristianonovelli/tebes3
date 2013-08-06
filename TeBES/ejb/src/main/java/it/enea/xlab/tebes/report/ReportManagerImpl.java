@@ -104,7 +104,7 @@ public class ReportManagerImpl implements ReportManagerRemote {
 	
 	// TODO forse aggiornerei qui dentro l'XML
 	// essendo parte della struttura
-	public Report createReportForNewSession(Session session, User user, TestPlan testPlan, SUT sut) throws Exception {
+	public Report createReportForNewSession(Session session) throws Exception {
 		
 		// Create Report by JPA
 		Report report = new Report();
@@ -152,19 +152,22 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			reportDOM.setSessionLastUpdateDateTime(session.getLastUpdateDateTime());
 			
 			// Aggiorno XML User
-			reportDOM.setIdAttribute(reportDOM.getUserElement(), session.getUserId().toString());
+			User user = session.getUser();
+			reportDOM.setIdAttribute(reportDOM.getUserElement(), user.getId().toString());
 			reportDOM.setUserName(user.getName());
 			reportDOM.setUserSurname(user.getSurname());
 
 			// Aggiorno XML SUT
-			reportDOM.setSUTId(session.getSutId());
+			SUT sut = session.getSut();
+			reportDOM.setSUTId(sut.getId());
 			reportDOM.setSUTName(sut.getName());
 			reportDOM.setSUTType(sut.getType());
 			reportDOM.setSUTInteraction(sut.getInteraction().getType());						
 			reportDOM.setSUTDescription(sut.getDescription());
 					
-			// Aggiorno XML TestPlan		
-			reportDOM.setTestPlanId(session.getTestPlanId());
+			// Aggiorno XML TestPlan	
+			TestPlan testPlan = session.getTestPlan();
+			reportDOM.setTestPlanId(testPlan.getId());
 			reportDOM.setTestPlanName(testPlan.getName());
 			reportDOM.setTestPlanDescription(testPlan.getDescription());
 			reportDOM.setTestPlanCreationDatetime(testPlan.getCreationDatetime());
