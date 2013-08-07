@@ -59,14 +59,18 @@ public class UserProfileController extends WebController<User> {
 
 					userManagerBean.setUserRole(user, role);
 					
-				} catch (Exception e) {					
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("[TeBES] User registration Exception!");
 					return new Long(-2);
 				}
 			}
 		}
-		else 
+		else {
+			System.out.println("[TeBES] User registration attempt with role != standard.");
 			userId = new Long(-3);
-		
+			
+		}
 		return userId;
 	}
 	

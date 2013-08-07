@@ -347,6 +347,9 @@ public class SessionManagerImplITCase {
 			
 			
 			
+			
+			
+			
 			// 1. UPLOAD
 			// a livello di Test passo il file al FileController 
 			// che verrà modificato in sede di definizione dell'interfaccia da EPOCA che deciderà il modo migliore per caricarlo

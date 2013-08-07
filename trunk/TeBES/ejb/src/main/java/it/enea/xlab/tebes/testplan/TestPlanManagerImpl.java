@@ -459,6 +459,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 	private Vector<Action> getActionsFromXML(TestPlanDOM testPlanDOM) throws SAXException, ParserConfigurationException, IOException {
 		
+		System.out.println("START getActionsFromXML");
+		
 		Vector<Action> actionsList = new Vector<Action>();
 		
 		// Ottengo lista actions
@@ -468,7 +470,11 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		Element actionElement = null;
 		for (int i = 0; i < actionNodes.getLength(); i++) {
 			
+			
+			
 			actionElement = (Element) actionNodes.item(i);
+			
+			System.out.println("getActionsFromXML - for - counter i:" + i);
 			
 			//String actionId = testPlanDOM.getIdAttribute(actionElement);	
 			int number = new Integer(testPlanDOM.getNumberAttribute(actionElement)).intValue();
@@ -492,19 +498,41 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 			location = TeBESDAO.url2localLocation(location);
 
+			System.out.println("getActionsFromXML - pre input");
+			
 			// Input
-			Node inputNode = testPlanDOM.getInputNode(actionElement);
+			NodeList inputNodeList = testPlanDOM.getInputNodeList(actionElement);
 			
-			String inputName = testPlanDOM.getNameAttribute(inputNode);
-			String inputDescription = testPlanDOM.getDescriptionAttribute(inputNode);	
-			String inputType = testPlanDOM.getTypeAttribute(inputNode);		
-			String inputLanguage = testPlanDOM.getLgAttribute(inputNode);				
-			String inputInteraction = testPlanDOM.getInteractionAttribute(inputNode);
-			String inputIdRef = testPlanDOM.getIdRefAttribute(inputNode);		
-			
-			Input input = new Input(inputName, inputDescription, inputType, inputInteraction, inputIdRef);
+			Node inputNode;
+			String inputName, inputDescription, inputType, inputLanguage, inputInteraction, inputIdRef;
 			Vector<Input> inputList = new Vector<Input>();
-			inputList.add(input);
+			for (int j = 0; j < inputNodeList.getLength(); j++) {
+			
+				// Get Input Node
+				inputNode = inputNodeList.item(j);
+				
+				// Get Input values
+				inputName = testPlanDOM.getNameAttribute(inputNode);
+				inputDescription = testPlanDOM.getDescriptionAttribute(inputNode);	
+				inputType = testPlanDOM.getTypeAttribute(inputNode);		
+				inputLanguage = testPlanDOM.getLgAttribute(inputNode);				
+				inputInteraction = testPlanDOM.getInteractionAttribute(inputNode);
+				inputIdRef = testPlanDOM.getIdRefAttribute(inputNode);		
+			
+				System.out.println("getActionsFromXML - pre action - input: " + inputName);
+				
+				// Create Input object
+				Input input = new Input(inputName, inputDescription, inputType, inputInteraction, inputIdRef);
+				
+				// Add Input object to List
+				inputList.add(input);
+			
+			}
+			
+			inputType = "";
+			inputLanguage = "";
+			inputInteraction = "";
+			
 			
 			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, jump, description,
 					inputType, inputLanguage, inputInteraction);
@@ -516,7 +544,10 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			
 			actionsList.add(action);
 			
+			System.out.println("getActionsFromXML - end for");
 		}	
+		
+		System.out.println("END getActionsFromXML");
 		
 		return actionsList;
 	}

@@ -4,6 +4,7 @@ import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
@@ -146,25 +147,41 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	
 	private boolean matchTestPlanSUT(TestPlan testPlan, SUT sut) {
 		
+		System.out.println("START matchTestPlanSUT");
+		
 		boolean match = true;
 		
-		// The match is "true" if for each action of test plan:
-		// 1. type="document" 
-		// 2. lg="xml"
-		// 3. interaction type="website"
+		// The match is "true" if for each input of each action of test plan there is a sut with same:
+		// 1. type 
+		// 2. interaction type
 		
 		List<Action> actionList = testPlan.getWorkflow().getActions();
 		
 		Action a;
+		Input input;
+		List<Input> inputList;
 		for (int i=0; i<actionList.size(); i++) {				
 			
 			a = actionList.get(i);
+			inputList = a.getInputs();
 			
-			if ( 	( !a.getInputType().equals(sut.getType() ) ) ||
-					( !a.getInputInteraction().equals(sut.getInteraction().getType() ) )  )
-						
-					match = false;
+			for (int j=0; j<inputList.size(); j++) {	
+			
+				input = inputList.get(j);
+				
+				System.out.println("matchTestPlanSUT - input.getType(): " + input.getType());
+				System.out.println("matchTestPlanSUT - sut.getType(): " + sut.getType());
+				System.out.println("matchTestPlanSUT - input.getInteraction(): " + input.getInteraction());
+				System.out.println("matchTestPlanSUT - sut.getInteraction().getType(): " + sut.getInteraction().getType());
+				
+				if ( 	( !input.getType().equals(sut.getType() ) ) ||
+						( !input.getInteraction().equals(sut.getInteraction().getType() ) )  )
+							
+						match = false;
+			}
 		}
+		
+		System.out.println("END matchTestPlanSUT");
 		
 		return match;
 	}
