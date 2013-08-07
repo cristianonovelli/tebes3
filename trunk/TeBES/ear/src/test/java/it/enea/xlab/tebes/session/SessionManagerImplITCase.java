@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.xlab.file.XLabFileManager;
 import org.xlab.xml.JXLabDOM;
 
 
@@ -150,39 +151,45 @@ public class SessionManagerImplITCase {
 		Long idTempUser2 = userProfileController.registration(otherUser, role1_standard);
 		Assert.assertNotNull(currentUser);
 		Assert.assertTrue(idTempUser2.intValue()>0);
-	}
-	
-	
-	@Test
-	public void test_session() {
 		
 		// Login SuperUser
-		String superUserEmail = PropertiesUtil.getUser1Email();
-		String superUserPassword = PropertiesUtil.getUser1Password();
-		User superUser = userProfileController.login(superUserEmail, superUserPassword);
-		Long superUserId = superUser.getId();
+		superUserEmail = PropertiesUtil.getUser1Email();
+		superUserPassword = PropertiesUtil.getUser1Password();
+		superUser = userProfileController.login(superUserEmail, superUserPassword);
+		superUserId = superUser.getId();
 		superUser = userAdminController.readUser(superUserId);
 		
 		// Importazione dei Test Plan XML per lo SuperUser (gli utenti li importeranno poi da lui)
 		// N.B. questa operazione viene fatta in fase di setup del sistema
 		boolean importing = testPlanController.importSystemTestPlanFile(superUser);
 		Assert.assertTrue(importing);
+	}
+	
+	
+	
+	
+	
+	
+	@Test
+	public void test_session() {
 
-		TestPlan testPlan = null;
-		Long testPlanId;
 		
-		
-		// ORA SI PASSA ALLO USER GENERICO //
-
-		// Login User generico
+		// USER 
 		User currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
 		Long currentUserId = currentUser.getId();
 		Assert.assertTrue(currentUser != null);
 		Assert.assertTrue(currentUser.getId().intValue() > 0);
+		logger.info("Login of user " + currentUser.getName() + " " + currentUser.getSurname() + " with id: " + currentUserId);
+		
+		
+		// TESTPLAN
 		
 		// Lista dei TestPlan disponibili nel sistema	
 		List<TestPlan> systemTestPlanList = testPlanController.getSystemTestPlanList();
 		Assert.assertTrue(systemTestPlanList.size()>0);
+		
+		TestPlan testPlan = null;
+		Long testPlanId;
 		
 		// Per ogni TestPlan del sistema... lo verifico
 		for (int i=0; i<systemTestPlanList.size();i++) {
@@ -211,9 +218,10 @@ public class SessionManagerImplITCase {
 		// Copia e importazione del TestPlan scelto per l'utente (currentUser)
 		testPlanId = testPlanController.cloneTestPlan(selectedTestPlan, currentUserId);
 		Assert.assertTrue(testPlanId.intValue()>0);			
+		logger.info("Selected TestPlan " + selectedTestPlan.getName() + " for user " + currentUser.getName() + " " + currentUser.getSurname());
 		
 		
-		// CREAZIONE SUT
+		//  SUT
 		
 		// 1. Recupero lista dei SUT Type direttamente dall'oggetto SUT
 		Vector<String> systemSUTTypeList = sutController.getSUTTypeList();
@@ -243,28 +251,23 @@ public class SessionManagerImplITCase {
 		Long sutId = sutController.createSUT(sut, currentUser);
 		Assert.assertNotNull(sutId);				
 		Assert.assertTrue(sutId.intValue()>0);	
-		
+		logger.info("Selected SUT " + sut.getName() + " for user " + currentUser.getName() + " " + currentUser.getSurname());
 
 		
-		// PRE-RUN (metodo check che si trova nel controller)
+
 		// Nel momento in cui l'utente avvia il test
-		// il sistema effettua prima una verifica di consistenza
+		// il sistema, nel controller, effettua prima una verifica di consistenza ( check() )
 		// verificando che Test Plan e SUT siano compatibili
 		// 1. tra loro
 		// 2. con quanto supportato dal sistema
-		// SE questa funzione ha successo si passa alla run()
+		// SE questa funzione ha successo si passa alla createSession()
 		// ALTRIMENTI è necessario specificare/creare un altro SUT (probabile) o scegliere un diverso TestPlan (improbabile)
 		
-
-		// Nel caso fosse minore di zero si dovrebbe modificare il testplan o il sut scelti
-		
-		
-		// createSession
 		Long sessionId = sessionController.createSession(currentUserId, sutId, testPlanId);
 		Assert.assertNotNull(sessionId);
 		System.out.println("sessionId:" + sessionId);
 		Assert.assertTrue(sessionId.intValue()>0);		
-		
+		logger.info("Create Session with id " + sessionId + " for user " + currentUser.getName() + " " + currentUser.getSurname());
 	
 		
 		
@@ -275,7 +278,6 @@ public class SessionManagerImplITCase {
 		// 2.2 RISPONDERE A UNA RICHIESTA DI INTERAZIONE
 		// 2.3 OTTENERE L'OUTPUT DEI TEST 
 		
-
 		
 		// GET Current Session
 		Session currentSession = sessionController.readSession(sessionId);
@@ -286,7 +288,8 @@ public class SessionManagerImplITCase {
 		Assert.assertTrue(selectedTestPlan.getId().intValue() > 0);
 		
 		// Check, provo a prendere un valore dall'oggetto sut contenuto in session
-		Assert.assertTrue(currentSession.getSut().getInteraction().getType().equals(SUTConstants.INTERACTION_WEBSITE) );
+		Assert.assertTrue(currentSession.getSut().getInteraction().getType().equals(SUTConstants.INTERACTION_WEBSITE));
+		
 		
 		// A questo punto, ho avviato la sessione di test per la tripla (utente, sut, testplan)
 		// EXECUTION OF ACTIONS WORKFLOW 
@@ -297,6 +300,8 @@ public class SessionManagerImplITCase {
 		Report report;
 		ActionWorkflow workflow;
 		Action currentAction;
+		
+		
 		
 		// GET Workflow
 		workflow = testPlanController.readTestPlan(testPlanId).getWorkflow();	
@@ -329,10 +334,10 @@ public class SessionManagerImplITCase {
 		
 			actionMarkPreRun = actionMark;
 			
-			System.out.println("RUNNING WORKFLOW...");
-
-			System.out.println("YOU ARE EXECUTING THE ACTION " + actionMark + " OF " + actionsNumber);	
-			System.out.println(currentAction.getActionSummaryString());
+			logger.info("Running Workflow... ACTION " + actionMark + " OF " + actionsNumber);	
+			logger.info(currentAction.getActionSummaryString());
+			
+			
 			
 
 			// PER ORA
@@ -340,11 +345,15 @@ public class SessionManagerImplITCase {
 			// 2. salvo il file nel FileManager
 			// 3. lo uso nel mio test
 			
+			
+			
 			// 1. UPLOAD
 			// a livello di Test passo il file al FileController 
 			// che verrà modificato in sede di definizione dell'interfaccia da EPOCA che deciderà il modo migliore per caricarlo
 			// TODO il file deve essere salvato nella locazione utente
-			String absFilePath = "C:/Java/workspace-indigo2/TeBES/ejb/TeBES_Artifacts/users/0/docs/";
+			String absUsersDirPath = PropertiesUtil.getUsersDir();
+			
+			String absSuperUserDocFilePath = absUsersDirPath.concat("0/docs/");
 			String fileName = "ubl-invoice.xml";
 			
 			// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
@@ -358,7 +367,7 @@ public class SessionManagerImplITCase {
 			
 			try {
 				// Get XML DOM (è solo un modo per me comodo di ottenere lo "stringone")
-				fileXML = new JXLabDOM(absFilePath.concat(fileName), false, false);
+				fileXML = new JXLabDOM(absSuperUserDocFilePath.concat(fileName), false, false);
 				// Get File String
 				fileXMLString = fileXML.getXMLString();
 				
@@ -417,32 +426,45 @@ public class SessionManagerImplITCase {
 			Assert.assertTrue(report.getXml().getBytes().length > 1000);
 			
 			
-			System.out.println(report.getXml());
+			// il report NON deve venire salvato su file
+			// se l'utente lo vuole scaricare verrà creato in una location temporanea
+			// lo salvo ora per monitorare l'output più agevolmente
+			String absUserReportsPath = absUsersDirPath.concat("1/reports/");			
+			String reportFileName = report.getName().concat(".xml");
+
+			
+			try {
+				
+				XLabFileManager.create(absUserReportsPath.concat(reportFileName), report.getXml());
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			
 			// TODO se lo stato della action corrente è working... interrogo la strttura dati
 			if ( actionMark > actionMarkPreRun) {
-				System.out.println("END ACTION: "  + actionMarkPreRun + " OF " + workflow.getActions().size());
-				System.out.println();
+				logger.info("END ACTION: "  + actionMarkPreRun + " OF " + workflow.getActions().size());
+				logger.info("");
 				failuresForAction=0;
 			}
 			// Se actionMark == actionMarkPreRun alora la action ha fallito
 			else {
 				
-				System.out.println("Action Failed or NOT Finished");				
-				System.out.println("REQUEST INPUT TYPE TO PUT...");
-				
 				// TODO leggo che devo caricare QUALCOSA nel MessageStore
 				// questo QUALCOSA dovrebbe essere indicato in una struttura temporanea da interrogare
 				
-				System.out.println();
+				failuresForAction++;	
 				
-				failuresForAction++;				
+				logger.warn("Action Failed or NOT Finished. Counter: " + failuresForAction);				
+				logger.warn("REQUEST INPUT TYPE TO PUT...");
+				logger.warn("");
 			}
 			
 
 
-			
+			// TODO
 			
 			// 1. le azioni da eseguire non sono finite
 			
@@ -456,7 +478,7 @@ public class SessionManagerImplITCase {
 			// in ogni caso devo aggiornate gli stati di session e report
 			
 			
-			System.out.println("COUNTER: " + failuresForAction);
+
 			
 			if ( 	report.getState().equals(Report.getFinalState()) ||
 					currentSession.getState().equals(Session.getSuspendedState()) ||
@@ -511,31 +533,13 @@ public class SessionManagerImplITCase {
 		// possibilità di download del report
 		
 		
-		
-		
 	}
 		
 	
-	//@Test
-/*	public void test3_validation() throws Exception {
 
-		ValidationController validationManagerController;
-		validationManagerController = (ValidationController) WebControllersUtilities.getManager(ValidationController.CONTROLLER_NAME);
-		Assert.assertNotNull(validationManagerController);	
-		
-		String xmlRelPathFileName = "TeBES_Artifacts/users/1/docs/ubl-invoice.xml";
-		String xsdURL = "http://winter.bologna.enea.it/peppol_schema_rep/xsd/maindoc/UBL-Invoice-2.0.xsd";
-		
-		//ErrorMessage emList[] = null;
-
-		// PROVAAAA
-		//ValidationManagerRemote validationManagerService = JNDIServices.getValidationManagerService(); 	
-		
-		System.out.println("oioioioi:" + validationManagerController.nothing().toString());
-		
-			
-	}*/
-
+	
+	
+	
 	@AfterClass
 	public static void after_testPlanManager() throws Exception {
 

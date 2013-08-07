@@ -54,9 +54,6 @@ public class Session implements Serializable {
 	 *  quando un utente se lo crea a partire da quello di sistema del test manager ne crea una copia in locale!
 	 */
 	
-	private Long userId;
-	private Long testPlanId;
-	private Long sutId;
 
 	@ManyToOne
 	private User user;
@@ -104,16 +101,6 @@ public class Session implements Serializable {
 		this.setState(getWorkingState());
 	}
 	
-	// Costruttore
-	public Session(Long userId, Long testPlanId, Long sutId) {
-
-		this.userId = userId;
-		this.testPlanId = testPlanId;
-		this.sutId = sutId;
-		
-		// Set state to "working"
-		this.setState(getWorkingState());
-	}
 
 	
 	public Long getId() {
@@ -122,30 +109,6 @@ public class Session implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public Long getSutId() {
-		return sutId;
-	}
-
-	public void setSutId(Long sutId) {
-		this.sutId = sutId;
-	}
-
-	public Long getTestPlanId() {
-		return testPlanId;
-	}
-
-	public void setTestPlanId(Long testPlanId) {
-		this.testPlanId = testPlanId;
 	}
 
 	public String getState() {
