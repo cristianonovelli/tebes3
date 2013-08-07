@@ -19,6 +19,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 @Entity
 @Table(name="TestAction")
 public class Action implements Serializable {
@@ -53,6 +56,7 @@ public class Action implements Serializable {
 	
 	
 	@OneToMany(mappedBy="testAction")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Input> inputs;
 	
 	

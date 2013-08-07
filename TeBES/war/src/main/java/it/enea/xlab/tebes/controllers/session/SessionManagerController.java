@@ -81,6 +81,8 @@ public class SessionManagerController extends WebController<Session> {
 		
 		
 		Long result = sessionManagerBean.check(userId, sutId, testPlanId);
+		System.out.println("check: " + result);
+		
 		
 		if (result.intValue()>0)
 			return sessionManagerBean.createSession(userId, sutId, testPlanId);

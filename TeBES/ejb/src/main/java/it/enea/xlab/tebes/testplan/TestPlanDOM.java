@@ -63,9 +63,10 @@ public class TestPlanDOM extends JXLabDOM {
 		return actionElement.getElementsByTagName("tebes:Test").item(0);
 	}	
 	
-	public Node getInputNode(Element actionElement) {
-		
-		return actionElement.getElementsByTagName("tebes:Input").item(0);
+
+	public NodeList getInputNodeList(Element actionElement) {
+
+		return actionElement.getElementsByTagName("tebes:Input");	 
 	}
 	
 
@@ -196,6 +197,8 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getAttribute(attributeLabel, node);
 		
 	}
+
+
 
 }
 

@@ -43,6 +43,14 @@
 				interaction="website"
 				idRef="document-website-1">
 			</tebes:Input>
+			<tebes:Input 
+				name="UBLInvoice2"
+				description="Send UBL Invoice2"
+				type="document" 
+				lg="xml"
+				interaction="website"
+				idRef="document-website-1">
+			</tebes:Input>
 		</tebes:TestAction>
 	
 	

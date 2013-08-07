@@ -482,7 +482,7 @@ public class UserManagerImpl implements UserManagerRemote {
 			
 			if (user.getPassword().equals(userPassword)) {
 				result = user;
-				logger.warn("LOGIN User: " + user.getName() + " " + user.getSurname() + " with Role: " + user.getRole());
+				logger.warn("LOGIN User: " + user.getName() + " " + user.getSurname());
 			}
 		}
 		
