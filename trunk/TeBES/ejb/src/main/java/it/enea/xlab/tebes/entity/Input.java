@@ -28,7 +28,11 @@ public class Input implements Serializable {
 	
 	private String interaction;
 	
-	private String idRef;
+	private String fileIdRef;
+	
+	// Set to "true" when SUT's User checked
+	private boolean isInteractionOK;
+	
 	
 	@ManyToOne
 	@JoinColumn(name="testaction_id")
@@ -44,12 +48,13 @@ public class Input implements Serializable {
 	 * Constructor without id.
 	 */
 	public Input(String name, String description, String type,
-			String interaction, String idRef) {
+			String interaction, String fileIdRef, boolean interactionOK) {
 		this.name = name;
 		this.description = description;
 		this.type = type;
 		this.interaction = interaction;
-		this.idRef = idRef;
+		this.setFileIdRef(fileIdRef);
+		this.setInteractionOK(interactionOK);
 	}
 
 
@@ -99,14 +104,7 @@ public class Input implements Serializable {
 	}
 
 
-	public String getIdRef() {
-		return idRef;
-	}
 
-
-	public void setIdRef(String idRef) {
-		this.idRef = idRef;
-	}
 
 
 	public Action getTestAction() {
@@ -132,6 +130,26 @@ public class Input implements Serializable {
 
 	public void setAction(Action action) {
 		this.testAction = action;
+	}
+
+
+	public String getFileIdRef() {
+		return fileIdRef;
+	}
+
+
+	public void setFileIdRef(String fileIdRef) {
+		this.fileIdRef = fileIdRef;
+	}
+
+
+	public boolean isInteractionOK() {
+		return isInteractionOK;
+	}
+
+
+	public void setInteractionOK(boolean isInteractionOK) {
+		this.isInteractionOK = isInteractionOK;
 	}
 
 

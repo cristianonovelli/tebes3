@@ -36,12 +36,13 @@
 				jumpPrerequisites="true"
 				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml">TA-001_TC-001_TS-001</tebes:Test>
 			<tebes:Input 
+				id="IN-1_TA-1_TP-2"
 				name="UBLInvoice"
 				description="Send UBL Invoice"
 				type="document" 
 				lg="xml"
 				interaction="website"
-				idRef="document-website-1">
+				fileIdRef="document-xml-website-IN-1_TA-1_TP-2">
 			</tebes:Input>		
 		</tebes:TestAction>
 	
@@ -123,12 +124,13 @@
 				- description: descrizione testuale
 			-->
 			<tebes:Input 
+				id="IN-1_TA-2_TP-2"
 				name="UBLInvoice"
 				description="Send UBL Invoice"
 				type="document" 
 				lg="xml"
 				interaction="website"
-				idRef="document-website-1">
+				fileIdRef="document-website-IN-1_TA-2_TP-2">
 			</tebes:Input>		
 		</tebes:TestAction>
 		

@@ -173,7 +173,27 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		return eM.find(Input.class, id);
 	}
 
+	
+	/**
+	 * UPDATE Input
+	 * @return 	Input if reading is OK
+	 */	
+	public boolean updateInput(Input input) {
 
+		Boolean result = false;
+
+		 if ( (input != null) && (input.getId() != null) ) {
+			 input = eM.merge(input);
+			 //eM.persist(user);
+			 
+			 if (input != null)
+				 result = true;
+		 }
+
+		 return result;
+	}
+	
+	
 	/**
 	 * ADD Input to Action
 	 */
@@ -589,7 +609,9 @@ public class ActionManagerImpl implements ActionManagerRemote {
 
 		 return result;
 	}
-	
+
+
+
 }
 
 

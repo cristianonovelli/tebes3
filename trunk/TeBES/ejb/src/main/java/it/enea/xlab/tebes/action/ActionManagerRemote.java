@@ -34,6 +34,7 @@ public interface ActionManagerRemote {
 	public Session runWorkflow(ActionWorkflow workflow, Session session);
 	
 	public Boolean updateWorkflow(ActionWorkflow workflow);
+	public boolean updateInput(Input input);
 	
 
 }
