@@ -169,15 +169,24 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			
 				input = inputList.get(j);
 				
-				System.out.println("matchTestPlanSUT - input.getType(): " + input.getType());
+				/*System.out.println("matchTestPlanSUT - input.getType(): " + input.getType());
 				System.out.println("matchTestPlanSUT - sut.getType(): " + sut.getType());
 				System.out.println("matchTestPlanSUT - input.getInteraction(): " + input.getInteraction());
-				System.out.println("matchTestPlanSUT - sut.getInteraction().getType(): " + sut.getInteraction().getType());
+				System.out.println("matchTestPlanSUT - sut.getInteraction().getType(): " + sut.getInteraction().getType());*/
 				
 				if ( 	( !input.getType().equals(sut.getType() ) ) ||
-						( !input.getInteraction().equals(sut.getInteraction().getType() ) )  )
+						( !input.getInteraction().equals(sut.getInteraction().getType() ) )  ) {
 							
 						match = false;
+				}
+				else {
+					input.setInteractionOK(true);
+					boolean updating = actionManager.updateInput(input);
+					if (!updating) {
+						System.out.println("INPUT UPDATING ERROR!");
+						match = false;
+					}
+				}
 			}
 		}
 		

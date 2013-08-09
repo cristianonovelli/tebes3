@@ -504,7 +504,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			NodeList inputNodeList = testPlanDOM.getInputNodeList(actionElement);
 			
 			Node inputNode;
-			String inputName, inputDescription, inputType, inputLanguage, inputInteraction, inputIdRef;
+			String inputName, inputDescription, inputType, inputLanguage, inputInteraction, inputFileIdRef;
 			Vector<Input> inputList = new Vector<Input>();
 			for (int j = 0; j < inputNodeList.getLength(); j++) {
 			
@@ -517,12 +517,12 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				inputType = testPlanDOM.getTypeAttribute(inputNode);		
 				inputLanguage = testPlanDOM.getLgAttribute(inputNode);				
 				inputInteraction = testPlanDOM.getInteractionAttribute(inputNode);
-				inputIdRef = testPlanDOM.getIdRefAttribute(inputNode);		
+				inputFileIdRef = testPlanDOM.getFileIdRefAttribute(inputNode);		
 			
 				System.out.println("getActionsFromXML - pre action - input: " + inputName);
 				
 				// Create Input object
-				Input input = new Input(inputName, inputDescription, inputType, inputInteraction, inputIdRef);
+				Input input = new Input(inputName, inputDescription, inputType, inputInteraction, inputFileIdRef, false);
 				
 				// Add Input object to List
 				inputList.add(input);

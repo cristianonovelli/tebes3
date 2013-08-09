@@ -227,27 +227,27 @@ public class SessionManagerImplITCase {
 		Vector<String> systemSUTTypeList = sutController.getSUTTypeList();
 		
 		// 2. L'utente seleziona un SUT type
-		String selectedSUTType = systemSUTTypeList.get(0);
-		Assert.assertTrue(selectedSUTType.equals(SUTConstants.SUT_TYPE1_DOCUMENT));
+		String defaultSUTType = systemSUTTypeList.get(0);
+		Assert.assertTrue(defaultSUTType.equals(SUTConstants.SUT_TYPE1_DOCUMENT));
 
 		// 3. richiamo servizio che dato il tipo mi restituisce una lista di possibili interazioni
-		// Get supported Interaction for the selected SUT Type
-		List<SUTInteraction> sutInteractionList = sutController.getSUTInteractionList(selectedSUTType);
+		// Get supported Interaction for the default SUT Type
+		List<SUTInteraction> sutInteractionList = sutController.getSUTInteractionList(defaultSUTType);
 		Assert.assertTrue(sutInteractionList.size() == 4);		
 		
 		// 4. l'utente sceglie un'interazione tra quelle disponibili, deve avvenire un cast
-		SUTInteraction selectedInteraction = (SUTInteraction) sutInteractionList.get(0);
-		Assert.assertTrue(selectedInteraction.getType().equals(SUTConstants.INTERACTION_WEBSITE));
+		SUTInteraction defaultInteraction = (SUTInteraction) sutInteractionList.get(0);
+		Assert.assertTrue(defaultInteraction.getType().equals(SUTConstants.INTERACTION_WEBSITE));
 
 		// 5. creo l'interazione utente con il tipo scelto
-		SUTInteraction interaction4User= new SUTInteraction(selectedInteraction.getType());
+		SUTInteraction interaction4User= new SUTInteraction(defaultInteraction.getType());
 		interaction4User.setEndpoint(null);
 			
 		// 6. inserisce una descrizione
 		String sutDescription = "XML document1 uploaded by email";
 
 		// 7. Creo SUT e lo persisto per l'utente corrente
-		SUT sut = new SUT("SystemSUT1-1", selectedSUTType, interaction4User, sutDescription);
+		SUT sut = new SUT("SystemSUT1-1", defaultSUTType, interaction4User, sutDescription);
 		Long sutId = sutController.createSUT(sut, currentUser);
 		Assert.assertNotNull(sutId);				
 		Assert.assertTrue(sutId.intValue()>0);	
@@ -257,11 +257,11 @@ public class SessionManagerImplITCase {
 
 		// Nel momento in cui l'utente avvia il test
 		// il sistema, nel controller, effettua prima una verifica di consistenza ( check() )
-		// verificando che Test Plan e SUT siano compatibili
+		// verificando che Test Plan selezionato e SUT di default siano compatibili
 		// 1. tra loro
 		// 2. con quanto supportato dal sistema
 		// SE questa funzione ha successo si passa alla createSession()
-		// ALTRIMENTI è necessario specificare/creare un altro SUT (probabile) o scegliere un diverso TestPlan (improbabile)
+		// ALTRIMENTI è necessario specificare/creare un altro SUT da abbinare gli input "inconsistenti"
 		
 		Long sessionId = sessionController.createSession(currentUserId, sutId, testPlanId);
 		Assert.assertNotNull(sessionId);
@@ -269,14 +269,14 @@ public class SessionManagerImplITCase {
 		Assert.assertTrue(sessionId.intValue()>0);		
 		logger.info("Create Session with id " + sessionId + " for user " + currentUser.getName() + " " + currentUser.getSurname());
 	
+
+		// A questo punto, ho avviato la sessione di test per la tripla (utente, sut, testplan)
+		// L'esecuzione del workflow non è ancora partita
 		
-		
-		// NEL MOMENTO IN CUI UN UTENTE AVVIA L'ESECUZIONE DI TEST:
-		// 1. VIENE AVVIATO IL TEST
-		// 2. UTENTE PUO' A QUESTO PUNTO FARE POLLING SULLA PROPRIA SESSIONE PER  
-		// 2.1 MONITORARE ESECUZIONE ACTIONS
-		// 2.2 RISPONDERE A UNA RICHIESTA DI INTERAZIONE
-		// 2.3 OTTENERE L'OUTPUT DEI TEST 
+		// L' UTENTE, AVVIATA LA SESSIONE, PUO' FARE POLLING PER  
+		// 1 MONITORARE ESECUZIONE ACTIONS
+		// 2 RISPONDERE A UNA RICHIESTA DI INTERAZIONE
+		// 3 OTTENERE IL REPORT DI OUTPUT (totale o parziale) DEI TEST 
 		
 		
 		// GET Current Session
@@ -291,8 +291,7 @@ public class SessionManagerImplITCase {
 		Assert.assertTrue(currentSession.getSut().getInteraction().getType().equals(SUTConstants.INTERACTION_WEBSITE));
 		
 		
-		// A questo punto, ho avviato la sessione di test per la tripla (utente, sut, testplan)
-		// EXECUTION OF ACTIONS WORKFLOW 
+
 		
 		// Definisco un contatore per evitare che la stessa Action si ripeta all'infinito
 		int failuresForAction = 0;
@@ -326,9 +325,9 @@ public class SessionManagerImplITCase {
 		// START EXUCUTION WORKFLOW CYCLE
 		// CICLO finchè:
 		// 1. le azioni da eseguire non sono finite
-		// 2. l'utente  decide di sospendere la sessione di test
-		// 3. l'utente  decide di annullare la sessione di test
-		// 4. raggiungo il numero massimo di fallimenti per la stessa action
+		// 2. l'utente non decide di sospendere la sessione di test
+		// 3. l'utente non decide di annullare la sessione di test
+		// 4. non raggiungo il numero massimo di fallimenti per la stessa action
 		boolean running = true;
 		while (running) {
 		
@@ -340,12 +339,15 @@ public class SessionManagerImplITCase {
 			
 			
 
-			// PER ORA
+			// PER ORA FACCIO
 			// 1. Faccio l'upload
 			// 2. salvo il file nel FileManager
 			// 3. lo uso nel mio test
 			
-			
+			// POI FARO'
+			// 1. vedo quanti input ho per questa action
+			// 2. carico gli input necessari
+			// 3. li uso nel mio test
 			
 			
 			

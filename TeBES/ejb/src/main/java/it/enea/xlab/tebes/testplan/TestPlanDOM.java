@@ -176,9 +176,9 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getNodeAttribute(node, "type");
 	}
 	
-	public String getIdRefAttribute(Node node) {
+	public String getFileIdRefAttribute(Node node) {
 		
-		return this.getNodeAttribute(node, "idRef");
+		return this.getNodeAttribute(node, "fileIdRef");
 	}
 
 	public String getLocationAttribute(Node node) {
