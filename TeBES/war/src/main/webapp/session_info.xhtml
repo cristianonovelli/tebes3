@@ -13,8 +13,43 @@
 	<ui:define name="content">
 		<f:view>
 			<h:form>
+				<a4j:poll id="poll" interval="500" enabled="#{SessionManagerController.isLogEnabled}" />
 				<h3>Sessione di Test</h3>
+				<div class="well">
+					<div class="control-group">
+    					<label class="control-label" for="output_test_plan">Test Plan</label>
+						<div class="controls">
+							<h:outputText id="output_test_plan" value="#{SessionManagerController.viewCurrentSession.testPlan.name}" />
+						</div>
+					</div>
+					<div class="control-group">
+    					<label class="control-label" for="output_sut">SUT</label>
+						<div class="controls">
+							<h:outputText id="output_sut" value="#{SessionManagerController.viewCurrentSession.sut.name}" />
+						</div>
+					</div>
+				</div>
+				<p>
+					<a4j:commandButton value="Esegui" styleClass="btn btn-primary" action="#{SessionManagerController.enableLog}" 
+						reRender="poll"/>
+					<a4j:commandButton value="Sospendi" styleClass="btn btn-primary" style="margin-left: 10px;" 
+						reRender="poll"/>
+					<a4j:commandButton value="Riavvia" styleClass="btn btn-primary" style="margin-left: 10px;" 
+						reRender="poll"/>
+				</p>
+				<t:dataTable id="actionList" var="action" styleClass="table table-striped"
+					value="#{SessionManagerController.viewCurrentSession.testPlan.workflow.actions}" preserveDataModel="false" >
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Actions" />
+						</f:facet>
+						<h:outputText value="#{action.actionName}" />
+					</h:column>
+				</t:dataTable>
 				
+				<a4j:outputPanel id="consolePanel" ajaxRendered="true" >
+					<h:outputText value="#{SessionManagerController.logMessage}" />
+				</a4j:outputPanel>
 				
 			</h:form>
 		</f:view>

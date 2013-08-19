@@ -14,5 +14,6 @@ public class Messages {
 	public static final String FORM_ERROR_SUT_CREATION = "Attenzione: errore nella creazione del SUT.";
 	public static final String FORM_TEST_PLAN_IMPORT_SUCCESS = "Test Plan importato correttamente!";
 	public static final String FORM_TEST_PLAN_IMPORT_FAIL = "Attenzione: errore nell'importazione del Test Plan.";
+	public static final String FORM_SESSION_CREATION_FAIL = "Attenzione: errore nella creazione della sessione.";
 	
 }
