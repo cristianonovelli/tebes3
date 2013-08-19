@@ -75,7 +75,7 @@
 						<a4j:commandLink id="createSessionlink" style="margin-left: 10px;"
 							action="#{MyTestPlanManagerController.openCreateSessionViewFromTestPlan}"> 
 							<i class="icon-play-circle icon-large"></i>
-							<a4j:actionparam name="selectedTestPlanName" value="#{testPlan.name}"
+							<a4j:actionparam name="selectedTestPlanName" value="#{testPlan.id}"
 								assignTo="#{SessionManagerController.selectedTestPlan}" />
 						</a4j:commandLink>
 						<rich:toolTip for="createSessionlink" value="Crea Sessione" />

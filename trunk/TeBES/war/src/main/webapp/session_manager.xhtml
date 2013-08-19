@@ -46,22 +46,21 @@
 						<f:facet name="header">
 							<h:outputText value="SUT" />
 						</f:facet>
-						<h:outputText value="#{testSession.creationDateTime}" />
+						<h:outputText value="#{testSession.sut.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Test Plan" />
 						</f:facet>
-						<h:outputText value="#{testSession.creationDateTime}" />
+						<h:outputText value="#{testSession.testPlan.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText styleClass="headerText" value="Azioni" />
 						</f:facet>
-						<a4j:commandLink id="openSessionlink" style="margin-left: 10px;"
-							action="view_session"> 
+						<a4j:commandLink id="openSessionlink" style="margin-left: 10px;" action="#{SessionManagerController.viewSession}"> 
 							<i class="icon-search icon-large"></i>
 							<a4j:actionparam name="selectedTestPlanName" value="#{testSession.id}"
 								assignTo="#{SessionManagerController.selectedSession}" />

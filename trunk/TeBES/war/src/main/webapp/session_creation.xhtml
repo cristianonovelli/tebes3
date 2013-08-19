@@ -15,23 +15,25 @@
 			<h:form styleClass="form-horizontal">
 				<h3>Creazione di una nuova sessione</h3>
 					<div class="control-group">
-						<label for="menu_type" class="control-label">Test Plan</label>
+						<label for="menu_test_plan" class="control-label">Test Plan</label>
 						<div class="controls">
-							<h:selectOneMenu id="menu_type" value="#{SessionManagerController.selectedTestPlan}">
-								<f:selectItems value="#{SessionManagerController.testPlanSelection}" />
+							<h:selectOneMenu id="menu_test_plan" value="#{SessionManagerController.selectedTestPlan}">
+								<f:selectItems value="#{SessionManagerController.testPlanSelection}" var="testPlan"
+        							itemValue="#{testPlan.id}" itemLabel="#{testPlan.name}"/>
 							</h:selectOneMenu>
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="menu_interaction" class="control-label">SUT</label>
+						<label for="menu_sut" class="control-label">SUT</label>
 						<div class="controls">
-							<h:selectOneMenu id="menu_interaction" value="#{SessionManagerController.selectedSUT}" >
-								<f:selectItems value="#{SessionManagerController.SUTSelection}" />
+							<h:selectOneMenu id="menu_sut" value="#{SessionManagerController.selectedSUT}" >
+								<f:selectItems value="#{SessionManagerController.SUTSelection}" var="sut"
+        							itemValue="#{sut.id}" itemLabel="#{sut.name}"/>
 							</h:selectOneMenu>
 						</div>
 					</div>
 					<div>
-      					<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SessionManagerController.createSession}" />
+      					<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SessionManagerController.createNewSession}" />
       					<h:commandLink styleClass="btn" value="Annulla" action="#{SessionManagerController.cancel}" style="margin-left: 10px;"/>
       						
       					<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true">

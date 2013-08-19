@@ -11,9 +11,12 @@ import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
+import it.enea.xlab.tebes.utils.Messages;
 
 import java.rmi.NotBoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
@@ -35,13 +38,18 @@ public class SessionManagerController extends WebController<Session> {
 	
 	private List<Session> sessionsList;
 	
-	private String selectedTestPlan;
-	private String selectedSUT;
+	private Long selectedTestPlan;
+	private Long selectedSUT;
 	private List<SelectItem> testPlanSelection; 
 	private List<SelectItem> SUTSelection;
 	private String sessionFormMessage;
 	private boolean showSessionFormMessage;
 	private Long selectedSession;
+	private String logMessage;
+	private boolean isLogEnabled;
+	private Session viewCurrentSession;
+	
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
 	public SessionManagerController() throws NamingException {
 		sessionManagerBean = JNDIServices.getSessionManagerService();
@@ -78,7 +86,6 @@ public class SessionManagerController extends WebController<Session> {
 	}*/
 
 	public Long createSession(Long userId, Long sutId, Long testPlanId) {
-		
 		
 		Long result = sessionManagerBean.check(userId, sutId, testPlanId);
 		System.out.println("check: " + result);
@@ -124,7 +131,8 @@ public class SessionManagerController extends WebController<Session> {
 	@Override
 	protected List<Criterion> determineRestrictions() {
 		List<Criterion> criterions = new ArrayList<Criterion>();
-		criterions.add(Restrictions.eq("userId", this.getCurrentUser().getId()));
+		NestedCriterion userCriterion = new NestedCriterion("user", Restrictions.eq("eMail", FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName()));
+		criterions.add(userCriterion);
 		return criterions;
 	}
 
@@ -142,7 +150,7 @@ public class SessionManagerController extends WebController<Session> {
 		List<TestPlan> userTestPlans = this.testPlanManagerBean.readUserTestPlanList(this.getCurrentUser());
 		testPlanSelection = new ArrayList<SelectItem>();
 		for (TestPlan testPlan : userTestPlans) {
-			testPlanSelection.add(new SelectItem(testPlan.getName()));
+			testPlanSelection.add(new SelectItem(testPlan.getId(), testPlan.getName()));
 		}
 	}
 	
@@ -150,7 +158,7 @@ public class SessionManagerController extends WebController<Session> {
 		List<SUT> userSUTs = this.getCurrentUser().getSutList();
 		SUTSelection = new ArrayList<SelectItem>();
 		for (SUT sut : userSUTs) {
-			SUTSelection.add(new SelectItem(sut.getName()));
+			SUTSelection.add(new SelectItem(sut.getId(), sut.getName()));
 		}
 	}
 	
@@ -166,8 +174,8 @@ public class SessionManagerController extends WebController<Session> {
 	private void resetFields() {
 		this.sessionFormMessage = "";
 		this.showSessionFormMessage = false;
-		this.selectedSUT = "";
-		this.selectedTestPlan = "";
+		this.selectedSUT = -1L;
+		this.selectedTestPlan = -1L;
 	}
 	
 	public String createSession() {
@@ -179,19 +187,59 @@ public class SessionManagerController extends WebController<Session> {
 		return "create_session";
 	}
 	
-	public String getSelectedTestPlan() {
+	public String enableLog() {
+		this.isLogEnabled = true;
+		startLog();
+		return "";
+	}
+	
+	public String startLog() {
+		
+		for (int i=0 ; i <10 ; i++){
+            logMessage += "output <br/>";
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }   
+        this.isLogEnabled = false;
+        return "";
+	}
+	
+	public String viewSession() {
+		if(selectedSession != null)
+			this.viewCurrentSession = this.sessionManagerBean.readSession(selectedSession);
+		
+		return "view_session";
+	}
+	
+	public String createNewSession() {
+		if(createSession(getCurrentUser().getId(), selectedSUT, selectedTestPlan) > 0) {
+			this.updateDataModel();
+			return "session_creation_success";
+		}
+		else {
+			this.showSessionFormMessage = true;
+			this.sessionFormMessage = Messages.FORM_SESSION_CREATION_FAIL;
+			return "session_creation_fail";
+		}
+	}
+
+	public Long getSelectedTestPlan() {
 		return selectedTestPlan;
 	}
 
-	public void setSelectedTestPlan(String selectedTestPlan) {
+	public void setSelectedTestPlan(Long selectedTestPlan) {
 		this.selectedTestPlan = selectedTestPlan;
 	}
 
-	public String getSelectedSUT() {
+	public Long getSelectedSUT() {
 		return selectedSUT;
 	}
 
-	public void setSelectedSUT(String selectedSUT) {
+	public void setSelectedSUT(Long selectedSUT) {
 		this.selectedSUT = selectedSUT;
 	}
 
@@ -205,8 +253,7 @@ public class SessionManagerController extends WebController<Session> {
 	}
 
 	public List<SelectItem> getSUTSelection() {
-		if(SUTSelection == null || SUTSelection.size() == 0)
-			updateSUTs();
+		updateSUTs();
 		return SUTSelection;
 	}
 
@@ -228,6 +275,24 @@ public class SessionManagerController extends WebController<Session> {
 
 	public void setSelectedSession(Long selectedSession) {
 		this.selectedSession = selectedSession;
+	}
+
+	public String getLogMessage() {
+		if(logMessage == null)
+			logMessage = "logMessage";
+		return this.logMessage;
+	}
+
+	public boolean getIsLogEnabled() {
+		return isLogEnabled;
+	}
+
+	public Session getViewCurrentSession() {
+		return viewCurrentSession;
+	}
+
+	public void setViewCurrentSession(Session viewCurrentSession) {
+		this.viewCurrentSession = viewCurrentSession;
 	}
 }
 
