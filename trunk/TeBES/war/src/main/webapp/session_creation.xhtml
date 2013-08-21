@@ -13,7 +13,8 @@
 	<ui:define name="content">
 		<f:view>
 			<h:form styleClass="form-horizontal">
-				<h3>Creazione di una nuova sessione</h3>
+				<div class="span4">
+					<h3>Creazione di una nuova sessione</h3>
 					<div class="control-group">
 						<label for="menu_test_plan" class="control-label">Test Plan</label>
 						<div class="controls">
@@ -32,7 +33,7 @@
 							</h:selectOneMenu>
 						</div>
 					</div>
-					<div>
+					<div class="pagination-centered">
       					<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SessionManagerController.createNewSession}" />
       					<h:commandLink styleClass="btn" value="Annulla" action="#{SessionManagerController.cancel}" style="margin-left: 10px;"/>
       						
@@ -40,6 +41,8 @@
 							<h:outputText value="#{SessionManagerController.sessionFormMessage}" rendered="#{SessionManagerController.showSessionFormMessage}" />
 						</a4j:outputPanel>
   					</div>
+  				</div>
+  				<div class="span5"> </div>
 			</h:form>
 		</f:view>
 	</ui:define>
