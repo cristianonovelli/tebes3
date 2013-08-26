@@ -27,11 +27,15 @@ public class Input implements Serializable {
 	private String type;
 	
 	private String interaction;
+	// Set to "true" when SUT's User checked
+	private boolean isInteractionOK;
+	
 	
 	private String fileIdRef;
 	
-	// Set to "true" when SUT's User checked
-	private boolean isInteractionOK;
+	
+	
+
 	
 	
 	@ManyToOne

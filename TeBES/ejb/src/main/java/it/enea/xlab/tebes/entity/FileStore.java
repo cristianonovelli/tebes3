@@ -18,9 +18,13 @@ public class FileStore implements Serializable {
 	@Column(name="id")
 	private Long id;
 
+	private String fileId;
+	
+	// con estensione
 	private String name;
 	
 	// The type field can take the values: testplan, report, document, message
+	// TODO specificare i tipi di file e le estensioni
 	private String type;
 	
 	// Source File
