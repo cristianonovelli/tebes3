@@ -345,8 +345,8 @@ public class SessionManagerImplITCase {
 			// 3. lo uso nel mio test
 			
 			// POI FARO'
-			// 1. vedo quanti input ho per questa action
-			// 2. carico gli input necessari
+			// 1. recupero lista fileId da input di questa action
+			// 2. per ogni fileId, se non è già presente, carico il file
 			// 3. li uso nel mio test
 			
 			
