@@ -223,7 +223,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	
 	
 	
-	private ActionWorkflow cloneWorkflow(ActionWorkflow workflow1) {
+/*	private ActionWorkflow cloneWorkflow(ActionWorkflow workflow1) {
 		
 		ActionWorkflow workflow2 = new ActionWorkflow();
 		
@@ -237,7 +237,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		workflow2.setActionMark(workflow1.getActionMark());
 		
 		return workflow2;
-	}
+	}*/
 	
 	
 	private Action cloneAction(Action action1) {
@@ -257,8 +257,26 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				action1.getInputInteraction()				
 				);
 
+		List<Input> inputList1 = action1.getInputs();
+		Vector<Input> inputList2 = new Vector<Input>();
+		for (int i=0; i<inputList1.size(); i++) {				
+			
+			inputList2.add(this.cloneInput(inputList1.get(i)));		
+		}
+		
+		action2.setInputs(inputList2);
+		
 		return action2;
 	}	
+	
+	
+	
+	private Input cloneInput(Input input1) {
+		
+		return new Input(input1.getName(), input1.getDescription(), input1.getType(), input1.getInteraction(), input1.getFileIdRef(), input1.isInteractionOK());
+		
+	}
+	
 	
 	private TestPlanXML cloneTestPlanXML(TestPlanXML tpXML1) {
 		

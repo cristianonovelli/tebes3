@@ -18,7 +18,7 @@ public class FileStore implements Serializable {
 	@Column(name="id")
 	private Long id;
 
-	private String fileId;
+	private String fileRefId;
 	
 	// con estensione
 	private String name;
@@ -40,8 +40,9 @@ public class FileStore implements Serializable {
 
 	}
 
-	public FileStore(String name, String type, String creationDatetime, String source) {
+	public FileStore(String fileRefId, String name, String type, String creationDatetime, String source) {
 
+		this.setFileRefId(fileRefId);
 		this.name = name;
 		this.type = type;
 		this.source = source;
@@ -95,6 +96,14 @@ public class FileStore implements Serializable {
 
 	public void setLastUpdateDatetime(String lastUpdateDatetime) {
 		this.lastUpdateDatetime = lastUpdateDatetime;
+	}
+
+	public String getFileRefId() {
+		return fileRefId;
+	}
+
+	public void setFileRefId(String fileId) {
+		this.fileRefId = fileId;
 	}
  
 	

@@ -54,8 +54,8 @@ public class Action implements Serializable {
 	@JoinColumn(name="workflow_id")
 	ActionWorkflow workflow;
 	
-	
-	@OneToMany(mappedBy="testAction")
+	// cascade=CascadeType.ALL, fetch = FetchType.EAGER
+	@OneToMany(mappedBy="testAction", cascade=CascadeType.REMOVE)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Input> inputs;
 	
