@@ -13,17 +13,22 @@ import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 import it.enea.xlab.tebes.utils.Messages;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.rmi.NotBoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.component.html.HtmlForm;
+import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 
+import org.apache.myfaces.custom.fileupload.UploadedFile;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -46,9 +51,14 @@ public class SessionManagerController extends WebController<Session> {
 	private boolean showSessionFormMessage;
 	private Long selectedSession;
 	private String logMessage;
-	private boolean isLogEnabled;
+	private boolean isRunning = false;
 	private Session viewCurrentSession;
 	
+	private UploadedFile uploadedFile;
+	private boolean uploadSuccess = false;
+	private String uploadMessage;
+	private boolean isSessionWaiting = false;
+
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
 	public SessionManagerController() throws NamingException {
@@ -188,24 +198,25 @@ public class SessionManagerController extends WebController<Session> {
 	}
 	
 	public String enableLog() {
-		this.isLogEnabled = true;
-		startLog();
-		return "";
-	}
-	
-	public String startLog() {
+		this.isRunning = true;
 		
-		for (int i=0 ; i <10 ; i++){
-            logMessage += "output <br/>";
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }   
-        this.isLogEnabled = false;
-        return "";
+		new Thread() {
+			
+			@Override
+			public void run() {
+				super.run();
+				for (int i=0 ; i <10 ; i++) {
+					logMessage += "output &lt;br /&gt;";
+					try {
+						sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}	
+			
+		}.start();
+		return "";
 	}
 	
 	public String viewSession() {
@@ -225,6 +236,23 @@ public class SessionManagerController extends WebController<Session> {
 			this.sessionFormMessage = Messages.FORM_SESSION_CREATION_FAIL;
 			return "session_creation_fail";
 		}
+	}
+
+	public String upload() throws IOException{
+		try {
+			InputStream stream = uploadedFile.getInputStream();
+			long size = uploadedFile.getSize();
+			byte [] buffer = new byte[(int)size];
+			stream.read(buffer, 0, (int)size);
+			stream.close();
+			uploadSuccess = true;
+			
+		} catch (Exception ioe) {
+
+			uploadMessage = "Errore nel caricamento del file. Ripetere l'operazione.";
+			uploadSuccess = false;
+		}
+		return "";
 	}
 
 	public Long getSelectedTestPlan() {
@@ -279,12 +307,19 @@ public class SessionManagerController extends WebController<Session> {
 
 	public String getLogMessage() {
 		if(logMessage == null)
-			logMessage = "logMessage";
+			logMessage = "console: ";
 		return this.logMessage;
 	}
 
-	public boolean getIsLogEnabled() {
-		return isLogEnabled;
+	public boolean getIsRunning() {
+		if(this.viewCurrentSession != null) {
+			if(this.viewCurrentSession.getState().equals("working"))
+				this.isRunning = true;
+			else
+				this.isRunning = false;
+		}
+		
+		return isRunning;
 	}
 
 	public Session getViewCurrentSession() {
@@ -294,5 +329,46 @@ public class SessionManagerController extends WebController<Session> {
 	public void setViewCurrentSession(Session viewCurrentSession) {
 		this.viewCurrentSession = viewCurrentSession;
 	}
+	
+	public UploadedFile getUploadedFile() {
+		return uploadedFile;
+	}
+
+	public void setUploadedFile(UploadedFile uploadedFile) {
+		this.uploadedFile = uploadedFile;
+	}
+
+	public boolean getUploadSuccess() {
+		return uploadSuccess;
+	}
+
+	public void setUploadSuccess(boolean uploadSuccess) {
+		this.uploadSuccess = uploadSuccess;
+	}
+
+	public String getUploadMessage() {
+		return uploadMessage;
+	}
+
+	public void setUploadMessage(String uploadMessage) {
+		this.uploadMessage = uploadMessage;
+	}
+
+	public boolean getIsSessionWaiting() {
+		
+		if(this.viewCurrentSession != null) {
+			if(this.viewCurrentSession.getState().equals("waiting"))
+				this.isSessionWaiting = true;
+			else
+				this.isSessionWaiting = false;
+		}
+		
+		return isSessionWaiting;
+	}
+
+	public void setIsSessionWaiting(boolean isSessionWaiting) {
+		this.isSessionWaiting = isSessionWaiting;
+	}
+	
 }
 

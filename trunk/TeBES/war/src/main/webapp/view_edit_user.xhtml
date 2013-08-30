@@ -70,10 +70,12 @@
       					<h:commandLink rendered="#{!UserAdminController.isUserEditMode}" styleClass="btn btn-primary" value="Crea"
       						action="#{UserAdminController.createNewUser}" />
       					<h:commandLink styleClass="btn" value="Annulla" action="#{UserAdminController.cancel}" style="margin-left: 10px;"/>
-      						
-      					<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true">
-							<h:outputText value="#{UserAdminController.userFormMessage}" rendered="#{UserAdminController.showUserFormMessage}" />
-						</a4j:outputPanel>
+      					
+	      				<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true" rendered="#{UserAdminController.showUserFormMessage}">
+	      					<div class="alert">
+								<h:outputText value="#{UserAdminController.userFormMessage}" rendered="#{UserAdminController.showUserFormMessage}" />		
+							</div>	
+						</a4j:outputPanel>	
   					</div>
   				</div>
   				<div class="span5"> </div>
