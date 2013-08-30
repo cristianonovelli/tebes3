@@ -37,8 +37,10 @@
       					<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SessionManagerController.createNewSession}" />
       					<h:commandLink styleClass="btn" value="Annulla" action="#{SessionManagerController.cancel}" style="margin-left: 10px;"/>
       						
-      					<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true">
-							<h:outputText value="#{SessionManagerController.sessionFormMessage}" rendered="#{SessionManagerController.showSessionFormMessage}" />
+      					<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true" rendered="#{SessionManagerController.showSessionFormMessage}">
+      						<div class="alert">
+								<h:outputText value="#{SessionManagerController.sessionFormMessage}" rendered="#{SessionManagerController.showSessionFormMessage}" />
+							</div>
 						</a4j:outputPanel>
   					</div>
   				</div>

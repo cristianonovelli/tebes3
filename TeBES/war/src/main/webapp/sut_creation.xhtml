@@ -60,8 +60,10 @@
 	      				<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SUTManagerController.createNewSUT}" />
 	      				<h:commandLink styleClass="btn" value="Annulla" action="#{SUTManagerController.cancel}" style="margin-left: 10px;"/>
 	      						
-	      				<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true">
-							<h:outputText value="#{SUTManagerController.sutFormMessage}" rendered="#{SUTManagerController.showSutFormMessage}" />
+	      				<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true" rendered="#{SUTManagerController.showSutFormMessage}">
+	      					<div class="alert">
+								<h:outputText value="#{SUTManagerController.sutFormMessage}" rendered="#{SUTManagerController.showSutFormMessage}" />
+							</div>
 						</a4j:outputPanel>
 	  				</div>
   				</div>
