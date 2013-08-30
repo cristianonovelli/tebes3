@@ -1,5 +1,12 @@
 package it.enea.xlab.tebes.controllers.file;
 
+import it.enea.xlab.tebes.common.JNDIServices;
+import it.enea.xlab.tebes.controllers.common.WebController;
+import it.enea.xlab.tebes.entity.FileStore;
+import it.enea.xlab.tebes.entity.Report;
+import it.enea.xlab.tebes.entity.Session;
+import it.enea.xlab.tebes.file.FileManagerRemote;
+
 import java.rmi.NotBoundException;
 import java.util.List;
 
@@ -8,16 +15,9 @@ import javax.naming.NamingException;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 
-import it.enea.xlab.tebes.common.JNDIServices;
-import it.enea.xlab.tebes.controllers.common.WebController;
-import it.enea.xlab.tebes.entity.Report;
-import it.enea.xlab.tebes.entity.SUT;
-import it.enea.xlab.tebes.entity.Session;
-import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.file.FileManagerRemote;
-import it.enea.xlab.tebes.sut.SUTManagerRemote;
-
 public class FileManagerController extends WebController<Report> {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String CONTROLLER_NAME = "FileManagerController";
 	
@@ -35,9 +35,9 @@ public class FileManagerController extends WebController<Report> {
 	}
 
 
-	public Session upload(String fileName, String type, String fileString, Session session) {
+	public Session upload(String fileIdRef, String fileName, String type, String fileString, Session session) {
 
-		return fileManagerService.upload(fileName, type, fileString, session);
+		return fileManagerService.upload(fileIdRef, fileName, type, fileString, session);
 	}
 
 
@@ -59,6 +59,18 @@ public class FileManagerController extends WebController<Report> {
 	protected List<Order> determineOrder() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public boolean isFileIdPresent(String fileIdRef) {
+		
+		return fileManagerService.isFileIdPresent(fileIdRef);
+	}
+
+
+	public List<FileStore> getFileListByType(String type) {
+		
+		return fileManagerService. readFileListByType(type); 
 	}
 	
 	

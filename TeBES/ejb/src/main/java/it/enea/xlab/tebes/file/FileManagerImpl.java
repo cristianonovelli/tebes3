@@ -5,7 +5,6 @@ import java.util.List;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.FileStore;
-import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 
 import javax.ejb.Stateless;
@@ -27,29 +26,32 @@ public class FileManagerImpl implements FileManagerRemote {
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM;
 
-	public Session upload(String fileName, String type, String fileString, Session session) {
+	public Session upload(String fileRefId, String fileName, String type, String fileString, Session session) {
+		
+		System.out.println("FileStore1: upload:" + fileName);
 		
 		if (!this.isFilePresent(fileString)) {
 		
 		
-		String datetime = XLabDates.getCurrentUTC();
-		
-		FileStore uploadedFile = new FileStore(fileName, type, datetime, fileString);
-		
-		Long fileId = this.createFile(uploadedFile);
-		
-		System.out.println("fileId2:" + fileId);
-		
-		// TODO avoid the replication
-		// in the case the same file is already present
-		
-		// TODO Session e Report, aggiornamento
-		// la Session deve sapere che deve prendere quel file
+			String datetime = XLabDates.getCurrentUTC();
+			
+			FileStore uploadedFile = new FileStore(fileRefId, fileName, type, datetime, fileString);
+			
+			Long id = this.createFile(uploadedFile);
+			
+			System.out.println("FileStore1: id:" + id);
+			System.out.println("FileStore1: fileRefId:" + fileRefId);
+			// TODO avoid the replication
+			// in the case the same file is already present
+			
+			// TODO Session e Report, aggiornamento
+			// la Session deve sapere che deve prendere quel file
 		
 		}
-		else
-			System.out.println("fileId2:file is already present");
-			
+		else {
+			// TODO memorizzare esito e messaggio di risposta nella sessione
+			System.out.println("FileStore1: file is already present");
+		}
 		return session;
 	}
 
@@ -71,6 +73,8 @@ public class FileManagerImpl implements FileManagerRemote {
 		return eM.find(FileStore.class, fileId);
 	}
 
+	
+	// TODO manca il filtro per utente, così agisco su i file di TUTTI
 	private Boolean isFilePresent(String source) {
 		
         String queryString = "SELECT f FROM FileStore AS f WHERE f.source = ?1";
@@ -78,7 +82,7 @@ public class FileManagerImpl implements FileManagerRemote {
         Query query = eM.createQuery(queryString);
         query.setParameter(1, source);
         @SuppressWarnings("unchecked")
-		List<SUT> resultList = query.getResultList();
+		List<FileStore> resultList = query.getResultList();
         if ((resultList != null) && (resultList.size() > 0))
         	return true;
         else
@@ -94,6 +98,32 @@ public class FileManagerImpl implements FileManagerRemote {
 
 		eM.remove(file);
 		return true;
+	}
+
+	public boolean isFileIdPresent(String fileIdRef) {
+
+        String queryString = "SELECT f FROM FileStore AS f WHERE f.fileRefId = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, fileIdRef);
+        @SuppressWarnings("unchecked")
+		List<FileStore> resultList = query.getResultList();
+        if ((resultList != null) && (resultList.size() > 0))
+        	return true;
+        else
+        	return false;
+	}
+
+	public List<FileStore> readFileListByType(String type) {
+
+        String queryString = "SELECT f FROM FileStore AS f WHERE f.type = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, type);
+        @SuppressWarnings("unchecked")
+		List<FileStore> resultList = query.getResultList();
+
+        return resultList;
 	}
 
 

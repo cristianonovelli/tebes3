@@ -11,6 +11,8 @@ import it.enea.xlab.tebes.controllers.users.UserAdminController;
 import it.enea.xlab.tebes.controllers.users.UserProfileController;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.FileStore;
+import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
@@ -208,7 +210,11 @@ public class SessionManagerImplITCase {
 			testPlan = testPlanController.readTestPlan(testPlanId);
 			Assert.assertNotNull(testPlan.getWorkflow());
 			Assert.assertNotNull(testPlan.getWorkflow().getActions());
-			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));			
+			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));
+			
+			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0).getInputs());
+			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0).getInputs().get(0));
+			
 		}	
 		
 		// Selezione di un TestPlan generico per l'utente (currentUser)
@@ -217,7 +223,17 @@ public class SessionManagerImplITCase {
 
 		// Copia e importazione del TestPlan scelto per l'utente (currentUser)
 		testPlanId = testPlanController.cloneTestPlan(selectedTestPlan, currentUserId);
-		Assert.assertTrue(testPlanId.intValue()>0);			
+		Assert.assertTrue(testPlanId.intValue()>0);	
+		
+		// Il testPlan selezionato diventa quello clonato per lo User
+		selectedTestPlan = testPlanController.readTestPlan(testPlanId);
+		Assert.assertNotNull(selectedTestPlan.getWorkflow());
+		Assert.assertNotNull(selectedTestPlan.getWorkflow().getActions());
+		Assert.assertNotNull(selectedTestPlan.getWorkflow().getActions().get(0));
+		
+		Assert.assertNotNull(selectedTestPlan.getWorkflow().getActions().get(0).getInputs());
+		Assert.assertNotNull(selectedTestPlan.getWorkflow().getActions().get(0).getInputs().get(0));		
+
 		logger.info("Selected TestPlan " + selectedTestPlan.getName() + " for user " + currentUser.getName() + " " + currentUser.getSurname());
 		
 		
@@ -284,6 +300,7 @@ public class SessionManagerImplITCase {
 		Assert.assertNotNull(currentSession);
 		Assert.assertTrue(currentSession.getId().intValue() > 0);
 
+		selectedTestPlan = currentSession.getTestPlan();
 		Assert.assertNotNull(selectedTestPlan);
 		Assert.assertTrue(selectedTestPlan.getId().intValue() > 0);
 		
@@ -303,8 +320,8 @@ public class SessionManagerImplITCase {
 		
 		
 		// GET Workflow
-		workflow = testPlanController.readTestPlan(testPlanId).getWorkflow();	
-		
+		workflow = currentSession.getTestPlan().getWorkflow();	
+		System.out.println("Filestore11: inputname: "+ workflow.getActions().get(0).getInputs().get(0).getName());	
 		int actionsNumber = workflow.getActions().size();
 		int indexTemp;
 		
@@ -329,6 +346,10 @@ public class SessionManagerImplITCase {
 		// 3. l'utente non decide di annullare la sessione di test
 		// 4. non raggiungo il numero massimo di fallimenti per la stessa action
 		boolean running = true;
+		List<Input> inputList;
+		String fileIdRef;
+		boolean fileIdRefPresent;
+		System.out.println("test FileStore1: pre while");
 		while (running) {
 		
 			actionMarkPreRun = actionMark;
@@ -338,59 +359,98 @@ public class SessionManagerImplITCase {
 			
 			
 			
-
+			String absUsersDirPath = PropertiesUtil.getUsersDir();
+			
+			String absSuperUserDocFilePath = absUsersDirPath.concat("0/docs/");
+			String fileName;
+			
 			// PER ORA FACCIO
 			// 1. Faccio l'upload
 			// 2. salvo il file nel FileManager
 			// 3. lo uso nel mio test
 			
 			// POI FARO'
-			// 1. recupero lista fileId da input di questa action
-			// 2. per ogni fileId, se non è già presente, carico il file
-			// 3. li uso nel mio test
+			// 1. recupero lista fileId da inputS di questa action
 			
 			
+			System.out.println("test FileStore1: currentAction: " + currentAction.getActionName());
 			
+			inputList =	currentAction.getInputs();
 			
-			// 1. UPLOAD
-			// a livello di Test passo il file al FileController 
-			// che verrà modificato in sede di definizione dell'interfaccia da EPOCA che deciderà il modo migliore per caricarlo
-			// TODO il file deve essere salvato nella locazione utente
-			String absUsersDirPath = PropertiesUtil.getUsersDir();
+			System.out.println("test FileStore1: pre for - inputList.size():" + inputList.size());
 			
-			String absSuperUserDocFilePath = absUsersDirPath.concat("0/docs/");
-			String fileName = "ubl-invoice.xml";
+			for (int i=0; i<inputList.size(); i++) {
 			
-			// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
-			// per ora assumo che venga estratta la stringa e gli venga passata quella
-			// 1. apro il file, prendo la stringa			
-			// 2. Boolean uploading = fileController.upload(filename, fileContentString);
-			// 3. il file viene salvato, prosegue il test con questo file impostato nella session
-			// 4. alla prossima action chiedo all'utente se questo file va bene
-			JXLabDOM fileXML = null;
-			String fileXMLString = null;
-			
-			try {
-				// Get XML DOM (è solo un modo per me comodo di ottenere lo "stringone")
-				fileXML = new JXLabDOM(absSuperUserDocFilePath.concat(fileName), false, false);
-				// Get File String
-				fileXMLString = fileXML.getXMLString();
+				System.out.println("test FileStore1: for i: " + i);
 				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TransformerFactoryConfigurationError e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TransformerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			Assert.assertNotNull(fileXMLString);
+				fileIdRef = inputList.get(i).getFileIdRef();
+				
+				System.out.println("test FileStore1: fileIdRef: " + fileIdRef);
+				
+				// è presente un file con questo file id?
+				fileIdRefPresent = fileController.isFileIdPresent(fileIdRef);
+				System.out.println("test FileStore1: fileIdRefPresent:" + fileIdRefPresent);
+				
+				// se sì non lo inserisco, 
+				// altrimenti richiedo all'utente un file
+				
+				// 2. per ogni fileId, se non è già presente, carico il file
+				// 3. li uso nel mio test
+				
+					
+				
+				if (!fileIdRefPresent) {
+				
+				
+					// 1. UPLOAD
+					// a livello di Test passo il file al FileController 
+					// che verrà modificato in sede di definizione dell'interfaccia da EPOCA che deciderà il modo migliore per caricarlo
+					// TODO il file deve essere salvato nella locazione utente
 
-			if (fileXMLString != null)
-				currentSession = fileController.upload(fileName, sut.getType(), fileXMLString, currentSession);
+					fileName = "ubl-invoice.xml";
+					
+					// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
+					// per ora assumo che venga estratta la stringa e gli venga passata quella
+					// 1. apro il file, prendo la stringa			
+					// 2. Boolean uploading = fileController.upload(filename, fileContentString);
+					// 3. il file viene salvato, prosegue il test con questo file impostato nella session
+					// 4. alla prossima action chiedo all'utente se questo file va bene
+					JXLabDOM fileXML = null;
+					String fileXMLString = null;
+					
+					try {
+						// Get XML DOM (è solo un modo per me comodo di ottenere lo "stringone")
+						fileXML = new JXLabDOM(absSuperUserDocFilePath.concat(fileName), false, false);
+						// Get File String
+						fileXMLString = fileXML.getXMLString();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (TransformerFactoryConfigurationError e) {
+						e.printStackTrace();
+					} catch (TransformerException e) {
+						e.printStackTrace();
+					}
+					
+					Assert.assertNotNull(fileXMLString);
+		
+					System.out.println("test FileStore1: pre if upload");
+					
+					if (fileXMLString != null) {
+						System.out.println("test FileStore1: pre upload");
+						currentSession = fileController.upload(fileIdRef, fileName, sut.getType(), fileXMLString, currentSession);
+						System.out.println("test FileStore1: post upload");
+					}
+					
+				} // End if (!fileIdRefPresent)
+			
+			} // End for
+			
+			// TODO manca il filtro per utente, per ora così agisco su i file di TUTTI
+			// TODO connettere quindi sessione - filestore
+			List<FileStore> documentList = fileController.getFileListByType(sut.getType());
+			
+			//Assert.assertTrue(documentList.size()>0);
 			
 			
 			
