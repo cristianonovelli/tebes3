@@ -251,10 +251,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				action1.getTestLocation(),
 				action1.getTestValue(), 
 				action1.isJumpTurnedON(), 
-				action1.getDescription(),
-				action1.getInputType(),
-				action1.getInputLanguage(),
-				action1.getInputInteraction()				
+				action1.getDescription()				
 				);
 
 		List<Input> inputList1 = action1.getInputs();
@@ -552,8 +549,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			inputInteraction = "";
 			
 			
-			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, jump, description,
-					inputType, inputLanguage, inputInteraction);
+			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, jump, description);
 			
 			action.setInputs(inputList);
 			//Long actionId = this.insertAction(action);

@@ -113,7 +113,7 @@ public class TAML2Java {
 				String location = tamlDOM.getSourcedocAttribute(externalTANodeList.item(i));
 				
 				// String actionId = "ta-taref".concat((new Integer(i+1)).toString());
-				Action taAction = new Action(i+1, name, Action.getTodoState(), Constants.TAML, Constants.TA, location, value, false, null,  null, null, null);
+				Action taAction = new Action(i+1, name, Action.getTodoState(), Constants.TAML, Constants.TA, location, value, false, null);
 				actionTable.put(value, taAction);
 			}
 		}
@@ -227,7 +227,7 @@ public class TAML2Java {
 					jump = true;
 				
 				//String actionId = "ta-ta".concat((new Integer(i+1)).toString());
-				Action taAction = new Action(i+1, name, Action.getTodoState(), Constants.TAML, Constants.TA, location, value, jump, description,  null, null, null);
+				Action taAction = new Action(i+1, name, Action.getTodoState(), Constants.TAML, Constants.TA, location, value, jump, description);
 				actionTable.put(value, taAction);
 			}
 		}
