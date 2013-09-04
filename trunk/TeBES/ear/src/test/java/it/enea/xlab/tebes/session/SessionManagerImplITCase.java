@@ -24,14 +24,10 @@ import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Vector;
-
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import junit.framework.Assert;
 
@@ -40,7 +36,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xlab.file.XLabFileManager;
-import org.xlab.xml.JXLabDOM;
 
 
 public class SessionManagerImplITCase {
@@ -171,8 +166,7 @@ public class SessionManagerImplITCase {
 		Assert.assertTrue(importing);
 	}
 	
-	
-	
+
 	
 	
 	

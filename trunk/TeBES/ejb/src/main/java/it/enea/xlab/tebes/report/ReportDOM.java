@@ -421,13 +421,13 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
-	public void setTestJumpPrerequisitesAttribute(Node actionNode,
-			boolean jumpTurnedON) {
+	public void setTestSkipPrerequisitesAttribute(Node actionNode,
+			boolean skipTurnedON) {
 		
-		if (jumpTurnedON)
-			this.setNodeAttribute(actionNode, "jumpPrerequisites", "true");
+		if (skipTurnedON)
+			this.setNodeAttribute(actionNode, "skipPrerequisites", "true");
 		else
-			this.setNodeAttribute(actionNode, "jumpPrerequisites", "false");
+			this.setNodeAttribute(actionNode, "skipPrerequisites", "false");
 		
 	}
 

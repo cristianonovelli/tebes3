@@ -36,10 +36,10 @@ datetime="2012-06-20T18:43:00"
                 <tebes:ActionName>XMLSchema-UBL-T10</tebes:ActionName>
                 <tebes:ActionDescription>UBL Invoice XML Schema
                     Validation.</tebes:ActionDescription>
-                <tebes:Test lg="taml" type="TestAssertion"
-jumpPrerequisites="true"
-                    location="http://www.ubl-italia.org/TeBES/testsuites/UBL
-/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml"
+                <tebes:Test 
+                	lg="taml" type="TestAssertion" 
+                	skipPrerequisites="true"
+                    location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml"
                     >TA-001_TC-001_TS-001</tebes:Test>
 
                 <tebes:Results>

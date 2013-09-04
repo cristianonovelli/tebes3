@@ -73,7 +73,7 @@
                 <tebes:Test 
 					lg="taml" 
 					type="TestAssertion"
-	                jumpPrerequisites="true"
+	                skipPrerequisites="true"
 	                location="http://www.empty.it">EMPTY</tebes:Test>
                 <tebes:Results>
                 	<ActionResult>warning</ActionResult>

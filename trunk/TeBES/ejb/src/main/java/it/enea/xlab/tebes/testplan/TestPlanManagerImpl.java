@@ -250,7 +250,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				action1.getTestType(), 
 				action1.getTestLocation(),
 				action1.getTestValue(), 
-				action1.isJumpTurnedON(), 
+				action1.isSkipTurnedON(), 
 				action1.getDescription()				
 				);
 
@@ -502,12 +502,12 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 			String type = testPlanDOM.getTypeAttribute(testNode);		
 			String value = testNode.getFirstChild().getNodeValue();				
-			String jumpString = testPlanDOM.getJumpAttribute(testNode);		
-			boolean jump;
-			if (jumpString.equals("true"))
-				jump = true;
+			String skipString = testPlanDOM.getSkipAttribute(testNode);		
+			boolean skip;
+			if (skipString.equals("true"))
+				skip = true;
 			else 
-				jump = false;
+				skip = false;
 			
 			String location = testPlanDOM.getLocationAttribute(testNode);
 
@@ -549,7 +549,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			inputInteraction = "";
 			
 			
-			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, jump, description);
+			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, skip, description);
 			
 			action.setInputs(inputList);
 			//Long actionId = this.insertAction(action);

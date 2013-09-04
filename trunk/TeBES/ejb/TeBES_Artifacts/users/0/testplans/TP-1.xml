@@ -33,7 +33,7 @@
 			<tebes:Test 
 				lg="taml" 
 				type="TestAssertion" 
-				jumpPrerequisites="true"
+				skipPrerequisites="true"
 				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml">TA-001_TC-001_TS-001</tebes:Test>
 			<tebes:Input 
 				id="IN-1_TA-1_TP-1"
@@ -116,7 +116,7 @@
 			<tebes:Test 
 				lg="taml" 
 				type="TestAssertion" 
-				jumpPrerequisites="false" 
+				skipPrerequisites="false" 
 				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml">TA-001_TC-001_TS-005</tebes:Test>
 				
 			<!-- 

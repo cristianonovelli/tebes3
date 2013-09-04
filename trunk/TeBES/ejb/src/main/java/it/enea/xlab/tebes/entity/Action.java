@@ -43,7 +43,7 @@ public class Action implements Serializable {
 	private String testType;
 	private String testLocation;
 	private String testValue;
-	private boolean jumpTurnedON;
+	private boolean skipTurnedON;
 	private String description;
 
 	//private String inputType;
@@ -65,7 +65,7 @@ public class Action implements Serializable {
 	}
 	
 	public Action(int number, String name, String state, 
-			String lg, String type, String location, String value, boolean jumpTurnedON, String description) {
+			String lg, String type, String location, String value, boolean skipTurnedON, String description) {
 		
 		//this.setActionId(actionId);
 		this.setActionNumber(number);
@@ -85,7 +85,7 @@ public class Action implements Serializable {
 			this.setTestType(null);
 		
 		this.setTestValue(value);	
-		this.setJumpTurnedON(jumpTurnedON);
+		this.setSkipTurnedON(skipTurnedON);
 		this.setDescription(description);
 				
 		this.setInputs(new Vector<Input>());
@@ -101,7 +101,7 @@ public class Action implements Serializable {
 		result = result.concat("Test Language: " + this.getTestLanguage() +"\n");
 		result = result.concat("Test Type: " + this.getTestType() +"\n");	
 		result = result.concat("Test Value: " + this.getTestValue() +"\n");
-		result = result.concat("Test Jump Prerequisites: " + this.isJumpTurnedON() +"\n");
+		result = result.concat("Test Skip Prerequisites: " + this.isSkipTurnedON() +"\n");
 		result = result.concat("Test Location: " + this.getTestLocation() +"\n");
 		result = result.concat("Test Location: " + this.getTestLocation() +"\n");
 		
@@ -185,12 +185,12 @@ public class Action implements Serializable {
 		this.testValue = testValue;
 	}
 
-	public boolean isJumpTurnedON() {
-		return jumpTurnedON;
+	public boolean isSkipTurnedON() {
+		return skipTurnedON;
 	}
 
-	public void setJumpTurnedON(boolean jumpTurnedON) {
-		this.jumpTurnedON = jumpTurnedON;
+	public void setSkipTurnedON(boolean skipTurnedON) {
+		this.skipTurnedON = skipTurnedON;
 	}
 
 	public String getDescription() {

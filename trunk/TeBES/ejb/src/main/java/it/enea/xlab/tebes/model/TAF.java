@@ -12,7 +12,7 @@ public class TAF {
 	private Target target;
 	private TestRule predicate;
 	private Vector<Action> tests;
-	private boolean jumpTurnedON;
+	private boolean skipTurnedON;
 	private String prescription;
 	private Hashtable<String, ReportFragment> reportFragments;
 	private String note;
@@ -24,14 +24,14 @@ public class TAF {
 
 
 	public TAF(String name, Target target, TestRule predicate, Vector<Action> prerequisites,
-			boolean jumpTurnedON, String prescription,
+			boolean skipTurnedON, String prescription,
 			Hashtable<String, ReportFragment> reportFragments, String note) {
 
 		this.name = name;
 		this.target = target;
 		this.predicate = predicate;
 		this.tests = prerequisites;
-		this.jumpTurnedON = jumpTurnedON;
+		this.skipTurnedON = skipTurnedON;
 		this.prescription = prescription;
 		this.reportFragments = reportFragments;
 		this.note = note;
@@ -56,12 +56,12 @@ public class TAF {
 		this.target = target;
 	}
 
-	public boolean isJumpTurnedON() {
-		return jumpTurnedON;
+	public boolean isSkipTurnedON() {
+		return skipTurnedON;
 	}
 
-	public void setJumpTurnedON(boolean jumpTurnedON) {
-		this.jumpTurnedON = jumpTurnedON;
+	public void setSkipTurnedON(boolean skipTurnedON) {
+		this.skipTurnedON = skipTurnedON;
 	}
 
 	public String getNote() {
