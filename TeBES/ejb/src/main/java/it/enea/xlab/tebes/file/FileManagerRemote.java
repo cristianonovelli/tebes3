@@ -10,7 +10,7 @@ import javax.ejb.Remote;
 @Remote
 public interface FileManagerRemote {
 
-	public Session upload(String fileRefId, String fileName, String type, String fileString, Session session);
+	public Session upload(String fileRefId, String fileName, String type, byte[] fileContent, Session session);
 
 	public boolean isFileIdPresent(String fileIdRef);
 

@@ -29,7 +29,7 @@
 								<configuration>
 									<tasks>
 									
-									<copy todir="${env.JBOSS_HOME}/bin/TeBES_Artifacts/">
+									<copy todir="${env.JBOSS_HOME}/server/default/TeBES_Artifacts/">
 							          <fileset dir="TeBES_Artifacts/" includes="**/*" />
 							         </copy>
 											
@@ -150,7 +150,7 @@
 		<dependency>
 			<groupId>it.enea.xlab</groupId>
 			<artifactId>xlab-common</artifactId>
-			<version>1.2</version>
+			<version>1.3</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

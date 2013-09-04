@@ -1,5 +1,7 @@
 package it.enea.xlab.tebes.file;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import it.enea.xlab.tebes.common.Constants;
@@ -15,6 +17,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+
+import org.xlab.file.FileUtil;
 import org.xlab.utilities.XLabDates;
 
 
@@ -26,32 +30,46 @@ public class FileManagerImpl implements FileManagerRemote {
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM;
 
-	public Session upload(String fileRefId, String fileName, String type, String fileString, Session session) {
+	public Session upload(String fileRefId, String fileName, String type, byte[] fileContent, Session session) {
 		
-		System.out.println("FileStore1: upload:" + fileName);
+		if (fileContent != null)
+			System.out.println("FileStore3: upload: fileContent non null");
+		else
+			System.out.println("FileStore3: upload: fileContent NULL");
 		
-		if (!this.isFilePresent(fileString)) {
+		String fileString = null;
+
 		
+		fileString = new String(fileContent);
+		System.out.println("FileStore3: " + fileString);
 		
-			String datetime = XLabDates.getCurrentUTC();
+		if (fileString != null) {
+			if (!this.isFilePresent(fileString)) {
 			
-			FileStore uploadedFile = new FileStore(fileRefId, fileName, type, datetime, fileString);
 			
-			Long id = this.createFile(uploadedFile);
+				String datetime = XLabDates.getCurrentUTC();
+				
+				FileStore uploadedFile = new FileStore(fileRefId, fileName, type, datetime, fileString);
+				
+				Long id = this.createFile(uploadedFile);
+				
+				System.out.println("FileStore3: id:" + id);
+				System.out.println("FileStore3: fileRefId:" + fileRefId);
+				// TODO avoid the replication
+				// in the case the same file is already present
+				
+				// TODO Session e Report, aggiornamento
+				// la Session deve sapere che deve prendere quel file
 			
-			System.out.println("FileStore1: id:" + id);
-			System.out.println("FileStore1: fileRefId:" + fileRefId);
-			// TODO avoid the replication
-			// in the case the same file is already present
-			
-			// TODO Session e Report, aggiornamento
-			// la Session deve sapere che deve prendere quel file
-		
+			}
+			else {
+				// TODO memorizzare esito e messaggio di risposta nella sessione
+				System.out.println("FileStore3: file is already present");
+			}
 		}
-		else {
-			// TODO memorizzare esito e messaggio di risposta nella sessione
-			System.out.println("FileStore1: file is already present");
-		}
+		else
+			System.out.println("FileStore3: filestring = null");
+		
 		return session;
 	}
 
