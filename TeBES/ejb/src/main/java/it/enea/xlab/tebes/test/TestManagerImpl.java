@@ -115,7 +115,7 @@ public class TestManagerImpl implements TestManagerRemote {
 		
 		// Prerequisites
 		Vector<Action> prerequisites = taf.getTests();
-		if ( !taf.isJumpTurnedON() && (prerequisites != null) ) {
+		if ( !taf.isSkipTurnedON() && (prerequisites != null) ) {
 		
 			report.addToFullDescription("\nThere are Prerequisites");
 			
@@ -152,10 +152,10 @@ public class TestManagerImpl implements TestManagerRemote {
 		}
 		else {
 			
-			if (taf.isJumpTurnedON())
-				report.addToFullDescription("\nJump Prerequisite turned ON");
+			if (taf.isSkipTurnedON())
+				report.addToFullDescription("\nSkip Prerequisite turned ON");
 			else
-				report.addToFullDescription("\nJump Prerequisite turned OFF but there is not prerequisites");
+				report.addToFullDescription("\nSkip Prerequisite turned OFF but there is not prerequisites");
 			
 			okPrerequisites = true;
 		}

@@ -186,9 +186,9 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getNodeAttribute(node, "location");
 	}
 	
-	public String getJumpAttribute(Node node) {
+	public String getSkipAttribute(Node node) {
 		
-		return this.getNodeAttribute(node, "jumpPrerequisites");
+		return this.getNodeAttribute(node, "skipPrerequisites");
 	}
 	
 	// Get generic node Attribute

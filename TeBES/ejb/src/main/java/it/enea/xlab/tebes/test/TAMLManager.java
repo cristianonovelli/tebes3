@@ -129,10 +129,6 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			System.out.println("actionsVector.size: " + actionsVector.size());
 
 			
-			// Ora devo creare una TAF che rappresenta il mio Test Case
-			// Non ha predicati ma ha una serie di actions
-			//taf = new TAF(action.getActionName(), action., predicate, prerequisites, jumpTurnedON, prescription, reportFragments, note)
-			
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -213,7 +209,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			prescription = t2j.getPrescriptionLevel(tamlDOM, testAssertionNode);
 				
 			// Se il SALTO dei prerequisiti NON è impostatato
-			if (!action.isJumpTurnedON()) {
+			if (!action.isSkipTurnedON()) {
 
 				// Get Prerequisite	from TAML
 				prerequisite = t2j.getPrerequisite(tamlDOM, testAssertionNode);		
@@ -243,7 +239,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			// Normalize Predicate
 			// Se il predicato TAML rispetta il profilo TAML4TeBES
 			// allora il predicato è sicuramente un'espressione XPath o Schematron
-			Vector<Action> predicates = this.normalize(testRuleList2, variableHashtable, taHashtable, taRefHashtable, commonNamespacesHashtable, action.isJumpTurnedON());
+			Vector<Action> predicates = this.normalize(testRuleList2, variableHashtable, taHashtable, taRefHashtable, commonNamespacesHashtable, action.isSkipTurnedON());
 			
 			// Get Report Hashtable from TAML
 			Hashtable<String, ReportFragment> reportHashtable = t2j.getReportHashtable(tamlDOM, testAssertionNode);			
@@ -260,7 +256,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			predicate.setLogicConnectorIsPresent(false);
 
 			///// Creazione della TAF ///// 			
-			taf = new TAF(action.getActionName(), target, predicate, prerequisites, action.isJumpTurnedON(), prescription, reportHashtable, null);
+			taf = new TAF(action.getActionName(), target, predicate, prerequisites, action.isSkipTurnedON(), prescription, reportHashtable, null);
 			
 	
 		} catch (SAXException e) {
@@ -300,11 +296,11 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	 * @param variableHashtable
 	 * @param taRefHashtable
 	 * @param taRefHashtable2 
-	 * @param jump
+	 * @param skip
 	 * @return
 	 */
 	private Vector<Action> normalize(Vector<TestRule> testRuleList, 
-			Hashtable<String, Variable> variableHashtable, Hashtable<String, Action> taHashtable, Hashtable<String, Action> taRefHashtable, Hashtable<String, String> namespacesHashtable, boolean jump) {
+			Hashtable<String, Variable> variableHashtable, Hashtable<String, Action> taHashtable, Hashtable<String, Action> taRefHashtable, Hashtable<String, String> namespacesHashtable, boolean skip) {
 		
 		
 		
@@ -362,14 +358,14 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 						
 						// prendo la TA esterna
 						// TODO qui prendo il nome della variabile
-						Action schematron = new Action(i+1, var.getName(), Action.getTodoState(), TAML2Java.SCHEMATRON_TYPE, Constants.TA, var.getValue(), var.getValue(), jump, null);
+						Action schematron = new Action(i+1, var.getName(), Action.getTodoState(), TAML2Java.SCHEMATRON_TYPE, Constants.TA, var.getValue(), var.getValue(), skip, null);
 						
 						result.add(schematron);
 					}
 					
 					if (var.getType().equals(TAML2Java.XPATH_TYPE)) {
 						
-						Action xpathAction = new Action(i+1, var.getName(), Action.getTodoState(), TAML2Java.XPATH_TYPE, Constants.TA, var.getValue(), var.getValue(), jump, null);
+						Action xpathAction = new Action(i+1, var.getName(), Action.getTodoState(), TAML2Java.XPATH_TYPE, Constants.TA, var.getValue(), var.getValue(), skip, null);
 						
 						if ( xpathAction.getTestValue().startsWith("count(//") && xpathAction.getTestValue().endsWith(") ge 1")) {
 							
@@ -384,7 +380,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 					
 					
 					String xpathId = "xpath".concat((new Integer(i+1)).toString());
-					Action xpath = new Action(i+1, xpathId, Action.getTodoState(), TAML2Java.XPATH_TYPE, Constants.TA, singleTestRule.getValue(), singleTestRule.getValue(), jump, null);
+					Action xpath = new Action(i+1, xpathId, Action.getTodoState(), TAML2Java.XPATH_TYPE, Constants.TA, singleTestRule.getValue(), singleTestRule.getValue(), skip, null);
 					
 					result.add(xpath);
 				}

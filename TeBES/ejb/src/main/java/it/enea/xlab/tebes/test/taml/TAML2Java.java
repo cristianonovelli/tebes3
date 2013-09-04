@@ -220,14 +220,14 @@ public class TAML2Java {
 				String location = tamlDOM.xmlFile;
 				String description = tamlDOM.getDescriptionValue(taNodeList.item(i));
 						
-				boolean jump;
+				boolean skip;
 				if (tamlDOM.getPrescriptionLevel(taNodeList.item(i)).equals(Constants.MANDATORY))
-					jump = false;
+					skip = false;
 				else
-					jump = true;
+					skip = true;
 				
 				//String actionId = "ta-ta".concat((new Integer(i+1)).toString());
-				Action taAction = new Action(i+1, name, Action.getTodoState(), Constants.TAML, Constants.TA, location, value, jump, description);
+				Action taAction = new Action(i+1, name, Action.getTodoState(), Constants.TAML, Constants.TA, location, value, skip, description);
 				actionTable.put(value, taAction);
 			}
 		}

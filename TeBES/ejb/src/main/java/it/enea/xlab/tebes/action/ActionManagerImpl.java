@@ -421,7 +421,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				// Set Test Value and attributes
 				reportDOM.setActionTest(actionNode, action.getTestValue());				
 				Node testNode = reportDOM.getTestElement(actionNode);
-				reportDOM.setTestJumpPrerequisitesAttribute(testNode, action.isJumpTurnedON());
+				reportDOM.setTestSkipPrerequisitesAttribute(testNode, action.isSkipTurnedON());
 				reportDOM.setTestLgAttribute(testNode, action.getTestLanguage());
 				reportDOM.setTestLocationAttribute(testNode, action.getTestLocation());
 				reportDOM.setTestTypeAttribute(testNode, action.getTestType());

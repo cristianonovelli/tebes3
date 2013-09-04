@@ -149,7 +149,7 @@ document.getElementById(other).style.display="none";
 		    <xsl:with-param name='TestAction_Description' select='tebes:ActionDescription'/>
 		    <xsl:with-param name='TestAction_Test_lg' select='tebes:Test/@lg'/>
 		    <xsl:with-param name='TestAction_Test_type' select='tebes:Test/@type'/>
-		    <xsl:with-param name='TestAction_Test_jumpPrerequisites' select='tebes:Test/@jumpPrerequisites'/>
+		    <xsl:with-param name='TestAction_Test_skipPrerequisites' select='tebes:Test/@skipPrerequisites'/>
 		    <xsl:with-param name='TestAction_Test_location_url' select='tebes:Test/@location'/>
 			<xsl:with-param name='TestAction_Test_location' select='tebes:Test'/>
 			<xsl:with-param name='TestAction_SUTidref' select='tebes:Results/SUT/@idref'/>
@@ -171,7 +171,7 @@ document.getElementById(other).style.display="none";
 	    <xsl:param name='TestAction_Description'/>
 		<xsl:param name='TestAction_Test_lg'/>
 		<xsl:param name='TestAction_Test_type'/>
-		<xsl:param name='TestAction_Test_jumpPrerequisites'/>
+		<xsl:param name='TestAction_Test_skipPrerequisites'/>
         <xsl:param name='TestAction_Test_location_url'/>
 		<xsl:param name='TestAction_Test_location'/>
 		<xsl:param name='TestAction_SUTidref'/>
@@ -264,10 +264,10 @@ document.getElementById(other).style.display="none";
 						</tr>
 						<tr>
 						    <td class='TP_sublisttableleft'>
-							    Jump Prerequisites
+							    Skip Prerequisites
 							</td>
                             <td class='TP_sublisttableright'>
-							    <xsl:value-of select="$TestAction_Test_jumpPrerequisites"/>
+							    <xsl:value-of select="$TestAction_Test_skipPrerequisites"/>
 							</td>
 						</tr>
 						<tr>
