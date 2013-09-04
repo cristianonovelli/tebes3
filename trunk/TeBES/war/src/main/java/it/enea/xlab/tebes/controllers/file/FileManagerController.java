@@ -7,6 +7,7 @@ import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.file.FileManagerRemote;
 
+import java.io.InputStream;
 import java.rmi.NotBoundException;
 import java.util.List;
 
@@ -35,9 +36,9 @@ public class FileManagerController extends WebController<Report> {
 	}
 
 
-	public Session upload(String fileIdRef, String fileName, String type, String fileString, Session session) {
+	public Session upload(String fileIdRef, String fileName, String type, byte[] fileContent, Session session) throws Exception {
 
-		return fileManagerService.upload(fileIdRef, fileName, type, fileString, session);
+		return fileManagerService.upload(fileIdRef, fileName, type, fileContent, session);
 	}
 
 

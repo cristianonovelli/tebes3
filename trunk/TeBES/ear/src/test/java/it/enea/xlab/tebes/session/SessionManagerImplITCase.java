@@ -22,7 +22,11 @@ import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Vector;
 
@@ -357,11 +361,12 @@ public class SessionManagerImplITCase {
 			logger.info("Running Workflow... ACTION " + actionMark + " OF " + actionsNumber);	
 			logger.info(currentAction.getActionSummaryString());
 			
-			
+			 
 			
 			String absUsersDirPath = PropertiesUtil.getUsersDir();
 			
 			String absSuperUserDocFilePath = absUsersDirPath.concat("0/docs/");
+			String absGenericUserDocFilePath = absUsersDirPath.concat("1/docs/");
 			String fileName;
 			
 			// PER ORA FACCIO
@@ -411,36 +416,30 @@ public class SessionManagerImplITCase {
 					
 					// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
 					// per ora assumo che venga estratta la stringa e gli venga passata quella
-					// 1. apro il file, prendo la stringa			
-					// 2. Boolean uploading = fileController.upload(filename, fileContentString);
+					// 1. apro il file, prendo l'InputStream			
+					// 2. Boolean uploading = fileController.upload
 					// 3. il file viene salvato, prosegue il test con questo file impostato nella session
 					// 4. alla prossima action chiedo all'utente se questo file va bene
-					JXLabDOM fileXML = null;
-					String fileXMLString = null;
-					
+
+					InputStream fileInputStream = null;
+					byte[] fileByteArray = null;
 					try {
-						// Get XML DOM (è solo un modo per me comodo di ottenere lo "stringone")
-						fileXML = new JXLabDOM(absSuperUserDocFilePath.concat(fileName), false, false);
-						// Get File String
-						fileXMLString = fileXML.getXMLString();
 						
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (TransformerFactoryConfigurationError e) {
-						e.printStackTrace();
-					} catch (TransformerException e) {
-						e.printStackTrace();
-					}
-					
-					Assert.assertNotNull(fileXMLString);
-		
-					System.out.println("test FileStore1: pre if upload");
-					
-					if (fileXMLString != null) {
-						System.out.println("test FileStore1: pre upload");
-						currentSession = fileController.upload(fileIdRef, fileName, sut.getType(), fileXMLString, currentSession);
+						
+						
+						fileInputStream = new FileInputStream(absGenericUserDocFilePath.concat(fileName));
+						fileByteArray = this.convertInputStreamToByteArray(fileInputStream);
+						
+						currentSession = fileController.upload(fileIdRef, fileName, sut.getType(), fileByteArray, currentSession);
 						System.out.println("test FileStore1: post upload");
-					}
+
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+					Assert.assertNotNull(fileInputStream);
+
+
 					
 				} // End if (!fileIdRefPresent)
 			
@@ -686,6 +685,20 @@ public class SessionManagerImplITCase {
 		}	*/	
 	}
 	
+	
+	public byte[] convertInputStreamToByteArray(InputStream is) throws IOException { 
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+		
+		int reads = is.read(); 
+		while(reads != -1){ 
+			baos.write(reads); 
+			reads = is.read(); 
+		} 
+		
+		return baos.toByteArray(); 
+		
+	}
 	
 	
 }
