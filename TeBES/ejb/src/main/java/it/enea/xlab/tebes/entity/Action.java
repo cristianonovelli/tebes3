@@ -46,9 +46,9 @@ public class Action implements Serializable {
 	private boolean jumpTurnedON;
 	private String description;
 
-	private String inputType;
-	private String inputLanguage;
-	private String inputInteraction;	
+	//private String inputType;
+	//private String inputLanguage;
+	//private String inputInteraction;	
 	
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="workflow_id")
@@ -65,8 +65,7 @@ public class Action implements Serializable {
 	}
 	
 	public Action(int number, String name, String state, 
-			String lg, String type, String location, String value, boolean jumpTurnedON, String description,
-			String inputType, String inputLanguage, String inputInteraction) {
+			String lg, String type, String location, String value, boolean jumpTurnedON, String description) {
 		
 		//this.setActionId(actionId);
 		this.setActionNumber(number);
@@ -88,10 +87,6 @@ public class Action implements Serializable {
 		this.setTestValue(value);	
 		this.setJumpTurnedON(jumpTurnedON);
 		this.setDescription(description);
-		
-		this.setInputType(inputType);
-		this.setInputLanguage(inputLanguage);
-		this.setInputInteraction(inputInteraction);
 				
 		this.setInputs(new Vector<Input>());
 	}
@@ -256,30 +251,6 @@ public class Action implements Serializable {
 
 	public static String getTodoState() {
 		return TODO_STATE;
-	}
-
-	public String getInputType() {
-		return inputType;
-	}
-
-	public void setInputType(String inputType) {
-		this.inputType = inputType;
-	}
-
-	public String getInputLanguage() {
-		return inputLanguage;
-	}
-
-	public void setInputLanguage(String inputLanguage) {
-		this.inputLanguage = inputLanguage;
-	}
-
-	public String getInputInteraction() {
-		return inputInteraction;
-	}
-
-	public void setInputInteraction(String inputInteraction) {
-		this.inputInteraction = inputInteraction;
 	}
 
 	public List<Input> getInputs() {
