@@ -2,6 +2,8 @@ package it.enea.xlab.tebes.test.taml;
 
 
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
 
 import javax.xml.transform.TransformerException;
 
@@ -12,6 +14,7 @@ import org.w3c.dom.NodeList;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.model.ReportFragment;
 import it.enea.xlab.tebes.model.Target;
 import it.enea.xlab.tebes.model.TestRule;
@@ -96,7 +99,7 @@ public class TAML2Java {
 	 * @return Hashtable (taId, TestAction)
 	 * where TestAction is an external Test Assertion
 	 */
-	public Hashtable<String, Action> getTestAssertionRefHashtable(TAMLDOM tamlDOM) {	
+	public Hashtable<String, Action> getTestAssertionRefHashtable(TAMLDOM tamlDOM, List<Input> inputs) {	
 	
 		Hashtable<String, Action> actionTable = null;
 		
@@ -114,6 +117,7 @@ public class TAML2Java {
 				
 				// String actionId = "ta-taref".concat((new Integer(i+1)).toString());
 				Action taAction = new Action(i+1, name, Action.getTodoState(), Constants.TAML, Constants.TA, location, value, false, null);
+				taAction.setInputs(inputs);
 				actionTable.put(value, taAction);
 			}
 		}
@@ -203,7 +207,7 @@ public class TAML2Java {
 	}
 
 
-	public Hashtable<String, Action> getTestAssertionHashtable(TAMLDOM tamlDOM) {
+	public Hashtable<String, Action> getTestAssertionHashtable(TAMLDOM tamlDOM, List<Input> inputs) {
 		
 		Hashtable<String, Action> actionTable = null;
 		
@@ -228,6 +232,7 @@ public class TAML2Java {
 				
 				//String actionId = "ta-ta".concat((new Integer(i+1)).toString());
 				Action taAction = new Action(i+1, name, Action.getTodoState(), Constants.TAML, Constants.TA, location, value, skip, description);
+				taAction.setInputs(inputs);
 				actionTable.put(value, taAction);
 			}
 		}

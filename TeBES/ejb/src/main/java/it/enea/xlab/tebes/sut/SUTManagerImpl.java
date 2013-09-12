@@ -234,8 +234,8 @@ public class SUTManagerImpl implements SUTManagerRemote {
 
 	public List<SUT> getSystemSUTSupported() {
 
-		String superUserEmail = PropertiesUtil.getUser1Email();
-		String superUserPassword = PropertiesUtil.getUser1Password();
+		String superUserEmail = PropertiesUtil.getSuperUserEmailProperty();
+		String superUserPassword = PropertiesUtil.getSuperUserPasswordProperty();
 
 		User superUser = userManager.readUserbyEmailAndPassword(superUserEmail, superUserPassword);
 		

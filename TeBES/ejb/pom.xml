@@ -29,6 +29,8 @@
 								<configuration>
 									<tasks>
 									
+									<delete dir="${env.JBOSS_HOME}/server/default/TeBES_Artifacts/" includeemptydirs="true"/>
+									
 									<copy todir="${env.JBOSS_HOME}/server/default/TeBES_Artifacts/">
 							          <fileset dir="TeBES_Artifacts/" includes="**/*" />
 							         </copy>

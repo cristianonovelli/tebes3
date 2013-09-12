@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.controllers.users;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.User;
@@ -14,6 +15,7 @@ import javax.naming.NamingException;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
+import org.xlab.file.XLabFileManager;
 
 public class UserProfileController extends WebController<User> {
 
@@ -42,6 +44,7 @@ public class UserProfileController extends WebController<User> {
 	 * 			-1 if already a User with that email exists
 	 * 			-2 if an exception occurs
 	 * 			-3 if the Role isn't standard
+	 * 			-4 if the user directory already exists
 	 */
 	public Long registration(User user, Role role) {
 		
@@ -58,6 +61,7 @@ public class UserProfileController extends WebController<User> {
 					user = this.login(user.geteMail(), user.getPassword());
 
 					userManagerBean.setUserRole(user, role);
+					
 					
 				} catch (Exception e) {
 					e.printStackTrace();

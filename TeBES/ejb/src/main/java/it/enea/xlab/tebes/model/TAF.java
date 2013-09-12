@@ -1,9 +1,11 @@
 package it.enea.xlab.tebes.model;
 
 import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.Input;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 public class TAF {
@@ -16,7 +18,7 @@ public class TAF {
 	private String prescription;
 	private Hashtable<String, ReportFragment> reportFragments;
 	private String note;
-	
+	private List<Input> inputs;
 	
 	public TAF() {
 		
@@ -25,7 +27,7 @@ public class TAF {
 
 	public TAF(String name, Target target, TestRule predicate, Vector<Action> prerequisites,
 			boolean skipTurnedON, String prescription,
-			Hashtable<String, ReportFragment> reportFragments, String note) {
+			Hashtable<String, ReportFragment> reportFragments, List<Input> inputs, String note) {
 
 		this.name = name;
 		this.target = target;
@@ -35,6 +37,7 @@ public class TAF {
 		this.prescription = prescription;
 		this.reportFragments = reportFragments;
 		this.note = note;
+		this.setInputs(inputs);
 	}
 
 
@@ -102,6 +105,16 @@ public class TAF {
 
 	public void setReportFragments(Hashtable<String, ReportFragment> reportFragments) {
 		this.reportFragments = reportFragments;
+	}
+
+
+	public List<Input> getInputs() {
+		return inputs;
+	}
+
+
+	public void setInputs(List<Input> inputs) {
+		this.inputs = inputs;
 	}
 
 }

@@ -3,10 +3,13 @@ package it.enea.xlab.tebes.users;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
+import it.enea.xlab.tebes.controllers.users.UserAdminController;
+import it.enea.xlab.tebes.controllers.users.UserProfileController;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.sut.SUTManagerController;
+import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
 import java.util.List;
 
@@ -22,7 +25,8 @@ public class UserManagerImplITCase {
 	static UserAdminController userAdminController;
 	static SUTManagerController sutManagerController;
 	
-
+	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
+	
 	/**
 	 * Before: Setup Roles and SuperUser
 	 * @throws Exception
@@ -30,17 +34,16 @@ public class UserManagerImplITCase {
 	@BeforeClass
 	public static void before_userManager() throws Exception {
 		
-		// Get UserProfileManager Service
-		userProfileController = new UserProfileController();
-		Assert.assertNotNull(userProfileController);
-		
-		// Get UserAdminManager Service
-		userAdminController = new UserAdminController();
+		// Get Services
+		userAdminController = (UserAdminController) WebControllersUtilities.getManager(UserAdminController.CONTROLLER_NAME);
 		Assert.assertNotNull(userAdminController);
-		
-		// Get SUTManagerController Service
-		sutManagerController = new SUTManagerController();
+
+		userProfileController = (UserProfileController) WebControllersUtilities.getManager(UserProfileController.CONTROLLER_NAME);
+		Assert.assertNotNull(userProfileController);		
+
+		sutManagerController = (SUTManagerController) WebControllersUtilities.getManager(SUTManagerController.CONTROLLER_NAME);
 		Assert.assertNotNull(sutManagerController);
+		
 		
 		// Create EJB linked to interface UserManagerRemote
 		// InitialContext ctx = new InitialContext();
@@ -50,10 +53,10 @@ public class UserManagerImplITCase {
 		//UserAdminController adminController = new UserAdminController();
 		
 		// Prepare 4 user Roles 
-		Role role1_standard = new Role(Constants.STANDARD_ROLE_NAME, Constants.STANDARD_ROLE_DESCRIPTION, Constants.STANDARD_ROLE_LEVEL);
-		Role role2_advanced = new Role(Constants.ADVANCED_ROLE_NAME, Constants.ADVANCED_ROLE_DESCRIPTION, Constants.ADVANCED_ROLE_LEVEL);
-		Role role3_admin = new Role(Constants.ADMIN_ROLE_NAME, Constants.ADMIN_ROLE_DESCRIPTION, Constants.ADMIN_ROLE_LEVEL);
-		Role role4_superuser = new Role(Constants.SUPERUSER_ROLE_NAME, Constants.SUPERUSER_ROLE_DESCRIPTION, Constants.SUPERUSER_ROLE_LEVEL);
+		role1_standard = new Role(Constants.STANDARD_ROLE_NAME, Constants.STANDARD_ROLE_DESCRIPTION, Constants.STANDARD_ROLE_LEVEL);
+		role2_advanced = new Role(Constants.ADVANCED_ROLE_NAME, Constants.ADVANCED_ROLE_DESCRIPTION, Constants.ADVANCED_ROLE_LEVEL);
+		role3_admin = new Role(Constants.ADMIN_ROLE_NAME, Constants.ADMIN_ROLE_DESCRIPTION, Constants.ADMIN_ROLE_LEVEL);
+		role4_superuser = new Role(Constants.SUPERUSER_ROLE_NAME, Constants.SUPERUSER_ROLE_DESCRIPTION, Constants.SUPERUSER_ROLE_LEVEL);
 		
 		// Create dei Ruoli che devono già essere fissati come setup del sistema
 		Long id_role1_standard = userAdminController.createRole(role1_standard);
@@ -193,6 +196,10 @@ public class UserManagerImplITCase {
 		// Get Group List
 		List<Long> groupIdList = userAdminController.getGroupIdList();
 		Assert.assertTrue(groupIdList.size() == 1);
+		
+		List<Group> groupList = userAdminController.getGroupList();
+		Assert.assertTrue(groupList.size() == 1);
+		
 		Group xlabGroup = userAdminController.readGroup(groupIdList.get(0));
 		Assert.assertNotNull(xlabGroup);
 		
@@ -226,6 +233,12 @@ public class UserManagerImplITCase {
 			Assert.assertTrue(groupSetting>0);
 			tempUser = userAdminController.readUser(tempUserId);	
 			Assert.assertTrue(tempUser.getGroup().getName().equals(Constants.XLAB_GROUP_NAME));
+			
+			// Detach
+			/*groupSetting = userAdminController.setUserGroup(tempUser, null);
+			tempUser = userAdminController.readUser(tempUserId);
+			Assert.assertNull(tempUser.getGroup());*/
+			
 			
 		}
 		
@@ -271,7 +284,7 @@ public class UserManagerImplITCase {
 
 		Boolean deleting;
 		
-		// Get Role List
+		/*// Get Role List
 		List<Long> roleIdList = userAdminController.getRoleIdList();
 		Assert.assertTrue(roleIdList.size() == 4);
 		
@@ -291,20 +304,41 @@ public class UserManagerImplITCase {
 				deleting = userAdminController.deleteRole(tempRole.getId());
 				Assert.assertTrue(deleting);			
 		}		
+		*/
+		
+		List<Long> userIdList = userAdminController.getUserIdList();
+		
+		User tempUser;
+		Long tempUserId;
+		for (int u=0;u<userIdList.size();u++) {
+			
+			tempUserId = (Long) userIdList.get(u);
+			Assert.assertTrue(tempUserId.intValue() > 0);
+
+			tempUser = userAdminController.readUser(tempUserId);			
+			Assert.assertNotNull(tempUser);
+						
+			// DELETE User
+			if (tempUser.getRole().getLevel() != role4_superuser.getLevel() ) {			
+				deleting = userAdminController.deleteUser(tempUser.getId());
+				Assert.assertTrue(deleting);			
+			}
+		} 
 		
 		// Get Group List
 		List<Long> groupIdList = userAdminController.getGroupIdList();
 		Assert.assertTrue(groupIdList.size() == 1);
-		deleting = userAdminController.deleteGroup(groupIdList.get(0));
+		/*
+		 * lascio il group a cui appartiene lo superuser
+		 * deleting = userAdminController.deleteGroup(groupIdList.get(0));
 		Assert.assertTrue(deleting);
 		groupIdList = userAdminController.getGroupIdList();
-		Assert.assertTrue(groupIdList.size() == 0);
+		Assert.assertTrue(groupIdList.size() == 0);*/
 		
 		// Last Check
 		// Sono stati eliminati tutti gli utenti?
-		List<Long> userIdList = userAdminController.getUserIdList();
 		userIdList = userAdminController.getUserIdList();
-		Assert.assertTrue(userIdList.size() == 0);
+		Assert.assertTrue(userIdList.size() == 1);
 		
 	}
 }

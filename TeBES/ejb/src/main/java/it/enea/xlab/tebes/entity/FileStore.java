@@ -1,5 +1,7 @@
 package it.enea.xlab.tebes.entity;
 
+import it.enea.xlab.tebes.common.Constants;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -21,7 +23,7 @@ public class FileStore implements Serializable {
 	private String fileRefId;
 	
 	// con estensione
-	private String name;
+	private String fileName;
 	
 	// The type field can take the values: testplan, report, document, message
 	// TODO specificare i tipi di file e le estensioni
@@ -40,15 +42,37 @@ public class FileStore implements Serializable {
 
 	}
 
-	public FileStore(String fileRefId, String name, String type, String creationDatetime, String source) {
+	public FileStore(String fileRefId, String fileName, String type, String creationDatetime, String source) {
 
 		this.setFileRefId(fileRefId);
-		this.name = name;
+		this.setFileName(fileName);
 		this.type = type;
 		this.source = source;
 		this.creationDatetime = creationDatetime;
 		this.lastUpdateDatetime = creationDatetime;
 	}
+	
+	
+	public static String generateTeBESFileName(String fileRefId, String userId, String sourceFileName) {
+		
+		// The TeBES filename starts with fileRefId ...
+		String result = fileRefId;		
+		result = result.concat(Constants.UNDERSCORE);
+		
+		// ... it continues with UserID ...	
+		result = result.concat(Constants.USERID_PREFIX);
+		result = result.concat(Constants.MINUS);		
+		result = result.concat(userId);		
+		result = result.concat(Constants.UNDERSCORE);
+		
+		// ... it ends with sourceFileName.	
+		result = result.concat(sourceFileName);
+		
+		return result;
+	}
+	
+	
+	
 	
 	public Long getId() {
 		return id;
@@ -58,14 +82,7 @@ public class FileStore implements Serializable {
 		this.id = id;
 	}
 	
-	public String getName() {
-		return name;
-	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
 	public String getType() {
 		return type;
 	}
@@ -105,6 +122,15 @@ public class FileStore implements Serializable {
 	public void setFileRefId(String fileId) {
 		this.fileRefId = fileId;
 	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
  
 	
 }

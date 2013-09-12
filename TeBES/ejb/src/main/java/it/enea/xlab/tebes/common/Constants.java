@@ -48,7 +48,10 @@ public class Constants {
 	
 	
 
-
+	public static final String USERID_PREFIX = "UID";
+	
+	
+	
 
 	
 	// Supported Test Definition Language Types
@@ -85,6 +88,14 @@ public class Constants {
 	public static final String MANDATORY = "mandatory";
 	public static final int COUNTER_MAX = 20;
 	
+	// FILE SYSTEM
+	public static final String SLASH = "/";
+	public static final String UNDERSCORE = "_";
+	public static final String MINUS = "-";
 	
+	public static final String DOCS_DIR = "docs/";
+	public static final String REPORTS_DIR = "reports/";
+	
+	public static final String XML_EXTENSION = ".xml";
 	
 }

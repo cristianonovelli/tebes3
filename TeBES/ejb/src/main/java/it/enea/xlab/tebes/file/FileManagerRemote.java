@@ -16,4 +16,6 @@ public interface FileManagerRemote {
 
 	public List<FileStore> readFileListByType(String type);
 
+	public FileStore readFilebyIdRef(String fileIdRef);
+
 }

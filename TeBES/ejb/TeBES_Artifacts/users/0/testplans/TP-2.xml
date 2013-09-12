@@ -42,7 +42,7 @@
 				type="document" 
 				lg="xml"
 				interaction="website"
-				fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-2_0">
+				fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-2">
 			</tebes:Input>		
 		</tebes:TestAction>
 	
@@ -130,7 +130,7 @@
 				type="document" 
 				lg="xml"
 				interaction="website"
-				fileIdRef="FI-2_document-xml-website-IN-1_TA-2_TP-2_0">
+				fileIdRef="FI-2_document-xml-website-IN-1_TA-2_TP-2">
 			</tebes:Input>		
 		</tebes:TestAction>
 		
