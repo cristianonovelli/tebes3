@@ -40,15 +40,17 @@ public class TestManagerImpl implements TestManagerRemote {
 	 */
 	public TAF buildTAF(Action action) {
 		
-		TAF result = null;
+		TAF tafResult = null;
 
 		try {
 			
 			String thisPackage = this.getClass().getPackage().getName();
 			Class extendedManager = Class.forName(thisPackage.concat(".").concat(action.getTestLanguage().toUpperCase().concat(TESTMANAGER_POSTFIX)));
 			Method xMethod = extendedManager.getMethod(BUILDTAF_METHOD, Action.class);
-			result = (TAF) xMethod.invoke(extendedManager.newInstance(), action);
-						
+			tafResult = (TAF) xMethod.invoke(extendedManager.newInstance(), action);
+
+			
+			
 			// TODO Normalize predicate
 			//result.setPredicate(this.normalizeTestRule(result.getPredicate()));
 			
@@ -81,7 +83,7 @@ public class TestManagerImpl implements TestManagerRemote {
 			e.printStackTrace();
 		}
 		
-		return result;
+		return tafResult;
 	}
 	
 	
@@ -163,13 +165,13 @@ public class TestManagerImpl implements TestManagerRemote {
 		// Una volta superati i prerequisiti, eseguo il Test
 		if (okPrerequisites) {
 		
-			TestRule predicate = taf.getPredicate();
+			//TestRule predicate = taf.getPredicate();
 
 			RuleManagerImpl testRuleManager = new RuleManagerImpl();
 			
 			
 			// TODO Execution of Predicate
-			report = testRuleManager.executeTestRule(predicate, report);
+			report = testRuleManager.executeTestRule(taf, report);
 			//report.setPartialResultSuccessfully(okPredicate);
 			
 			// TODO Gestione Report

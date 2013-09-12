@@ -20,6 +20,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
+import org.xlab.file.XLabFileManager;
 
 
 @Stateless(name="UserManagerImpl")  
@@ -47,12 +48,20 @@ public class UserManagerImpl implements UserManagerRemote {
 	 */
 	public Long createUser(User user) {
 
+		Long result;
+		
 		List<User> userList = this.readUsersByEmail(user.geteMail());
 		
 		try {
 			if ( (userList == null) || (userList.size() == 0) ) {
 				eM.persist(user);
-				return user.getId();
+				
+				result = user.getId();
+				
+				if (user.getId() > 0)
+					result = this.createUserFileSystem(user.getId());
+
+				return result;
 			}
 			else {
 				return new Long(-1);
@@ -62,6 +71,40 @@ public class UserManagerImpl implements UserManagerRemote {
 			return new Long(-2);
 		}	
 	}
+	
+	
+	private Long createUserFileSystem(Long userId) {
+		
+		
+		// CREO IL SUO FILE FILESYSTEM
+		// se la directory con quello user id esiste, c'è un problema di sistema
+		// torna -4
+		// altrimenti la creo, e poi creo le cartelle docs e report
+		String absUsersDirPath = PropertiesUtil.getUsersDir();
+		String absGenericUserFilePath = absUsersDirPath.concat(userId.toString()).concat(Constants.SLASH);
+		
+		if ( !XLabFileManager.isFileOrDirectoryPresent(absGenericUserFilePath) ) {
+			
+			// CREO
+			boolean dirCreation = XLabFileManager.createDir(absGenericUserFilePath);
+			if (dirCreation) {
+				
+				XLabFileManager.createDir(absGenericUserFilePath.concat(Constants.DOCS_DIR));
+				XLabFileManager.createDir(absGenericUserFilePath.concat(Constants.REPORTS_DIR));	
+			}
+				
+			
+		}
+		else {
+			// se il file systeCancello l'utente e ritorno -4
+			
+			this.deleteUser(userId);
+			return new Long(-4);
+		}
+		
+		return userId;
+	}
+	
 	
 	/**
 	 * READ User
@@ -163,7 +206,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		// TODO  sarebbe più ottimizzato e opportuno creare procedura che nelle before legge da file properties
 		// quella stessa procedura può essere richiamata per sincronizzare DB con file di properties
 		// dopodichè si legge sempre da DB
-		return this.readUserbyEmailAndPassword(PropertiesUtil.getUser1Email(), PropertiesUtil.getUser1Password()).getId();
+		return this.readUserbyEmailAndPassword(PropertiesUtil.getSuperUserEmailProperty(), PropertiesUtil.getSuperUserPasswordProperty()).getId();
 	}
 
 	

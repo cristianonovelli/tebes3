@@ -1,8 +1,10 @@
 package it.enea.xlab.tebes.controllers.file;
 
+import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.entity.FileStore;
+import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.file.FileManagerRemote;
@@ -23,7 +25,7 @@ public class FileManagerController extends WebController<Report> {
 	public static final String CONTROLLER_NAME = "FileManagerController";
 	
 	private FileManagerRemote fileManagerService;
-	
+	private ActionManagerRemote actionManagerService;
 	
 	public FileManagerController() {
 
@@ -36,9 +38,17 @@ public class FileManagerController extends WebController<Report> {
 	}
 
 
-	public Session upload(String fileIdRef, String fileName, String type, byte[] fileContent, Session session) throws Exception {
+	public Session upload(Input input, String fileName, String type, byte[] fileContent, Session session) throws Exception {
 
-		return fileManagerService.upload(fileIdRef, fileName, type, fileContent, session);
+		Session result = fileManagerService.upload(input.getFileIdRef(), fileName, type, fileContent, session);
+		
+		// Aggiorno l'input
+		input.setFileStored(true);
+		actionManagerService.updateInput(input);
+		
+		// TODO controllo sull'updating ed esito dell'upload
+		
+		return result;
 	}
 
 

@@ -330,8 +330,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			
 			User superUser;
 			
-			String superUserEmail = PropertiesUtil.getUser1Email();
-			String superUserPassword = PropertiesUtil.getUser1Password();
+			String superUserEmail = PropertiesUtil.getSuperUserEmailProperty();
+			String superUserPassword = PropertiesUtil.getSuperUserPasswordProperty();
 			
 			if (email.equals(superUserEmail) && password.equals(superUserPassword))
 				superUser = userManager.readUserbyEmailAndPassword(superUserEmail, superUserPassword);
@@ -544,9 +544,6 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			
 			}
 			
-			inputType = "";
-			inputLanguage = "";
-			inputInteraction = "";
 			
 			
 			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, skip, description);
@@ -677,7 +674,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		String systemTestPlanAbsDirName = null;
 		
 		try {		
-			systemTestPlanAbsDirName = PropertiesUtil.getSuperUserTestPlanDir();			
+			systemTestPlanAbsDirName = PropertiesUtil.getSuperUserTestPlansDir();			
 			//System.out.println("systemTestPlanAbsDirName:" + systemTestPlanAbsDirName);
 			
 			if (XLabFileManager.isFileOrDirectoryPresent(systemTestPlanAbsDirName) ) 
@@ -749,7 +746,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			Vector<String> systemTestPlanFileList = this.getSystemTestPlanFileList();
 
 			// System Dir
-			String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlanDir();
+			String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlansDir();
 			
 			String testPlanAbsPathName;
 			TestPlan testPlan;
@@ -784,8 +781,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 	public List<TestPlan> getSystemTestPlanList() {
 		
-		String superUserEmail = PropertiesUtil.getUser1Email();
-		String superUserPassword = PropertiesUtil.getUser1Password();
+		String superUserEmail = PropertiesUtil.getSuperUserEmailProperty();
+		String superUserPassword = PropertiesUtil.getSuperUserPasswordProperty();
 
 		User superUser = userManager.readUserbyEmailAndPassword(superUserEmail, superUserPassword);
 		

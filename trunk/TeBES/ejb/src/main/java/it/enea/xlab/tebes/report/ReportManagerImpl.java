@@ -88,8 +88,12 @@ public class ReportManagerImpl implements ReportManagerRemote {
 				 
 				 eM.merge(report);
 				 
-				 if (report != null)
+				 if (report != null) {
 					 result = true;
+					 
+					 // Update File
+					 
+				 }
 			 }
 			 else
 				 result = false;
@@ -125,8 +129,10 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		
 
 		
-		// XML
-		String xmlReportPathName = this.getSystemXMLReportAbsPathName();
+		// XML di Systema da cui prendere il template
+		String xmlReportPathName = PropertiesUtil.getSuperUserReportAbsFileName(); 
+				//PropertiesUtil.getUserReportDir(session.getUser().getId()).concat(report.getName()).concat(Constants.XML_EXTENSION); 
+		System.out.println("xmlReportPathName: " + xmlReportPathName);
 		
 		ReportDOM reportDOM = null;
 
@@ -194,11 +200,6 @@ public class ReportManagerImpl implements ReportManagerRemote {
 	}
 
 	
-	
-	public String getSystemXMLReportAbsPathName() {
-		
-		return PropertiesUtil.getSuperUserReportAbsPathName();	
-	}
 	
 }
 

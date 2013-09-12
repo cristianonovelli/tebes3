@@ -4,6 +4,7 @@ import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.model.ReportFragment;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.Target;
@@ -15,6 +16,7 @@ import it.enea.xlab.tebes.test.taml.TAMLDOM;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,7 +50,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	 */
 	public TAF buildTAF(Action action) {
 
-		TAF taf = new TAF();
+		TAF taf = null;
 		
 		// Test Suite Execution
 		if (action.getTestType().equals(Constants.TS)) {
@@ -115,7 +117,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			tamlDOM = new TAMLDOM(absoluteLocation, PropertiesUtil.getTAMLXMLSchema(), true);
 
 			// Get TestAssertion Hashtable from TAML
-			taHashtable = t2j.getTestAssertionHashtable(tamlDOM);	
+			taHashtable = t2j.getTestAssertionHashtable(tamlDOM, action.getInputs());	
 			
 			Enumeration<Action> actionsEnumeration = taHashtable.elements();
 			Vector<Action> actionsVector = new Vector<Action>();
@@ -187,7 +189,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			tamlDOM = new TAMLDOM(absoluteLocation, PropertiesUtil.getTAMLXMLSchema(), true);
 
 			// Get TestAssertion Hashtable from TAML
-			taHashtable = t2j.getTestAssertionHashtable(tamlDOM);
+			taHashtable = t2j.getTestAssertionHashtable(tamlDOM, action.getInputs());
 			
 			
 			// Get testAssertion Node from TAML
@@ -223,7 +225,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 					 Vector<TestRule> testRuleList = this.andSplitTestRule(prerequisite);				
 			
 					// Get TestAssertionRef Hashtable from TAML
-					taRefHashtable = t2j.getTestAssertionRefHashtable(tamlDOM);			
+					taRefHashtable = t2j.getTestAssertionRefHashtable(tamlDOM, action.getInputs());			
 					
 					
 					// Normalize Prerequisite 
@@ -255,8 +257,10 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			predicate.setValue(predicateAction.getTestValue());
 			predicate.setLogicConnectorIsPresent(false);
 
+			String comment = "Generated from Action: ".concat(action.getActionName());
+			
 			///// Creazione della TAF ///// 			
-			taf = new TAF(action.getActionName(), target, predicate, prerequisites, action.isSkipTurnedON(), prescription, reportHashtable, null);
+			taf = new TAF(action.getActionName(), target, predicate, prerequisites, action.isSkipTurnedON(), prescription, reportHashtable, action.getInputs(), comment);
 			
 	
 		} catch (SAXException e) {

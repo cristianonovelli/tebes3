@@ -373,15 +373,11 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			// clono la action
 			// poi in ogni caso modifico la action
 			NodeList testActionListXML = reportDOM.getTestActionNodeList();
-			System.out.println("poiu testActionListXML:" + testActionListXML.getLength());
 			
 			Node actionNode = testActionListXML.item(0);
 			String globalResult = reportDOM.getGlobalResult();
-			System.out.println("poiu globalResult:" + globalResult);
 			
 			if ( !globalResult.equals(Report.getUndefinedResult()) ) {
-				
-				System.out.println("poiu clono");
 				
 				// 1. Clono actionNode
 				Node actionNodeClone = actionNode.cloneNode(true);
@@ -396,8 +392,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			else {
 				// Se GlobalResul è "empty"
 				// dovrò individuare l'unica action contenuta
-				
-				System.out.println("non clono, modifico");
+
 				
 				Element actionElement = (Element) actionNode;
 				
@@ -586,9 +581,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			
 		}
 		
-		// TODO persistere: workflow, report e aggiornare session
-		boolean updating = this.updateWorkflow(workflow);
-		
+		boolean updating = this.updateWorkflow(workflow);	
 		updating = updating && reportManager.updateReport(report);
 
 		return session;

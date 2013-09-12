@@ -1,13 +1,13 @@
 package it.enea.xlab.tebes.file;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.FileStore;
 import it.enea.xlab.tebes.entity.Session;
+
+import java.io.IOException;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -17,8 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-
-import org.xlab.file.FileUtil;
+import org.xlab.file.XLabFileManager;
 import org.xlab.utilities.XLabDates;
 
 
@@ -33,15 +32,15 @@ public class FileManagerImpl implements FileManagerRemote {
 	public Session upload(String fileRefId, String fileName, String type, byte[] fileContent, Session session) {
 		
 		if (fileContent != null)
-			System.out.println("FileStore3: upload: fileContent non null");
+			System.out.println("FileStore4: upload: fileContent non null");
 		else
-			System.out.println("FileStore3: upload: fileContent NULL");
+			System.out.println("FileStore4: upload: fileContent NULL");
 		
 		String fileString = null;
 
 		
 		fileString = new String(fileContent);
-		System.out.println("FileStore3: " + fileString);
+		System.out.println("FileStore4: " + fileString);
 		
 		if (fileString != null) {
 			if (!this.isFilePresent(fileString)) {
@@ -53,26 +52,67 @@ public class FileManagerImpl implements FileManagerRemote {
 				
 				Long id = this.createFile(uploadedFile);
 				
-				System.out.println("FileStore3: id:" + id);
-				System.out.println("FileStore3: fileRefId:" + fileRefId);
+				System.out.println("FileStore4: id:" + id);
+				System.out.println("FileStore4: fileRefId:" + fileRefId);
+				
+				
+				// SAVE FILE TO TeBES FilyStem
+				Long userId = session.getUser().getId();			
+				String absGenericUserDocFilePath = PropertiesUtil.getUserDocsAbsDir(userId);
+				
+				// Generate TeBES fileName
+				String tebesFileName = FileStore.generateTeBESFileName(fileRefId, userId.toString(), fileName);					
+				
+				try {
+					// CREATE File in the TeBES file system
+					XLabFileManager.create(absGenericUserDocFilePath, tebesFileName, fileString);
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				// ADJUST SESSION
+				
 				// TODO avoid the replication
 				// in the case the same file is already present
 				
 				// TODO Session e Report, aggiornamento
 				// la Session deve sapere che deve prendere quel file
+				// lo sa tramite gli input delle action
 			
 			}
 			else {
 				// TODO memorizzare esito e messaggio di risposta nella sessione
-				System.out.println("FileStore3: file is already present");
+				System.out.println("FileStore4: file is already present");
 			}
 		}
 		else
-			System.out.println("FileStore3: filestring = null");
+			System.out.println("FileStore4: filestring = null");
 		
 		return session;
 	}
 
+	
+	public FileStore readFilebyIdRef(String fileIdRef) {
+		
+		System.out.println("zazaza1");
+        String queryString = "SELECT f FROM FileStore AS f WHERE f.fileRefId = ?1";
+        
+        Query query = eM.createQuery(queryString);
+        query.setParameter(1, fileIdRef);
+        System.out.println("zazaza2");
+        @SuppressWarnings("unchecked")
+		List<FileStore> resultList = query.getResultList();
+        
+        System.out.println("zazaza:" + resultList.size());
+        
+        if ((resultList != null) && (resultList.size() > 0))
+        	return (FileStore) resultList.get(0);
+        else
+        	return null;
+	}
+	
 	private Long createFile(FileStore file) {
 
 		try {
@@ -143,6 +183,8 @@ public class FileManagerImpl implements FileManagerRemote {
 
         return resultList;
 	}
+
+
 
 
 	

@@ -102,8 +102,8 @@ public class SessionManagerImplITCase {
 		role4_superuser = userAdminController.readRole(id_role4_superuser);
 		
 		// Create superuser
-		String superUserEmail = PropertiesUtil.getUser1Email();
-		String superUserPassword = PropertiesUtil.getUser1Password();
+		String superUserEmail = PropertiesUtil.getSuperUserEmailProperty();
+		String superUserPassword = PropertiesUtil.getSuperUserPasswordProperty();
 		User superUser = new User("Cristiano", "Novelli", superUserEmail, superUserPassword);
 		Long superUserId = userAdminController.createUser(superUser, role4_superuser);
 		superUser = userAdminController.readUser(superUserId);
@@ -154,8 +154,8 @@ public class SessionManagerImplITCase {
 		Assert.assertTrue(idTempUser2.intValue()>0);
 		
 		// Login SuperUser
-		superUserEmail = PropertiesUtil.getUser1Email();
-		superUserPassword = PropertiesUtil.getUser1Password();
+		superUserEmail = PropertiesUtil.getSuperUserEmailProperty();
+		superUserPassword = PropertiesUtil.getSuperUserPasswordProperty();
 		superUser = userProfileController.login(superUserEmail, superUserPassword);
 		superUserId = superUser.getId();
 		superUser = userAdminController.readUser(superUserId);
@@ -357,10 +357,9 @@ public class SessionManagerImplITCase {
 			
 			 
 			
-			String absUsersDirPath = PropertiesUtil.getUsersDir();
 			
-			String absSuperUserDocFilePath = absUsersDirPath.concat("0/docs/");
-			String absGenericUserDocFilePath = absUsersDirPath.concat("1/docs/");
+			String absSuperUserDocFilePath = PropertiesUtil.getSuperUserDocsDir();
+			
 			String fileName;
 			
 			// PER ORA FACCIO
@@ -378,17 +377,20 @@ public class SessionManagerImplITCase {
 			
 			System.out.println("test FileStore1: pre for - inputList.size():" + inputList.size());
 			
+			Input inputTemp = null;
 			for (int i=0; i<inputList.size(); i++) {
 			
 				System.out.println("test FileStore1: for i: " + i);
 				
-				fileIdRef = inputList.get(i).getFileIdRef();
+				inputTemp = inputList.get(i);
+				
+				fileIdRef = inputTemp.getFileIdRef();
 				
 				System.out.println("test FileStore1: fileIdRef: " + fileIdRef);
 				
 				// è presente un file con questo file id?
-				fileIdRefPresent = fileController.isFileIdPresent(fileIdRef);
-				System.out.println("test FileStore1: fileIdRefPresent:" + fileIdRefPresent);
+				//fileIdRefPresent = fileController.isFileIdPresent(fileIdRef);
+				//System.out.println("test FileStore1: fileIdRefPresent:" + fileIdRefPresent);
 				
 				// se sì non lo inserisco, 
 				// altrimenti richiedo all'utente un file
@@ -398,7 +400,7 @@ public class SessionManagerImplITCase {
 				
 					
 				
-				if (!fileIdRefPresent) {
+				if (!inputTemp.isFileStored()) {
 				
 				
 					// 1. UPLOAD
@@ -421,21 +423,26 @@ public class SessionManagerImplITCase {
 						
 						
 						
-						fileInputStream = new FileInputStream(absGenericUserDocFilePath.concat(fileName));
+						fileInputStream = new FileInputStream(absSuperUserDocFilePath.concat(fileName));
 						fileByteArray = this.convertInputStreamToByteArray(fileInputStream);
 						
-						currentSession = fileController.upload(fileIdRef, fileName, sut.getType(), fileByteArray, currentSession);
+						
+						
+						
+						currentSession = fileController.upload(inputTemp, fileName, sut.getType(), fileByteArray, currentSession);
 						System.out.println("test FileStore1: post upload");
-
+						
+						
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} 
+					
 					Assert.assertNotNull(fileInputStream);
 
 
 					
-				} // End if (!fileIdRefPresent)
+				} // End if (!isFileStored)
 			
 			} // End for
 			
@@ -487,7 +494,7 @@ public class SessionManagerImplITCase {
 			// il report NON deve venire salvato su file
 			// se l'utente lo vuole scaricare verrà creato in una location temporanea
 			// lo salvo ora per monitorare l'output più agevolmente
-			String absUserReportsPath = absUsersDirPath.concat("1/reports/");			
+			String absUserReportsPath = PropertiesUtil.getUserReportsDir(currentUserId);		
 			String reportFileName = report.getName().concat(".xml");
 
 			

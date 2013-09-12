@@ -32,7 +32,8 @@ public class Input implements Serializable {
 	
 	
 	private String fileIdRef;
-	
+	// Set to "true" when Input is uploaded
+	private boolean isFileStored;
 	
 	
 
@@ -58,6 +59,7 @@ public class Input implements Serializable {
 		this.type = type;
 		this.interaction = interaction;
 		this.setFileIdRef(fileIdRef);
+		this.setFileStored(false);
 		this.setInteractionOK(interactionOK);
 	}
 
@@ -154,6 +156,16 @@ public class Input implements Serializable {
 
 	public void setInteractionOK(boolean isInteractionOK) {
 		this.isInteractionOK = isInteractionOK;
+	}
+
+
+	public boolean isFileStored() {
+		return isFileStored;
+	}
+
+
+	public void setFileStored(boolean isFileStored) {
+		this.isFileStored = isFileStored;
 	}
 
 
