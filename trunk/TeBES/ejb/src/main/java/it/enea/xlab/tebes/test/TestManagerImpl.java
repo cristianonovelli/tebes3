@@ -14,6 +14,7 @@ import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.Report;
+import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.TestRule;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
@@ -101,7 +102,9 @@ public class TestManagerImpl implements TestManagerRemote {
 	}*/
 
 
-	public Report executeTAF(TAF taf, Report report) {
+	public Report executeTAF(TAF taf, Session session) {
+		
+		Report report = session.getReport();
 		
 		boolean okPrerequisites = false;
 		
@@ -139,7 +142,7 @@ public class TestManagerImpl implements TestManagerRemote {
 				report.addToFullDescription("\n---> Recursive execution");
 				
 				//boolean singleResult = this.executeTAF(t, report);
-				report = this.executeTAF(t, report);
+				report = this.executeTAF(t, session);
 				
 				sumPrerequisites = sumPrerequisites && report.isPartialResultSuccessfully();
 				
@@ -171,7 +174,7 @@ public class TestManagerImpl implements TestManagerRemote {
 			
 			
 			// TODO Execution of Predicate
-			report = testRuleManager.executeTestRule(taf, report);
+			report = testRuleManager.executeTestRule(taf, session);
 			//report.setPartialResultSuccessfully(okPredicate);
 			
 			// TODO Gestione Report

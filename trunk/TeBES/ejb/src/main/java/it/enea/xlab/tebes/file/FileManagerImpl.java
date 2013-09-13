@@ -29,46 +29,48 @@ public class FileManagerImpl implements FileManagerRemote {
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM;
 
-	public Session upload(String fileRefId, String fileName, String type, byte[] fileContent, Session session) {
-		
-		if (fileContent != null)
-			System.out.println("FileStore4: upload: fileContent non null");
-		else
-			System.out.println("FileStore4: upload: fileContent NULL");
-		
-		String fileString = null;
+	
+	/**
+	 * UPLOAD single file
+	 */
+	public Session upload(String fileIdRef, String fileName, String type, byte[] fileContent, Session session) {
 
+		// Se il fileIdRef è già presente, allora il file è già stato caricato
+		// TODO deve essere ritornato nella Session un messaggio congruo
+		if ( !this.isFileIdPresent(fileIdRef) ) {
 		
-		fileString = new String(fileContent);
-		System.out.println("FileStore4: " + fileString);
-		
-		if (fileString != null) {
-			if (!this.isFilePresent(fileString)) {
+			// Se il il file content non è vuoto ...
+			if  ( (fileContent != null) && (fileContent.length > 0) ) {
 			
-			
-				String datetime = XLabDates.getCurrentUTC();
+				// Get file string
+				String fileString = new String(fileContent);
 				
-				FileStore uploadedFile = new FileStore(fileRefId, fileName, type, datetime, fileString);
+				// Get userId
+				Long userId = session.getUser().getId();	
 				
-				Long id = this.createFile(uploadedFile);
-				
-				System.out.println("FileStore4: id:" + id);
-				System.out.println("FileStore4: fileRefId:" + fileRefId);
-				
-				
-				// SAVE FILE TO TeBES FilyStem
-				Long userId = session.getUser().getId();			
-				String absGenericUserDocFilePath = PropertiesUtil.getUserDocsAbsDir(userId);
+
+				// Generate datetime
+				String datetime = XLabDates.getCurrentUTC();			
+				String datetimeForFile = datetime.replace(":", "");
+				datetimeForFile = datetimeForFile.replace("-", "");
 				
 				// Generate TeBES fileName
-				String tebesFileName = FileStore.generateTeBESFileName(fileRefId, userId.toString(), fileName);					
+				String tebesFileName = FileStore.generateTeBESFileName(fileIdRef, userId.toString(), fileName, datetimeForFile);		
 				
+				// SAVE File in FileStore
+				FileStore uploadedFile = new FileStore(fileIdRef, tebesFileName, type, datetime, fileString);
+				
+				Long id = this.createFile(uploadedFile);
+
+				// SAVE File in TeBES FilyStem					
+				String absGenericUserDocFilePath = PropertiesUtil.getUserDocsDirPath(userId);
+
 				try {
-					// CREATE File in the TeBES file system
 					XLabFileManager.create(absGenericUserDocFilePath, tebesFileName, fileString);
 					
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					
+					// TODO messaggio in Session
 					e.printStackTrace();
 				}
 				
@@ -81,31 +83,24 @@ public class FileManagerImpl implements FileManagerRemote {
 				// la Session deve sapere che deve prendere quel file
 				// lo sa tramite gli input delle action
 			
-			}
-			else {
-				// TODO memorizzare esito e messaggio di risposta nella sessione
-				System.out.println("FileStore4: file is already present");
-			}
-		}
-		else
-			System.out.println("FileStore4: filestring = null");
+			} // if (fileString != null)
+			
+		} // if ( !this.isFileIdPresent(fileRefId) ) 
 		
 		return session;
 	}
 
 	
+	
 	public FileStore readFilebyIdRef(String fileIdRef) {
 		
-		System.out.println("zazaza1");
         String queryString = "SELECT f FROM FileStore AS f WHERE f.fileRefId = ?1";
         
         Query query = eM.createQuery(queryString);
         query.setParameter(1, fileIdRef);
-        System.out.println("zazaza2");
+
         @SuppressWarnings("unchecked")
 		List<FileStore> resultList = query.getResultList();
-        
-        System.out.println("zazaza:" + resultList.size());
         
         if ((resultList != null) && (resultList.size() > 0))
         	return (FileStore) resultList.get(0);

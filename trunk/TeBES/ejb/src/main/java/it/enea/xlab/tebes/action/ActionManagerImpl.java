@@ -351,8 +351,11 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	 * @return 	true if type is equal to one of the three permitted values: "TestSuite", "TestCase", "TestAssertion"
 	 * 			false otherwise
 	 */
-	public Report runAction(Action action, Report report) {
+	public Report runAction(Action action, Session session) {
 	
+		
+		Report report = session.getReport();
+		
 		//boolean result = false;
 		report.setPartialResultSuccessfully(false);
 
@@ -446,7 +449,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 					report.addToFullDescription("\nStart execution TAF " + taf.getName());
 					
 					// EXECUTE TAF
-					report = testManager.executeTAF(taf, report);
+					report = testManager.executeTAF(taf, session);
 					//report.setPartialResultSuccessfully(tafResult);
 					
 					report.addToFullDescription("\nResult: " + report.isPartialResultSuccessfully());
@@ -546,17 +549,12 @@ public class ActionManagerImpl implements ActionManagerRemote {
 
 		
 		int actionMark = workflow.getActionMark(); 
-		
-		System.out.println("actionMark: " + actionMark);
-		
-		System.out.println("actionListSize: " + actionListSize);
-			
 
 		Action a = (Action) actionList.get(actionMark-1);
 			
 		if (a != null) {
 			
-			report = runAction(a, report);
+			report = runAction(a, session);
 			report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
 			
 			if ( report.isPartialResultSuccessfully() ) {
@@ -568,10 +566,6 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		else 
 			report.setFinalResultSuccessfully(false);
 		
-		System.out.println("actionMark2: " + actionMark);
-		
-		System.out.println("actionListSize2: " + actionListSize);		
-
 		
 		// Se questa era l'ultima azione il Report è concluso
 		// e la sessione di Test termina

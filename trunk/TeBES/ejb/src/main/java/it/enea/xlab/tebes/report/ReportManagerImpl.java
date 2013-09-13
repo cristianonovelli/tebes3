@@ -131,8 +131,6 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		
 		// XML di Systema da cui prendere il template
 		String xmlReportPathName = PropertiesUtil.getSuperUserReportAbsFileName(); 
-				//PropertiesUtil.getUserReportDir(session.getUser().getId()).concat(report.getName()).concat(Constants.XML_EXTENSION); 
-		System.out.println("xmlReportPathName: " + xmlReportPathName);
 		
 		ReportDOM reportDOM = null;
 

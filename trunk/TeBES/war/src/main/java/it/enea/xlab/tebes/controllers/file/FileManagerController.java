@@ -9,7 +9,6 @@ import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.file.FileManagerRemote;
 
-import java.io.InputStream;
 import java.rmi.NotBoundException;
 import java.util.List;
 
@@ -35,6 +34,7 @@ public class FileManagerController extends WebController<Report> {
 	public void initContext() throws NotBoundException, NamingException {
 		
 		fileManagerService = JNDIServices.getFileManagerService();
+		actionManagerService = JNDIServices.getActionManagerService();
 	}
 
 

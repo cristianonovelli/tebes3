@@ -1,6 +1,8 @@
 package it.enea.xlab.tebes.entity;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,7 +11,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  * Test Session (Sessione di Test)
@@ -26,11 +32,13 @@ public class Session implements Serializable {
 	private Long id;
 
 	// State
+	// NEW (sessione appena creata, il workflow non è ancora stato eseguito)
 	// WORKING (in elaborazione, interrogando altre strtture dati possiamo sapere a che punto siamo)
 	// WAITING (in attesa di input dall’utente, interrogando … possiamo sapere cosa dobbiamo fare)
 	// SUSPENDED (sospesa dall’utente, può essere ripresa)
 	// ABORTED (annullata, può essere riavviata ma da capo generando una nuova sessione)
 	// DONE (finito, è possibile esaminare il report finale)
+	private static final String NEW_STATE = "new";
 	private static final String WORKING_STATE = "working";
 	private static final String WAITING_STATE = "waiting";
 	private static final String SUSPENDED_STATE = "suspended";
@@ -83,7 +91,9 @@ public class Session implements Serializable {
 	private String messageStore;
 	
 	
-	
+	@OneToMany(mappedBy="session",cascade = {CascadeType.ALL})
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<UserInteraction> userInteractions;
 	
 
 	public Session() {
@@ -97,9 +107,13 @@ public class Session implements Serializable {
 		this.testPlan = testPlan;
 		this.sut = sut;
 				
-		// Set state to "working"
-		this.setState(getWorkingState());
+		setUserInteractions(new Vector<UserInteraction>());
+		
+		// Set state to "new"
+		this.setState(getNewState());
 	}
+	
+	
 	
 
 	
@@ -115,7 +129,12 @@ public class Session implements Serializable {
 		return state;
 	}
 
-
+	public static String getNewState() {
+		return NEW_STATE;
+	}
+	
+	
+	
 	public static String getWorkingState() {
 		return WORKING_STATE;
 	}
@@ -216,5 +235,17 @@ public class Session implements Serializable {
 		this.sut = sut;
 	}
 
+	public List<UserInteraction> getUserInteractions() {
+		return userInteractions;
+	}
+
+	public void setUserInteractions(List<UserInteraction> userInteractions) {
+		this.userInteractions = userInteractions;
+	}
+
+	
+	public void addUserInteraction(UserInteraction userInteraction) {
+		this.userInteractions.add(userInteraction);
+	}	
 
 }

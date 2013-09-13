@@ -28,7 +28,7 @@ public interface ActionManagerRemote {
 	public void addActionToWorkflow(Long actionId, Long workflowId);
 	
 	
-	public Report runAction(Action action, Report report);
+	public Report runAction(Action action, Session session);
 	
 	//public Report runWorkflow(ActionWorkflow workflow, Report report);
 	public Session runWorkflow(ActionWorkflow workflow, Session session);

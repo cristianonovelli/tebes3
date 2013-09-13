@@ -11,7 +11,7 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
 
 	<appender name="FILE" class="org.apache.log4j.FileAppender">
-		<param name="File" value="C:/Java/jboss-4.2.3.GA/bin/TeBES_Artifacts/log/tebes.log"/>
+		<param name="File" value="C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/log/tebes.log"/>
 		<param name="Threshold" value="DEBUG"/>
 		<param name="Append" value="true"/>
 		<layout class="org.apache.log4j.PatternLayout">

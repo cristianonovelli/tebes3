@@ -55,17 +55,10 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		try {
 			if (existingSUT == null) {
 					
-				System.out.println("--- createSUT ---");
-				System.out.println("user.getId " + user.getId());
-				System.out.println("sut.getname " + sut.getName());
-				
-				//TODO sut.addToUser(user); prendi spunto da Test Plan
-					
 				eM.persist(sut);
 				
 				Long interactionId = this.createInteraction(sut.getInteraction());
 				
-				System.out.println("sut.getId " + sut.getId());
 				Long adding = this.addInteractionToSUT(interactionId, sut.getId());
 				
 				if (adding.intValue()>0) {
@@ -122,10 +115,6 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		return eM.find(SUTInteraction.class, interactionId);
 	}
 
-/*	public Interaction readInteraction(String interactionName) {
-		return (SUTInteraction) eM.createQuery("FROM Interaction int WHERE int.type=:interactionName").
-				setParameter("interactionName", interactionName).getSingleResult();
-	}*/
 
 
 	private Long createInteraction(SUTInteraction interaction) {

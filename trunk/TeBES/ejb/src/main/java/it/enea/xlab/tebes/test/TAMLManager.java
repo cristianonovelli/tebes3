@@ -184,7 +184,6 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			// p.es. "TeBES/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml"
 			// a cui viene qui aggiunto	Properties.TeBES_HOME)
 			String absoluteLocation = TeBESDAO.url2localLocation(action.getTestLocation());					
-			//System.out.println("pre-TAMLDOM:" + absoluteLocation);
 			// Get DOM object from TAML 
 			tamlDOM = new TAMLDOM(absoluteLocation, PropertiesUtil.getTAMLXMLSchema(), true);
 
@@ -250,8 +249,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			// Adjust Predicate Test Rule
 			// TODO Si assume che il predicato sia 1 ed 1 soltanto
 			Action predicateAction = (Action) predicates.firstElement();
-			
-			System.out.println("");
+
 			
 			predicate.setLanguage(predicateAction.getTestLanguage());
 			predicate.setValue(predicateAction.getTestValue());
@@ -444,7 +442,6 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			for (int i = 0; i < temp.length; i++) {
 				
 				TestRule tr = new TestRule(prerequisite.getLanguage(), temp[i]);
-				System.out.println("SPLIT: " + temp[i]);
 				result.add(tr);
 			}
 		}
@@ -453,10 +450,6 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 		
 		return result;
 	}
-
-
-
-	
 
 
 }

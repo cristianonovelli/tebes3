@@ -27,7 +27,7 @@ public class TeBESDAO {
 			relativeLocation = urlLocation.substring(PropertiesUtil.getTeBESURL().length(), urlLocation.length());
 			
 			// Add file system local path
-			localLocation = PropertiesUtil.getArtifactsPath().concat(relativeLocation);
+			localLocation = PropertiesUtil.getArtifactsDirPath().concat(relativeLocation);
 			
 			// Verificare che il file o la directory esista
 			if( !XLabFileManager.isFileOrDirectoryPresent(localLocation) ) 
