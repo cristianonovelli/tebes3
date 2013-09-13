@@ -346,6 +346,9 @@ public class SessionManagerImplITCase {
 		boolean running = true;
 		List<Input> inputList;
 		String fileIdRef;
+		
+		List<FileStore> documentList = new Vector<FileStore>();
+		
 		boolean fileIdRefPresent;
 		System.out.println("test FileStore1: pre while");
 		while (running) {
@@ -358,7 +361,7 @@ public class SessionManagerImplITCase {
 			 
 			
 			
-			String absSuperUserDocFilePath = PropertiesUtil.getSuperUserDocsDir();
+			String absSuperUserDocFilePath = PropertiesUtil.getSuperUserDocsDirPath();
 			
 			String fileName;
 			
@@ -446,10 +449,8 @@ public class SessionManagerImplITCase {
 			
 			} // End for
 			
-			// TODO manca il filtro per utente, per ora così agisco su i file di TUTTI
-			// TODO connettere quindi sessione - filestore
-			List<FileStore> documentList = fileController.getFileListByType(sut.getType());
-			
+
+
 			//Assert.assertTrue(documentList.size()>0);
 			
 			
@@ -494,7 +495,7 @@ public class SessionManagerImplITCase {
 			// il report NON deve venire salvato su file
 			// se l'utente lo vuole scaricare verrà creato in una location temporanea
 			// lo salvo ora per monitorare l'output più agevolmente
-			String absUserReportsPath = PropertiesUtil.getUserReportsDir(currentUserId);		
+			String absUserReportsPath = PropertiesUtil.getUserReportsDirPath(currentUserId);		
 			String reportFileName = report.getName().concat(".xml");
 
 			
@@ -573,8 +574,11 @@ public class SessionManagerImplITCase {
 		//boolean updating = reportManager.updateReport(report);
 			
 			
-
-
+		// TODO manca il filtro per utente, per ora così agisco su i file di TUTTI
+		// TODO connettere quindi sessione - filestore
+		documentList = fileController.getFileListByType(sut.getType());
+		logger.info("Documenti caricati: " + documentList.size());
+		
 
 		
 		// TODO CICLO PER ATTENDERE RICHIESTA DI INTERAZIONE O FINE DEL WORKFLOW 

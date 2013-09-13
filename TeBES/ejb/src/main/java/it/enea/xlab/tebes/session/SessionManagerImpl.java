@@ -147,8 +147,6 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	
 	private boolean matchTestPlanSUT(TestPlan testPlan, SUT sut) {
 		
-		System.out.println("START matchTestPlanSUT");
-		
 		boolean match = true;
 		
 		// The match is "true" if for each input of each action of test plan there is a sut with same:
@@ -169,11 +167,6 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			
 				input = inputList.get(j);
 				
-				/*System.out.println("matchTestPlanSUT - input.getType(): " + input.getType());
-				System.out.println("matchTestPlanSUT - sut.getType(): " + sut.getType());
-				System.out.println("matchTestPlanSUT - input.getInteraction(): " + input.getInteraction());
-				System.out.println("matchTestPlanSUT - sut.getInteraction().getType(): " + sut.getInteraction().getType());*/
-				
 				if ( 	( !input.getType().equals(sut.getType() ) ) ||
 						( !input.getInteraction().equals(sut.getInteraction().getType() ) )  ) {
 							
@@ -183,14 +176,12 @@ public class SessionManagerImpl implements SessionManagerRemote {
 					input.setInteractionOK(true);
 					boolean updating = actionManager.updateInput(input);
 					if (!updating) {
-						System.out.println("INPUT UPDATING ERROR!");
+						System.out.println("matchTestPlanSUT: INPUT UPDATING ERROR!");
 						match = false;
 					}
 				}
 			}
 		}
-		
-		System.out.println("END matchTestPlanSUT");
 		
 		return match;
 	}
@@ -204,15 +195,9 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	 */
 	private Long createSession(Session session) {
 
-		// una sessione con questi 3 parametri è possibile
-		//Session existingSession = this.readSessionByUserTestPlanAndSUT(session.getUserId(), session.getTestPlanId(), session.getSutId());
-		
-		//if (existingSession == null) {
 			eM.persist(session);		
+			
 			return session.getId();
-		//}
-		//else 
-		//	return new Long(-1);
 	}
 	
 	
@@ -224,28 +209,6 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		return eM.find(Session.class, id);
 	}	
 		
-	
-	/**
-	 * READ Session by userId, testplanId and sutId
-	 * @return 	session if present
-	 * 			null otherwise
-	 */	
-	private Session readSessionByUserTestPlanAndSUT(Long userId, Long testPlanId, Long sutId) {
-
-        String queryString = "SELECT s FROM Session AS s WHERE s.userId = ?1 AND s.testPlanId = ?2 AND s.sutId = ?3";
-        
-        Query query = eM.createQuery(queryString);
-        query.setParameter(1, userId);
-        query.setParameter(2, testPlanId);
-        query.setParameter(3, sutId);
-        
-        @SuppressWarnings("unchecked")
-		List<Session> resultList = query.getResultList();
-        if ((resultList != null) && (resultList.size() > 0))
-        	return (Session) resultList.get(0);
-        else
-        	return null;
-	}
 		
 	
 	/**

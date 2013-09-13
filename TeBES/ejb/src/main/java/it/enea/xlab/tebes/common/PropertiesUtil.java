@@ -18,6 +18,7 @@ public class PropertiesUtil {
 	private static Logger logger = Logger.getLogger(PropertiesUtil.class.getName());
 
 	
+	
 	/**
 	 * Get CONFIGURATION
 	 */	
@@ -33,36 +34,22 @@ public class PropertiesUtil {
 	}
 	
 	
-	/**
-	 * Get XML Artifacts Path
-	 * URL of TeBES platform root. The URL has to end with the root directory "TeBES/"
-	 */
-	public static String getArtifactsPath() {
-		
-		String artifactsPath = getConfiguration().getString("artifacts.path");
-		
-		artifactsPath = checkFinalSlash(artifactsPath);
 
-		return artifactsPath;
-	}
-	
-	
-	/**
-	 * Get TeBES home final URL
-	 */
-	public static String getTeBESURL() {
-		
-		String tebesURL = getConfiguration().getString("tebes.url");
-		
-		tebesURL = checkFinalSlash(tebesURL);
-
-		return tebesURL;
-	}
 	
 	
 	/**
 	 * Get PROPERTIES
 	 */	
+	public static String getArtifactsDirProperty() {
+
+		return getConfiguration().getString("artifacts.dir");
+	}
+
+	public static String getArtifactsLocationProperty() {
+
+		return getConfiguration().getString("artifacts.location");
+	}
+	
 	public static String getSuperUserEmailProperty() {
 
 		return getConfiguration().getString("superuser.email");
@@ -83,7 +70,7 @@ public class PropertiesUtil {
 		return getConfiguration().getString("superuser.report");
 	}
 	
-	public static String getUserDirProperty() {
+	public static String getUsersDirProperty() {
 		
 		return getConfiguration().getString("users.dir");
 	}
@@ -104,56 +91,86 @@ public class PropertiesUtil {
 	}
 	
 	
+	
+	/**
+	 * Get TeBES home final URL
+	 */
+	public static String getTeBESURL() {
 		
+		String tebesURL = getConfiguration().getString("tebes.url");	
+		tebesURL = checkFinalSlash(tebesURL);
+
+		return tebesURL;
+	}
+	
+	
+	
+	/**
+	 * Get XML Artifacts Path
+	 * URL of TeBES platform root. The URL has to end with the root directory "TeBES/"
+	 */
+	public static String getArtifactsDirPath() {
+		
+		String artifactsPath = getArtifactsLocationProperty();	
+		artifactsPath = checkFinalSlash(artifactsPath);
+		
+		artifactsPath = artifactsPath.concat(getArtifactsDirProperty());
+		artifactsPath = checkFinalSlash(artifactsPath);
+		
+		return artifactsPath;
+	}
+		
+	
+	
 	/**
 	 * Get SUPERUSER Dirs
 	 */	
-	public static String getSuperUserDir() {
+	public static String getSuperUserDirPath() {
 		
 		String result;
 		
 		String superuserId = getSuperUserIdProperty();
 		
-		result = PropertiesUtil.getUsersDir().concat(superuserId);
+		result = PropertiesUtil.getUsersDirPath().concat(superuserId);
 		
 		result = checkFinalSlash(result);
 		
 		return result;
 	}	
 	
-	public static String getSuperUserTestPlansDir() {
+	public static String getSuperUserTestPlansDirPath() {
 		
 		String result;
 		
 		String testPlansDir = getTestPlansDirProperty();
 		
-		result = PropertiesUtil.getSuperUserDir().concat(testPlansDir);
+		result = PropertiesUtil.getSuperUserDirPath().concat(testPlansDir);
 		
 		result = checkFinalSlash(result);
 		
 		return result;
 	}	
 	
-	public static String getSuperUserDocsDir() {
+	public static String getSuperUserDocsDirPath() {
 		
 		String result;
 		
 		String docsDir = getDocsDirProperty();
 		
-		result = PropertiesUtil.getSuperUserDir().concat(docsDir);
+		result = PropertiesUtil.getSuperUserDirPath().concat(docsDir);
 		
 		result = checkFinalSlash(result);
 		
 		return result;
 	}	
 
-	public static String getSuperUserReportsDir() {
+	public static String getSuperUserReportsDirPath() {
 		
 		String result;
 		
 		String reportsDir = getReportsDirProperty();
 		
-		result = PropertiesUtil.getSuperUserDir().concat(reportsDir);
+		result = PropertiesUtil.getSuperUserDirPath().concat(reportsDir);
 		
 		result = checkFinalSlash(result);
 		
@@ -166,7 +183,7 @@ public class PropertiesUtil {
 		
 		String reportFileName = getSuperUserReportProperty();
 		
-		result = PropertiesUtil.getSuperUserReportsDir().concat(reportFileName);
+		result = PropertiesUtil.getSuperUserReportsDirPath().concat(reportFileName);
 		
 		return result;
 	}
@@ -176,13 +193,13 @@ public class PropertiesUtil {
 	/**
 	 * Get USERS Dir
 	 */	
-	public static String getUsersDir() {
+	public static String getUsersDirPath() {
 
 		String result;
 		
-		String usersDirProperty = getUserDirProperty();
+		String usersDirProperty = getUsersDirProperty();
 		
-		result = PropertiesUtil.getArtifactsPath().concat(usersDirProperty);
+		result = PropertiesUtil.getArtifactsDirPath().concat(usersDirProperty);
 		
 		result = checkFinalSlash(result);
 		
@@ -193,17 +210,17 @@ public class PropertiesUtil {
 	/**
 	 * Get USER Dirs
 	 */	
-	public static String getUserDir(String userDir) {
+	public static String getUserDirPath(Long userId) {
 		
-		String result = getUsersDir().concat(userDir);	
+		String result = getUsersDirPath().concat(userId.toString());	
 		result = checkFinalSlash(result);
 		
 		return result;
 	}
 	
-	public static String getUserDocsAbsDir(Long id) {
+	public static String getUserDocsDirPath(Long id) {
 		
-		String result = getUserDir(id.toString());
+		String result = getUserDirPath(id);
 		
 		String docsDir = getDocsDirProperty();
 		result = result.concat(docsDir);
@@ -211,10 +228,29 @@ public class PropertiesUtil {
 		
 		return result;
 	}
+
+	// Path Relativo (necessario in alcuni validatori)
+	public static String getUserDocsRelPath(Long id) {
 		
-	public static String getUserReportsDir(Long id) {
+		//String result = getUserDir(id);
+		String result = getArtifactsDirProperty();
+		result = checkFinalSlash(result);
 		
-		String result = getUserDir(id.toString());
+		result = result.concat(getUsersDirProperty());
+		result = checkFinalSlash(result);
+		
+		result = result.concat(id.toString());
+		result = checkFinalSlash(result);		
+
+		result = result.concat(getDocsDirProperty());
+		result = checkFinalSlash(result);	
+		
+		return result;
+	}
+	
+	public static String getUserReportsDirPath(Long id) {
+		
+		String result = getUserDirPath(id);
 		
 		String reportsDir = getReportsDirProperty();
 		result = result.concat(reportsDir);
@@ -230,7 +266,7 @@ public class PropertiesUtil {
 	 */
 	public static String getTAMLXMLSchema() {
 		
-		String artifactsRootPath = PropertiesUtil.getArtifactsPath();
+		String artifactsRootPath = PropertiesUtil.getArtifactsDirPath();
 		String xmlschemaDir = getConfiguration().getString("xmlschemas.dir");
 		String tamlDir = getConfiguration().getString("taml.dir");
 		String tamlXMLSchema = getConfiguration().getString("taml.xmlschema");
@@ -268,34 +304,6 @@ public class PropertiesUtil {
 			return path;
 	}
 	
-	
-	
-	/*public static String getSuperUserReport1AbsPathName() {
-	
-	
-	String result = PropertiesUtil.getSuperUserReportsDir();	
-	
-	String reportFileName = getConfiguration().getString("superuser.report1");
-	
-	result = result.concat(reportFileName);
-	
-	return result;
-}*/
-	/*	public static String getSuperUserTestPlan1AbsPathName() {
-	
-	String absTestPlanDir = PropertiesUtil.getSuperUserTestPlansDir();	
-	String testPlan1FileName = getConfiguration().getString("superuser.testplan1");
-	
-	String result = absTestPlanDir.concat(testPlan1FileName);
-	
-	return result;
-}	
-
-
-public static Long getSuperUserTestPlan1Id() {
-	
-	return  getConfiguration().getLong("superuser.testplan1id");
-}	*/
 
 }
 

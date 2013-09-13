@@ -99,13 +99,6 @@ public class UserProfileController {
 		userManagerBean.addSUTToUser(sutId, userId);
 	}
 
-
-/*	public Boolean deleteTestPlan(Long userId, Long testPlanId) {
-		
-		return userManagerBean.deleteTestPlan(userId, testPlanId);
-	}*/
-
-
 	
 
 }

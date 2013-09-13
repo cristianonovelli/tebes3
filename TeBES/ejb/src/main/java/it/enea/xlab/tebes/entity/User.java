@@ -61,7 +61,6 @@ public class User implements Serializable {
 	
 	
 	
-	
 	/**
 	 * Lista dei TEST PLANS dello User 
 	 * Ogni User ha zero o più TestPlans => OneToMany

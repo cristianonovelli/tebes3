@@ -18,13 +18,9 @@ import java.io.InputStream;
 import java.rmi.NotBoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.faces.component.html.HtmlForm;
-import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 
@@ -34,6 +30,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 public class SessionManagerController extends WebController<Session> {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String CONTROLLER_NAME = "SessionManagerController";
 	
@@ -313,7 +311,7 @@ public class SessionManagerController extends WebController<Session> {
 
 	public boolean getIsRunning() {
 		if(this.viewCurrentSession != null) {
-			if(this.viewCurrentSession.getState().equals("working"))
+			if(this.viewCurrentSession.getState().equals(Session.getWorkingState()))
 				this.isRunning = true;
 			else
 				this.isRunning = false;

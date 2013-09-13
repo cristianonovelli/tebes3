@@ -128,15 +128,11 @@ public class JNDIServices {
 		
 		if (validationManager == null) {
 
-			System.out.println("ctx1");	
-				System.out.println("ctx2");
 				try {
 					validationManager = (ValidationManagerRemote) getInitialContext().lookup(ValidationManagerServiceName);
 				} catch (Exception e) {
-					System.out.println("ctx4");
 					e.printStackTrace();
 				}
-				System.out.println("ctx3");
 		}		
 		
 		return validationManager;

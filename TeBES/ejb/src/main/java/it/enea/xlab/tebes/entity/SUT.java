@@ -139,6 +139,16 @@ public class SUT implements Serializable {
 		return new String[]{SUTConstants.SUT_TYPE1_DOCUMENT, SUTConstants.SUT_TYPE2_TRANSPORT, SUTConstants.SUT_TYPE3_PROCESS};
 	}
 
+
+	public List<Session> getSessions() {
+		return sessions;
+	}
+
+
+	public void setSessions(List<Session> sessions) {
+		this.sessions = sessions;
+	}
+
 }
 
 

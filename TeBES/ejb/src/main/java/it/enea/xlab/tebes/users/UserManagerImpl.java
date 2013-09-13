@@ -80,7 +80,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		// se la directory con quello user id esiste, c'è un problema di sistema
 		// torna -4
 		// altrimenti la creo, e poi creo le cartelle docs e report
-		String absUsersDirPath = PropertiesUtil.getUsersDir();
+		String absUsersDirPath = PropertiesUtil.getUsersDirPath();
 		String absGenericUserFilePath = absUsersDirPath.concat(userId.toString()).concat(Constants.SLASH);
 		
 		if ( !XLabFileManager.isFileOrDirectoryPresent(absGenericUserFilePath) ) {

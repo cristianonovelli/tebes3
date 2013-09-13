@@ -3,9 +3,11 @@ package it.enea.xlab.tebes.test.rule;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.FileStore;
 import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
+import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.file.FileManagerRemote;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.TestRule;
@@ -31,72 +33,108 @@ public class RuleManagerImpl implements RuleManagerRemote {
 	@EJB
 	private FileManagerRemote fileManager; 
 	
-	public Report executeTestRule(TAF taf, Report report) { 
+	
+	
+	/**
+	 * Execute Test Rule
+	 */
+	public Report executeTestRule(TAF taf, Session session) { 
 		
+		System.out.println("executeTestRule: START");
+		
+		Report report = session.getReport();
 		
 		TestRule testRule = taf.getPredicate();
 
 		
-		
-		String xmlString = "TeBES_Artifacts/users/1/docs/ubl-invoice.xml";
-		
 		report.addToFullDescription("\n- Prerequisite OK... EXE Predicate");
 		report.addToFullDescription("\n- Language: " + testRule.getLanguage());
 		report.addToFullDescription("\n- Value: " + testRule.getValue());
-		
-		
-		
-		
-		if (testRule.getLanguage().equals(Constants.XPATH)) {
-			
-			
-			report.addToFullDescription("\nTESTRULE: " + testRule.getValue());
-			
-			
-			
-			// TODO cosa succede in xpath???
-			// per ora il file su cui dovrebbe agire è xmlString
-			// se l'oggetto dell'espressione XPath è una validazione XML Schema
-			// recupero l'XSD
-			 
-			
-			report.setPartialResultSuccessfully(xPathValidation(xmlString, testRule.getValue()));
-			
-		}
-			
-			
-		if (testRule.getLanguage().equals(Constants.SCHEMATRON)) {
-			report.setPartialResultSuccessfully(schematronValidation(xmlString, testRule.getValue()));
-		}
-		
-		// XML Schema validation
-		if (testRule.getLanguage().equals(Constants.XMLSCHEMA)) { 
-			
-			try {
-				fileManager = JNDIServices.getFileManagerService();
-			} catch (NamingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}		
-			
 
+		System.out.println("executeTestRule: taf.getName(): " + taf.getName());
+		System.out.println("executeTestRule: taf.getInputs().size(): " + taf.getInputs().size());
+		System.out.println("executeTestRule: testRule.getLanguage(): " + testRule.getLanguage());
+		System.out.println("executeTestRule: testRule.getValue(): " + testRule.getValue());
+		
+		
+		try {
+			fileManager = JNDIServices.getFileManagerService();
 			
-			//  XML Schema validation implies one input file
+			
+			// File 1
 			Input input = taf.getInputs().get(0);
 			
 			FileStore file = fileManager.readFilebyIdRef(input.getFileIdRef());
-					
-			//String fileRelPath = file.getFileName();
-			String fileRelPath = xmlString;
-			fileRelPath ="TeBES_Artifacts/users/2/docs/".concat(file.getFileName());
+			System.out.println("executeTestRule: file: " + file.getFileRefId());
+			System.out.println("executeTestRule: file: " + file.getFileName());
+			System.out.println("executeTestRule: file: " + file.getType());
+			
+			String userDocsAbsDir = PropertiesUtil.getUserDocsDirPath(session.getUser().getId());
+	
+			String xmlString = userDocsAbsDir.concat(file.getFileName());
 			//String xmlString = "TeBES_Artifacts/users/1/docs/ubl-invoice.xml";
-			report.setPartialResultSuccessfully(xmlSchemaValidation( fileRelPath, testRule.getValue() ));
-		}
-
+			System.out.println("executeTestRule: file: " + xmlString);
+			
+			
+			
+			if (testRule.getLanguage().equals(Constants.XPATH)) {
+				
+				
+				report.addToFullDescription("\nTESTRULE: " + testRule.getValue());
+	
+				System.out.println("executeTestRule: pre-validation XPATH");	 
+				boolean xpathValidation = xPathValidation(xmlString, testRule.getValue());
+				report.setPartialResultSuccessfully(xpathValidation);
+				System.out.println("executeTestRule: post-validation XPATH");
+			}
+				
+				
+			
+			
+			if (testRule.getLanguage().equals(Constants.SCHEMATRON)) {
+				System.out.println("executeTestRule: pre-validation SCHEMATRON");
+				report.setPartialResultSuccessfully(schematronValidation(xmlString, testRule.getValue()));
+				System.out.println("executeTestRule: post-validation SCHEMATRON");
+			}
+			
+			
+			
+			// XML Schema validation
+			if (testRule.getLanguage().equals(Constants.XMLSCHEMA)) { 
+				
+				System.out.println("executeTestRule: pre-validation XMLSCHEMA");
+	
+				
+	
+						
+				//String fileRelPath = file.getFileName();
+				//String fileRelPath = xmlString;
+				
+				String fileRelPath = userDocsAbsDir.concat(file.getFileName());
+				
+				System.out.println("executeTestRule: xml: " + fileRelPath);
+				System.out.println("executeTestRule: xsd: " + testRule.getValue());
+				
+				report.setPartialResultSuccessfully(xmlSchemaValidation( fileRelPath, testRule.getValue() ));
+				
+				System.out.println("executeTestRule: post-validation XMLSCHEMA");
+			}
+	
+			
+			report.addToFullDescription("\nTODO: Schematron or XPath Execution");
+			
+			System.out.println("executeTestRule: END");
+			
+		} catch (NamingException e) {
+			
+			System.out.println("executeTestRule: NamingException");
+			
+			// TODO Adjust Report
+			e.printStackTrace();
+		}		
 		
-		report.addToFullDescription("\nTODO: Schematron or XPath Execution");
 		
-		//return result;
+		
 		return report;
 	}
 	
@@ -105,7 +143,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 
 	
 	public boolean schematronValidation(String xmlString, String xmlSchematron) {
-		// TODO Auto-generated method stub
+
 		return true;
 	}
 
@@ -123,8 +161,8 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		System.out.println("xmlSchemaValidation B:" + xsdString);
 		
 
-		String xmlRelPathFileName = "TeBES_Artifacts/users/0/docs/ubl-invoice.xml";
-		String xsdURL = "http://winter.bologna.enea.it/peppol_schema_rep/xsd/maindoc/UBL-Invoice-2.0.xsd";
+		//String xmlRelPathFileName = "TeBES_Artifacts/users/0/docs/ubl-invoice.xml";
+		//String xsdURL = "http://winter.bologna.enea.it/peppol_schema_rep/xsd/maindoc/UBL-Invoice-2.0.xsd";
 		
 		ErrorMessage emList[] = null;
 
@@ -136,10 +174,10 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		}
 		
 		try {
-			emList = validationManager.validation(xmlRelPathFileName, xsdURL);
+			emList = validationManager.validation(xmlString, xsdString);
 			
 			int i=0;
-			System.out.println("PRE While");
+
 			while (i<emList.length){
 				
 				System.out.println("RIGA " + i + ": " + emList[i].getErrorType());
@@ -154,13 +192,6 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			e.printStackTrace();
 			
 		}
-		
-		
-		
-
-		System.out.println("POST While");
-		
-		
 		
 		return true;
 	}

@@ -249,11 +249,7 @@ public class TAML2Java {
 
 			try {
 				namespacesNodeList = tamlDOM.getCommonNamespacesNodeList();
-				
-				if ( namespacesNodeList.getLength() > 0 )
-					System.out.println("qwqw5");
-				
-				
+
 				for (int i = 0; i < namespacesNodeList.getLength(); i++) {
 							
 							Node nsNode = namespacesNodeList.item(i);
@@ -265,9 +261,6 @@ public class TAML2Java {
 							String value = tamlDOM.getNodeAttribute(nsNode, "xmlns:".concat(label));
 							
 								if ((value != null) && !value.equals("")) {
-							
-									System.out.println("label:" + label);
-									System.out.println("value:" + value);
 									
 									// Insert into the Hashtable
 									commonNamespacesTable.put(label, value);

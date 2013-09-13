@@ -52,7 +52,7 @@
 				type="document" 
 				lg="xml"
 				interaction="website"
-				fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-1">
+				fileIdRef="FI-2_document-xml-website-IN-2_TA-1_TP-1">
 			</tebes:Input>
 		</tebes:TestAction>
 	

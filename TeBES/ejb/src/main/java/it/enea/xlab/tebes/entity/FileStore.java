@@ -38,6 +38,8 @@ public class FileStore implements Serializable {
 	private String lastUpdateDatetime;
 
 	
+	
+	
 	public FileStore() {
 
 	}
@@ -53,10 +55,14 @@ public class FileStore implements Serializable {
 	}
 	
 	
-	public static String generateTeBESFileName(String fileRefId, String userId, String sourceFileName) {
+	public static String generateTeBESFileName(String fileRefId, String userId, String sourceFileName, String datetime) {
+
+		// The TeBES filename starts with datetime ...
+		String result = datetime;		
+		result = result.concat(Constants.UNDERSCORE);
 		
 		// The TeBES filename starts with fileRefId ...
-		String result = fileRefId;		
+		result = result.concat(fileRefId);		
 		result = result.concat(Constants.UNDERSCORE);
 		
 		// ... it continues with UserID ...	
