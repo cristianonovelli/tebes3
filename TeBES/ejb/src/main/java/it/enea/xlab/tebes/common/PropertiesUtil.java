@@ -50,6 +50,16 @@ public class PropertiesUtil {
 		return getConfiguration().getString("artifacts.location");
 	}
 	
+	public static String getSuperUserNameProperty() {
+
+		return getConfiguration().getString("superuser.name");
+	}	
+	
+	public static String getSuperUserSurnameProperty() {
+
+		return getConfiguration().getString("superuser.surname");
+	}	
+	
 	public static String getSuperUserEmailProperty() {
 
 		return getConfiguration().getString("superuser.email");

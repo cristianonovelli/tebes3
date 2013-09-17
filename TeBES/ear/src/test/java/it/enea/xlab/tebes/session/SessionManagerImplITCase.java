@@ -58,6 +58,16 @@ public class SessionManagerImplITCase {
 	@BeforeClass
 	public static void before_testPlanManager() throws Exception {
 		
+		logger.info("*******************************************");
+		logger.info("*** TEST SessionManagerImplITCase START ***");
+		logger.info("*******************************************");
+		logger.info("");
+		
+
+		
+		logger.info("************ TEST @BeforeClass ************");				
+		logger.info("1) CONTROLLERS creating...");
+		
 		sessionController = (SessionManagerController) WebControllersUtilities.getManager(SessionManagerController.CONTROLLER_NAME);
 		Assert.assertNotNull(sessionController);
 		
@@ -74,13 +84,16 @@ public class SessionManagerImplITCase {
 		Assert.assertNotNull(sutController);
 
 		fileController = (FileManagerController) WebControllersUtilities.getManager(FileManagerController.CONTROLLER_NAME);
-		Assert.assertNotNull(fileController);
+		Assert.assertNotNull(fileController);		
+		logger.info("OK! CONTROLLERS created!");
+
 		
 		
+		// Prepare Roles 		
+		logger.info("2) ROLES creating...");
 		List<Long> roleIdList = userAdminController.getRoleIdList();
-		Assert.assertTrue(roleIdList.size() == 0);
-		
-		// Prepare 4 user Roles 
+		Assert.assertTrue(roleIdList.size() == 0);		
+
 		role1_standard = new Role(Constants.STANDARD_ROLE_NAME, Constants.STANDARD_ROLE_DESCRIPTION, Constants.STANDARD_ROLE_LEVEL);
 		role2_advanced = new Role(Constants.ADVANCED_ROLE_NAME, Constants.ADVANCED_ROLE_DESCRIPTION, Constants.ADVANCED_ROLE_LEVEL);
 		role3_admin = new Role(Constants.ADMIN_ROLE_NAME, Constants.ADMIN_ROLE_DESCRIPTION, Constants.ADMIN_ROLE_LEVEL);
@@ -95,27 +108,39 @@ public class SessionManagerImplITCase {
 		// Get Role List
 		roleIdList = userAdminController.getRoleIdList();
 		Assert.assertTrue(roleIdList.size() == 4);
-		
+			
 		role1_standard = userAdminController.readRole(id_role1_standard);
 		role2_advanced = userAdminController.readRole(id_role2_advanced);
 		role3_admin = userAdminController.readRole(id_role3_admin);
 		role4_superuser = userAdminController.readRole(id_role4_superuser);
+		logger.info("ROLES: " 
+				+ role1_standard.getName() + ", " 
+				+ role2_advanced.getName() + ", " 
+				+ role3_admin.getName() + ", " 
+				+ role4_superuser.getName() + " created!");
+
 		
 		// Create superuser
+		logger.info("3) SUPERUSER creating...");
+		String superUserName = PropertiesUtil.getSuperUserNameProperty();
+		String superUserSurname = PropertiesUtil.getSuperUserSurnameProperty();
 		String superUserEmail = PropertiesUtil.getSuperUserEmailProperty();
 		String superUserPassword = PropertiesUtil.getSuperUserPasswordProperty();
-		User superUser = new User("Cristiano", "Novelli", superUserEmail, superUserPassword);
+		User superUser = new User(superUserName, superUserSurname, superUserEmail, superUserPassword);
 		Long superUserId = userAdminController.createUser(superUser, role4_superuser);
 		superUser = userAdminController.readUser(superUserId);
-		Assert.assertTrue(superUserId.intValue()>0);	
+		Assert.assertTrue(superUserId.intValue()>0);			
+		logger.info("OK! SUPERUSER created for " + superUserName + " " + superUserSurname + " !");
+		
+		
 		
 		// Create superuser SUTs (SUTs supported by TeBES)
+		logger.info("4) SUT creating...");
 		SUTInteraction interactionWebSite = new SUTInteraction(SUTConstants.INTERACTION_WEBSITE);
 		SUTInteraction interactionEmail = new SUTInteraction(SUTConstants.INTERACTION_EMAIL);
 		SUTInteraction interactionWSClient = new SUTInteraction(SUTConstants.INTERACTION_WS_CLIENT);
 		SUTInteraction interactionWSServer = new SUTInteraction(SUTConstants.INTERACTION_WS_SERVER);
-		
-		
+			
 		Vector<SUT> sutList = new Vector<SUT>();
 		
 		// SUT supportati per il tipo "document"
@@ -136,14 +161,23 @@ public class SessionManagerImplITCase {
 		sutList.add( new SUT("SystemSUT11", SUTConstants.SUT_TYPE3_PROCESS, interactionWSServer, "System SUT 11: Process - Web Service Server") );
 						
 		Long sutId;
+		//String sutString = "";
+		//SUT sutTemp;
 		for (int i=0; i<sutList.size();i++) {
 		
 			sutId = sutController.createSUT(sutList.elementAt(i), superUser);
 			Assert.assertNotNull(sutId);	
-			Assert.assertTrue(sutId.intValue()>0);			
+			Assert.assertTrue(sutId.intValue()>0);	
+			
+			//sutTemp = sutController.readSUT(sutId);
+			//sutString.concat(sutTemp.getName() + ", ");
 		}
+		logger.info("OK! SUT: " + sutList.size() + " created!");
 		
-		// Create 2 temporary Users
+		
+		
+		// Create two generic Users
+		logger.info("5) Two STANDARD USERS creating...");
 		User currentUser = new User(Constants.USER1_NAME, Constants.USER1_SURNAME, Constants.USER1_EMAIL, Constants.USER1_PASSWORD);	
 		Long idTempUser1 = userProfileController.registration(currentUser, role1_standard);
 		Assert.assertNotNull(currentUser);
@@ -152,18 +186,34 @@ public class SessionManagerImplITCase {
 		Long idTempUser2 = userProfileController.registration(otherUser, role1_standard);
 		Assert.assertNotNull(currentUser);
 		Assert.assertTrue(idTempUser2.intValue()>0);
+		logger.info("OK! Two STANDARD USERS for " + currentUser.getName() + " and " + otherUser.getName() + " created!");
+		
+		
 		
 		// Login SuperUser
+		logger.info("6) SUPERUSER LOGIN");
 		superUserEmail = PropertiesUtil.getSuperUserEmailProperty();
 		superUserPassword = PropertiesUtil.getSuperUserPasswordProperty();
 		superUser = userProfileController.login(superUserEmail, superUserPassword);
 		superUserId = superUser.getId();
 		superUser = userAdminController.readUser(superUserId);
+		logger.info("OK! SUPERUSER SIGNED!");
+		
 		
 		// Importazione dei Test Plan XML per lo SuperUser (gli utenti li importeranno poi da lui)
 		// N.B. questa operazione viene fatta in fase di setup del sistema
+		logger.info("7) IMPORTING system Test Plans");
 		boolean importing = testPlanController.importSystemTestPlanFile(superUser);
 		Assert.assertTrue(importing);
+		
+		TestPlan testPlan = testPlanController.getSystemTestPlanList().get(0);
+		Assert.assertNotNull(testPlan.getWorkflow());
+		Assert.assertNotNull(testPlan.getWorkflow().getActions());
+		Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));
+		logger.info("OK! IMPORTING system Test Plans");
+		
+		logger.info("*******************************************");
+		logger.info("");
 	}
 	
 
@@ -174,22 +224,27 @@ public class SessionManagerImplITCase {
 	public void test_session() {
 
 		
+		logger.info("**************** TEST @Test ****************");			
+		logger.info("********** Part 1: Configuration ***********");	
+		
 		// USER 
+		logger.info("1) LOGIN USER");
 		User currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
 		Long currentUserId = currentUser.getId();
 		Assert.assertTrue(currentUser != null);
 		Assert.assertTrue(currentUser.getId().intValue() > 0);
-		logger.info("Login of user " + currentUser.getName() + " " + currentUser.getSurname() + " with id: " + currentUserId);
+		logger.info("OK! Login of user " + currentUser.getName() + " " + currentUser.getSurname() + " with id: " + currentUserId);
 		
 		
 		// TESTPLAN
-		
 		// Lista dei TestPlan disponibili nel sistema	
+		logger.info("2) GET system TEST PLANS");
 		List<TestPlan> systemTestPlanList = testPlanController.getSystemTestPlanList();
 		Assert.assertTrue(systemTestPlanList.size()>0);
 		
 		TestPlan testPlan = null;
 		Long testPlanId;
+		String tpString = "";
 		
 		// Per ogni TestPlan del sistema... lo verifico
 		for (int i=0; i<systemTestPlanList.size();i++) {
@@ -197,6 +252,8 @@ public class SessionManagerImplITCase {
 			testPlan = systemTestPlanList.get(i);
 			Assert.assertNotNull(testPlan);
 			 
+			tpString.concat(testPlan.getName() + " ");
+			
 			Assert.assertNotNull(testPlan.getWorkflow());
 			Assert.assertNotNull(testPlan.getWorkflow().getActions());
 			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));	
@@ -209,13 +266,17 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(testPlan.getWorkflow());
 			Assert.assertNotNull(testPlan.getWorkflow().getActions());
 			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));
+			//logger.info(testPlan.getWorkflow().getActions().get(0).getActionSummaryString());
 			
 			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0).getInputs());
-			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0).getInputs().get(0));
-			
+			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0).getInputs().get(0));		
 		}	
+		logger.info("OK! System TEST PLANS: " + tpString);
+		
+		
 		
 		// Selezione di un TestPlan generico per l'utente (currentUser)
+		logger.info("3) SELECT and IMPORT TEST PLAN");
 		TestPlan selectedTestPlan = systemTestPlanList.get(0);
 		Assert.assertNotNull(selectedTestPlan);
 
@@ -232,10 +293,11 @@ public class SessionManagerImplITCase {
 		Assert.assertNotNull(selectedTestPlan.getWorkflow().getActions().get(0).getInputs());
 		Assert.assertNotNull(selectedTestPlan.getWorkflow().getActions().get(0).getInputs().get(0));		
 
-		logger.info("Selected TestPlan " + selectedTestPlan.getName() + " for user " + currentUser.getName() + " " + currentUser.getSurname());
+		logger.info("OK! IMPORTED selected TestPlan " + selectedTestPlan.getName() + " for user " + currentUser.getName() + " " + currentUser.getSurname());
 		
 		
 		//  SUT
+		logger.info("4) Select SUT TYPE/INTERACTION and Create SUT for User");
 		
 		// 1. Recupero lista dei SUT Type direttamente dall'oggetto SUT
 		Vector<String> systemSUTTypeList = sutController.getSUTTypeList();
@@ -265,10 +327,9 @@ public class SessionManagerImplITCase {
 		Long sutId = sutController.createSUT(sut, currentUser);
 		Assert.assertNotNull(sutId);				
 		Assert.assertTrue(sutId.intValue()>0);	
-		logger.info("Selected SUT " + sut.getName() + " for user " + currentUser.getName() + " " + currentUser.getSurname());
+		logger.info("OK! CREATED SUT " + sut.getName() + " with type: " + sut.getType() + " and interaction: " + sut.getInteraction());
 
 		
-
 		// Nel momento in cui l'utente avvia il test
 		// il sistema, nel controller, effettua prima una verifica di consistenza ( check() )
 		// verificando che Test Plan selezionato e SUT di default siano compatibili
@@ -276,56 +337,64 @@ public class SessionManagerImplITCase {
 		// 2. con quanto supportato dal sistema
 		// SE questa funzione ha successo si passa alla createSession()
 		// ALTRIMENTI è necessario specificare/creare un altro SUT da abbinare gli input "inconsistenti"
-		
+		logger.info("5) CREATING SESSION...");
 		Long sessionId = sessionController.createSession(currentUserId, sutId, testPlanId);
 		Assert.assertNotNull(sessionId);
 		System.out.println("sessionId:" + sessionId);
 		Assert.assertTrue(sessionId.intValue()>0);		
-		logger.info("Create Session with id " + sessionId + " for user " + currentUser.getName() + " " + currentUser.getSurname());
-	
+		logger.info("OK! CREATE SESSION with id " + sessionId);
 
+		
+		
+		logger.info("********************************************");
+		logger.info("");
+		logger.info("********** Part 2: Pre-Execution ***********");	
+		
+		
 		// A questo punto, ho avviato la sessione di test per la tripla (utente, sut, testplan)
 		// L'esecuzione del workflow non è ancora partita
 		
-		// L' UTENTE, AVVIATA LA SESSIONE, PUO' FARE POLLING PER  
+		// L' UTENTE, CREATA LA SESSIONE, PUO' FARE POLLING PER  
 		// 1 MONITORARE ESECUZIONE ACTIONS
 		// 2 RISPONDERE A UNA RICHIESTA DI INTERAZIONE
 		// 3 OTTENERE IL REPORT DI OUTPUT (totale o parziale) DEI TEST 
 		
+		logger.info("1) Retrieve SESSION...");
 		
 		// GET Current Session
 		Session currentSession = sessionController.readSession(sessionId);
 		Assert.assertNotNull(currentSession);
 		Assert.assertTrue(currentSession.getId().intValue() > 0);
-
+		logger.info("Session ID: " + currentSession.getId().intValue());
+		logger.info("User ID: " + currentSession.getUser().getId().intValue());
+		
 		selectedTestPlan = currentSession.getTestPlan();
 		Assert.assertNotNull(selectedTestPlan);
 		Assert.assertTrue(selectedTestPlan.getId().intValue() > 0);
+		logger.info("TestPlan ID: " + selectedTestPlan.getId().intValue());
 		
 		// Check, provo a prendere un valore dall'oggetto sut contenuto in session
 		Assert.assertTrue(currentSession.getSut().getInteraction().getType().equals(SUTConstants.INTERACTION_WEBSITE));
+		logger.info("SUT ID: " + currentSession.getSut().getId().intValue());		
 		
+		// Othe Information
+		logger.info("STATE of Session: " + currentSession.getState());
+		logger.info("Required USER INTERACTION: " + currentSession.getUserInteractions().size());
+		logger.info("OK! SESSION Retrieved!");
 		
-
-		
-		// Definisco un contatore per evitare che la stessa Action si ripeta all'infinito
-		int failuresForAction = 0;
-		
-		Report report;
-		ActionWorkflow workflow;
-		Action currentAction;
 		
 		
 		
 		// GET Workflow
-		workflow = currentSession.getTestPlan().getWorkflow();	
-		System.out.println("Filestore11: inputname: "+ workflow.getActions().get(0).getInputs().get(0).getName());	
+		logger.info("2) Retrieve WORKFLOW of ACTIONS...");
+		ActionWorkflow workflow = currentSession.getTestPlan().getWorkflow();	
 		int actionsNumber = workflow.getActions().size();
-		int indexTemp;
+		logger.info("Actions: " + actionsNumber);
 		
 		// Definisco due actionMark:
 		// actionMark aggiornato
 		int actionMark = workflow.getActionMark();
+		logger.info("Action Mark: " + actionMark);
 		// actionMarkPreRun continua a conservare lo stato prima dell'esecuzione della action
 		// questo ci serve per capire se è variato o meno (varia se l'action è stata eseguita)
 		int actionMarkPreRun;
@@ -333,8 +402,14 @@ public class SessionManagerImplITCase {
 		Assert.assertTrue(actionMark == 1);
 		
 		// Get First Action to Execute
-		currentAction = workflow.getActions().get(actionMark - 1);
+		Action currentAction = workflow.getActions().get(actionMark - 1);
+		logger.info("First Action: " + currentAction.getActionSummaryString());
+		logger.info("OK! Retrieved WORKFLOW of ACTIONS.");
+				
 		
+		logger.info("****************************************");
+		logger.info("");
+		logger.info("********** Part 3: Execution ***********");	
 		
 		
 		// START EXUCUTION WORKFLOW CYCLE
@@ -347,23 +422,55 @@ public class SessionManagerImplITCase {
 		List<Input> inputList;
 		String fileIdRef;
 		
+		String absSuperUserDocFilePath = PropertiesUtil.getSuperUserDocsDirPath();
+		
 		List<FileStore> documentList = new Vector<FileStore>();
 		
-		boolean fileIdRefPresent;
-		System.out.println("test FileStore1: pre while");
+		// Definisco un contatore per evitare che la stessa Action si ripeta all'infinito
+		int failuresForAction = 0;
+		Report report;
+		String fileName;
+		
+		logger.info("Pre-While Running Workflow...");		
+		// La variabile di controllo "running" diventa false in uno di questi 5 casi:
+		// 		report.getState().equals(Report.getFinalState()) ||
+		//		currentSession.getState().equals(Session.getSuspendedState()) ||
+		//		currentSession.getState().equals(Session.getAbortedState()) ||
+		//		currentSession.getState().equals(Session.getDoneState()) ||
+		//		(failuresForAction == Constants.COUNTER_MAX)		
+		// TODO quello del report si potrà togliere poiché ridondante nella sessione
 		while (running) {
 		
+			logger.info("While running Workflow...");
+			
 			actionMarkPreRun = actionMark;
 			
-			logger.info("Running Workflow... ACTION " + actionMark + " OF " + actionsNumber);	
+			// stampo il summary dell'action nel file di log
+			logger.info(actionMark + ") ACTION " + actionMark + " OF " + actionsNumber);	
 			logger.info(currentAction.getActionSummaryString());
 			
 			 
+			// 1. avvio il workflow
+			// 2. se l'action corrente non ha tutti gli input per l'action corrente, li richiede attraverso userInteraction
+			// 3. carico gli input
+			// 4. rilancio il workflow 
 			
 			
-			String absSuperUserDocFilePath = PropertiesUtil.getSuperUserDocsDirPath();
 			
-			String fileName;
+			//////////////////
+			// RUN WORKFLOW //
+			//////////////////
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 			// PER ORA FACCIO
 			// 1. Faccio l'upload
