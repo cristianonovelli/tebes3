@@ -510,7 +510,7 @@ public class SessionManagerImplITCase {
 				
 					
 				
-				if (!inputTemp.isFileStored()) {
+				if (!inputTemp.isInputSolved()) {
 				
 				
 					// 1. UPLOAD

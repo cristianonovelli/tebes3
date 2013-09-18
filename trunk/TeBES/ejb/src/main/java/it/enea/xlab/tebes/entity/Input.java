@@ -25,6 +25,9 @@ public class Input implements Serializable {
 	
 	// tipi possibili: document, transport, process
 	private String type;
+
+	// tipi possibili: xml, ...
+	private String lg;
 	
 	private String interaction;
 	// Set to "true" when SUT's User checked
@@ -33,10 +36,12 @@ public class Input implements Serializable {
 	
 	private String fileIdRef;
 	// Set to "true" when Input is uploaded
-	private boolean isFileStored;
+	private boolean isInputSolved;
 	
-	
-
+	// reaction and message of GUI user interface
+	// reaction can take values: "upload", "text", "message"
+	private String guiReaction;
+	private String guiMessage;
 	
 	
 	@ManyToOne
@@ -52,7 +57,7 @@ public class Input implements Serializable {
 	/**
 	 * Constructor without id.
 	 */
-	public Input(String name, String description, String type,
+/*	public Input(String name, String description, String type,
 			String interaction, String fileIdRef, boolean interactionOK) {
 		this.name = name;
 		this.description = description;
@@ -61,8 +66,25 @@ public class Input implements Serializable {
 		this.setFileIdRef(fileIdRef);
 		this.setFileStored(false);
 		this.setInteractionOK(interactionOK);
-	}
+	}*/
 
+	public Input(String name, String description, String type, String lg,
+			String interaction, String fileIdRef, String guiReaction, String guiMessage, boolean interactionOK) {
+		
+		this.name = name;
+		this.description = description;
+		this.type = type;
+		this.lg = lg;
+		
+		this.interaction = interaction;
+		this.setFileIdRef(fileIdRef);
+		this.setInputSolved(false);
+		
+		this.guiReaction = guiReaction;
+		this.guiMessage = guiMessage;
+		
+		this.setInteractionOK(interactionOK);
+	}
 
 	/*
 	 * Getters and Setters
@@ -159,13 +181,43 @@ public class Input implements Serializable {
 	}
 
 
-	public boolean isFileStored() {
-		return isFileStored;
+	public boolean isInputSolved() {
+		return isInputSolved;
 	}
 
 
-	public void setFileStored(boolean isFileStored) {
-		this.isFileStored = isFileStored;
+	public void setInputSolved(boolean solved) {
+		this.isInputSolved = solved;
+	}
+
+
+	public String getLg() {
+		return lg;
+	}
+
+
+	public void setLg(String lg) {
+		this.lg = lg;
+	}
+
+
+	public String getGuiReaction() {
+		return guiReaction;
+	}
+
+
+	public void setGuiReaction(String guiReaction) {
+		this.guiReaction = guiReaction;
+	}
+
+
+	public String getGuiMessage() {
+		return guiMessage;
+	}
+
+
+	public void setGuiMessage(String guiMessage) {
+		this.guiMessage = guiMessage;
 	}
 
 

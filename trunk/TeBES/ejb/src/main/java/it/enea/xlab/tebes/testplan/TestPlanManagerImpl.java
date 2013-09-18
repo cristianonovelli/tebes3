@@ -270,8 +270,16 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	
 	private Input cloneInput(Input input1) {
 		
-		return new Input(input1.getName(), input1.getDescription(), input1.getType(), input1.getInteraction(), input1.getFileIdRef(), input1.isInteractionOK());
-		
+		return new Input(
+				input1.getName(), 
+				input1.getDescription(), 
+				input1.getType(), 
+				input1.getLg(),				
+				input1.getInteraction(), 
+				input1.getFileIdRef(), 
+				input1.getGuiReaction(),
+				input1.getGuiMessage(),
+				input1.isInteractionOK());	
 	}
 	
 	
@@ -463,7 +471,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			NodeList inputNodeList = testPlanDOM.getInputNodeList(actionElement);
 			
 			Node inputNode;
-			String inputName, inputDescription, inputType, inputLanguage, inputInteraction, inputFileIdRef;
+			String inputName, inputDescription, inputType, inputLanguage; 
+			String inputInteraction, inputFileIdRef, inputGuiReaction, inputGuiMessage;
 			Vector<Input> inputList = new Vector<Input>();
 			for (int j = 0; j < inputNodeList.getLength(); j++) {
 			
@@ -475,11 +484,14 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				inputDescription = testPlanDOM.getDescriptionAttribute(inputNode);	
 				inputType = testPlanDOM.getTypeAttribute(inputNode);		
 				inputLanguage = testPlanDOM.getLgAttribute(inputNode);				
-				inputInteraction = testPlanDOM.getInteractionAttribute(inputNode);
+				inputInteraction = testPlanDOM.getSutInteractionAttribute(inputNode);
 				inputFileIdRef = testPlanDOM.getFileIdRefAttribute(inputNode);		
+				inputGuiReaction = testPlanDOM.getGuiReactionAttribute(inputNode);
+				inputGuiMessage = testPlanDOM.getGuiMessageAttribute(inputNode);
 				
 				// Create Input object
-				Input input = new Input(inputName, inputDescription, inputType, inputInteraction, inputFileIdRef, false);
+				Input input = new Input(inputName, inputDescription, inputType, inputLanguage,
+						inputInteraction, inputFileIdRef, inputGuiReaction, inputGuiMessage, false);
 				
 				// Add Input object to List
 				inputList.add(input);
