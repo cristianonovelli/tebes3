@@ -41,8 +41,10 @@
 				description="Send UBL Invoice"
 				type="document" 
 				lg="xml"
-				interaction="website"
-				fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-1">
+				sutInteraction="website"
+				fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-1"
+				guiReaction="upload"
+				guiMessage="Message for Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-1">
 			</tebes:Input>
 			<!-- Questo secondo input ha lo stesso fileIdRef, quindi indica che richiederà lo stesso file -->
 			<tebes:Input 
@@ -51,8 +53,10 @@
 				description="Send UBL Invoice2"
 				type="document" 
 				lg="xml"
-				interaction="website"
-				fileIdRef="FI-2_document-xml-website-IN-2_TA-1_TP-1">
+				sutInteraction="website"
+				fileIdRef="FI-2_document-xml-website-IN-2_TA-1_TP-1"
+				guiReaction="upload"
+				guiMessage="Message for Upload of Input with fileIdRef = FI-2_document-xml-website-IN-2_TA-1_TP-1">
 			</tebes:Input>
 		</tebes:TestAction>
 	
@@ -134,8 +138,10 @@
 				description="Send UBL Invoice"
 				type="document" 
 				lg="xml"
-				interaction="website"
-				fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-1">
+				sutInteraction="website"
+				fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-1"
+				guiReaction="upload"
+				guiMessage="Message for Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-1">
 			</tebes:Input>
 		</tebes:TestAction>
 		

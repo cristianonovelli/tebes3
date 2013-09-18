@@ -43,7 +43,7 @@ public class FileManagerController extends WebController<Report> {
 		Session result = fileManagerService.upload(input.getFileIdRef(), fileName, type, fileContent, session);
 		
 		// Aggiorno l'input
-		input.setFileStored(true);
+		input.setInputSolved(true);
 		actionManagerService.updateInput(input);
 		
 		// TODO controllo sull'updating ed esito dell'upload

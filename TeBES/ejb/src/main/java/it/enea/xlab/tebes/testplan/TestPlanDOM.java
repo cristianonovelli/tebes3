@@ -166,9 +166,9 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getNodeAttribute(inputNode, "name");
 	}
 
-	public String getInteractionAttribute(Node node) {
+	public String getSutInteractionAttribute(Node node) {
 		
-		return this.getNodeAttribute(node, "interaction");
+		return this.getNodeAttribute(node, "sutInteraction");
 	}
 	
 	public String getTypeAttribute(Node node) {
@@ -181,6 +181,17 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getNodeAttribute(node, "fileIdRef");
 	}
 
+	public String getGuiReactionAttribute(Node node) {
+		
+		return this.getNodeAttribute(node, "guiReaction");
+	}
+	
+	public String getGuiMessageAttribute(Node node) {
+		
+		return this.getNodeAttribute(node, "guiMessage");
+	}
+	
+	
 	public String getLocationAttribute(Node node) {
 		
 		return this.getNodeAttribute(node, "location");
