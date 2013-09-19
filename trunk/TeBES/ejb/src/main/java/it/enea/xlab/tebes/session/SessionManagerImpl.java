@@ -333,12 +333,45 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			Action currentAction = (Action) actionList.get(actionMark-1);
 				
 			
-			if ( !currentAction.getState().equals(Action.getNewState()) ) {
-			
-
+			// Se l'action è nello stato NEW
+			Boolean isReady = false;
+			if ( currentAction.getState().equals(Action.getNewState()) ) {	
+				isReady = actionManager.checkActionReady(currentAction);
 				
-
+				if (isReady) {
 					
+					currentAction = actionManager.readAction(currentAction.getId());
+				}
+				else {
+					session.setState(Session.getWaitingState());
+					updating = this.updateSession(session);
+					if (updating)
+						logger.info("Session State changed to WAITING");					
+					else
+						logger.error("ERROR in the Session State updating to WAITING");	
+				}
+			}
+				
+				
+			// Se l'action è nello stato READY
+			if ( currentAction.getState().equals(Action.getReadyState()) ) {
+
+				// Se la sessione non è settata a Working la setto
+				if ( !session.getState().equals(Session.getWorkingState()) ) {
+					
+					session.setState(Session.getWorkingState());
+					updating = this.updateSession(session);
+								
+					if (updating)
+						logger.info("Session State changed to WORKING");					
+					else
+						logger.error("ERROR in the Session State updating to WORKING");
+				}
+				
+				
+				//////////////////
+				/// RUN ACTION ///
+				//////////////////
 				report = actionManager.runAction(currentAction, session);
 				report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
 				
@@ -348,29 +381,19 @@ public class SessionManagerImpl implements SessionManagerRemote {
 					workflow.setActionMark(actionMark);
 				}
 
-				
-				
 				// Se questa era l'ultima azione il Report è concluso
 				// e la sessione di Test termina
 				if (actionMark > actionListSize) {
 					
-					report.setState(Report.getFinalState());
-					
+					report.setState(Report.getFinalState());				
 				}
 				
 				updating = actionManager.updateWorkflow(workflow);	
 				//updating = updating && reportManager.updateReport(report);
 	
 				session.setReport(report);
-				updating = updating && updateSession(session);
-				
-				if (updating)
-					logger.info("updating ok");
-				else
-					logger.info("updating error");
-				
-				logger.info("actionMark:" + actionMark);
-			
+				updating = updating && updateSession(session);				
+				session = readSession(session.getId());
 			}
 			
 			return session;

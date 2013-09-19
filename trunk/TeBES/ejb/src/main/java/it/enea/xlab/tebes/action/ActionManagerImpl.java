@@ -589,12 +589,9 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		}
 		
 		if (isReady) {
-			logger.info("isReady: true");
 			action.setState(Action.getReadyState());
 			isReady = isReady && this.updateAction(action);
 		}
-		else
-			logger.info("isReady: false");
 		
 		return isReady;
 	}
