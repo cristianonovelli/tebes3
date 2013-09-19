@@ -27,6 +27,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -40,6 +41,11 @@ public class ActionManagerImpl implements ActionManagerRemote {
 
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT) 
 	private EntityManager eM; 
+
+	// Logger
+	private static Logger logger = Logger.getLogger(ActionManagerImpl.class);
+	
+	
 	
 	@EJB
 	private ReportManagerRemote reportManager; 
@@ -535,9 +541,11 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	}
 
 
+	// RUN WORKFLOW
+	// Il controllo sui cambiamenti di stato della sessione, sono qui
 	public Session runWorkflow(ActionWorkflow workflow, Session session) {
 		
-		//boolean result = true;
+		logger.info("runWorkflow - Session State: " + session.getState());
 		
 		Report report = session.getReport();
 		
@@ -550,11 +558,20 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		
 		int actionMark = workflow.getActionMark(); 
 
-		Action a = (Action) actionList.get(actionMark-1);
+		Action currentAction = (Action) actionList.get(actionMark-1);
 			
-		if (a != null) {
+		
+
+		
+		
+		
+		
+		
+		
+		
+		if (currentAction != null) {
 			
-			report = runAction(a, session);
+			report = runAction(currentAction, session);
 			report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
 			
 			if ( report.isPartialResultSuccessfully() ) {
