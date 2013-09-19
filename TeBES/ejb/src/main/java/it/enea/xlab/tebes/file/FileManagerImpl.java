@@ -5,10 +5,13 @@ import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.FileStore;
 import it.enea.xlab.tebes.entity.Session;
+import it.enea.xlab.tebes.report.ReportManagerRemote;
+import it.enea.xlab.tebes.session.SessionManagerRemote;
 
 import java.io.IOException;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -29,6 +32,8 @@ public class FileManagerImpl implements FileManagerRemote {
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM;
 
+	@EJB
+	private SessionManagerRemote sessionManager; 
 	
 	/**
 	 * UPLOAD single file
@@ -86,6 +91,9 @@ public class FileManagerImpl implements FileManagerRemote {
 			} // if (fileString != null)
 			
 		} // if ( !this.isFileIdPresent(fileRefId) ) 
+		
+		
+		sessionManager.updateSession(session);
 		
 		return session;
 	}
