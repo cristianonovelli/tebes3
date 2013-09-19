@@ -71,10 +71,7 @@ public class Action implements Serializable {
 		this.setActionNumber(number);
 		this.setActionName(name);
 		
-		if (state.equals(Action.getDoneState()))
-			this.setState(Action.getDoneState());
-		else
-			this.setState(Action.getReadyState());
+		this.setState(state);
 		
 		this.setTestLanguage(lg);
 		this.setTestLocation(location);
@@ -103,6 +100,9 @@ public class Action implements Serializable {
 		result = result.concat("Test Value: " + this.getTestValue() +"\n");
 		result = result.concat("Test Skip Prerequisites: " + this.isSkipTurnedON() +"\n");
 		result = result.concat("Test Location: " + this.getTestLocation() +"\n");
+		
+		result = result.concat("Inputs: " + this.getInputs().size() +"\n");
+		result = result.concat("STATE: " + this.getState() +"\n");
 		
 		result = result.concat("------------------------");
 		
