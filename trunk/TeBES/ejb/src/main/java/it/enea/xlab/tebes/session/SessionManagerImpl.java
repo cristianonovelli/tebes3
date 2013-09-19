@@ -300,7 +300,24 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		// Il controllo sui cambiamenti di stato della sessione, sono qui
 		public Session runWorkflow(ActionWorkflow workflow, Session session) {
 			
-			logger.info("runWorkflow - Session State: " + session.getState());
+			
+			logger.info("START runWorkflow - Session State: " + session.getState());	
+			
+			boolean updating;
+			
+			// Session NEW diventa WORKING
+			if (session.getState().equals(Session.getNewState())) {
+				
+				session.setState(Session.getWorkingState());
+				updating = this.updateSession(session);
+				if (updating)
+					logger.info("Session State changed to WORKING");					
+				else
+					logger.error("ERROR in the Session State updating to WORKING");
+			}			
+			
+			
+			
 			
 			Report report = session.getReport();
 			
@@ -316,16 +333,12 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			Action currentAction = (Action) actionList.get(actionMark-1);
 				
 			
+			if ( !currentAction.getState().equals(Action.getNewState()) ) {
+			
 
-			
-			
-			
-			
-			
-			
-			
-			if (currentAction != null) {
 				
+
+					
 				report = actionManager.runAction(currentAction, session);
 				report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
 				
@@ -334,22 +347,32 @@ public class SessionManagerImpl implements SessionManagerRemote {
 					actionMark++;				
 					workflow.setActionMark(actionMark);
 				}
-			}
-			else 
-				report.setFinalResultSuccessfully(false);
-			
-			
-			// Se questa era l'ultima azione il Report è concluso
-			// e la sessione di Test termina
-			if (actionMark > actionListSize) {
-				
-				report.setState(Report.getFinalState());
-				
-			}
-			
-			boolean updating = actionManager.updateWorkflow(workflow);	
-			updating = updating && reportManager.updateReport(report);
 
+				
+				
+				// Se questa era l'ultima azione il Report è concluso
+				// e la sessione di Test termina
+				if (actionMark > actionListSize) {
+					
+					report.setState(Report.getFinalState());
+					
+				}
+				
+				updating = actionManager.updateWorkflow(workflow);	
+				//updating = updating && reportManager.updateReport(report);
+	
+				session.setReport(report);
+				updating = updating && updateSession(session);
+				
+				if (updating)
+					logger.info("updating ok");
+				else
+					logger.info("updating error");
+				
+				logger.info("actionMark:" + actionMark);
+			
+			}
+			
 			return session;
 		}
 }

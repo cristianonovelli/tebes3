@@ -198,7 +198,24 @@ public class ActionManagerImpl implements ActionManagerRemote {
 
 		 return result;
 	}
-	
+
+	/**
+	 * UPDATE Input
+	 * @return 	Input if reading is OK
+	 */	
+	private boolean updateAction(Action action) {
+
+		Boolean result = false;
+
+		 if ( (action != null) && (action.getId() != null) ) {
+			 action = eM.merge(action);
+			 
+			 if (action != null)
+				 result = true;
+		 }
+
+		 return result;
+	}
 	
 	/**
 	 * ADD Input to Action
@@ -557,6 +574,29 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		 }
 
 		 return result;
+	}
+
+
+	public Boolean checkActionReady(Action action) {
+		
+		List<Input> inputs = action.getInputs();
+		
+		
+		Boolean isReady = true;
+		for (int i=0; i<inputs.size(); i++) {
+		
+			isReady = isReady && inputs.get(i).isInputSolved();
+		}
+		
+		if (isReady) {
+			logger.info("isReady: true");
+			action.setState(Action.getReadyState());
+			isReady = isReady && this.updateAction(action);
+		}
+		else
+			logger.info("isReady: false");
+		
+		return isReady;
 	}
 
 

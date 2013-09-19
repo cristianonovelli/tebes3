@@ -3,6 +3,7 @@ package it.enea.xlab.tebes.controllers.file;
 import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.controllers.common.WebController;
+import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.FileStore;
 import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
@@ -40,14 +41,18 @@ public class FileManagerController extends WebController<Report> {
 
 	public Session upload(Input input, String fileName, String type, byte[] fileContent, Session session) throws Exception {
 
-		Session result = fileManagerService.upload(input.getFileIdRef(), fileName, type, fileContent, session);
-		
 		// Aggiorno l'input
 		input.setInputSolved(true);
 		actionManagerService.updateInput(input);
 		
-		// TODO controllo sull'updating ed esito dell'upload
+		Action action = input.getAction();
+		boolean checking = actionManagerService.checkActionReady(action);
 		
+		if (checking)
+			action.setState(Action.getReadyState());
+		
+		Session result = fileManagerService.upload(input.getFileIdRef(), fileName, type, fileContent, session);
+
 		return result;
 	}
 

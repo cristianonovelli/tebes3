@@ -34,6 +34,7 @@ public interface ActionManagerRemote {
 	
 	public Boolean updateWorkflow(ActionWorkflow workflow);
 	public boolean updateInput(Input input);
+	public Boolean checkActionReady(Action action);
 	
 
 }
