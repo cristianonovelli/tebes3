@@ -28,4 +28,6 @@ public interface SessionManagerRemote {
 
 	public Long check(Long userId, Long sutId, Long testPlanId);
 
+	public Boolean updateSession(Session session);
+
 }

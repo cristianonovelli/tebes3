@@ -402,8 +402,7 @@ public class SessionManagerImplITCase {
 		Assert.assertTrue(actionMark == 1);
 		
 		// Get First Action to Execute
-		Action currentAction = workflow.getActions().get(actionMark - 1);
-		logger.info("First Action: " + currentAction.getActionSummaryString());
+		logger.info("First Action Name: " + workflow.getActions().get(0).getActionName());
 		logger.info("OK! Retrieved WORKFLOW of ACTIONS.");
 				
 		
@@ -430,36 +429,59 @@ public class SessionManagerImplITCase {
 		int failuresForAction = 0;
 		Report report;
 		String fileName;
+		Action currentAction;
 		
-		logger.info("Pre-While Running Workflow...");		
+		
+		logger.info("Pre-While Running Workflow...SESSION STATE: " + currentSession.getState());	
 		// La variabile di controllo "running" diventa false in uno di questi 5 casi:
 		// 		report.getState().equals(Report.getFinalState()) ||
 		//		currentSession.getState().equals(Session.getSuspendedState()) ||
 		//		currentSession.getState().equals(Session.getAbortedState()) ||
 		//		currentSession.getState().equals(Session.getDoneState()) ||
 		//		(failuresForAction == Constants.COUNTER_MAX)		
-		// TODO quello del report si potrà togliere poiché ridondante nella sessione
+		// TODO quello del report si potrà togliere poiché ridondante nella sessione	
+		Boolean updating;
 		while (running) {
-		
-			logger.info("While running Workflow...");
-			
-			actionMarkPreRun = actionMark;
-			
-			// stampo il summary dell'action nel file di log
-			logger.info(actionMark + ") ACTION " + actionMark + " OF " + actionsNumber);	
-			logger.info(currentAction.getActionSummaryString());
-			
-			 
-			// 1. avvio il workflow
-			// 2. se l'action corrente non ha tutti gli input per l'action corrente, li richiede attraverso userInteraction
-			// 3. carico gli input
-			// 4. rilancio il workflow 
-			
-			
-			
+
 			//////////////////
 			// RUN WORKFLOW //
 			//////////////////
+
+			// 0. Session NEW diventa WORKING
+			// 1. prendo l'action corrente 
+			// 2. 1 se l'action corrente è NEW, Session WAITING, risolvo gli input, poi avvio il workflow, Session WORKING
+			//    2 se l'action corrente è READY, avvio il workflow, Session WORKING
+			//    3 se l'action è DONE, Session WORKING, incremento marker
+			// 3. dopo aver avviato il workflow controllo la sessione
+			//	  se SESSION WAITING, non incremento il marker
+			// 	  se SESSION WORKING, incremento il marker
+
+			// Session NEW diventa WORKING
+			if (currentSession.getState().equals(Session.getNewState())) {
+				
+				currentSession.setState(Session.getWorkingState());
+				updating = sessionController.updateSession(currentSession);
+				if (!updating)
+					logger.error("ERROR in the Session State updating");
+			}
+			
+			// Sincronizzo i due marker (servono per recuperare l'action e capire se il workflow è incrementato)
+			actionMarkPreRun = actionMark;
+			
+			// Prendo l'action da eseguire e stampo il summary dell'action nel file di log
+			currentAction = workflow.getActions().get(actionMark - 1);
+			logger.info(actionMark + ") ACTION " + actionMark + " OF " + actionsNumber + " **********************");	
+			logger.info(currentAction.getActionSummaryString());
+			
+			
+			
+
+			
+			
+			
+
+			
+			
 			
 			
 			
@@ -618,7 +640,7 @@ public class SessionManagerImplITCase {
 			
 			// TODO se lo stato della action corrente è working... interrogo la strttura dati
 			if ( actionMark > actionMarkPreRun) {
-				logger.info("END ACTION: "  + actionMarkPreRun + " OF " + workflow.getActions().size());
+				logger.info("END ACTION: "  + actionMarkPreRun + " OF " + workflow.getActions().size()  + " **********************");
 				logger.info("");
 				failuresForAction=0;
 			}
