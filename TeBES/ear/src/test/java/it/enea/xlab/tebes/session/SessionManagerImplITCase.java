@@ -432,7 +432,7 @@ public class SessionManagerImplITCase {
 		Action currentAction;
 		
 		
-		logger.info("Pre-While Running Workflow...SESSION STATE: " + currentSession.getState());	
+	
 		// La variabile di controllo "running" diventa false in uno di questi 5 casi:
 		// 		report.getState().equals(Report.getFinalState()) ||
 		//		currentSession.getState().equals(Session.getSuspendedState()) ||
@@ -443,53 +443,45 @@ public class SessionManagerImplITCase {
 		Boolean updating;
 		while (running) {
 
-			//////////////////
-			// RUN WORKFLOW //
-			//////////////////
-
-
 			
-			// Sincronizzo i due marker (servono per recuperare l'action e capire se il workflow è incrementato)
+			// Sincronizzo i due marker (servono per recuperare l'action e capire se il workflow è incrementato dopo la run)
 			actionMarkPreRun = actionMark;
 
+			logger.info("Pre-Running Workflow...SESSION STATE: " + currentSession.getState());
 			
-			// RUN Workflow
+			
+			//////////////////
+			// RUN WORKFLOW //
+			//////////////////			
 			currentSession = sessionController.runWorkflow(workflow, currentSession);
 
-			// REFRESH Workflow, actionMark and current Action
+			// REFRESH workflow, actionMark and report
 			workflow = testPlanController.readTestPlan(testPlanId).getWorkflow();		
 			actionMark = workflow.getActionMark();		
-			
-
-			
-			
-
-			
-			
 			report = currentSession.getReport();
-			logger.info("marker:" + actionMark);
-			logger.info("report state " + report.getState());
+			
+			logger.info("Post-Running Workflow...SESSION STATE: " + currentSession.getState());
+			logger.info("Action Marker:" + actionMark);
+			logger.info("Report State " + report.getState());
+
+			
+			
 			Assert.assertTrue(report.getName().contains(Report.getReportnamePrefix()));			
 			Assert.assertTrue(report.getXml().getBytes().length > 1000);
-			
-			
+
 			// il report NON deve venire salvato su file
 			// se l'utente lo vuole scaricare verrà creato in una location temporanea
 			// lo salvo ora per monitorare l'output più agevolmente
 			String absUserReportsPath = PropertiesUtil.getUserReportsDirPath(currentUserId);		
-			String reportFileName = report.getName().concat(".xml");
-
-			
-			try {
-				
-				XLabFileManager.create(absUserReportsPath.concat(reportFileName), report.getXml());
-				
+			String reportFileName = report.getName().concat(".xml");	
+			try {			
+				XLabFileManager.create(absUserReportsPath.concat(reportFileName), report.getXml());	
+				// TODO verificare valore di ritorno nelle librerie xlab-common
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			// 0. Session NEW diventa WORKING
+			
 			// 1. prendo l'action corrente 
 			// 2. 1 se l'action corrente è NEW, Session diventa WAITING, risolvo gli input, poi avvio il workflow, Session WORKING
 			//    2 se l'action corrente è READY, avvio il workflow, Session WORKING
@@ -498,141 +490,90 @@ public class SessionManagerImplITCase {
 			//	  se SESSION WAITING, non incremento il marker
 			// 	  se SESSION WORKING, incremento il marker
 
-
-			
-			
-
-			
 			// Prendo l'action da eseguire e stampo il summary dell'action nel file di log
 			currentAction = workflow.getActions().get(actionMark - 1);
 			logger.info("ACTION " + actionMark + " OF " + actionsNumber + " ***********************");	
 			logger.info(currentAction.getActionSummaryString());
 						
-			
-			
-			// If Action State = NEW, the Session State become WAITING
-						if ( currentAction.getState().equals(Action.getNewState()) ) {
-							
-							logger.info("Action State: NEW > Need Input...");	
-							
-							
-							currentSession.setState(Session.getWaitingState());
-							updating = sessionController.updateSession(currentSession);
-							if (updating)
-								logger.info("Session State: WAITING");					
-							else
-								logger.error("ERROR in the Session State updating to WAITING");
-							
-							
-							// Risolvo gli input, poi ripasso a working
-							
-			
-							
-							inputList =	currentAction.getInputs();
-							
-							System.out.println("test FileStore1: pre for - inputList.size():" + inputList.size());
-							
-							Input inputTemp = null;
-							for (int i=0; i<inputList.size(); i++) {
-							
-								logger.info("Input i: " + i);
-								
-								inputTemp = inputList.get(i);
-								
-								fileIdRef = inputTemp.getFileIdRef();
-								
-								logger.info("Input fileIdRef: " + fileIdRef);
-								
-								
-								if (!inputTemp.isInputSolved()) {
-								
-									logger.info("Input by UPLOAD...");
-								
-									// 1. UPLOAD
-									// a livello di Test passo il file al FileController 
-									// che verrà modificato in sede di definizione dell'interfaccia da EPOCA che deciderà il modo migliore per caricarlo
-									// TODO il file deve essere salvato nella locazione utente
+			// se l'action corrente è NEW, Session diventa WAITING, risolvo gli input, poi avvio il workflow
+			if ( currentAction.getState().equals(Action.getNewState()) ) {
 				
-									fileName = "ubl-invoice.xml";
-									
-									// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
-									// per ora assumo che venga estratta la stringa e gli venga passata quella
-									// 1. apro il file, prendo l'InputStream			
-									// 2. Boolean uploading = fileController.upload
-									// 3. il file viene salvato, prosegue il test con questo file impostato nella session
-									// 4. alla prossima action chiedo all'utente se questo file va bene
+				logger.info("Action State: NEW");	
+
+				// Risolvo gli input, poi ripasso a working
+				inputList =	currentAction.getInputs();
+				logger.info("Required Inputs: " + inputList.size());	
 				
-									InputStream fileInputStream = null;
-									byte[] fileByteArray = null;
-									try {
-										
-										
-										
-										fileInputStream = new FileInputStream(absSuperUserDocFilePath.concat(fileName));
-										fileByteArray = this.convertInputStreamToByteArray(fileInputStream);
-										
-										
-										
-										
-										currentSession = fileController.upload(inputTemp, fileName, sut.getType(), fileByteArray, currentSession);
-										logger.info("OK Input by UPLOAD");
-										
-										
-									} catch (Exception e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									} 
-									
-									Assert.assertNotNull(fileInputStream);
+				Input inputTemp = null;
+				for (int i=0; i<inputList.size(); i++) {
 				
-				
-									
-								} // End if (!isFileStored)
-								
-								
-							
-							} // End for
+					logger.info("Input i: " + i);
+					
+					inputTemp = inputList.get(i);
+					
+					fileIdRef = inputTemp.getFileIdRef();
+					
+					logger.info("Input fileIdRef: " + fileIdRef);
+					
+					
+					if (!inputTemp.isInputSolved()) {
+					
+						logger.info("Input by UPLOAD...");
+					
+						// 1. UPLOAD
+						// a livello di Test passo il file al FileController 
+						// questo file viene copiato dalla cartella TeBES_Artifacts/users/0/docs/
+						fileName = "ubl-invoice.xml";
 						
+						// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
+						// per ora assumo che venga estratto l'array di byte e gli venga passata quello
+						InputStream fileInputStream = null;
+						byte[] fileByteArray = null;
+						try {
 
-							// Una volta che tutti gli input sono risolti
-							// Lo stato dell'Action corrente diventa READY
-							// Lo stato della Session torna su WORKING
-							//currentAction.setState(Action.getReadyState());
+							fileInputStream = new FileInputStream(absSuperUserDocFilePath.concat(fileName));
+							fileByteArray = this.convertInputStreamToByteArray(fileInputStream);
 
-							
-							
-			/*				updating = sessionController.updateSession(currentSession);
-							if (updating)
-								logger.info("Session State: WORKING");					
-							else
-								logger.error("ERROR in the Session State updating to WORKING");*/
-							
-							
-							// Check State
-							
-							
-							//Qualche Assert?
-							/*workflow.getActions().get(actionMark - 1).setState(Action.getReadyState());
-							testPlanController.updateWorkflow(workflow);*/
-							
-							currentSession = sessionController.runWorkflow(workflow, currentSession);
-							
-							// REFRESH Workflow, actionMark and current Action
-							workflow = testPlanController.readTestPlan(testPlanId).getWorkflow();		
-							actionMark = workflow.getActionMark();		
-						}	
+							currentSession = fileController.upload(inputTemp, fileName, sut.getType(), fileByteArray, currentSession);
+							logger.info("OK Input by UPLOAD");
+
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} 
+						
+						Assert.assertNotNull(fileInputStream);
+	
+	
+						
+					} // End if (!isFileStored)
+					
+					
+				
+				} // End for
+			
+
+				
+				// Una volta che tutti gli input sono risolti
+				// Lo stato dell'Action corrente è diventato READY
+				// Lo stato della Session è tornato su WORKING
+
+				
+				logger.info("Session State: " + currentSession.getState());
+				logger.info("Inputs Loaded > runWorkflow...");
+				
+				currentSession = sessionController.runWorkflow(workflow, currentSession);
+				
+				// REFRESH Workflow, actionMark and current Action
+				workflow = currentSession.getTestPlan().getWorkflow();		
+				actionMark = workflow.getActionMark();		
+				report = currentSession.getReport();
+				
+			}	// End if NEW_STATE
 			
 			
 			
 			
-			
-			
-			report = currentSession.getReport();
-			
-			
-			
-			
-			// TODO se lo stato della action corrente è working... interrogo la strttura dati
 			if ( actionMark > actionMarkPreRun) {
 				logger.info("END ACTION: "  + actionMarkPreRun + " OF " + workflow.getActions().size()  + " *********************");
 				logger.info("");
@@ -640,9 +581,6 @@ public class SessionManagerImplITCase {
 			}
 			// Se actionMark == actionMarkPreRun alora la action ha fallito
 			else {
-				
-				// TODO leggo che devo caricare QUALCOSA nel MessageStore
-				// questo QUALCOSA dovrebbe essere indicato in una struttura temporanea da interrogare
 				
 				failuresForAction++;	
 				
@@ -653,23 +591,13 @@ public class SessionManagerImplITCase {
 			
 
 
-			// TODO
-			
+			// TODO A QUESTO PUNTO: 		
 			// 1. le azioni da eseguire non sono finite
-			
-			// 2. l'utente  decide di sospendere la sessione di test
-			
+			// 2. l'utente  decide di sospendere la sessione di test		
 			// 3. l'utente  decide di annullare la sessione di test
-			
 			// 4. raggiungo il numero massimo di fallimenti per la stessa action
-			
-			
 			// in ogni caso devo aggiornate gli stati di session e report
-			
-			
 
-			
-			
 			
 			if ( 	report.getState().equals(Report.getFinalState()) ||
 					currentSession.getState().equals(Session.getSuspendedState()) ||
@@ -683,9 +611,7 @@ public class SessionManagerImplITCase {
 			System.out.println();
 		}
 		
-		Assert.assertTrue(failuresForAction < Constants.COUNTER_MAX);
-		
-		// TODO
+		Assert.assertTrue(failuresForAction < Constants.COUNTER_MAX);	
 		// la gestione del counter è necessaria solo se non c'è interazione con l'utente
 		// oppure se l'interazione è automatica
 		// in ogni caso un controllo di questo tipo per evitare loop infiniti dovrebbe esserci
@@ -696,12 +622,8 @@ public class SessionManagerImplITCase {
 		// TODO session.setEndDateTime(endDateTime);
 		//sessionController.setState(Session.getDoneState());
 			
-		
-		//boolean updating = reportManager.updateReport(report);
-			
 			
 		// TODO manca il filtro per utente, per ora così agisco su i file di TUTTI
-		// TODO connettere quindi sessione - filestore
 		documentList = fileController.getFileListByType(sut.getType());
 		logger.info("Documenti caricati: " + documentList.size());
 		
@@ -726,29 +648,6 @@ public class SessionManagerImplITCase {
 		
 		// TODO chiusura della sessione di test
 		// possibilità di download del report
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-
-			
-			
-
-			
-
-			
-			
-		
 		
 	}
 		
@@ -838,7 +737,7 @@ public class SessionManagerImplITCase {
 		}	*/	
 	}
 	
-	
+	// TODO da inserire nelle xlab-common
 	public byte[] convertInputStreamToByteArray(InputStream is) throws IOException { 
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
