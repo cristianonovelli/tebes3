@@ -541,62 +541,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	}
 
 
-	// RUN WORKFLOW
-	// Il controllo sui cambiamenti di stato della sessione, sono qui
-	public Session runWorkflow(ActionWorkflow workflow, Session session) {
-		
-		logger.info("runWorkflow - Session State: " + session.getState());
-		
-		Report report = session.getReport();
-		
-				
-		// io credo dovrei fare una ricerca del tipo readActionByWorkflowId
-		// eseguire questa action e una volta eseguita, eliminarla dal DB o settarla come "done"
-		List<Action> actionList = workflow.getActions();
-		int actionListSize = workflow.getActions().size();
-
-		
-		int actionMark = workflow.getActionMark(); 
-
-		Action currentAction = (Action) actionList.get(actionMark-1);
-			
-		
-
-		
-		
-		
-		
-		
-		
-		
-		if (currentAction != null) {
-			
-			report = runAction(currentAction, session);
-			report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
-			
-			if ( report.isPartialResultSuccessfully() ) {
-				
-				actionMark++;				
-				workflow.setActionMark(actionMark);
-			}
-		}
-		else 
-			report.setFinalResultSuccessfully(false);
-		
-		
-		// Se questa era l'ultima azione il Report è concluso
-		// e la sessione di Test termina
-		if (actionMark > actionListSize) {
-			
-			report.setState(Report.getFinalState());
-			
-		}
-		
-		boolean updating = this.updateWorkflow(workflow);	
-		updating = updating && reportManager.updateReport(report);
-
-		return session;
-	}
+	
 	
 
 	public Boolean updateWorkflow(ActionWorkflow workflow) {

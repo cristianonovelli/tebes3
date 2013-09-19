@@ -1,5 +1,6 @@
 package it.enea.xlab.tebes.session;
 
+import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Session;
 import java.util.List;
 import javax.ejb.Remote;
@@ -30,4 +31,6 @@ public interface SessionManagerRemote {
 
 	public Boolean updateSession(Session session);
 
+
+	public Session runWorkflow(ActionWorkflow workflow, Session session);
 }

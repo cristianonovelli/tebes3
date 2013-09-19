@@ -7,27 +7,20 @@ import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.dao.NestedCriterion;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
-import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
-import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.xml.sax.SAXException;
 
 public class TestPlanManagerController extends WebController<TestPlan> {
 
@@ -36,9 +29,11 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 	private TestPlanManagerRemote testPlanManagerService;
 	private ActionManagerRemote actionManagerService;
 	private UserManagerRemote userManagerService;
+
 	
 	// CONTROLLER Constructor
 	public TestPlanManagerController() throws NamingException {
+
 
 		testPlanManagerService = JNDIServices.getTestPlanManagerService(); 
 		actionManagerService = JNDIServices.getActionManagerService();
@@ -180,10 +175,7 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 		return testPlanManagerService.cloneTestPlan(testPlan, userId);
 	}
 
-	public Session runWorkflow(ActionWorkflow workflow, Session session) {
-		
-		return actionManagerService.runWorkflow(workflow, session);
-	}
+
 
 	public boolean importSystemTestPlanFile(User superUser) {
 		

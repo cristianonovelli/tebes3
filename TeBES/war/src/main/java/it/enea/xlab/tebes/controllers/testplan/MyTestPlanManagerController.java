@@ -186,10 +186,7 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 		return testPlanManagerService.cloneTestPlan(testPlan, userId);
 	}
 
-	public Session runWorkflow(ActionWorkflow workflow, Session session) {
-		
-		return actionManagerService.runWorkflow(workflow, session);
-	}
+
 
 	public boolean importSystemTestPlanFile(User superUser) {
 		

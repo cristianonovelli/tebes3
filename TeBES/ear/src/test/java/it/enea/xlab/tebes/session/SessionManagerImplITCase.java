@@ -449,6 +449,8 @@ public class SessionManagerImplITCase {
 
 
 			
+			
+			
 			// 0. Session NEW diventa WORKING
 			// 1. prendo l'action corrente 
 			// 2. 1 se l'action corrente è NEW, Session diventa WAITING, risolvo gli input, poi avvio il workflow, Session WORKING
@@ -608,8 +610,10 @@ public class SessionManagerImplITCase {
 			
 
 			
+			
+			
 			// RUN Workflow
-			currentSession = testPlanController.runWorkflow(workflow, currentSession);
+			currentSession = sessionController.runWorkflow(workflow, currentSession);
 
 			
 			
