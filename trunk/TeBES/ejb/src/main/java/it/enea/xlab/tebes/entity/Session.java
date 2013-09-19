@@ -45,7 +45,7 @@ public class Session implements Serializable {
 	private static final String ABORTED_STATE = "aborted";
 	private static final String DONE_STATE = "done";
 
-
+	private String state;
 	
 	// Sessione corrente o passata
 	
@@ -77,11 +77,7 @@ public class Session implements Serializable {
 	Report report;
 	
 	
-	private String state;
-	
-	// TODO QUALI SONO I TIPI DI INTERAZIONE CHE RICHIEDE UNA ACTION?
-	
-	//private String requestInteraction;
+
 	
 
 	private String creationDateTime;
@@ -246,6 +242,7 @@ public class Session implements Serializable {
 	
 	public void addUserInteraction(UserInteraction userInteraction) {
 		this.userInteractions.add(userInteraction);
-	}	
+	}
+
 
 }

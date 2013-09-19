@@ -10,7 +10,6 @@ import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,7 +27,8 @@ public class Action implements Serializable {
 
 	public static final long serialVersionUID = 1L;
 	
-	private static final String TODO_STATE = "todo";
+	private static final String NEW_STATE = "new";
+	private static final String READY_STATE = "ready";
 	private static final String DONE_STATE = "done";
 	
 	@Id
@@ -74,7 +74,7 @@ public class Action implements Serializable {
 		if (state.equals(Action.getDoneState()))
 			this.setState(Action.getDoneState());
 		else
-			this.setState(Action.getTodoState());
+			this.setState(Action.getReadyState());
 		
 		this.setTestLanguage(lg);
 		this.setTestLocation(location);
@@ -248,8 +248,8 @@ public class Action implements Serializable {
 		return DONE_STATE;
 	}
 
-	public static String getTodoState() {
-		return TODO_STATE;
+	public static String getReadyState() {
+		return READY_STATE;
 	}
 
 	public List<Input> getInputs() {
@@ -258,6 +258,10 @@ public class Action implements Serializable {
 
 	public void setInputs(List<Input> inputs) {
 		this.inputs = inputs;
+	}
+
+	public static String getNewState() {
+		return NEW_STATE;
 	}
 
 

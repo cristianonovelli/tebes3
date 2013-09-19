@@ -498,7 +498,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			
 			}
 
-			Action action = new Action(number, name, Action.getTodoState(), lg, type, location, value, skip, description);
+			Action action = new Action(number, name, Action.getReadyState(), lg, type, location, value, skip, description);
 			
 			action.setInputs(inputList);
 			

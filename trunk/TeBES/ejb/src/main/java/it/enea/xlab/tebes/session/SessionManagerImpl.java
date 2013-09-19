@@ -26,6 +26,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
 import org.xlab.utilities.XLabDates;
 
 
@@ -34,6 +35,9 @@ import org.xlab.utilities.XLabDates;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class SessionManagerImpl implements SessionManagerRemote {
 
+	// Logger
+	private static Logger logger = Logger.getLogger(SessionManagerImpl.class);
+	
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
@@ -271,6 +275,23 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		List<Long> sessionIdList = query.getResultList();
 
         return sessionIdList;
+	}
+
+	public Boolean updateSession(Session session) {
+
+		Boolean result = false;
+		
+		 if ( (session != null) && (session.getId() > 0) ) {
+			 
+			 session = eM.merge(session);
+			 
+			 if (session != null) {
+				 result = true;
+				 logger.debug("UPDATED session with ID " + session.getId() + " and state: " + session.getState());
+			 }
+		 }
+		
+		return result;
 	}
 
 	

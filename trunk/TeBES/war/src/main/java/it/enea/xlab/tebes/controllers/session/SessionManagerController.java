@@ -367,6 +367,11 @@ public class SessionManagerController extends WebController<Session> {
 	public void setIsSessionWaiting(boolean isSessionWaiting) {
 		this.isSessionWaiting = isSessionWaiting;
 	}
+
+	public Boolean updateSession(Session session) {
+		
+		return sessionManagerBean.updateSession(session);
+	}
 	
 }
 
