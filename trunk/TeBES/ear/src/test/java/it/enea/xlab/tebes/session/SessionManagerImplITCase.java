@@ -449,7 +449,7 @@ public class SessionManagerImplITCase {
 
 			// 0. Session NEW diventa WORKING
 			// 1. prendo l'action corrente 
-			// 2. 1 se l'action corrente è NEW, Session WAITING, risolvo gli input, poi avvio il workflow, Session WORKING
+			// 2. 1 se l'action corrente è NEW, Session diventa WAITING, risolvo gli input, poi avvio il workflow, Session WORKING
 			//    2 se l'action corrente è READY, avvio il workflow, Session WORKING
 			//    3 se l'action è DONE, Session WORKING, incremento marker
 			// 3. dopo aver avviato il workflow controllo la sessione
@@ -462,11 +462,13 @@ public class SessionManagerImplITCase {
 				currentSession.setState(Session.getWorkingState());
 				updating = sessionController.updateSession(currentSession);
 				if (!updating)
-					logger.error("ERROR in the Session State updating");
+					logger.error("ERROR in the Session State updating to WORKING");
 			}
+			
 			
 			// Sincronizzo i due marker (servono per recuperare l'action e capire se il workflow è incrementato)
 			actionMarkPreRun = actionMark;
+			
 			
 			// Prendo l'action da eseguire e stampo il summary dell'action nel file di log
 			currentAction = workflow.getActions().get(actionMark - 1);
@@ -474,7 +476,19 @@ public class SessionManagerImplITCase {
 			logger.info(currentAction.getActionSummaryString());
 			
 			
-			
+			// If Action State = NEW, the Session State become WAITING
+			if ( currentAction.getState().equals(Action.getNewState()) ) {
+				
+				currentSession.setState(Session.getWaitingState());
+				updating = sessionController.updateSession(currentSession);
+				if (!updating)
+					logger.error("ERROR in the Session State updating to WAITING");
+				
+				
+				
+				// Risolvo gli input, poi ripasso a working
+				
+			}
 
 			
 			
