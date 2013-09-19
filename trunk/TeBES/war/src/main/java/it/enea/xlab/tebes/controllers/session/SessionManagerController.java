@@ -3,6 +3,7 @@ package it.enea.xlab.tebes.controllers.session;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.dao.NestedCriterion;
+import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
@@ -373,5 +374,9 @@ public class SessionManagerController extends WebController<Session> {
 		return sessionManagerBean.updateSession(session);
 	}
 	
+	public Session runWorkflow(ActionWorkflow workflow, Session session) {
+		
+		return sessionManagerBean.runWorkflow(workflow, session);
+	}
 }
 
