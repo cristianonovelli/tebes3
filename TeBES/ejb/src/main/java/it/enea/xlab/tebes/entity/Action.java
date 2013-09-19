@@ -92,6 +92,7 @@ public class Action implements Serializable {
 	public String getActionSummaryString() {
 
 		String result = "\n--- Action Number: " + this.getActionNumber() +" ---\n";
+		result = result.concat("STATE: " + this.getState() +"\n");
 		result = result.concat("Action Name: " + this.getActionName() +"\n");
 		result = result.concat("Action Description: " + this.getDescription() +"\n");
 		
@@ -99,11 +100,9 @@ public class Action implements Serializable {
 		result = result.concat("Test Type: " + this.getTestType() +"\n");	
 		result = result.concat("Test Value: " + this.getTestValue() +"\n");
 		result = result.concat("Test Skip Prerequisites: " + this.isSkipTurnedON() +"\n");
-		result = result.concat("Test Location: " + this.getTestLocation() +"\n");
-		
+		result = result.concat("Test Location: " + this.getTestLocation() +"\n");		
 		result = result.concat("Inputs: " + this.getInputs().size() +"\n");
-		result = result.concat("STATE: " + this.getState() +"\n");
-		
+			
 		result = result.concat("------------------------");
 		
 		return result;
