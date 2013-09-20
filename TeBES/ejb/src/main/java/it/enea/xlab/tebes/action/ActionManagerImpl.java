@@ -497,7 +497,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				
 				// SET Action as DONE
 				action = this.readAction(action.getId());
-				action.setState(Action.getDoneState());
+				action.setStateToDone();
 				eM.persist(action);
 				
 				
@@ -589,7 +589,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		}
 		
 		if (isReady) {
-			action.setState(Action.getReadyState());
+			action.setStateToReady();
 			isReady = isReady && this.updateAction(action);
 		}
 		

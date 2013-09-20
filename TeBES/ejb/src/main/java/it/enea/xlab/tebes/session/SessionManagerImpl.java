@@ -335,7 +335,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			
 			// Se l'action è nello stato NEW
 			Boolean isReady = false;
-			if ( currentAction.getState().equals(Action.getNewState()) ) {	
+			if ( currentAction.isStateNew() ) {	
 				isReady = actionManager.checkActionReady(currentAction);
 				
 				if (isReady) {
@@ -354,7 +354,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				
 				
 			// Se l'action è nello stato READY
-			if ( currentAction.getState().equals(Action.getReadyState()) ) {
+			if ( currentAction.isStateReady() ) {
 
 				// Se la sessione non è settata a Working la setto
 				if ( !session.isStateWorking() ) {
