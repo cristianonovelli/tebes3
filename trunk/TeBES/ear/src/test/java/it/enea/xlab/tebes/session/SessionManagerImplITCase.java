@@ -379,7 +379,7 @@ public class SessionManagerImplITCase {
 		
 		// Othe Information
 		logger.info("STATE of Session: " + currentSession.getState());
-		logger.info("Required USER INTERACTION: " + currentSession.getUserInteractions().size());
+		//logger.info("Required USER INTERACTION: " + currentSession.getUserInteractions().size());
 		logger.info("OK! SESSION Retrieved!");
 		
 		

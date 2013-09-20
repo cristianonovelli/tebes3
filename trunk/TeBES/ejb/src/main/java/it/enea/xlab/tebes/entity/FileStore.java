@@ -4,11 +4,14 @@ import it.enea.xlab.tebes.common.Constants;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class FileStore implements Serializable {
@@ -38,6 +41,9 @@ public class FileStore implements Serializable {
 	private String lastUpdateDatetime;
 
 	
+	@ManyToOne(cascade=CascadeType.MERGE)
+	@JoinColumn(name="session_id")
+	private Session session;	
 	
 	
 	public FileStore() {
@@ -135,6 +141,14 @@ public class FileStore implements Serializable {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public Session getSession() {
+		return session;
+	}
+
+	public void setSession(Session session) {
+		this.session = session;
 	}
 
  
