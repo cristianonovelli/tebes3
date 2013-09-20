@@ -546,11 +546,10 @@ public class SessionManagerImplITCase {
 	
 	
 						
-					} // End if (!isFileStored)
-					
+					} // End if (!isInputSolved)
 					
 				
-				} // End for
+				} // End for inputList.size()
 			
 
 				
@@ -569,9 +568,11 @@ public class SessionManagerImplITCase {
 				actionMark = workflow.getActionMark();		
 				report = currentSession.getReport();
 				
+				logger.info("After runWorkflow - Session State: " + currentSession.getState());
+				
 			}	// End if NEW_STATE
 			
-			
+			logger.info("After if NEW_STATE - Session State: " + currentSession.getState());
 			
 			
 			if ( actionMark > actionMarkPreRun) {
@@ -599,9 +600,9 @@ public class SessionManagerImplITCase {
 			// in ogni caso devo aggiornate gli stati di session e report
 
 			
-			if ( 	report.getState().equals(Report.getFinalState()) ||
-					currentSession.getState().equals(Session.getSuspendedState()) ||
-					currentSession.getState().equals(Session.getAbortedState()) ||
+			if ( 	currentSession.isStateDone() ||
+					currentSession.isStateSuspended() ||
+					currentSession.isStateAborted() ||
 					(failuresForAction == Constants.COUNTER_MAX)	) {	
 				running = false;
 			}
@@ -609,12 +610,18 @@ public class SessionManagerImplITCase {
 				currentAction = workflow.getActions().get((actionMark-1));	
 			
 			System.out.println();
-		}
+			
+		} // End while (running)
+		
+		logger.info("After while(running) - Session State: " + currentSession.getState());
 		
 		Assert.assertTrue(failuresForAction < Constants.COUNTER_MAX);	
 		// la gestione del counter è necessaria solo se non c'è interazione con l'utente
 		// oppure se l'interazione è automatica
 		// in ogni caso un controllo di questo tipo per evitare loop infiniti dovrebbe esserci
+		
+		
+		
 		
 		
 		// TODO quando si chiude la sessione di test?

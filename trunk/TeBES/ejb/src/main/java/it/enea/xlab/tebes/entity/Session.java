@@ -18,8 +18,11 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 /**
- * Test Session (Sessione di Test)
- * 
+ * Test Session (Sessione di Test, corrente o passata)
+ * è relativa all'esecuzione di un piano di Test e coinvolge:
+ *  1 user (1 user ha 0 o più sessioni)
+ *  1 sut (o più sut)
+ *  1 piano di test
  */
 @Entity
 public class Session implements Serializable {
@@ -31,7 +34,7 @@ public class Session implements Serializable {
 	@Column(name="id")
 	private Long id;
 
-	// State
+	// States:
 	// NEW (sessione appena creata, il workflow non è ancora stato eseguito)
 	// WORKING (in elaborazione, interrogando altre strtture dati possiamo sapere a che punto siamo)
 	// WAITING (in attesa di input dall’utente, interrogando … possiamo sapere cosa dobbiamo fare)
@@ -47,21 +50,6 @@ public class Session implements Serializable {
 
 	private String state;
 	
-	// Sessione corrente o passata
-	
-	/*
-	 *  Una sessione è relativa a:
-	 *  1 user (1 user ha 0 o più sessioni)
-	 *  1 sut (o più sut)
-	 *  1 piano di test
-	 *  devo capire se unirli con delle merge o join 
-	 *  quando una sessione viene cancellata gli oggetti a cui fa riferimento rimangono
-	 *  quando viene cancellato uno user, vengono cancellati i suoi sut, i suoi test plan e le sue sessioni
-	 *  QUINDI sessione è "figlio" di user
-	 *  MENTRE test plan può essere figlio del sistema oppure figlio di un utente
-	 *  quando un utente se lo crea a partire da quello di sistema del test manager ne crea una copia in locale!
-	 */
-	
 
 	@ManyToOne
 	private User user;
@@ -75,10 +63,7 @@ public class Session implements Serializable {
 	// relazione con l'entity report?
 	@OneToOne(cascade=CascadeType.ALL)
 	Report report;
-	
-	
 
-	
 
 	private String creationDateTime;
 	private String lastUpdateDateTime;
@@ -92,11 +77,12 @@ public class Session implements Serializable {
 	private List<UserInteraction> userInteractions;
 	
 
+	// Empty Constructor
 	public Session() {
 
 	}
 
-	// Costruttore
+	// Constructor
 	public Session(User user, TestPlan testPlan, SUT sut) {
 
 		this.user = user;
@@ -106,12 +92,121 @@ public class Session implements Serializable {
 		setUserInteractions(new Vector<UserInteraction>());
 		
 		// Set state to "new"
-		this.setState(getNewState());
+		this.setStateToNew();
 	}
 	
 	
 	
+	/////////////////////////////////
+	/// STATE Getters and Setters ///
+	/////////////////////////////////
+	public String getState() {
+		return state;
+	}
+	
+	public void setState(String state) {
+		this.state = state;
+	}
 
+	public static String getNewState() {
+		return NEW_STATE;
+	}
+	
+	public void setStateToNew() {
+		this.setState(NEW_STATE);
+	}	
+
+	public boolean isStateNew() {
+		
+		if ( getState().equals(NEW_STATE) )
+			return true;
+		else
+			return false;
+	}
+	
+	public static String getWorkingState() {
+		return WORKING_STATE;
+	}
+	
+	public void setStateToWorking() {
+		this.setState(WORKING_STATE);
+	}	
+	
+	public boolean isStateWorking() {
+		
+		if ( getState().equals(WORKING_STATE) )
+			return true;
+		else
+			return false;
+	}
+	
+	public static String getWaitingState() {
+		return WAITING_STATE;
+	}
+	
+	public void setStateToWaiting() {
+		this.setState(WAITING_STATE);
+	}	
+
+	public boolean isStateWaiting() {
+		
+		if ( getState().equals(WAITING_STATE) )
+			return true;
+		else
+			return false;
+	}
+	
+	public static String getSuspendedState() {
+		return SUSPENDED_STATE;
+	}	
+	
+	public void setStateToSuspended() {
+		this.setState(SUSPENDED_STATE);
+	}	
+	
+	public boolean isStateSuspended() {
+		
+		if ( getState().equals(SUSPENDED_STATE) )
+			return true;
+		else
+			return false;
+	}
+	
+	public static String getAbortedState() {
+		return ABORTED_STATE;
+	}
+	
+	public void setStateToAborted() {
+		this.setState(ABORTED_STATE);
+	}
+	
+	public boolean isStateAborted() {
+		
+		if ( getState().equals(ABORTED_STATE) )
+			return true;
+		else
+			return false;
+	}
+	
+	public static String getDoneState() {
+		return DONE_STATE;
+	}	
+	
+	public void setStateToDone() {
+		this.setState(DONE_STATE);
+	}	
+	
+	public boolean isStateDone() {
+		
+		if ( getState().equals(DONE_STATE) )
+			return true;
+		else
+			return false;
+	}
+	
+	///////////////////////////
+	/// Getters and Setters ///
+	///////////////////////////
 	
 	public Long getId() {
 		return id;
@@ -121,111 +216,57 @@ public class Session implements Serializable {
 		this.id = id;
 	}
 
-	public String getState() {
-		return state;
-	}
-
-	public static String getNewState() {
-		return NEW_STATE;
-	}
-	
-	
-	
-	public static String getWorkingState() {
-		return WORKING_STATE;
-	}
-
-
-	public static String getWaitingState() {
-		return WAITING_STATE;
-	}
-
-
-	public static String getSuspendedState() {
-		return SUSPENDED_STATE;
-	}
-
-
-	public static String getAbortedState() {
-		return ABORTED_STATE;
-	}
-
-
-	public static String getDoneState() {
-		return DONE_STATE;
-	}
-
-
-	public void setState(String state) {
-		this.state = state;
-	}
-
-
 	public Report getReport() {
 		return report;
 	}
-
 
 	public void setReport(Report report) {
 		this.report = report;
 	}
 
-
 	public String getCreationDateTime() {
 		return creationDateTime;
 	}
-
 
 	public void setCreationDateTime(String creationDateTime) {
 		this.creationDateTime = creationDateTime;
 	}
 
-
 	public String getLastUpdateDateTime() {
 		return lastUpdateDateTime;
 	}
-
 
 	public void setLastUpdateDateTime(String lastUpdateDateTime) {
 		this.lastUpdateDateTime = lastUpdateDateTime;
 	}
 
-
-
 	public String getMessageStore() {
 		return messageStore;
 	}
-
 
 	public void setMessageStore(String messageStore) {
 		this.messageStore = messageStore;
 	}
 
-
 	public User getUser() {
 		return user;
 	}
-
 
 	public void setUser(User user) {
 		this.user = user;
 	}
 
-
 	public TestPlan getTestPlan() {
 		return testPlan;
 	}
-
 
 	public void setTestPlan(TestPlan testPlan) {
 		this.testPlan = testPlan;
 	}
 
-
 	public SUT getSut() {
 		return sut;
 	}
-
 
 	public void setSut(SUT sut) {
 		this.sut = sut;
@@ -239,10 +280,10 @@ public class Session implements Serializable {
 		this.userInteractions = userInteractions;
 	}
 
-	
 	public void addUserInteraction(UserInteraction userInteraction) {
 		this.userInteractions.add(userInteraction);
 	}
 
-
 }
+
+

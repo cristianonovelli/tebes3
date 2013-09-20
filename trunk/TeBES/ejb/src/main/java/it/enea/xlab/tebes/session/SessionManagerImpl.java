@@ -306,9 +306,9 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			boolean updating;
 			
 			// Session NEW diventa WORKING
-			if (session.getState().equals(Session.getNewState())) {
+			if (session.isStateNew()) {
 				
-				session.setState(Session.getWorkingState());
+				session.setStateToWorking();
 				updating = this.updateSession(session);
 				if (updating)
 					logger.info("Session State changed to WORKING");					
@@ -343,7 +343,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 					currentAction = actionManager.readAction(currentAction.getId());
 				}
 				else {
-					session.setState(Session.getWaitingState());
+					session.setStateToWaiting();
 					updating = this.updateSession(session);
 					if (updating)
 						logger.info("Session State changed to WAITING");					
@@ -357,9 +357,9 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			if ( currentAction.getState().equals(Action.getReadyState()) ) {
 
 				// Se la sessione non è settata a Working la setto
-				if ( !session.getState().equals(Session.getWorkingState()) ) {
+				if ( !session.isStateWorking() ) {
 					
-					session.setState(Session.getWorkingState());
+					session.setStateToWorking();
 					updating = this.updateSession(session);
 								
 					if (updating)
@@ -375,30 +375,53 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				report = actionManager.runAction(currentAction, session);
 				report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
 				
-				if ( report.isPartialResultSuccessfully() ) {
+				/* 
+				 * questo IF in questo punto implica che l'Action deve per forza finire in uno stato di successo
+				 * altrimenti non è possibile passare alla successiva 
+				 * 
+				 * if ( report.isPartialResultSuccessfully() ) {
 					
 					actionMark++;				
 					workflow.setActionMark(actionMark);
 				}
-
+				*/
+				actionMark++;				
+				workflow.setActionMark(actionMark);
+				
 				// Se questa era l'ultima azione il Report è concluso
-				// e la sessione di Test termina
+				// e la sessione di Test termina con state DONE
 				if (actionMark > actionListSize) {
 					
-					report.setState(Report.getFinalState());				
+					// Report state
+					report.setState(Report.getFinalState());	
+					
+					// Session state
+					session.setStateToDone();
+					updating = this.updateSession(session);
+								
+					if (updating)
+						logger.info("Session State changed to DONE");					
+					else
+						logger.error("ERROR in the Session State updating to DONE");
+					
 				}
 				
+				// Updating workflow and Session
 				updating = actionManager.updateWorkflow(workflow);	
 				//updating = updating && reportManager.updateReport(report);
 	
 				session.setReport(report);
 				updating = updating && updateSession(session);				
+				
 				session = readSession(session.getId());
-			}
+				
+			} // End if READY_STATE
 			
 			return session;
 		}
+		
 }
+
 
 
 
