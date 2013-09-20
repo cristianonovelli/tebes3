@@ -73,8 +73,8 @@ public class Session implements Serializable {
 	
 	
 	@OneToMany(mappedBy="session",cascade = {CascadeType.ALL})
-	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<UserInteraction> userInteractions;
+	@LazyCollection(LazyCollectionOption.TRUE)
+	private List<FileStore> files;
 	
 
 	// Empty Constructor
@@ -88,8 +88,8 @@ public class Session implements Serializable {
 		this.user = user;
 		this.testPlan = testPlan;
 		this.sut = sut;
-				
-		setUserInteractions(new Vector<UserInteraction>());
+		
+		files = new Vector<FileStore>();
 		
 		// Set state to "new"
 		this.setStateToNew();
@@ -272,16 +272,12 @@ public class Session implements Serializable {
 		this.sut = sut;
 	}
 
-	public List<UserInteraction> getUserInteractions() {
-		return userInteractions;
+	public List<FileStore> getFiles() {
+		return files;
 	}
 
-	public void setUserInteractions(List<UserInteraction> userInteractions) {
-		this.userInteractions = userInteractions;
-	}
-
-	public void addUserInteraction(UserInteraction userInteraction) {
-		this.userInteractions.add(userInteraction);
+	public void setFiles(List<FileStore> files) {
+		this.files = files;
 	}
 
 }
