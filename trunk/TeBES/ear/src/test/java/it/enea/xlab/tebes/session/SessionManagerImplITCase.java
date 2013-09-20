@@ -496,7 +496,7 @@ public class SessionManagerImplITCase {
 			logger.info(currentAction.getActionSummaryString());
 						
 			// se l'action corrente è NEW, Session diventa WAITING, risolvo gli input, poi avvio il workflow
-			if ( currentAction.getState().equals(Action.getNewState()) ) {
+			if ( currentAction.isStateNew() ) {
 				
 				logger.info("Action State: NEW");	
 

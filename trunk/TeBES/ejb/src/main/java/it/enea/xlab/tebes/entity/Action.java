@@ -31,13 +31,16 @@ public class Action implements Serializable {
 	private static final String READY_STATE = "ready";
 	private static final String DONE_STATE = "done";
 	
+	private String state;
+		
+		
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 
 	private int actionNumber;
 	private String actionName;
-	private String state;
+
 	
 	private String testLanguage;
 	private String testType;
@@ -108,24 +111,76 @@ public class Action implements Serializable {
 		return result;
 	}
 
+
+	/////////////////////////////////
+	/// STATE Getters and Setters ///
+	/////////////////////////////////
+	public static String getNewState() {
+		return NEW_STATE;
+	}	
+
+	public void setStateToNew() {
+		this.setState(NEW_STATE);
+	}	
+	
+	public boolean isStateNew() {
+
+		if ( getState().equals(NEW_STATE) )
+			return true;
+		else
+			return false;
+	}	
+	
+	public static String getReadyState() {
+		return READY_STATE;
+	}
+
+	public void setStateToReady() {
+		this.setState(READY_STATE);
+	}	
+	
+	public boolean isStateReady() {
+
+		if ( getState().equals(READY_STATE) )
+			return true;
+		else
+			return false;
+	}
+	
+	public static String getDoneState() {
+		return DONE_STATE;
+	}
+
+	public void setStateToDone() {
+		this.setState(DONE_STATE);
+	}	
+	
+	public boolean isStateDone() {
+
+		if ( getState().equals(DONE_STATE) )
+			return true;
+		else
+			return false;
+	}	
+	
+	
+	
+	
+	
 	
 	public void addToWorkflow(ActionWorkflow workflow) {
 		
 		this.workflow = workflow;
 	}
 
-	public void removeFromWorkflow() {
-		
-		this.workflow = null;
-	}
-	
-/*	public String getActionId() {
-		return actionId;
-	}
 
-	public void setActionId(String actionId) {
-		this.actionId = actionId;
-	}*/
+	
+	
+	
+	
+	/////////////////////////////////
+	/// STATE Getters and Setters ///
+	/////////////////////////////////
 
 	public Long getId() {
 		return id;
@@ -242,14 +297,10 @@ public class Action implements Serializable {
 	public void setState(String state) {
 		this.state = state;
 	}
+	
 
-	public static String getDoneState() {
-		return DONE_STATE;
-	}
 
-	public static String getReadyState() {
-		return READY_STATE;
-	}
+
 
 	public List<Input> getInputs() {
 		return inputs;
@@ -259,9 +310,7 @@ public class Action implements Serializable {
 		this.inputs = inputs;
 	}
 
-	public static String getNewState() {
-		return NEW_STATE;
-	}
+
 
 
 	

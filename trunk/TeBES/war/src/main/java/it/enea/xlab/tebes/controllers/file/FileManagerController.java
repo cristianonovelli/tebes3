@@ -49,7 +49,7 @@ public class FileManagerController extends WebController<Report> {
 		boolean checking = actionManagerService.checkActionReady(action);
 		
 		if (checking)
-			action.setState(Action.getReadyState());
+			action.setStateToReady();
 		
 		Session result = fileManagerService.upload(input.getFileIdRef(), fileName, type, fileContent, session);
 
