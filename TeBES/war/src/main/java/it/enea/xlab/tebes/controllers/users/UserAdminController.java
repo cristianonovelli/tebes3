@@ -11,25 +11,21 @@ import it.enea.xlab.tebes.utils.UserUtils;
 
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 
-import org.apache.log4j.Logger;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 
 public class UserAdminController extends WebController<User> {
 
-        public static final String CONTROLLER_NAME = "UserAdminController";
-    	private static Logger logger = Logger.getLogger(UserAdminController.class);
+		private static final long serialVersionUID = 1L;
+		public static final String CONTROLLER_NAME = "UserAdminController";
+    	//private static Logger logger = Logger.getLogger(UserAdminController.class);
         
-        private UserManagerRemote userManagerBean;
+        private UserManagerRemote userManagerService;
 
     	private Long itemToDelete;
     	private User selectedUser;
@@ -47,18 +43,19 @@ public class UserAdminController extends WebController<User> {
     	private String userFormMessage;
     	private boolean showUserFormMessage;
 
+    	
 		public UserAdminController() throws NamingException {
-        	userManagerBean = JNDIServices.getUserManagerService();
+        	userManagerService = JNDIServices.getUserManagerService();
         }
 
         public void initContext() throws NotBoundException, NamingException {
-                userManagerBean = JNDIServices.getUserManagerService();                 
+                userManagerService = JNDIServices.getUserManagerService();                 
         }
         
         
         // GET USER LIST
-        public List<Long> getUserIdList() {  
-                return userManagerBean.getUserIdList();
+        public List<Long> getUserIdList(User superUser) {  
+                return userManagerService.getUserIdList(superUser);
         }
         
         // CREATE -> Equivalente a UserProfileManager.signUp MA ASSEGNA ANCHE UN RUOLO DIVERSO DA QUELLO DI DEFAULT
@@ -68,11 +65,11 @@ public class UserAdminController extends WebController<User> {
          */
         public Long createUser(User user, Role role) {
 
-                Long userId = userManagerBean.createUser(user);
+                Long userId = userManagerService.createUser(user);
                 
                 if (userId > 0) {
                         user = this.readUser(userId);
-                        userManagerBean.setUserRole(user, role);
+                        userManagerService.setUserRole(user, role);
                 }
                 return userId;
         }       
@@ -80,7 +77,7 @@ public class UserAdminController extends WebController<User> {
         // READ User
         public User readUser(Long id) {
                 
-                return userManagerBean.readUser(id);
+                return userManagerService.readUser(id);
         }
         
         // UPDATE -> UserProfileManager.Update
@@ -89,11 +86,11 @@ public class UserAdminController extends WebController<User> {
         
         // DELETE User
         public Boolean deleteUser(Long id) {
-                return userManagerBean.deleteUser(id);
+                return userManagerService.deleteUser(id);
         }
 
         public Boolean deleteUserByEmail(String email) {
-                return userManagerBean.deleteUserByEmail(email);
+                return userManagerService.deleteUserByEmail(email);
         }
         
         // GET Role LIST
@@ -103,59 +100,59 @@ public class UserAdminController extends WebController<User> {
                 // allora creo in questa classe il metodo getRoleList 
                 // che utilizza il presente metodo
                 
-                return userManagerBean.getRoleIdList();
+                return userManagerService.getRoleIdList();
         }
         
         // CREATE Role
         public Long createRole(Role role) {
-                return userManagerBean.createRole(role);
+                return userManagerService.createRole(role);
         }
 
         // READ Role
         public Role readRole(Long roleId) {
-                return userManagerBean.readRole(roleId);
+                return userManagerService.readRole(roleId);
         }
 
         // READ Role by level
         public Role readRoleByLevel(int level) {
-                return userManagerBean.readRoleByLevel(level);
+                return userManagerService.readRoleByLevel(level);
         }
 
         public void setUserRole(User user, Role role) {
-                userManagerBean.setUserRole(user, role);
+                userManagerService.setUserRole(user, role);
         }
 
         public Boolean deleteRole(Long id) {    
-                return userManagerBean.deleteRole(id);
+                return userManagerService.deleteRole(id);
         }
 
         // CREATE Role
         public Long createGroup(Group group) {
-                return userManagerBean.createGroup(group);
+                return userManagerService.createGroup(group);
         }
 
         public List<Long> getGroupIdList() {
-                return userManagerBean.getGroupIdList();
+                return userManagerService.getGroupIdList();
         }
 
         public List<Group> getGroupList() {
-                return userManagerBean.getGroupList();
+                return userManagerService.getGroupList();
         }
 
         public Group readGroup(Long id) {
-                return userManagerBean.readGroup(id);
+                return userManagerService.readGroup(id);
         }
 
         public Long setUserGroup(User user, Group group) {
-                return userManagerBean.setUserGroup(user, group);
+                return userManagerService.setUserGroup(user, group);
         }
 
         public Boolean deleteGroup(Long id) {
-                return userManagerBean.deleteGroup(id);
+                return userManagerService.deleteGroup(id);
         }
 
         public List<Long> getActionIdList() {
-                return userManagerBean.getActionIdList();
+                return userManagerService.getActionIdList();
         }
 
 		@Override
@@ -195,7 +192,7 @@ public class UserAdminController extends WebController<User> {
 		
 		public String deleteItem() {
 			try {
-			userManagerBean.deleteUser(this.getItemToDelete());
+			userManagerService.deleteUser(this.getItemToDelete());
 			} catch (Exception e) {
 				setNewItemFormMessage(Messages.FORM_ERROR_DELETE_USER);
 				setNewItemFormMessageRendered(true);
@@ -241,18 +238,18 @@ public class UserAdminController extends WebController<User> {
 				user.setPassword(selectedUser.getPassword());
 
 				if(this.selectedRole != null && !this.selectedRole.equals("")) {
-					Role role = this.userManagerBean.readRole(this.selectedRole);
+					Role role = this.userManagerService.readRole(this.selectedRole);
 					if(role != null)
 						user.setRole(role);
 				}
 
 				if(this.selectedGroup != null && !this.selectedGroup.equals("")) {
-					Group group = this.userManagerBean.readGroup(this.selectedGroup);
+					Group group = this.userManagerService.readGroup(this.selectedGroup);
 					if(group != null)
 						user.setGroup(group);
 				}
 
-				Long result = this.userManagerBean.createUser(user);
+				Long result = this.userManagerService.createUser(user);
 				if(result == -1) {
 					this.userFormMessage = Messages.FORM_ERROR_USER_ALREADY_EXISTING;
 					this.showUserFormMessage = true;
@@ -279,7 +276,7 @@ public class UserAdminController extends WebController<User> {
 			
 			if(message == null) {
 				
-				User user = this.userManagerBean.readUser(this.selectedUser.getId());
+				User user = this.userManagerService.readUser(this.selectedUser.getId());
 				
 				if(user == null) {
 					this.userFormMessage = Messages.FORM_USER_NOT_EXISTING;
@@ -293,18 +290,18 @@ public class UserAdminController extends WebController<User> {
 				user.setPassword(selectedUser.getPassword());
 
 				if(this.selectedRole != null && !this.selectedRole.equals("")) {
-					Role role = this.userManagerBean.readRole(this.selectedRole);
+					Role role = this.userManagerService.readRole(this.selectedRole);
 					if(role != null)
 						user.setRole(role);
 				}
 
 				if(this.selectedGroup != null && !this.selectedGroup.equals("")) {
-					Group group = this.userManagerBean.readGroup(this.selectedGroup);
+					Group group = this.userManagerService.readGroup(this.selectedGroup);
 					if(group != null)
 						user.setGroup(group);
 				}
 
-				if(!this.userManagerBean.updateUser(user)) {
+				if(!this.userManagerService.updateUser(user)) {
 					this.userFormMessage = Messages.FORM_ERROR_USER_UPDATE;
 					this.showUserFormMessage = true;
 					return "";

@@ -267,10 +267,11 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	}
 
 
-	public List<Long> getSessionIdList() {
+	public List<Long> getSessionIdList(User user) {
 
-        String queryString = "SELECT s.id FROM Session AS s";   
+        String queryString = "SELECT s.id FROM Session AS s WHERE s.user = ?1";   
         Query query = eM.createQuery(queryString);
+        query.setParameter(1, user);
         
         @SuppressWarnings("unchecked")
 		List<Long> sessionIdList = query.getResultList();

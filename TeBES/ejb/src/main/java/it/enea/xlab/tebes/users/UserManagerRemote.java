@@ -18,7 +18,7 @@ public interface UserManagerRemote {
 	public User readUser(Long id);	
 	public List<User> readUsersByEmail(String parEmail);
 	public User readUserbyEmailAndPassword(String userEmail, String userPassword);	
-	public List<Long> getUserIdList();
+	public List<Long> getUserIdList(User superUser);
 	public Long getSuperUserId();
 	
 	// UPDATE User
