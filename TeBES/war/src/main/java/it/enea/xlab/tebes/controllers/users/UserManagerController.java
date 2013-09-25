@@ -3,7 +3,6 @@ package it.enea.xlab.tebes.controllers.users;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.controllers.common.WebController;
-import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.users.UserManagerRemote;
@@ -20,9 +19,10 @@ import org.hibernate.criterion.Order;
 
 public class UserManagerController extends WebController<User> {
 
+	private static final long serialVersionUID = 1L;
 	public static final String CONTROLLER_NAME = "UserManagerController";
 	
-	private UserManagerRemote userManagerBean;
+	private UserManagerRemote userManagerService;
 	
 	private User user;
 	private String confirmPassword;
@@ -30,17 +30,17 @@ public class UserManagerController extends WebController<User> {
 	private boolean showUserFormMessage;
 	
 	public UserManagerController() throws NamingException {
-		userManagerBean = JNDIServices.getUserManagerService(); 
+		userManagerService = JNDIServices.getUserManagerService(); 
 	}
 
 	public void initContext() throws NotBoundException, NamingException {
 		// GET SERVICE
-		userManagerBean = JNDIServices.getUserManagerService(); 		
+		userManagerService = JNDIServices.getUserManagerService(); 		
 	}
 	
 	// LOGIN
 	public User login(String email, String password) {
-		return userManagerBean.readUserbyEmailAndPassword(email, password);
+		return userManagerService.readUserbyEmailAndPassword(email, password);
 	}
 	
 	// ADD SUT TO USER
@@ -51,12 +51,12 @@ public class UserManagerController extends WebController<User> {
 		//SUTManagerController sutManagerController = new SUTManagerController();
 		//SUT sut = sutManagerController.readSUT(sutId);
 		
-		userManagerBean.addSUTToUser(sutId, userId);
+		userManagerService.addSUTToUser(sutId, userId);
 	}
 
 	// READ User
 	public User readUser(Long id) {
-		return userManagerBean.readUser(id);
+		return userManagerService.readUser(id);
 	}
 
 	@Override
@@ -88,11 +88,11 @@ public class UserManagerController extends WebController<User> {
 			newUser.seteMail(user.geteMail());
 			newUser.setPassword(user.getPassword());
 			
-			Role role = this.userManagerBean.readRole(Constants.STANDARD_ROLE_NAME);
+			Role role = this.userManagerService.readRole(Constants.STANDARD_ROLE_NAME);
 			if(role != null)
 				newUser.setRole(role);
 
-			Long result = this.userManagerBean.createUser(newUser);
+			Long result = this.userManagerService.createUser(newUser);
 			if(result == -1) {
 				this.userFormMessage = Messages.FORM_ERROR_USER_ALREADY_EXISTING;
 				this.showUserFormMessage = true;

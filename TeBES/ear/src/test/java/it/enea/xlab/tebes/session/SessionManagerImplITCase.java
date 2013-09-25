@@ -592,17 +592,29 @@ public class SessionManagerImplITCase {
 			
 
 
-			// TODO A QUESTO PUNTO: 		
-			// 1. le azioni da eseguire non sono finite
-			// 2. l'utente  decide di sospendere la sessione di test		
-			// 3. l'utente  decide di annullare la sessione di test
-			// 4. raggiungo il numero massimo di fallimenti per la stessa action
-			// in ogni caso devo aggiornate gli stati di session e report
-
+			// A QUESTO PUNTO L'UTENTE: 		
+			
+			// 1. continua con le azioni da eseguire che non sono finite		
+			
+			// 2. decide di sospendere la sessione di test 
+			// 		(lo stato passa in SUSPENDED solo se NON era DONE o CANCELLED)
+			currentSession = sessionController.suspendSession(currentSession);	
+			
+			// 3. decide di annullare la sessione di test 
+			// 		(lo stato passa in CANCELLED solo se NON era DONE o già in CANCELLED)
+			//currentSession = sessionController.annulSession(currentSession);		
+			
+			// 4. decidere di riprendere una sessione precedentemente sospesa
+			// 		(lo stato torna in WORKING solo se era in SUSPENDED)
+			currentSession = sessionController.resumeSession(currentSession);	
+			
+			// 5. raggiungo il numero massimo di fallimenti per la stessa action
+			// TODO da spostare nel backend
+			
 			
 			if ( 	currentSession.isStateDone() ||
 					currentSession.isStateSuspended() ||
-					currentSession.isStateAborted() ||
+					currentSession.isStateCancelled() ||
 					(failuresForAction == Constants.COUNTER_MAX)	) {	
 				running = false;
 			}
@@ -648,6 +660,7 @@ public class SessionManagerImplITCase {
 		report = sessionController.getReport(sessionId);
 		
 		Assert.assertTrue(report.getState().equals(Report.getFinalState()));
+		//Assert.assertTrue(report.getState().equals(Report.getDraftState()));
 		System.out.println("REPORT");
 		System.out.println(report.getState());
 		System.out.println(report.getTestResult());

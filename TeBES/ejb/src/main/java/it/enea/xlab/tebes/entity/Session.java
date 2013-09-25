@@ -45,7 +45,7 @@ public class Session implements Serializable {
 	private static final String WORKING_STATE = "working";
 	private static final String WAITING_STATE = "waiting";
 	private static final String SUSPENDED_STATE = "suspended";
-	private static final String ABORTED_STATE = "aborted";
+	private static final String CANCELLED_STATE = "cancelled";
 	private static final String DONE_STATE = "done";
 
 	private String state;
@@ -172,17 +172,17 @@ public class Session implements Serializable {
 			return false;
 	}
 	
-	public static String getAbortedState() {
-		return ABORTED_STATE;
+	public static String getCancelledState() {
+		return CANCELLED_STATE;
 	}
 	
-	public void setStateToAborted() {
-		this.setState(ABORTED_STATE);
+	public void setStateToCancelled() {
+		this.setState(CANCELLED_STATE);
 	}
 	
-	public boolean isStateAborted() {
+	public boolean isStateCancelled() {
 		
-		if ( getState().equals(ABORTED_STATE) )
+		if ( getState().equals(CANCELLED_STATE) )
 			return true;
 		else
 			return false;
