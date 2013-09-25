@@ -747,11 +747,11 @@ public class SessionManagerImplITCase {
 		// Last Check
 		// Sono stati eliminati tutti gli utenti (a cascata)?
 		userIdList = userAdminController.getUserIdList(superUser);
-		//Assert.assertTrue(userIdList.size() == 1);
+		Assert.assertTrue(userIdList.size() == 1);
 		
 		
 		// Get Session List
-		sessionIdList = sessionController.getSessionIdList(superUser);
+		sessionIdList = sessionController.getSessionIdList(currentUser);
 		Assert.assertTrue(sessionIdList.size() == 0);
 		
 
