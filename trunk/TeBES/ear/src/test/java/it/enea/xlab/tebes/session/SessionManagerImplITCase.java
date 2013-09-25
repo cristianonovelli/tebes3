@@ -669,6 +669,13 @@ public class SessionManagerImplITCase {
 		// TODO chiusura della sessione di test
 		// possibilità di download del report
 		
+		
+		// IPOTESI
+		// 1. sospendo quella sessione
+		// 2 faccio login con altro utente
+		// 3. avvio altro test plan TP-2 per verificare sessioni multiple
+		
+		
 	}
 		
 	
