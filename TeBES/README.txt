@@ -28,3 +28,19 @@ mvn clean install -Pdev-create -Dit.test=SessionManagerImplITCase verify
 
 URL APPLICAZIONE WEB
 http://localhost:8080/TeBES-war/index.jsf
+
+
+CONFIGURAZIONE DEL MODULO DI SICUREZZA IN JBOSS
+Per configurare JAAS in JBOSS occorre inserire i seguenti tag xml all'interno del tag <policy>, nel file login-config.xml 
+presente nella cartella JBOSS_HOME/server/default/conf
+
+<application-policy name="tebes_policy">
+        <authentication>
+            <login-module code="org.jboss.security.auth.spi.DatabaseServerLoginModule" flag="required">
+             <module-option name = "dsJndiName">java:/TeBESDS</module-option>
+                <module-option name="unauthenticatedIdentity">guest</module-option>
+                <module-option name="principalsQuery">SELECT password FROM User WHERE eMail=?</module-option>
+                <module-option name="rolesQuery">SELECT name, 'Roles' FROM Role WHERE id = (SELECT role_id FROM User WHERE eMail=?)</module-option>
+            </login-module>
+        </authentication>
+</application-policy>
