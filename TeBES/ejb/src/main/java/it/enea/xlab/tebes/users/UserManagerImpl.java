@@ -189,9 +189,11 @@ public class UserManagerImpl implements UserManagerRemote {
 	/**
 	 * GET User LIST
 	 */
-	public List<Long> getUserIdList(User superUser) {
+	public List<Long> getUserIdList(User user) {
 			
-		if (superUser.getId().equals(getSuperUserId())) {
+		
+		// To Get user Id List you have to be adminnuser or superuser
+		if (user.getRole().getLevel() > 2) {
 			
 	        String queryString = "SELECT u.id FROM User AS u";   
 	        Query query = eM.createQuery(queryString);
@@ -199,13 +201,17 @@ public class UserManagerImpl implements UserManagerRemote {
 	        @SuppressWarnings("unchecked")
 			List<Long> userIdList = query.getResultList();
 	        
+	        // If user isn't superuser, remove its id from list
+	        if (!user.getId().equals(getSuperUserId()))
+	        	userIdList.remove(user.getId()); 
+	        
 	        return userIdList;
 		}
 		else
 			return null;
 	}
 
-	
+
 	public Long getSuperUserId() {
 
 		// TODO  sarebbe più ottimizzato e opportuno creare procedura che nelle before legge da file properties
