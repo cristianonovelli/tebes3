@@ -111,9 +111,9 @@ public class SessionManagerController extends WebController<Session> {
 		return this.getSession(sessionId).getReport();
 	}
 
-	public List<Long> getSessionIdList() {
+	public List<Long> getSessionIdList(User superUser) {
 		
-		return sessionManagerService.getSessionIdList();
+		return sessionManagerService.getSessionIdList(superUser);
 	}
 
 	public Boolean deleteSession(Long id) {

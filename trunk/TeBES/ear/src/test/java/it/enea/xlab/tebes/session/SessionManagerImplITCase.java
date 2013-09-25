@@ -53,6 +53,7 @@ public class SessionManagerImplITCase {
 	
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
+	static User superUser, currentUser;
 	 
 
 	@BeforeClass
@@ -126,7 +127,7 @@ public class SessionManagerImplITCase {
 		String superUserSurname = PropertiesUtil.getSuperUserSurnameProperty();
 		String superUserEmail = PropertiesUtil.getSuperUserEmailProperty();
 		String superUserPassword = PropertiesUtil.getSuperUserPasswordProperty();
-		User superUser = new User(superUserName, superUserSurname, superUserEmail, superUserPassword);
+		superUser = new User(superUserName, superUserSurname, superUserEmail, superUserPassword);
 		Long superUserId = userAdminController.createUser(superUser, role4_superuser);
 		superUser = userAdminController.readUser(superUserId);
 		Assert.assertTrue(superUserId.intValue()>0);			
@@ -229,7 +230,7 @@ public class SessionManagerImplITCase {
 		
 		// USER 
 		logger.info("1) LOGIN USER");
-		User currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
+		currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
 		Long currentUserId = currentUser.getId();
 		Assert.assertTrue(currentUser != null);
 		Assert.assertTrue(currentUser.getId().intValue() > 0);
@@ -692,7 +693,8 @@ public class SessionManagerImplITCase {
 		// è necessario cancellare i workflow prima di cancellare Role > User > TestPlan
 		// sarebbe più logico che le cancellazioni fossero a cascata (ovvero, cancello una di queste entity e vengono cancellate quelle successive)
 		// Role > User > TestPlan > workflow > actions
-		
+		List<Long> sessionIdList = sessionController.getSessionIdList(currentUser);
+		Assert.assertTrue(sessionIdList.size() == 1);	
 		
 		// Get Role List
 		List<Long> roleIdList = userAdminController.getRoleIdList();
@@ -718,7 +720,7 @@ public class SessionManagerImplITCase {
 			Assert.assertTrue(deleting);			
 		}		*/
 		
-		List<Long> userIdList = userAdminController.getUserIdList();
+		List<Long> userIdList = userAdminController.getUserIdList(superUser);
 		
 		User tempUser;
 		Long tempUserId;
@@ -744,12 +746,12 @@ public class SessionManagerImplITCase {
 		
 		// Last Check
 		// Sono stati eliminati tutti gli utenti (a cascata)?
-		userIdList = userAdminController.getUserIdList();
+		userIdList = userAdminController.getUserIdList(superUser);
 		//Assert.assertTrue(userIdList.size() == 1);
 		
 		
 		// Get Session List
-		List<Long> sessionIdList = sessionController.getSessionIdList();
+		sessionIdList = sessionController.getSessionIdList(superUser);
 		Assert.assertTrue(sessionIdList.size() == 0);
 		
 

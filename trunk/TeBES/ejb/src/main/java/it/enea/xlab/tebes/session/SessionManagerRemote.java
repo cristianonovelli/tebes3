@@ -2,6 +2,8 @@ package it.enea.xlab.tebes.session;
 
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Session;
+import it.enea.xlab.tebes.entity.User;
+
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -16,7 +18,7 @@ public interface SessionManagerRemote {
 
 	public Long createSession(Long userId, Long sutId, Long testPlanId);
 
-	public List<Long> getSessionIdList();
+	public List<Long> getSessionIdList(User superUser);
 
 	public Boolean deleteSession(Long id);
 

@@ -189,15 +189,20 @@ public class UserManagerImpl implements UserManagerRemote {
 	/**
 	 * GET User LIST
 	 */
-	public List<Long> getUserIdList() {
-		
-        String queryString = "SELECT u.id FROM User AS u";   
-        Query query = eM.createQuery(queryString);
-        
-        @SuppressWarnings("unchecked")
-		List<Long> userIdList = query.getResultList();
-
-        return userIdList;
+	public List<Long> getUserIdList(User superUser) {
+			
+		if (superUser.getId().equals(getSuperUserId())) {
+			
+	        String queryString = "SELECT u.id FROM User AS u";   
+	        Query query = eM.createQuery(queryString);
+	        
+	        @SuppressWarnings("unchecked")
+			List<Long> userIdList = query.getResultList();
+	        
+	        return userIdList;
+		}
+		else
+			return null;
 	}
 
 	
