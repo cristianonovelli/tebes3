@@ -36,9 +36,9 @@ public class SessionManagerController extends WebController<Session> {
 
 	public static final String CONTROLLER_NAME = "SessionManagerController";
 	
-	private SessionManagerRemote sessionManagerBean;
-	private UserManagerRemote userManagerBean;
-	private TestPlanManagerRemote testPlanManagerBean;
+	private SessionManagerRemote sessionManagerService;
+	private UserManagerRemote userManagerService;
+	private TestPlanManagerRemote testPlanManagerService;
 	
 	private List<Session> sessionsList;
 	
@@ -61,17 +61,17 @@ public class SessionManagerController extends WebController<Session> {
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
 	public SessionManagerController() throws NamingException {
-		sessionManagerBean = JNDIServices.getSessionManagerService();
-		userManagerBean = JNDIServices.getUserManagerService();
-		testPlanManagerBean = JNDIServices.getTestPlanManagerService();
+		sessionManagerService = JNDIServices.getSessionManagerService();
+		userManagerService = JNDIServices.getUserManagerService();
+		testPlanManagerService = JNDIServices.getTestPlanManagerService();
 	}
 
 	public void initContext() throws NotBoundException, NamingException {
-		sessionManagerBean = JNDIServices.getSessionManagerService();
+		sessionManagerService = JNDIServices.getSessionManagerService();
 	}
 	
 	public Session getSession(Long sessionId) {
-		return sessionManagerBean.readSession(sessionId);
+		return sessionManagerService.readSession(sessionId);
 	}
 
 //	public List<Session> getSessionsList() {
@@ -96,12 +96,12 @@ public class SessionManagerController extends WebController<Session> {
 
 	public Long createSession(Long userId, Long sutId, Long testPlanId) {
 		
-		Long result = sessionManagerBean.check(userId, sutId, testPlanId);
+		Long result = sessionManagerService.check(userId, sutId, testPlanId);
 		System.out.println("check: " + result);
 		
 		
 		if (result.intValue()>0)
-			return sessionManagerBean.createSession(userId, sutId, testPlanId);
+			return sessionManagerService.createSession(userId, sutId, testPlanId);
 		else
 			return new Long(-1);
 	} 
@@ -113,17 +113,17 @@ public class SessionManagerController extends WebController<Session> {
 
 	public List<Long> getSessionIdList() {
 		
-		return sessionManagerBean.getSessionIdList();
+		return sessionManagerService.getSessionIdList();
 	}
 
 	public Boolean deleteSession(Long id) {
 		
-		return sessionManagerBean.deleteSession(id);
+		return sessionManagerService.deleteSession(id);
 	}
 
 	public Session readSession(Long id) {
 		
-		return sessionManagerBean.readSession(id);
+		return sessionManagerService.readSession(id);
 	}
 
 	@Override
@@ -152,11 +152,11 @@ public class SessionManagerController extends WebController<Session> {
 	}
 
 	private User getCurrentUser() {
-		return userManagerBean.readUsersByEmail(FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName()).get(0);
+		return userManagerService.readUsersByEmail(FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName()).get(0);
 	}
 	
 	private void updateTestPlans() {
-		List<TestPlan> userTestPlans = this.testPlanManagerBean.readUserTestPlanList(this.getCurrentUser());
+		List<TestPlan> userTestPlans = this.testPlanManagerService.readUserTestPlanList(this.getCurrentUser());
 		testPlanSelection = new ArrayList<SelectItem>();
 		for (TestPlan testPlan : userTestPlans) {
 			testPlanSelection.add(new SelectItem(testPlan.getId(), testPlan.getName()));
@@ -220,7 +220,7 @@ public class SessionManagerController extends WebController<Session> {
 	
 	public String viewSession() {
 		if(selectedSession != null)
-			this.viewCurrentSession = this.sessionManagerBean.readSession(selectedSession);
+			this.viewCurrentSession = this.sessionManagerService.readSession(selectedSession);
 		
 		return "view_session";
 	}
@@ -371,12 +371,27 @@ public class SessionManagerController extends WebController<Session> {
 
 	public Boolean updateSession(Session session) {
 		
-		return sessionManagerBean.updateSession(session);
+		return sessionManagerService.updateSession(session);
 	}
 	
 	public Session runWorkflow(ActionWorkflow workflow, Session session) {
 		
-		return sessionManagerBean.runWorkflow(workflow, session);
+		return sessionManagerService.runWorkflow(workflow, session);
+	}
+
+	public Session suspendSession(Session session) {
+		
+		return sessionManagerService.suspendSession(session);
+	}
+
+	public Session annulSession(Session session) {
+		
+		return sessionManagerService.annulSession(session);
+	}
+
+	public Session resumeSession(Session session) {
+		
+		return sessionManagerService.resumeSession(session);
 	}
 }
 

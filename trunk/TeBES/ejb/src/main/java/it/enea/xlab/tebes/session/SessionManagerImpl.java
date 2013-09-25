@@ -419,6 +419,79 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			
 			return session;
 		}
+
+		// Suspend Session
+		public Session suspendSession(Session session) {
+		
+			// If session state ISN'T CANCELLED or DONE			
+			if (!session.isStateCancelled() && !session.isStateDone()) { 
+				
+				// Set Report state to Draft
+				session.getReport().setState(Report.getDraftState());	
+				
+				// Set Session state to SUSPENDED
+				session.setStateToSuspended();
+				
+				// Updating
+				boolean updating = this.updateSession(session);						
+				if (updating)
+					logger.info("Session State changed to SUSPEND");					
+				else
+					logger.error("ERROR in the Session State updating to SUSPEND");
+				
+				// Refresh Session
+				session = readSession(session.getId());
+			}
+			
+			return session;
+		}
+
+		public Session annulSession(Session session) {
+			
+			// If session state ISN'T CANCELLED or DONE			
+			if (!session.isStateCancelled() && !session.isStateDone()) { 
+			
+				// Report state
+				session.getReport().setState(Report.getFinalState());	
+				
+				// Session state
+				session.setStateToCancelled();
+				
+				// Updating
+				boolean updating = this.updateSession(session);						
+				if (updating)
+					logger.info("Session State changed to CANCELLED");					
+				else
+					logger.error("ERROR in the Session State updating to CANCELLED");
+				
+				// Refresh Session
+				session = readSession(session.getId());
+			}
+			return session;
+		}
+
+		
+		public Session resumeSession(Session session) {
+			
+			// If session state is SUSPENDED			
+			if (session.isStateSuspended()) {
+				
+				// Set Session State to WORKING
+				session.setStateToWorking();
+			
+				// Updating
+				boolean updating = this.updateSession(session);						
+				if (updating)
+					logger.info("Session State changed to WORKING");					
+				else
+					logger.error("ERROR in the Session State updating to WORKING");
+				
+				// Refresh Session
+				session = readSession(session.getId());
+			}
+			
+			return session;
+		}
 		
 }
 
