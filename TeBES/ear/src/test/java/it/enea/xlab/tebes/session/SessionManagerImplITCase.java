@@ -492,7 +492,7 @@ public class SessionManagerImplITCase {
 			// 	  se SESSION WORKING, incremento il marker
 
 			// Prendo l'action da eseguire e stampo il summary dell'action nel file di log
-			currentAction = workflow.getActions().get(actionMark - 1);
+			currentAction = workflow.getCurrentAction();
 			logger.info("ACTION " + actionMark + " OF " + actionsNumber + " ***********************");	
 			logger.info(currentAction.getActionSummaryString());
 						
@@ -620,7 +620,7 @@ public class SessionManagerImplITCase {
 				running = false;
 			}
 			else
-				currentAction = workflow.getActions().get((actionMark-1));	
+				currentAction = workflow.getCurrentAction();
 			
 			System.out.println();
 			
