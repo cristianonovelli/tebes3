@@ -70,9 +70,6 @@ public class ActionWorkflow implements Serializable {
 		this.actions = actions;
 	}
 
-
-
-
 	public String getComment() {
 		return comment;
 	}
@@ -85,25 +82,22 @@ public class ActionWorkflow implements Serializable {
 		return actionMark;
 	}
 
+	public Action getCurrentAction() {
+		
+		Action currentAction = null;
+		
+		int actionMark = this.getActionMark();
+		List<Action> actions = this.getActions();
+				
+		if (actions.size()>0) 
+			currentAction = actions.get(actionMark - 1);
+
+		return currentAction;
+	}
+	
 	public void setActionMark(int actionMark) {
 		this.actionMark = actionMark;
 	}
-
-/*	public void addToTestPlan(TestPlan tp) {
-		
-		this.testPlan = tp;
-	}
-
-
-	public TestPlan getTestPlan() {
-		return testPlan;
-	}
-
-
-	public void setTestPlan(TestPlan testPlan) {
-		this.testPlan = testPlan;
-	}*/
-
 
 	
 }
