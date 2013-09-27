@@ -48,9 +48,9 @@
 
         <taml:var vname="TA-001_TC-001_TS-001" vtype="http://docs.oasis-open.org/ns/tag/taml-201002/">taml:TA-001_TC-001_TS-001 eq 'pass'</taml:var>
         
-        <taml:var vname="BIICORE-UBL-T10" vtype="http://purl.oclc.org/dsdl/schematron">http://winter.bologna.enea.it/peppol_schema_rep/schematron/biicore/UBL/BIICORE-UBL-T10.sch</taml:var>
+        <taml:var vname="BIICORE-UBL-T10" vtype="http://purl.oclc.org/dsdl/schematron">http://winter.bologna.enea.it/peppol_schema_rep/schematron/biicore/BIICORE-UBL-T10.sch</taml:var>
         
-        <!-- XML document, target of Test -->
+        <!-- XML document, target of Test --> 
         <taml:target type="xml">document</taml:target>
         
         <taml:prerequisite>TA-001_TC-001_TS-001</taml:prerequisite>
@@ -93,7 +93,7 @@
 
         <taml:var vname="TA-001_TC-001_TS-002" vtype="http://docs.oasis-open.org/ns/tag/taml-201002/">taml:TA-001_TC-001_TS-002 eq 'pass'</taml:var>
         
-        <taml:var vname="BIIPROFILES-UBL-T10" vtype="http://purl.oclc.org/dsdl/schematron">http://winter.bologna.enea.it/peppol_schema_rep/schematron/biiprofiles/UBL/BIIPROFILES-UBL-T10.sch</taml:var>
+        <taml:var vname="BIIPROFILES-UBL-T10" vtype="http://purl.oclc.org/dsdl/schematron">http://winter.bologna.enea.it/peppol_schema_rep/schematron/biiprofiles/BIIPROFILES-UBL-T10.sch</taml:var>
         
         <!-- XML document, target of Test -->
         <taml:target type="xml">document</taml:target>
@@ -138,7 +138,7 @@
         
         <taml:var vname="TA-002_TC-001_TS-002" vtype="http://docs.oasis-open.org/ns/tag/taml-201002/">taml:TA-002_TC-001_TS-002 eq 'pass'</taml:var>
         
-        <taml:var vname="BIIRULES-UBL-T10" vtype="http://purl.oclc.org/dsdl/schematron">http://winter.bologna.enea.it/peppol_schema_rep/schematron/biirules/UBL/BIIRULES-UBL-T10.sch</taml:var>
+        <taml:var vname="BIIRULES-UBL-T10" vtype="http://purl.oclc.org/dsdl/schematron">http://winter.bologna.enea.it/peppol_schema_rep/schematron/biirules/BIIRULES-UBL-T10.sch</taml:var>
         
         <!-- XML document, target of Test -->
         <taml:target type="xml">document</taml:target>
