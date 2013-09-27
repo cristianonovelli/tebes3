@@ -3,41 +3,41 @@ if (typeof TeBES !== 'object') {
 }
 
 
-TeBES.Global = (function ($) {
+TeBES.Global = (function (jQueryNew) {
 
-$(window).load(function(){});
+jQueryNew(window).load(function(){});
 
 
-$(document).ready(function() {
+jQueryNew(document).ready(function() {
 	
-	if($.cookie('login_tab_cookie') == 'login') {
-		$('#loginTab a[href="#login"]').tab('show');
+	if(jQueryNew.cookie('login_tab_cookie') == 'login') {
+		jQueryNew('#loginTab a[href="#login"]').tab('show');
 	} else {
-		$('#loginTab a[href="#create"]').tab('show');
+		jQueryNew('#loginTab a[href="#create"]').tab('show');
 	}
 	
-	$('#loginTab a[href="#login"]').click(function (e) {
+	jQueryNew('#loginTab a[href="#login"]').click(function (e) {
 		  e.preventDefault();
-		  $.cookie('login_tab_cookie', 'login');
-		  $(this).tab('show');
+		  jQueryNew.cookie('login_tab_cookie', 'login');
+		  jQueryNew(this).tab('show');
 	});
 	
-	$('#loginTab a[href="#create"]').click(function (e) {
+	jQueryNew('#loginTab a[href="#create"]').click(function (e) {
 		  e.preventDefault();
-		  $.cookie('login_tab_cookie', 'create');
-		  $(this).tab('show');
+		  jQueryNew.cookie('login_tab_cookie', 'create');
+		  jQueryNew(this).tab('show');
 	});
 	
-	$('#admin_navbar').click(function (e) {
-		$(this).toggleClass('active');
-		$('#info_navbar').removeClass('active');
-		$('#home_navbar').removeClass('active');
+	jQueryNew('#admin_navbar').click(function (e) {
+		jQueryNew(this).toggleClass('active');
+		jQueryNew('#info_navbar').removeClass('active');
+		jQueryNew('#home_navbar').removeClass('active');
 	});
 	
-	$('#home_navbar').click(function (e) {
-		$(this).toggleClass('active');
-		$('#info_navbar').removeClass('active');
-		$('#admin_navbar').removeClass('active');
+	jQueryNew('#home_navbar').click(function (e) {
+		jQueryNew(this).toggleClass('active');
+		jQueryNew('#info_navbar').removeClass('active');
+		jQueryNew('#admin_navbar').removeClass('active');
 	});
 
 }); // END OF DOCUMENT READY

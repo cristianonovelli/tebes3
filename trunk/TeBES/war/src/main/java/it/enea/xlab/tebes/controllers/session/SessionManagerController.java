@@ -1,19 +1,26 @@
 package it.enea.xlab.tebes.controllers.session;
 
+import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.controllers.common.WebController;
+import it.enea.xlab.tebes.controllers.file.FileManagerController;
 import it.enea.xlab.tebes.dao.NestedCriterion;
+import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.file.FileManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
+import it.enea.xlab.tebes.utils.File;
 import it.enea.xlab.tebes.utils.Messages;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.NotBoundException;
@@ -29,6 +36,8 @@ import org.apache.myfaces.custom.fileupload.UploadedFile;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.richfaces.event.UploadEvent;
+import org.richfaces.model.UploadItem;
 
 public class SessionManagerController extends WebController<Session> {
 
@@ -39,6 +48,8 @@ public class SessionManagerController extends WebController<Session> {
 	private SessionManagerRemote sessionManagerService;
 	private UserManagerRemote userManagerService;
 	private TestPlanManagerRemote testPlanManagerService;
+	private FileManagerRemote fileManagerService;
+	private ActionManagerRemote actionManagerService;
 	
 	private List<Session> sessionsList;
 	
@@ -50,20 +61,36 @@ public class SessionManagerController extends WebController<Session> {
 	private boolean showSessionFormMessage;
 	private Long selectedSession;
 	private String logMessage;
-	private boolean isRunning = false;
+	private boolean isRunning;
 	private Session viewCurrentSession;
 	
 	private UploadedFile uploadedFile;
 	private boolean uploadSuccess = false;
 	private String uploadMessage;
 	private boolean isSessionWaiting = false;
+	private Action currentAction;
+	private Input currentInput;
+	private String guiMessage;
+	private String inputTextMessage;
+	private boolean showUploadFileBox = false;
+	private boolean showInputTextBox = false;
+	private boolean showMessageOkBox = false;
 
+	// FILE UPLOAD
+	private ArrayList<File> files = new ArrayList<File>();
+    private int uploadsAvailable = 1;
+    private boolean autoUpload = true;
+    private boolean useFlash = false;
+	
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
 	public SessionManagerController() throws NamingException {
 		sessionManagerService = JNDIServices.getSessionManagerService();
 		userManagerService = JNDIServices.getUserManagerService();
 		testPlanManagerService = JNDIServices.getTestPlanManagerService();
+		fileManagerService = JNDIServices.getFileManagerService();
+		actionManagerService = JNDIServices.getActionManagerService();
+		this.isRunning = false;
 	}
 
 	public void initContext() throws NotBoundException, NamingException {
@@ -111,6 +138,11 @@ public class SessionManagerController extends WebController<Session> {
 		return this.getSession(sessionId).getReport();
 	}
 
+	public List<Long> getSessionIdList() {
+		
+		return sessionManagerService.getSessionIdList();
+	}
+	
 	public List<Long> getSessionIdList(User superUser) {
 		
 		return sessionManagerService.getSessionIdList(superUser);
@@ -196,28 +228,6 @@ public class SessionManagerController extends WebController<Session> {
 		return "create_session";
 	}
 	
-	public String enableLog() {
-		this.isRunning = true;
-		
-		new Thread() {
-			
-			@Override
-			public void run() {
-				super.run();
-				for (int i=0 ; i <10 ; i++) {
-					logMessage += "output &lt;br /&gt;";
-					try {
-						sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}	
-			
-		}.start();
-		return "";
-	}
-	
 	public String viewSession() {
 		if(selectedSession != null)
 			this.viewCurrentSession = this.sessionManagerService.readSession(selectedSession);
@@ -236,24 +246,7 @@ public class SessionManagerController extends WebController<Session> {
 			return "session_creation_fail";
 		}
 	}
-
-	public String upload() throws IOException{
-		try {
-			InputStream stream = uploadedFile.getInputStream();
-			long size = uploadedFile.getSize();
-			byte [] buffer = new byte[(int)size];
-			stream.read(buffer, 0, (int)size);
-			stream.close();
-			uploadSuccess = true;
-			
-		} catch (Exception ioe) {
-
-			uploadMessage = "Errore nel caricamento del file. Ripetere l'operazione.";
-			uploadSuccess = false;
-		}
-		return "";
-	}
-
+	
 	public Long getSelectedTestPlan() {
 		return selectedTestPlan;
 	}
@@ -307,18 +300,23 @@ public class SessionManagerController extends WebController<Session> {
 	public String getLogMessage() {
 		if(logMessage == null)
 			logMessage = "console: ";
-		return this.logMessage;
+		return this.logMessage + this.viewCurrentSession.getReport().getXml();
 	}
 
+//	public boolean getIsRunning() {
+//		if(this.viewCurrentSession != null) {
+//			if(this.viewCurrentSession.getState().equals(Session.getWorkingState()))
+//				this.isRunning = true;
+//			else
+//				this.isRunning = false;
+//		}
+//		
+//		return isRunning;
+//	}
+	
 	public boolean getIsRunning() {
-		if(this.viewCurrentSession != null) {
-			if(this.viewCurrentSession.getState().equals(Session.getWorkingState()))
-				this.isRunning = true;
-			else
-				this.isRunning = false;
-		}
 		
-		return isRunning;
+		return this.isRunning;
 	}
 
 	public Session getViewCurrentSession() {
@@ -353,20 +351,56 @@ public class SessionManagerController extends WebController<Session> {
 		this.uploadMessage = uploadMessage;
 	}
 
-	public boolean getIsSessionWaiting() {
-		
-		if(this.viewCurrentSession != null) {
-			if(this.viewCurrentSession.getState().equals("waiting"))
-				this.isSessionWaiting = true;
-			else
-				this.isSessionWaiting = false;
-		}
-		
-		return isSessionWaiting;
+	public String getGuiMessage() {
+		return guiMessage;
+	}
+
+	public void setGuiMessage(String guiMessage) {
+		this.guiMessage = guiMessage;
+	}
+
+	public String getInputTextMessage() {
+		return inputTextMessage;
+	}
+
+	public void setInputTextMessage(String inputTextMessage) {
+		this.inputTextMessage = inputTextMessage;
 	}
 
 	public void setIsSessionWaiting(boolean isSessionWaiting) {
 		this.isSessionWaiting = isSessionWaiting;
+	}
+
+	public boolean getShowUploadFileBox() {
+		return showUploadFileBox;
+	}
+
+	public void setShowUploadFileBox(boolean showUploadFileBox) {
+		this.showUploadFileBox = showUploadFileBox;
+	}
+
+	public boolean getShowInputTextBox() {
+		return showInputTextBox;
+	}
+
+	public void setShowInputTextBox(boolean showInputTextBox) {
+		this.showInputTextBox = showInputTextBox;
+	}
+
+	public boolean getShowMessageOkBox() {
+		return showMessageOkBox;
+	}
+
+	public void setShowMessageOkBox(boolean showMessageOkBox) {
+		this.showMessageOkBox = showMessageOkBox;
+	}
+
+	public Input getCurrentInput() {
+		return currentInput;
+	}
+
+	public void setCurrentInput(Input currentInput) {
+		this.currentInput = currentInput;
 	}
 
 	public Boolean updateSession(Session session) {
@@ -392,6 +426,168 @@ public class SessionManagerController extends WebController<Session> {
 	public Session resumeSession(Session session) {
 		
 		return sessionManagerService.resumeSession(session);
+	}
+
+	public String upload() throws IOException{
+		try {
+			InputStream stream = uploadedFile.getInputStream();
+			byte [] buffer = this.convertInputStreamToByteArray(stream);
+			this.uploadFile(this.currentInput, uploadedFile.getName(), this.viewCurrentSession.getSut().getType(), buffer, this.viewCurrentSession);
+			uploadSuccess = true;
+			
+		} catch (Exception ioe) {
+
+			uploadMessage = "Errore nel caricamento del file. Ripetere l'operazione.";
+			uploadSuccess = false;
+		}
+		return "";
+	}
+
+	
+	public String execute() {
+		
+		if(this.viewCurrentSession != null) {
+			this.isRunning = true;
+			this.resetBoxFlags();
+			this.viewCurrentSession = this.runWorkflow(this.viewCurrentSession.getTestPlan().getWorkflow(), this.viewCurrentSession);
+		}
+
+		return "";
+	}
+
+	public boolean getIsSessionWaiting() {
+		
+		if(this.viewCurrentSession != null) {
+			if(this.viewCurrentSession.getState().equals(Session.getWaitingState())) {
+				this.isRunning = false;
+				this.isSessionWaiting = true;
+				this.currentAction = this.viewCurrentSession.getTestPlan().getWorkflow().getCurrentAction();
+				
+				for (Input input : this.currentAction.getInputs()) {
+					if(!input.isInputSolved()) {
+						this.currentInput = input;
+						this.guiMessage = input.getGuiMessage();
+						if(input.getGuiReaction().equals("upload")) {
+							this.showUploadFileBox = true;
+							this.showInputTextBox = false;
+							this.showMessageOkBox = false;
+							break;
+						} else if(input.getGuiReaction().equals("text")) {
+							this.showUploadFileBox = false;
+							this.showInputTextBox = true;
+							this.showMessageOkBox = false;
+							break;
+						} else if(input.getGuiReaction().equals("message")) {
+							this.showUploadFileBox = false;
+							this.showInputTextBox = false;
+							this.showMessageOkBox = true;
+							break;
+						}
+					}
+				}
+				
+			} else
+				this.isSessionWaiting = false;
+		}
+		
+		return isSessionWaiting;
+	}
+	
+	private void resetBoxFlags() {
+		this.showUploadFileBox = false;
+		this.showInputTextBox = false;
+		this.showMessageOkBox = false;
+	} 
+	
+	private byte[] convertInputStreamToByteArray(InputStream is) throws IOException { 
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+		
+		int reads = is.read(); 
+		while(reads != -1){ 
+			baos.write(reads); 
+			reads = is.read(); 
+		} 
+		
+		return baos.toByteArray(); 
+		
+	}
+	
+	private Session uploadFile(Input input, String fileName, String type, byte[] fileContent, Session session) throws Exception {
+
+		// Aggiorno l'input
+		input.setInputSolved(true);
+		actionManagerService.updateInput(input);
+		
+		Action action = input.getAction();
+		boolean checking = actionManagerService.checkActionReady(action);
+		
+		if (checking)
+			action.setStateToReady();
+		
+		Session result = fileManagerService.upload(input.getFileIdRef(), fileName, type, fileContent, session);
+
+		return result;
+	}
+	
+	public void listener(UploadEvent event) throws Exception{
+        UploadItem item = event.getUploadItem();
+        File file = new File();
+        file.setLength(item.getData().length);
+        file.setName(item.getFileName());
+        file.setData(item.getData());
+        files.add(file);
+        uploadsAvailable--;
+    } 
+
+	public int getSize() {
+		if (getFiles().size()>0) {
+			return getFiles().size();
+		} else {
+			return 0;
+		}
+	}
+
+	public String clearUploadData() {
+		files.clear();
+		setUploadsAvailable(5);
+		return null;
+	}
+
+	public long getTimeStamp(){
+		return System.currentTimeMillis();
+	}
+
+	public ArrayList<File> getFiles() {
+		return files;
+	}
+
+	public void setFiles(ArrayList<File> files) { 
+		this.files = files;
+	}
+
+	public int getUploadsAvailable() {
+		return uploadsAvailable;
+	}
+
+	public void setUploadsAvailable(int uploadsAvailable) {
+		this.uploadsAvailable = uploadsAvailable;
+	}
+
+	public boolean isAutoUpload() {
+		return autoUpload;
+	}
+
+	public void setAutoUpload(boolean autoUpload) {
+		this.autoUpload = autoUpload;
+	}
+
+	public boolean isUseFlash() {
+		return useFlash;
+	}
+
+	public void setUseFlash(boolean useFlash) {
+		this.useFlash = useFlash;
 	}
 }
 
