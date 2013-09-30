@@ -137,11 +137,6 @@ public class SessionManagerController extends WebController<Session> {
 		
 		return this.getSession(sessionId).getReport();
 	}
-
-	public List<Long> getSessionIdList() {
-		
-		return sessionManagerService.getSessionIdList();
-	}
 	
 	public List<Long> getSessionIdList(User superUser) {
 		
