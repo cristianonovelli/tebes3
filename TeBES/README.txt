@@ -5,8 +5,10 @@ https://tebes3.googlecode.com/svn/trunk/
 
 2. Import TeBES 4-modules project as Existing Maven Project
 
-3. Adjust *.properties and *-ds.xml files from
-TeBES/ejb/src/main/resources
+3. Adjust files in TeBES\ejb\src\main\resources
+tebes.properties 
+tebes-ds.xml  
+log4j.xml 
 
 4. Create MySQL account and database as specified in *-ds.xml file
 
