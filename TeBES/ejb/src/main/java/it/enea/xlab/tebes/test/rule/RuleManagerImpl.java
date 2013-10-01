@@ -144,6 +144,46 @@ public class RuleManagerImpl implements RuleManagerRemote {
 	
 	public boolean schematronValidation(String xmlString, String xmlSchematron) {
 
+		System.out.println("schematronValidation! azx 1");
+		
+		System.out.println("schematronValidation! azx: " + xmlString);
+		System.out.println("schematronValidation! azx: " + xmlSchematron);
+		
+		
+		// TODO
+		// verifica sia uno schematron valido
+		
+		ErrorMessage emList[] = null;
+
+		try {
+			System.out.println("schematronValidation! azx2");
+			validationManager = JNDIServices.getValidationManagerService();
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			System.out.println("schematronValidation! azx3");
+			emList = validationManager.validation(xmlString, xmlSchematron);
+			System.out.println("schematronValidation! azx4");
+			int i=0;
+
+			while (i<emList.length){
+				
+				System.out.println("azxRIGA " + i + ": " + emList[i].getErrorType());
+				System.out.println("azxRIGA " + i + ": " + emList[i].getLineNumber());
+				System.out.println("azxRIGA " + i + ": " + emList[i].getDescription());
+				
+				
+				i++;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		}
+		
 		return true;
 	}
 
@@ -155,7 +195,8 @@ public class RuleManagerImpl implements RuleManagerRemote {
 
 	public boolean xmlSchemaValidation(String xmlString, String xsdString) {
 
-		
+		// TODO
+		// verifica sia uno schematron valido
 
 		System.out.println("xmlSchemaValidation A:" + xmlString);
 		System.out.println("xmlSchemaValidation B:" + xsdString);
