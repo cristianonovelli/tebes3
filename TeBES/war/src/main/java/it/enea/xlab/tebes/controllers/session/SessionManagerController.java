@@ -17,22 +17,25 @@ import it.enea.xlab.tebes.file.FileManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
-import it.enea.xlab.tebes.utils.File;
 import it.enea.xlab.tebes.utils.Messages;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.NotBoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 
-import org.apache.myfaces.custom.fileupload.UploadedFile;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -61,13 +64,13 @@ public class SessionManagerController extends WebController<Session> {
 	private boolean showSessionFormMessage;
 	private Long selectedSession;
 	private String logMessage;
-	private boolean isRunning;
+	private boolean isPollerRunning;
 	private Session viewCurrentSession;
 	
-	private UploadedFile uploadedFile;
 	private boolean uploadSuccess = false;
 	private String uploadMessage;
 	private boolean isSessionWaiting = false;
+	private boolean isSessionWorking = false;
 	private Action currentAction;
 	private Input currentInput;
 	private String guiMessage;
@@ -75,12 +78,16 @@ public class SessionManagerController extends WebController<Session> {
 	private boolean showUploadFileBox = false;
 	private boolean showInputTextBox = false;
 	private boolean showMessageOkBox = false;
+	private String sessionState;
+	private boolean canBeExecuted = false;
+	private boolean canBeStopped = false;
+	private boolean canBeRestarted = false;
+	private boolean isBackEnabled = false;
 
 	// FILE UPLOAD
-	private ArrayList<File> files = new ArrayList<File>();
+    private Map<String, File> uploadedFiles = new LinkedHashMap<String, File>();
     private int uploadsAvailable = 1;
-    private boolean autoUpload = true;
-    private boolean useFlash = false;
+    private String currentFileName;
 	
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
@@ -90,7 +97,8 @@ public class SessionManagerController extends WebController<Session> {
 		testPlanManagerService = JNDIServices.getTestPlanManagerService();
 		fileManagerService = JNDIServices.getFileManagerService();
 		actionManagerService = JNDIServices.getActionManagerService();
-		this.isRunning = false;
+		this.isPollerRunning = false;
+		this.canBeExecuted = true;
 	}
 
 	public void initContext() throws NotBoundException, NamingException {
@@ -309,9 +317,10 @@ public class SessionManagerController extends WebController<Session> {
 //		return isRunning;
 //	}
 	
-	public boolean getIsRunning() {
-		
-		return this.isRunning;
+	public boolean getIsPollerRunning() {
+		if(this.viewCurrentSession.getState().equals(Session.getDoneState()))
+			this.isPollerRunning = false;
+		return this.isPollerRunning;
 	}
 
 	public Session getViewCurrentSession() {
@@ -320,14 +329,6 @@ public class SessionManagerController extends WebController<Session> {
 
 	public void setViewCurrentSession(Session viewCurrentSession) {
 		this.viewCurrentSession = viewCurrentSession;
-	}
-	
-	public UploadedFile getUploadedFile() {
-		return uploadedFile;
-	}
-
-	public void setUploadedFile(UploadedFile uploadedFile) {
-		this.uploadedFile = uploadedFile;
 	}
 
 	public boolean getUploadSuccess() {
@@ -398,6 +399,63 @@ public class SessionManagerController extends WebController<Session> {
 		this.currentInput = currentInput;
 	}
 
+	public String getSessionState() {
+		if(this.viewCurrentSession != null)
+			this.sessionState = this.viewCurrentSession.getState();
+		return sessionState;
+	}
+
+	public void setSessionState(String sessionState) {
+		this.sessionState = sessionState;
+	}
+
+	public boolean getCanBeExecuted() {
+		if(this.viewCurrentSession.getState().equals(Session.getDoneState()))
+			this.canBeExecuted = false;
+		return canBeExecuted;
+	}
+
+	public void setCanBeExecuted(boolean canBeExecuted) {
+		this.canBeExecuted = canBeExecuted;
+	}
+
+	public boolean getCanBeStopped() {
+		if(this.viewCurrentSession.getState().equals(Session.getDoneState()))
+			this.canBeStopped = false;
+		return canBeStopped;
+	}
+
+	public void setCanBeStopped(boolean canBeStopped) {
+		this.canBeStopped = canBeStopped;
+	}
+
+	public boolean getCanBeRestarted() {
+		if(this.viewCurrentSession.getState().equals(Session.getDoneState()))
+			this.canBeRestarted = false;
+		return canBeRestarted;
+	}
+
+	public void setCanBeRestarted(boolean canBeRestarted) {
+		this.canBeRestarted = canBeRestarted;
+	}
+
+	public boolean getIsSessionWorking() {
+		
+		if(this.getSessionState().equals(Session.getWorkingState()))
+			this.isSessionWorking = true;
+		else
+			this.isSessionWorking = false;
+		return isSessionWorking;
+	}
+
+	public boolean getIsBackEnabled() {
+		if(this.getSessionState().equals(Session.getDoneState()))
+			this.isBackEnabled = true;
+		else
+			this.isBackEnabled = false;
+		return isBackEnabled;
+	}
+
 	public Boolean updateSession(Session session) {
 		
 		return sessionManagerService.updateSession(session);
@@ -422,29 +480,32 @@ public class SessionManagerController extends WebController<Session> {
 		
 		return sessionManagerService.resumeSession(session);
 	}
-
-	public String upload() throws IOException{
-		try {
-			InputStream stream = uploadedFile.getInputStream();
-			byte [] buffer = this.convertInputStreamToByteArray(stream);
-			this.uploadFile(this.currentInput, uploadedFile.getName(), this.viewCurrentSession.getSut().getType(), buffer, this.viewCurrentSession);
-			uploadSuccess = true;
-			
-		} catch (Exception ioe) {
-
-			uploadMessage = "Errore nel caricamento del file. Ripetere l'operazione.";
-			uploadSuccess = false;
-		}
+	
+	public String back() {
+		return "back";
+	}
+	
+	public String suspend() {
+		this.viewCurrentSession = this.suspendSession(this.viewCurrentSession);
+		this.canBeExecuted = false;
+		this.canBeStopped = false;
+		this.canBeRestarted = true;
 		return "";
 	}
-
 	
 	public String execute() {
 		
 		if(this.viewCurrentSession != null) {
-			this.isRunning = true;
+			this.isPollerRunning = true;
+			this.canBeExecuted = false;
+			this.canBeStopped = true;
+			this.canBeRestarted = false;
 			this.resetBoxFlags();
 			this.viewCurrentSession = this.runWorkflow(this.viewCurrentSession.getTestPlan().getWorkflow(), this.viewCurrentSession);
+			
+			this.canBeExecuted = true;
+			this.canBeStopped = false;
+			this.canBeRestarted = false;
 		}
 
 		return "";
@@ -454,12 +515,15 @@ public class SessionManagerController extends WebController<Session> {
 		
 		if(this.viewCurrentSession != null) {
 			if(this.viewCurrentSession.getState().equals(Session.getWaitingState())) {
-				this.isRunning = false;
+				this.isPollerRunning = false;
 				this.isSessionWaiting = true;
+				
 				this.currentAction = this.viewCurrentSession.getTestPlan().getWorkflow().getCurrentAction();
+				boolean found = false;
 				
 				for (Input input : this.currentAction.getInputs()) {
 					if(!input.isInputSolved()) {
+						found = true;
 						this.currentInput = input;
 						this.guiMessage = input.getGuiMessage();
 						if(input.getGuiReaction().equals("upload")) {
@@ -479,6 +543,16 @@ public class SessionManagerController extends WebController<Session> {
 							break;
 						}
 					}
+				}
+				
+				if(!found) {
+					this.resetBoxFlags();
+					this.isPollerRunning = true;
+					this.isSessionWaiting = false;
+					
+					this.canBeExecuted = true;
+					this.canBeStopped = false;
+					this.canBeRestarted = false;
 				}
 				
 			} else
@@ -507,6 +581,23 @@ public class SessionManagerController extends WebController<Session> {
 		return baos.toByteArray(); 
 		
 	}
+
+	public String upload() throws IOException{
+		try {
+			InputStream stream = new FileInputStream(this.uploadedFiles.get(this.currentFileName));
+			byte [] buffer = this.convertInputStreamToByteArray(stream);
+			this.viewCurrentSession = this.uploadFile(this.currentInput, this.currentFileName, this.viewCurrentSession.getSut().getType(), buffer, this.viewCurrentSession);
+			uploadSuccess = true;
+			this.isPollerRunning = true;
+			this.clearUploadedFile(null);
+			
+		} catch (Exception ioe) {
+
+			uploadMessage = "Errore nel caricamento del file. Ripetere l'operazione.";
+			uploadSuccess = false;
+		}
+		return "";
+	}
 	
 	private Session uploadFile(Input input, String fileName, String type, byte[] fileContent, Session session) throws Exception {
 
@@ -525,40 +616,29 @@ public class SessionManagerController extends WebController<Session> {
 		return result;
 	}
 	
-	public void listener(UploadEvent event) throws Exception{
+	public void fileUploadListener(UploadEvent event) throws Exception{
         UploadItem item = event.getUploadItem();
-        File file = new File();
-        file.setLength(item.getData().length);
-        file.setName(item.getFileName());
-        file.setData(item.getData());
-        files.add(file);
+        this.uploadedFiles.put(item.getFileName(), item.getFile());
+        this.currentFileName = item.getFileName();
         uploadsAvailable--;
     } 
 
+	public void clearUploadedFile(ActionEvent event) {
+		this.uploadedFiles.clear();
+		this.currentFileName = "";
+		setUploadsAvailable(1);
+	}
+
 	public int getSize() {
-		if (getFiles().size()>0) {
-			return getFiles().size();
+		if (this.uploadedFiles.size()>0) {
+			return this.uploadedFiles.size();
 		} else {
 			return 0;
 		}
 	}
 
-	public String clearUploadData() {
-		files.clear();
-		setUploadsAvailable(5);
-		return null;
-	}
-
 	public long getTimeStamp(){
 		return System.currentTimeMillis();
-	}
-
-	public ArrayList<File> getFiles() {
-		return files;
-	}
-
-	public void setFiles(ArrayList<File> files) { 
-		this.files = files;
 	}
 
 	public int getUploadsAvailable() {
@@ -567,22 +647,6 @@ public class SessionManagerController extends WebController<Session> {
 
 	public void setUploadsAvailable(int uploadsAvailable) {
 		this.uploadsAvailable = uploadsAvailable;
-	}
-
-	public boolean isAutoUpload() {
-		return autoUpload;
-	}
-
-	public void setAutoUpload(boolean autoUpload) {
-		this.autoUpload = autoUpload;
-	}
-
-	public boolean isUseFlash() {
-		return useFlash;
-	}
-
-	public void setUseFlash(boolean useFlash) {
-		this.useFlash = useFlash;
 	}
 }
 

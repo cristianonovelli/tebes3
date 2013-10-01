@@ -82,47 +82,6 @@
 
         <!-- end of RICHFACES CONFIGURATION -->
         
-        <!-- File upload configuration -->
-        <filter>
-                <filter-name>extensionsFilter</filter-name>
-                <filter-class>org.apache.myfaces.webapp.filter.ExtensionsFilter
-                </filter-class>
-        <init-param>
-                <description> Set the size limit for uploaded files.
-                                Format: 10 - 10 bytes
-                        10k - 10 KB
-                        10m - 10 MB
-                        1g - 1 GB
-                </description>
-                <param-name>uploadMaxFileSize</param-name>
-                <param-value>100m</param-value>
-        </init-param>
-        <init-param>
-                <description> Set the threshold size - files below this 
-                        limit are stored in memory, files above this limit 
-                        are stored on disk.
-                         Format: 10 - 10 bytes
-                         10k - 10 KB
-                         10m - 10 MB
-                         1g - 1 GB
-                </description>
-                <param-name>uploadThresholdSize</param-name>
-                <param-value>10m</param-value>
-         </init-param>
-        </filter>
-
-        <!-- End of File upload configuration -->
-        
-        <filter-mapping>
-        <filter-name>extensionsFilter</filter-name>
-        <url-pattern>*.jsf</url-pattern>
-        </filter-mapping>
-
-        <filter-mapping>
-        <filter-name>extensionsFilter</filter-name>
-        <url-pattern>/faces/*</url-pattern>
-        </filter-mapping>
-        
         <!-- SECURITY -->
         
         <security-role>
