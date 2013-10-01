@@ -2,94 +2,141 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:t="http://myfaces.apache.org/tomahawk"
-        xmlns:a4j="http://richfaces.org/a4j"
-        xmlns:rich="http://richfaces.org/rich">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
 
 <ui:composition template="layout/layout.xhtml">
-        <ui:define name="content">
-                <f:view>
-                        <h:form enctype="multipart/form-data">
-                                <a4j:poll id="poll" interval="500" enabled="#{SessionManagerController.isRunning}" reRender="poll,fileUploadPanel"/>
-                                <div class="row" style="margin-left: 10px;">
-                                        <h3>Sessione di Test</h3>
-                                </div>
-                                <div class="well row" style="margin-left: 10px;">
-                                        <div class="control-group">
-                                        <label class="control-label" for="output_test_plan">Test Plan</label>
-                                                <div class="controls">
-                                                        <h:outputText id="output_test_plan" value="#{SessionManagerController.viewCurrentSession.testPlan.name}" />
-                                                </div>
-                                        </div>
-                                        <div class="control-group">
-                                        <label class="control-label" for="output_sut">SUT</label>
-                                                <div class="controls">
-                                                        <h:outputText id="output_sut" value="#{SessionManagerController.viewCurrentSession.sut.name}" />
-                                                </div>
-                                        </div>
-                                </div>
-                                <div class="row" style="margin-left: 10px;">
-                                        <div class="span9">
-                                                <a4j:commandButton value="Esegui" styleClass="btn btn-primary" action="#{SessionManagerController.execute}" 
-                                                        reRender="poll"/>
-                                                <a4j:commandButton value="Sospendi" styleClass="btn btn-primary" style="margin-left: 10px;" 
-                                                        reRender="poll"/>
-                                                <a4j:commandButton value="Riavvia" styleClass="btn btn-primary" style="margin-left: 10px;" 
-                                                        reRender="poll"/>
-                                        </div>
-                                </div>
-                                <div class="row" style="margin-left: 10px;">
-                                        <div class="span4">
-                                                <t:dataTable id="actionList" var="action" styleClass="table table-striped" 
-                                                        value="#{SessionManagerController.viewCurrentSession.testPlan.workflow.actions}" preserveDataModel="false">
-                                                        <h:column>
-                                                                <f:facet name="header">
-                                                                        <h:outputText value="Actions" />
-                                                                </f:facet>
-                                                                <h:outputText value="#{action.actionName}" />
-                                                        </h:column>
-                                                </t:dataTable>
-                                        </div>
-                                        
-                                        <a4j:outputPanel id="fileUploadPanel">
-                                                        <rich:fileUpload fileUploadListener="#{SessionManagerController.listener}"
-															id="upload"
-								   							maxFilesQuantity="#{SessionManagerController.uploadsAvailable}"
-														    immediateUpload="true" 
-														    allowFlash="false"
-														    acceptedTypes="pdf,png,jpg,txt,html,xml"
-														    rendered="#{SessionManagerController.isSessionWaiting}"
-														    noDuplicate="true" clearAllControlLabel="Cancella tutto" clearControlLabel="Cancella" doneLabel="Caricato">
-														    <a4j:support event="onuploadcomplete" reRender="poll" />
-														</rich:fileUpload>
-                                                <div class="well span4 offset1">
-													<h:outputText value="#{SessionManagerController.guiMessage}" rendered="#{SessionManagerController.showInputTextBox}"/>
-													<div class="controls">
-														<h:inputText id="inputMessage" value="#{SessionManagerController.inputTextMessage}" rendered="#{SessionManagerController.showInputTextBox}"/>
-													</div>
-						   						 	<h:commandButton styleClass="btn btn-primary" value="OK" action="#{SessionManagerController.upload}" rendered="#{SessionManagerController.showInputTextBox}"/>
-												</div>
-												<div class="well span4 offset1">
-													<h:outputText value="#{SessionManagerController.guiMessage}" rendered="#{SessionManagerController.showMessageOkBox}"/>
-						   						 	<h:commandButton styleClass="btn btn-primary" value="OK" action="#{SessionManagerController.upload}" rendered="#{SessionManagerController.showMessageOkBox}"/>
-												</div>
-                                        </a4j:outputPanel>
-                                </div>
-                                
-                                <div class="row" style="margin-left: 10px;">
-                                        <h3>Console di Log</h3>
-                                </div>
-                                <div class="well row" style="background-color: #000000; margin-left: 10px;">
-                                        <a4j:outputPanel id="consolePanel" ajaxRendered="true">
-                                                <h:outputText value="#{SessionManagerController.logMessage}" style="color: #FFFFFF;" />
-                                        </a4j:outputPanel>
-                                </div>
-                                
-                        </h:form>
-                </f:view>
-        </ui:define>
+	<ui:define name="content">
+		<f:view>
+			<h:form enctype="multipart/form-data">
+				<a4j:poll id="poll" interval="500" enabled="#{SessionManagerController.isPollerRunning}" reRender="poll,fileUploadPanel,backButtonPanel" />
+				<a4j:poll id="buttonPoller" enabled="true" interval="500" reRender="buttonPanel,sessionState" />
+				<div class="row" style="margin-left: 10px;">
+					<h3>Sessione di Test</h3>
+				</div>
+				<a4j:outputPanel id="sessionState">
+					<h:outputText styleClass="pull-right" value="Stato della sessione: #{SessionManagerController.sessionState}" />
+				</a4j:outputPanel>
+				<a4j:outputPanel id="sessionRunning">
+					<h:outputText styleClass="pull-right" rendered="#{SessionManagerController.isSessionWorking}" >
+						<i class="icon-spinner icon-spin icon-large"></i>
+					</h:outputText>	
+				</a4j:outputPanel>
+				
+				<div class="well row" style="margin-left: 10px;">
+					<div class="control-group">
+						<label class="control-label" for="output_test_plan">Test Plan</label>
+						<div class="controls">
+							<h:outputText id="output_test_plan"
+								value="#{SessionManagerController.viewCurrentSession.testPlan.name}" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="output_sut">SUT</label>
+						<div class="controls">
+							<h:outputText id="output_sut"
+								value="#{SessionManagerController.viewCurrentSession.sut.name}" />
+						</div>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 10px;">
+					<div class="span9">
+						<a4j:outputPanel id="buttonPanel">
+							<a4j:commandButton value="Esegui" styleClass="btn btn-primary" rendered="#{SessionManagerController.canBeExecuted}"
+								action="#{SessionManagerController.execute}" reRender="poll,sessionRunning" />
+							<a4j:commandButton value="Esegui" styleClass="btn btn-primary disabled"
+								rendered="#{!SessionManagerController.canBeExecuted}" />
+							<a4j:commandButton value="Sospendi" styleClass="btn btn-primary" rendered="#{SessionManagerController.canBeStopped}"
+								style="margin-left: 10px;" reRender="poll,sessionRunning" action="#{SessionManagerController.suspend}"/>
+							<a4j:commandButton value="Sospendi" styleClass="btn btn-primary disabled" rendered="#{!SessionManagerController.canBeStopped}"
+								style="margin-left: 10px;" />
+							<a4j:commandButton value="Riavvia" styleClass="btn btn-primary" rendered="#{SessionManagerController.canBeRestarted}"
+								style="margin-left: 10px;" reRender="poll,sessionRunning" />
+							<a4j:commandButton value="Riavvia" styleClass="btn btn-primary disabled" rendered="#{!SessionManagerController.canBeRestarted}"
+								style="margin-left: 10px;" />
+						</a4j:outputPanel>
+					</div>
+				</div>
+				<div class="row" style="margin-left: 10px;">
+					<div class="span4">
+						<t:dataTable id="actionList" var="action"
+							styleClass="table table-striped"
+							value="#{SessionManagerController.viewCurrentSession.testPlan.workflow.actions}"
+							preserveDataModel="false">
+							<h:column>
+								<f:facet name="header">
+									<h:outputText value="Actions" />
+								</f:facet>
+								<h:outputText value="#{action.actionName}" />
+							</h:column>
+						</t:dataTable>
+					</div>
+
+					<a4j:outputPanel id="fileUploadPanel">
+						<a4j:region
+							rendered="#{SessionManagerController.isSessionWaiting}" />
+						<div class="span4 offset1">
+							<rich:fileUpload
+								fileUploadListener="#{SessionManagerController.fileUploadListener}"
+								id="upload"
+								maxFilesQuantity="#{SessionManagerController.uploadsAvailable}"
+								immediateUpload="true" allowFlash="false"
+								acceptedTypes="pdf,png,jpg,txt,html,xml"
+								rendered="#{SessionManagerController.showUploadFileBox}"
+								noDuplicate="true" clearAllControlLabel="Cancella tutto"
+								clearControlLabel="Cancella" doneLabel="Caricato">
+								<a4j:support event="onuploadcomplete" reRender="poll" />
+								<a4j:support event="onclear" reRender="poll,fileUploadPanel"
+									actionListener="#{SessionManagerController.clearUploadedFile}" />
+							</rich:fileUpload>
+							<a4j:commandButton value="Procedi" styleClass="btn btn-primary"
+								rendered="#{SessionManagerController.showUploadFileBox}"
+								action="#{SessionManagerController.upload}"
+								reRender="poll,fileUploadPanel,sessionState,sessionRunning" />
+						</div>
+						<a4j:region rendered="#{SessionManagerController.showInputTextBox}" >
+							<div class="well span4 offset1">
+								<h:outputText value="#{SessionManagerController.guiMessage}" />
+								<div class="controls">
+									<h:inputText id="inputMessage"
+										value="#{SessionManagerController.inputTextMessage}" />
+								</div>
+								<h:commandButton styleClass="btn btn-primary" value="OK"
+									action="#{SessionManagerController.upload}" />
+							</div>
+						</a4j:region>
+						<a4j:region rendered="#{SessionManagerController.showMessageOkBox}" >
+							<div class="well span4 offset1">
+								<h:outputText value="#{SessionManagerController.guiMessage}" />
+								<h:commandButton styleClass="btn btn-primary" value="OK"
+									action="#{SessionManagerController.upload}" />
+							</div>
+						</a4j:region>
+					</a4j:outputPanel>
+				</div>
+
+				<div class="row" style="margin-left: 10px;">
+					<h3>Console di Log</h3>
+				</div>
+				<div class="well row"
+					style="background-color: #000000; margin-left: 10px;">
+					<a4j:outputPanel id="consolePanel" ajaxRendered="true">
+						<h:outputText value="#{SessionManagerController.logMessage}"
+							style="color: #FFFFFF;" />
+					</a4j:outputPanel>
+				</div>
+				
+				<a4j:outputPanel id="backButtonPanel" ajaxRendered="true">
+					<h:commandButton styleClass="btn btn-primary" value="Indietro" rendered="#{SessionManagerController.isBackEnabled}" 
+						action="backToSessionManager" />
+				</a4j:outputPanel>
+
+			</h:form>
+		</f:view>
+	</ui:define>
 </ui:composition>
 </html>

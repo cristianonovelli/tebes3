@@ -186,6 +186,16 @@
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
+	
+	<!-- session_info -->
+	<navigation-rule>
+		<from-view-id>/session_info.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>backToSessionManager</from-outcome>
+			<to-view-id>/session_manager.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
 
 	<application>
 		<locale-config>
