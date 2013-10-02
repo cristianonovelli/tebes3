@@ -18,12 +18,12 @@
 			<a4j:form ajaxSubmit="true"
 				reRender="utentiList,scrollValidationDown,scroll_1_div">
 
-				<h3>Gestione Utenti</h3>
-				<h:commandLink styleClass="btn btn-primary pull-right" value="Crea Utente" action="#{UserAdminController.createItem}" />
+				<h3 style="display:inline-block;">Gestione Utenti</h3>
+				<h:commandLink styleClass="btn btn-success pull-right" value="Crea Utente" action="#{UserAdminController.createItem}" />
 
 				<t:dataTable id="utentiList" var="utente" styleClass="table table-striped"
 					value="#{UserAdminController.dataModel}" preserveDataModel="false"
-					rows="#{UserAdminController.rowsPerPage}">
+					rows="#{UserAdminController.rowsPerPage}" style="margin-top:20px;">
 
 					<h:column>
 						<f:facet name="header">

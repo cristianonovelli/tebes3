@@ -1,43 +1,36 @@
-.oddRow {
-	background-color: silver;
+body {
+	font-size: 12px;
 }
 
-.evenRow {
-	background-color: white;
+h4 {
+	color: #195B7D;
 }
 
-.centered {
-	text-align: center;
-	width: 30%;
+a [class^="icon-"]:hover {
+	text-decoration:none;
 }
 
-.normal {
-	text-align: left;
+.table th {
+	color: #999;
+	font-size: 12px;
+	line-height: 12px;
+	border-bottom: 4px solid #999;
 }
 
-.form {
-	border: solid #000 3px;
-	width: 400px;
+.tdVerticalAligned {
+	vertical-align: middle !important;
 }
 
-.contactTable {
-	border: solid #000 1px;
-	width: 500px;
+.nav-header {
+	color: #999;
 }
 
-.headerTable {
-	border: solid #000 1px;
+.nav-list>li>a {
+	font-size: 14px;
+	font-weight: 800;
 }
 
-.errorClass {
-	color: red;
-		
-}
-
-.infoClass {
-	color: blue;
-}
-
-.labelClass {
-	color: black;
+.control-label {
+	color: #666;
+	font-weight: 600;
 }
