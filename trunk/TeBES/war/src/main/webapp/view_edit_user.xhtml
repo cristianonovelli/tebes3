@@ -18,38 +18,38 @@
 			<h:form class="form-horizontal" styleClass="form-horizontal">
 				<div class="span4">
 					<h3>Dettaglio Utente</h3>
-					<div class="control-group">
-    					<label class="control-label" for="input_username">Nome</label>
+					<div class="control-group" style="margin-top:20px;">
+    					<label class="control-label" for="input_username">Nome *</label>
 						<div class="controls">
 							<h:inputText id="input_username" value="#{UserAdminController.selectedUser.name}" />
 						</div>
   					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_surname">Cognome</label>
+    					<label class="control-label" for="input_surname">Cognome *</label>
 						<div class="controls">
 							<h:inputText id="input_surname" value="#{UserAdminController.selectedUser.surname}" />
 						</div>
 					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_email">E-mail</label>
+    					<label class="control-label" for="input_email">E-mail *</label>
 						<div class="controls">
 							<h:inputText id="input_email" value="#{UserAdminController.selectedUser.eMail}" />
 						</div>
 					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_password">Password</label>
+    					<label class="control-label" for="input_password">Password *</label>
 						<div class="controls">
 							<h:inputSecret id="input_password" redisplay="true" value="#{UserAdminController.selectedUser.password}" />
 						</div>
 					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_password_confirm">Conferma password</label>
+    					<label class="control-label" for="input_password_confirm">Conferma password *</label>
 						<div class="controls">
 							<h:inputSecret id="input_password_confirm" redisplay="true" value="#{UserAdminController.currentPasswordConfirm}" />
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="menu_role" class="control-label">Ruolo</label>
+						<label for="menu_role" class="control-label">Ruolo *</label>
 						<div class="controls">
 							<h:selectOneMenu id="menu_role" value="#{UserAdminController.selectedRole}">
 								<f:selectItems value="#{UserAdminController.roleSelect}" />
@@ -57,26 +57,36 @@
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="menu_group" class="control-label">Gruppo</label>
+						<label for="menu_group" class="control-label">Gruppo *</label>
 						<div class="controls">
 							<h:selectOneMenu id="menu_group" value="#{UserAdminController.selectedGroup}">
 								<f:selectItems value="#{UserAdminController.groupSelect}" />
 							</h:selectOneMenu>
 						</div>
 					</div>
-					<div class="pagination-centered">
-      					<h:commandLink rendered="#{UserAdminController.isUserEditMode}" styleClass="btn btn-primary" value="Salva"
+					
+					<div class="control-group">
+						
+						<div class="controls">
+							<h:commandLink rendered="#{UserAdminController.isUserEditMode}" styleClass="btn btn-primary" value="Salva"
       						action="#{UserAdminController.updateUser}"/>
-      					<h:commandLink rendered="#{!UserAdminController.isUserEditMode}" styleClass="btn btn-primary" value="Crea"
-      						action="#{UserAdminController.createNewUser}" />
-      					<h:commandLink styleClass="btn" value="Annulla" action="#{UserAdminController.cancel}" style="margin-left: 10px;"/>
-      					
-	      				<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true" rendered="#{UserAdminController.showUserFormMessage}">
-	      					<div class="alert">
-								<h:outputText value="#{UserAdminController.userFormMessage}" rendered="#{UserAdminController.showUserFormMessage}" />		
-							</div>	
-						</a4j:outputPanel>	
-  					</div>
+	      					<h:commandLink rendered="#{!UserAdminController.isUserEditMode}" styleClass="btn btn-primary" value="Crea"
+	      						action="#{UserAdminController.createNewUser}" />
+	      					<h:commandLink styleClass="btn" value="Annulla" action="#{UserAdminController.cancel}" style="margin-left: 10px;"/>
+						</div>
+					</div>
+					
+					<div class="control-group">
+						
+						<div class="controls" style="width: 230px;">
+							<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true" rendered="#{UserAdminController.showUserFormMessage}">
+		      					<div class="alert">
+									<h:outputText value="#{UserAdminController.userFormMessage}" rendered="#{UserAdminController.showUserFormMessage}" />		
+								</div>	
+							</a4j:outputPanel>	
+						</div>
+					</div>
+	
   				</div>
   				<div class="span5"> </div>
 			</h:form>

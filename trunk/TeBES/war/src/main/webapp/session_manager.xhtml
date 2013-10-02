@@ -14,12 +14,12 @@
 		<f:view>
 			<a4j:form ajaxSubmit="true" reRender="utentiList,scrollValidationDown,scroll_1_div">
 				<h3>Session Manager</h3>
-				<h4>Sessioni attive</h4>
-				<h:commandLink styleClass="btn btn-primary pull-right" value="Crea Sessione" action="#{SessionManagerController.openCreateSessionView}" />
+				<h4 style="display: inline-block;">Sessioni attive</h4>
+				<h:commandLink styleClass="btn btn-success pull-right" value="Crea Sessione" action="#{SessionManagerController.openCreateSessionView}" />
 				
 				<t:dataTable id="activeSessionList" var="testSession" styleClass="table table-striped"
 					value="#{SessionManagerController.dataModel}" preserveDataModel="false"
-					rows="#{SessionManagerController.rowsPerPage}">
+					rows="#{SessionManagerController.rowsPerPage}" style="margin-top: 20px;">
 
 					<h:column>
 						<f:facet name="header">
