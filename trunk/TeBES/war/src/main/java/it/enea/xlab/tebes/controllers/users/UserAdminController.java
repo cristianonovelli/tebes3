@@ -408,4 +408,9 @@ public class UserAdminController extends WebController<User> {
 			return showUserFormMessage;
 		}
 
+		public boolean checkValidation() {
+				
+			return userManagerService.checkValidation();
+		}
+
 }

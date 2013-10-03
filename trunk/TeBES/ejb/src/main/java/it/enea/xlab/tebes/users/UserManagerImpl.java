@@ -1,6 +1,7 @@
 package it.enea.xlab.tebes.users;
 
 import it.enea.xlab.tebes.common.Constants;
+import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Group;
@@ -8,13 +9,16 @@ import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.testplan.TestPlanManagerImpl;
+import it.enea.xlab.tebes.validation.ValidationManagerRemote;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -635,6 +639,23 @@ public class UserManagerImpl implements UserManagerRemote {
 	public Group readGroup(String groupName) {
 
 		return (Group) eM.createQuery("SELECT group FROM UserGroup group WHERE group.name =:groupName").setParameter("groupName", groupName).getSingleResult();
+	}
+
+	
+	
+	@EJB
+	private ValidationManagerRemote validationManager; 	
+	public boolean checkValidation() {
+
+		boolean result = false;
+		try {
+			validationManager = JNDIServices.getValidationManagerService();
+			if (validationManager != null)
+				result = true;
+		} catch (NamingException e) {
+			result = false;
+		}
+		return result;
 	}
 
 /*	public Boolean deleteTestPlan(Long userId, Long testPlanId) {
