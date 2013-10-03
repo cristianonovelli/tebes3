@@ -113,11 +113,6 @@ public class TestManagerImpl implements TestManagerRemote {
 		report.addToFullDescription("\nSTART executeTAF: " + taf.getName());
 		
 		
-		// Qui sto considerando che la TAF sia una Test Assertion, 
-		// ma invece bisognerebbe gestire anche il fatto sia una Test Suite o un Test Case
-		// A DIRE IL VERO NO! UNA VOLTA CHE E' TAF NON MI INTERESSA PIU'! 
-		// DEVO SOLO GESTIRE I CASI IN CUI LA TEST RULE E' VUOTA!
-		
 		// Prerequisites
 		Vector<Action> prerequisites = taf.getTests();
 		if ( !taf.isSkipTurnedON() && (prerequisites != null) ) {

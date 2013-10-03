@@ -51,6 +51,8 @@ public interface UserManagerRemote {
 
 	public List<Long> getActionIdList();
 
+	public boolean checkValidation();
+
 	
 
 	//public Boolean deleteTestPlan(Long userId, Long testPlanId);

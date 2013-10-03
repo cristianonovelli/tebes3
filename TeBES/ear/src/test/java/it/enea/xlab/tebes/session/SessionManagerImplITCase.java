@@ -51,11 +51,13 @@ public class SessionManagerImplITCase {
 	static SUTManagerController sutController;
 	static FileManagerController fileController;
 	
+	
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
 	static User superUser, currentUser;
 	 
 
+	
 	@BeforeClass
 	public static void before_testPlanManager() throws Exception {
 		
@@ -114,7 +116,11 @@ public class SessionManagerImplITCase {
 		role2_advanced = userAdminController.readRole(id_role2_advanced);
 		role3_admin = userAdminController.readRole(id_role3_admin);
 		role4_superuser = userAdminController.readRole(id_role4_superuser);
-		logger.info("ROLES: " 
+		Assert.assertNotNull(role1_standard);
+		Assert.assertNotNull(role2_advanced);
+		Assert.assertNotNull(role3_admin);
+		Assert.assertNotNull(role4_superuser);
+		logger.info("OK! ROLES: " 
 				+ role1_standard.getName() + ", " 
 				+ role2_advanced.getName() + ", " 
 				+ role3_admin.getName() + ", " 
@@ -212,6 +218,13 @@ public class SessionManagerImplITCase {
 		Assert.assertNotNull(testPlan.getWorkflow().getActions());
 		Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));
 		logger.info("OK! IMPORTING system Test Plans");
+		
+		logger.info("8) VALIDATION service CHECKING...");
+		if( userAdminController.checkValidation() )
+			logger.info("OK! CHECKED OUT VALIDATION service!");
+		else
+			logger.info("NO. VALIDATION service is disabled or doesn't work");
+		
 		
 		logger.info("*******************************************");
 		logger.info("");
@@ -328,7 +341,7 @@ public class SessionManagerImplITCase {
 		Long sutId = sutController.createSUT(sut, currentUser);
 		Assert.assertNotNull(sutId);				
 		Assert.assertTrue(sutId.intValue()>0);	
-		logger.info("OK! CREATED SUT " + sut.getName() + " with type: " + sut.getType() + " and interaction: " + sut.getInteraction());
+		logger.info("OK! CREATED SUT " + sut.getName() + " with type: " + sut.getType() + " and interaction: " + sut.getInteraction().getType());
 
 		
 		// Nel momento in cui l'utente avvia il test
