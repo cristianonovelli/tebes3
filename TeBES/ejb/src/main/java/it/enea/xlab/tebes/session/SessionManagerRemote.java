@@ -34,4 +34,7 @@ public interface SessionManagerRemote {
 	public Session annulSession(Session session);
 
 	public Session resumeSession(Session session);
+
+
+	public String getReportURL(Session session);
 }

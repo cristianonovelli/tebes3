@@ -7,6 +7,7 @@ import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.authentication.AuthenticationManager;
 import it.enea.xlab.tebes.paging.PagingManager;
 import it.enea.xlab.tebes.file.FileManagerRemote;
+import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
@@ -168,5 +169,6 @@ public class JNDIServices {
 		
 		return fileManager;
 	}
-	
+
+
 }

@@ -110,36 +110,47 @@ public class ReportManagerImpl implements ReportManagerRemote {
 	// essendo parte della struttura
 	public Report createReportForNewSession(Session session) throws Exception {
 		
+		System.out.println("createReportForNewSession START");
+		
 		// Create Report by JPA
 		Report report = new Report();
-		Long reportId = this.createReport(report);				
+		Long reportId = this.createReport(report);		
 		report = this.readReport(reportId);
+		System.out.println("createReportForNewSession - reportId:" + reportId);
 		
 		// Define report name as "TR-" + [reportId]
 		report.setName(Report.getReportnamePrefix().concat(reportId.toString()));
+		System.out.println("createReportForNewSession - name:" + report.getName());
 		
 		// Define report description as "Report " + [reportName]
 		report.setDescription(Report.getReportdescription().concat(report.getName()));
+		System.out.println("createReportForNewSession - description:" + report.getDescription());
 		
 		// Set sessionID
 		report.setSessionID(session.getId());
+		System.out.println("createReportForNewSession - sessionId:" + report.getSessionID());
 		
 		// Get and Set current Datetime
 		report.setDatetime(XLabDates.getCurrentUTC());
-		
+		System.out.println("createReportForNewSession - datetime:" + report.getDatetime());
 
 		
-		// XML di Systema da cui prendere il template
+		// XML di Sistema da cui prendere il template
 		String xmlReportPathName = PropertiesUtil.getSuperUserReportAbsFileName(); 
+		System.out.println("createReportForNewSession - xmlReportPathName:" + xmlReportPathName);
 		
 		ReportDOM reportDOM = null;
 
 		// Get ReportDOM
+		System.out.println("createReportForNewSession - PRE-DOM");
 		reportDOM = new ReportDOM(xmlReportPathName);
-
+		System.out.println("createReportForNewSession - POST-DOM");
+		
 		 
 		Element rootElement = reportDOM.root;
 		
+		
+		// Aggiorno XML
 		if ( reportDOM.root != null ) {
 			
 			// Aggiorno XML Root
@@ -189,11 +200,16 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			boolean updating = this.updateReport(report);
 			
 			// READING
-			if (updating) 
-				report = this.readReport(reportId);			
-	
+			if (updating) {
+				report = this.readReport(reportId);
+				System.out.println("createReportForNewSession - UPDATING OK");
+			}
+			else
+				System.out.println("createReportForNewSession - UPDATING NO");
 		}
 
+		System.out.println("createReportForNewSession END");
+		
 		return report;
 	}
 

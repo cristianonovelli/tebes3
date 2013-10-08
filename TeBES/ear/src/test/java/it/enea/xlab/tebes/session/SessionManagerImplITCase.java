@@ -483,18 +483,6 @@ public class SessionManagerImplITCase {
 			Assert.assertTrue(report.getName().contains(Report.getReportnamePrefix()));			
 			Assert.assertTrue(report.getXml().getBytes().length > 1000);
 
-			// il report NON deve venire salvato su file
-			// se l'utente lo vuole scaricare verrà creato in una location temporanea
-			// lo salvo ora per monitorare l'output più agevolmente
-			String absUserReportsPath = PropertiesUtil.getUserReportsDirPath(currentUserId);		
-			String reportFileName = report.getName().concat(".xml");	
-			try {			
-				XLabFileManager.create(absUserReportsPath.concat(reportFileName), report.getXml());	
-				// TODO verificare valore di ritorno nelle librerie xlab-common
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
 			
 			// 1. prendo l'action corrente 
 			// 2. 1 se l'action corrente è NEW, Session diventa WAITING, risolvo gli input, poi avvio il workflow, Session WORKING
@@ -649,7 +637,6 @@ public class SessionManagerImplITCase {
 		
 		
 		
-		
 		// TODO quando si chiude la sessione di test?
 		// TODO closeSession
 		// TODO session.setEndDateTime(endDateTime);
@@ -662,32 +649,14 @@ public class SessionManagerImplITCase {
 		
 
 		
-		// TODO CICLO PER ATTENDERE RICHIESTA DI INTERAZIONE O FINE DEL WORKFLOW 
-		// Prima di far partire il workflow l'utente dovrebbe visualizzare:
-		// 1. lista delle action che verranno eseguite;
-		// 2. prossima azione (con eventuali requisiti)
-		// 3. eventuale interazione richiesta per cominciare
+		// il report NON deve venire salvato su file
+		// se l'utente lo vuole scaricare verrà creato in una location temporanea
+		// lo salvo ora per monitorare l'output più agevolmente
 		
-		// TODO report.setState(Report.getFinalState());
+		String reportURL = sessionController.getReportURL(currentSession);
 		
+		logger.info("Report URL: " + reportURL);
 		
-		report = sessionController.getReport(sessionId);
-		
-		Assert.assertTrue(report.getState().equals(Report.getFinalState()));
-		//Assert.assertTrue(report.getState().equals(Report.getDraftState()));
-		System.out.println("REPORT");
-		System.out.println(report.getState());
-		System.out.println(report.getTestResult());
-		
-		
-		// TODO chiusura della sessione di test
-		// possibilità di download del report
-		
-		
-		// IPOTESI
-		// 1. sospendo quella sessione
-		// 2 faccio login con altro utente
-		// 3. avvio altro test plan TP-2 per verificare sessioni multiple
 		
 		
 	}

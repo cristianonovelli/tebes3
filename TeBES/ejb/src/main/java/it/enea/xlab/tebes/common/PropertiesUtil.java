@@ -239,17 +239,14 @@ public class PropertiesUtil {
 		return result;
 	}
 
-	// Path Relativo (necessario in alcuni validatori)
-	public static String getUserDocsRelPath(Long id) {
+	// Path Relativo (necessario in alcuni validatori e per costruire l'URL)
+	// p.es. users/1/docs/
+	public static String getUserDocsRelPath(Long userId) {
 		
-		//String result = getUserDir(id);
-		String result = getArtifactsDirProperty();
+		String result = getUsersDirProperty();
 		result = checkFinalSlash(result);
 		
-		result = result.concat(getUsersDirProperty());
-		result = checkFinalSlash(result);
-		
-		result = result.concat(id.toString());
+		result = result.concat(userId.toString());
 		result = checkFinalSlash(result);		
 
 		result = result.concat(getDocsDirProperty());
@@ -257,6 +254,38 @@ public class PropertiesUtil {
 		
 		return result;
 	}
+
+
+	// Path Relativo (necessario per fornire l'URL)
+	// p.es. users/1/reports/
+	private static String getUserReportRelPath(Long userId) {
+		
+		String result = getUsersDirProperty();
+		result = checkFinalSlash(result);
+		
+		result = result.concat(userId.toString());
+		result = checkFinalSlash(result);		
+
+		result = result.concat(getReportsDirProperty());
+		result = checkFinalSlash(result);	
+		
+		return result;
+	}
+	
+	public static String getUserReportURL(Long userId, String reportName) {
+		
+		String result = getTeBESURL();
+		result = checkFinalSlash(result);
+		
+		result = result.concat(getUserReportRelPath(userId));
+		result = checkFinalSlash(result);		
+
+		result = result.concat(reportName);
+		
+		return result;
+	}
+		
+	
 	
 	public static String getUserReportsDirPath(Long id) {
 		
