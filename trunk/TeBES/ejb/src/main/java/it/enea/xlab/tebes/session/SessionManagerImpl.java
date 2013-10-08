@@ -3,6 +3,7 @@ package it.enea.xlab.tebes.session;
 import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Input;
@@ -16,6 +17,7 @@ import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -28,6 +30,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
+import org.xlab.file.XLabFileManager;
 import org.xlab.utilities.XLabDates;
 
 
@@ -129,6 +132,8 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			// CREATE Report Structure (DRAFT state by default)
 			Report report;
 			try {
+				
+				
 				
 				report = reportManager.createReportForNewSession(session);
 				
@@ -492,6 +497,24 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			}
 			
 			return session;
+		}
+
+		public String getReportURL(Session session) {
+
+			String result = null;
+			
+			String absUserReportsPath = PropertiesUtil.getUserReportsDirPath(session.getUser().getId());		
+			String reportFileName = session.getReport().getName().concat(Constants.XML_EXTENSION);	
+			try {			
+				XLabFileManager.create(absUserReportsPath.concat(reportFileName), session.getReport().getXml());	
+				
+				result = PropertiesUtil.getUserReportURL(session.getUser().getId(), reportFileName);
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			return result;
 		}
 		
 }

@@ -14,6 +14,7 @@ import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.file.FileManagerRemote;
+import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
@@ -647,6 +648,11 @@ public class SessionManagerController extends WebController<Session> {
 
 	public void setUploadsAvailable(int uploadsAvailable) {
 		this.uploadsAvailable = uploadsAvailable;
+	}
+
+	public String getReportURL(Session session) {
+		
+		return sessionManagerService.getReportURL(session);
 	}
 }
 

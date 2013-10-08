@@ -60,8 +60,6 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		try {
 			fileManager = JNDIServices.getFileManagerService();
 			
-			
-			// File 1
 			Input input = taf.getInputs().get(0);
 			
 			FileStore file = fileManager.readFilebyIdRef(input.getFileIdRef());
