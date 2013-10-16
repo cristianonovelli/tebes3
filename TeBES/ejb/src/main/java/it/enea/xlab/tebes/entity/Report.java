@@ -1,12 +1,15 @@
 package it.enea.xlab.tebes.entity;
 
+
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Report implements Serializable {
@@ -42,6 +45,8 @@ public class Report implements Serializable {
 	private String datetime;
 	private String state;
 
+	@OneToOne(cascade=CascadeType.ALL)
+	private TestResult tempResult;
 	
 	@Column(length=99999) 
 	private String fullDescription;
@@ -59,6 +64,7 @@ public class Report implements Serializable {
 		this.setState(DRAFT_STATE);
 		this.setFullDescription("");
 		this.setFinalResultSuccessfully(true);
+		this.setTempResult(null);
 	}
 
 	
@@ -109,7 +115,6 @@ public class Report implements Serializable {
 	public void addToFullDescription(String furtherDescription) {
 		this.fullDescription = fullDescription.concat(furtherDescription);
 	}
-
 
 	public boolean isPartialResultSuccessfully() {
 		return partialResultSuccessfully;
@@ -213,6 +218,16 @@ public class Report implements Serializable {
 
 	public static String getErrorResult() {
 		return ERROR_RESULT;
+	}
+
+
+	public TestResult getTempResult() {
+		return tempResult;
+	}
+
+
+	public void setTempResult(TestResult result) {
+		this.tempResult = result;
 	}
 
 }

@@ -450,6 +450,18 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
+	public void setSingleResult(Node resultsNode, String result) {
+		
+		this.setNodeValue(resultsNode, "tebes:SingleResult", result);
+	}
+
+
+	public Node getTestResultsElement(Node actionNode) {
+		
+		return ((Element) actionNode).getElementsByTagName("tebes:TestResults").item(0);
+	}
+
+
 
 
 

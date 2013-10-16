@@ -22,7 +22,7 @@
     <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
     <cbc:CustomizationID schemeID="PEPPOL">urn:www.cenbii.eu:transaction:biicoretrdm010:ver1.0:#urn:www.peppol.eu:bis:peppol4a:ver1.0</cbc:CustomizationID>
     <cbc:ProfileID>urn:www.cenbii.eu:profile:bii04:ver1.0</cbc:ProfileID>    
-	<cbc:ID>2/ 28</cbc:ID>
+	<!-- cbc:ID>2/ 28</cbc:ID -->
     <cbc:IssueDate>2012-01-31</cbc:IssueDate>
     <cbc:InvoiceTypeCode listID="UN/ECE 1001" listAgencyID="6">380</cbc:InvoiceTypeCode>
     <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha" listAgencyID="5">EUR</cbc:DocumentCurrencyCode>
@@ -45,7 +45,7 @@
                 <cbc:CompanyID schemeID="IT:VAT"
                     schemeURI="urn:oasis:names:tc:ebcore:partyid-type:unregistered:bii:it:vat">IT01598570354</cbc:CompanyID>
                 <cac:TaxScheme>
-                    <!-- cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID -->
+                    <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">VAT</cbc:ID>
                 </cac:TaxScheme>
             </cac:PartyTaxScheme>   
         </cac:Party>

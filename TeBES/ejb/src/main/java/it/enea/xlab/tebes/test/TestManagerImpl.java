@@ -129,6 +129,7 @@ public class TestManagerImpl implements TestManagerRemote {
 				
 				report.addToFullDescription("\nPrerequisite: " + a.getActionName());
 				report.addToFullDescription("\nBuilding TAF from: " + a.getActionName());
+
 				
 				// Prerequisite TAF from Action
 				TAF t = this.buildTAF(a);
@@ -138,6 +139,13 @@ public class TestManagerImpl implements TestManagerRemote {
 				
 				//boolean singleResult = this.executeTAF(t, report);
 				report = this.executeTAF(t, session);
+
+
+				// TODO come facevo in runAction dovrei prendere un elemento, 
+				// clonarlo, modificarlo e metterlo nella prerequisites list
+				report.addToFullDescription("\n-POST executeTAF call (into the while)");
+				
+				
 				
 				sumPrerequisites = sumPrerequisites && report.isPartialResultSuccessfully();
 				
@@ -160,7 +168,7 @@ public class TestManagerImpl implements TestManagerRemote {
 			okPrerequisites = true;
 		}
 		
-		// Una volta superati i prerequisiti, eseguo il Test
+		// Una volta superati i prerequisiti, eseguo il Test (può anche essere un prerequisito questa taf)
 		if (okPrerequisites) {
 		
 			//TestRule predicate = taf.getPredicate();
@@ -171,6 +179,21 @@ public class TestManagerImpl implements TestManagerRemote {
 			// TODO Execution of Predicate
 			report = testRuleManager.executeTestRule(taf, session);
 			//report.setPartialResultSuccessfully(okPredicate);
+			report.addToFullDescription("\n-POST executeTAF call (okPrerequisites)\n");
+			
+			if (report.getTempResult() != null)
+				report.addToFullDescription("\n Test Rule Output: " + report.getTempResult());
+			else
+				report.addToFullDescription("\nNo output to append. Test Rule RESULT SUCCESSFUL\n");
+			
+			// TODO MI SERVE SAPERE SE SI TRATTA DI ACTION O DI PREREQUISITE
+			// SE TAF = ACTION INSERISCO IN RESULTS > TESTRESULT			
+			// SE TAF = PREREQUISITE INSERISCO RESULTS > TESTRESULT > PrerequisiteList
+			
+			
+			
+			
+			
 			
 			// TODO Gestione Report
 			report.addToFullDescription("\nReport Message: " + taf.getReportFragments().get("pass").getMessage());

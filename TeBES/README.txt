@@ -14,6 +14,7 @@ log4j.xml
 
 5. Set environment variable JBOSS_HOME
 (i.e. JBOSS_HOME=C:\Java\jboss-4.2.3.GA)
+and set security module (see at the end of this file)
 
 6. Check build-package-deployment through the maven statement:
 mvn clean install -DskipTests

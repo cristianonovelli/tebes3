@@ -38,9 +38,10 @@ public class Action implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 
+	private boolean prerequisite;
 	private int actionNumber;
 	private String actionName;
-
+	private String actionId;
 	
 	private String testLanguage;
 	private String testType;
@@ -67,12 +68,14 @@ public class Action implements Serializable {
 		
 	}
 	
-	public Action(int number, String name, String state, 
+	public Action(boolean prerequisite, int number, String name, String actionId, String state, 
 			String lg, String type, String location, String value, boolean skipTurnedON, String description) {
 		
-		//this.setActionId(actionId);
+		this.setPrerequisite(prerequisite);
+		
 		this.setActionNumber(number);
 		this.setActionName(name);
+		this.setActionId(actionId);
 		
 		this.setState(state);
 		
@@ -96,6 +99,7 @@ public class Action implements Serializable {
 
 		String result = "\n--- Action Number: " + this.getActionNumber() +" ---\n";
 		result = result.concat("STATE: " + this.getState() +"\n");
+		result = result.concat("is a Prerequisite: " + this.isPrerequisite() + "\n");
 		result = result.concat("Action Name: " + this.getActionName() +"\n");
 		result = result.concat("Action Description: " + this.getDescription() +"\n");
 		
@@ -308,6 +312,22 @@ public class Action implements Serializable {
 
 	public void setInputs(List<Input> inputs) {
 		this.inputs = inputs;
+	}
+
+	public String getActionId() {
+		return actionId;
+	}
+
+	public void setActionId(String actionId) {
+		this.actionId = actionId;
+	}
+
+	public boolean isPrerequisite() {
+		return prerequisite;
+	}
+
+	public void setPrerequisite(boolean prerequisite) {
+		this.prerequisite = prerequisite;
 	}
 
 

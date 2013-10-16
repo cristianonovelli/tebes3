@@ -1,7 +1,5 @@
 package it.enea.xlab.tebes.report;
 
-import java.io.IOException;
-
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
@@ -18,13 +16,10 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
-import org.xlab.file.XLabFileManager;
 import org.xlab.utilities.XLabDates;
-import org.xml.sax.SAXException;
 
 @Stateless
 @Interceptors({Profile.class})
@@ -83,16 +78,11 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		
 		 try {
 			 if ( (report != null) && (report.getId() != null) ) {
-				 
 
-				 
 				 eM.merge(report);
 				 
 				 if (report != null) {
-					 result = true;
-					 
-					 // Update File
-					 
+					 result = true; 
 				 }
 			 }
 			 else
