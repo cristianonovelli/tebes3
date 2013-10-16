@@ -441,7 +441,7 @@ public class SessionManagerImplITCase {
 		
 		// Definisco un contatore per evitare che la stessa Action si ripeta all'infinito
 		int failuresForAction = 0;
-		Report report;
+		Report report = null;
 		String fileName;
 		Action currentAction;
 		
@@ -657,8 +657,13 @@ public class SessionManagerImplITCase {
 		
 		logger.info("Report URL: " + reportURL);
 		
-		
-		
+		logger.info("***************");
+		logger.info("Report Full Description: ");
+		if (report != null)
+			logger.info(report.getFullDescription());
+		else
+			logger.info("Report NULL!");
+		logger.info("***************");
 	}
 		
 	

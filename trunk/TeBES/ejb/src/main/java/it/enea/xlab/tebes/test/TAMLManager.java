@@ -228,7 +228,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 					
 					
 					// Normalize Prerequisite 
-					prerequisites = this.normalize(testRuleList, variableHashtable, taHashtable, taRefHashtable, commonNamespacesHashtable, true);
+					prerequisites = this.normalize(true, testRuleList, variableHashtable, taHashtable, taRefHashtable, commonNamespacesHashtable, true);
 					
 				}
 			}
@@ -240,7 +240,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			// Normalize Predicate
 			// Se il predicato TAML rispetta il profilo TAML4TeBES
 			// allora il predicato è sicuramente un'espressione XPath o Schematron
-			Vector<Action> predicates = this.normalize(testRuleList2, variableHashtable, taHashtable, taRefHashtable, commonNamespacesHashtable, action.isSkipTurnedON());
+			Vector<Action> predicates = this.normalize(false, testRuleList2, variableHashtable, taHashtable, taRefHashtable, commonNamespacesHashtable, action.isSkipTurnedON());
 			
 			// Get Report Hashtable from TAML
 			Hashtable<String, ReportFragment> reportHashtable = t2j.getReportHashtable(tamlDOM, testAssertionNode);			
@@ -301,7 +301,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	 * @param skip
 	 * @return
 	 */
-	private Vector<Action> normalize(Vector<TestRule> testRuleList, 
+	private Vector<Action> normalize(boolean prerequisite, Vector<TestRule> testRuleList, 
 			Hashtable<String, Variable> variableHashtable, Hashtable<String, Action> taHashtable, Hashtable<String, Action> taRefHashtable, Hashtable<String, String> namespacesHashtable, boolean skip) {
 		
 		
@@ -360,14 +360,14 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 						
 						// prendo la TA esterna
 						// TODO qui prendo il nome della variabile
-						Action schematron = new Action(i+1, var.getName(), Action.getReadyState(), TAML2Java.SCHEMATRON_TYPE, Constants.TA, var.getValue(), var.getValue(), skip, null);
+						Action schematron = new Action(prerequisite, i+1, var.getName(), actionId, Action.getReadyState(), TAML2Java.SCHEMATRON_TYPE, Constants.TA, var.getValue(), var.getValue(), skip, null);
 						
 						result.add(schematron);
 					}
 					
 					if (var.getType().equals(TAML2Java.XPATH_TYPE)) {
 						
-						Action xpathAction = new Action(i+1, var.getName(), Action.getReadyState(), TAML2Java.XPATH_TYPE, Constants.TA, var.getValue(), var.getValue(), skip, null);
+						Action xpathAction = new Action(prerequisite, i+1, var.getName(), actionId, Action.getReadyState(), TAML2Java.XPATH_TYPE, Constants.TA, var.getValue(), var.getValue(), skip, null);
 						
 						if ( xpathAction.getTestValue().startsWith("count(//") && xpathAction.getTestValue().endsWith(") ge 1")) {
 							
@@ -382,7 +382,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 					
 					
 					String xpathId = "xpath".concat((new Integer(i+1)).toString());
-					Action xpath = new Action(i+1, xpathId, Action.getReadyState(), TAML2Java.XPATH_TYPE, Constants.TA, singleTestRule.getValue(), singleTestRule.getValue(), skip, null);
+					Action xpath = new Action(prerequisite, i+1, xpathId, xpathId, Action.getReadyState(), TAML2Java.XPATH_TYPE, Constants.TA, singleTestRule.getValue(), singleTestRule.getValue(), skip, null);
 					
 					result.add(xpath);
 				}

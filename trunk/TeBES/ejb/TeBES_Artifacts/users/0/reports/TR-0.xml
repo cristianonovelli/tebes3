@@ -23,10 +23,11 @@
     
         <tebes:State>working</tebes:State>
         <!-- State of Session can take the following 5 values: 
+				"new": new session
         		"working": started and now is working (default value for a new Report);
         		"waiting": waiting for input by user; 
         		"suspended", suspended by user, the session CAN be resumed;
-        		"aborted", aborted by userm the session CAN'T be resumed;
+        		"cancelled", aborted by user the session CAN'T be resumed;
         		"done", the test plan execution is done and the session finished. -->
         
         <tebes:CreationDateTime>2012-06-16T18:43:00</tebes:CreationDateTime>
@@ -75,15 +76,12 @@
 					type="TestAssertion"
 	                skipPrerequisites="true"
 	                location="http://www.empty.it">EMPTY</tebes:Test>
-                <tebes:Results>
-                	<ActionResult>warning</ActionResult>
-                    <tebes:TestResult
-                            label="pass"
-                            message="EMPTY">EMPTY</tebes:TestResult>
-                    <tebes:PrerequisiteList>
-						<tebes:Prerequisite>EMPTY</tebes:Prerequisite>
-                    </tebes:PrerequisiteList>
-                </tebes:Results>
+                <tebes:TestResults result="EMPTY" line="EMPTY" message="EMPTY">                	
+                    <tebes:SingleResult
+                    		result="EMPTY"
+                    		line="EMPTY"
+                            message="EMPTY">EMPTY</tebes:SingleResult>
+                </tebes:TestResults>
             </tebes:TestAction>
             
         </tebes:TestActionList>

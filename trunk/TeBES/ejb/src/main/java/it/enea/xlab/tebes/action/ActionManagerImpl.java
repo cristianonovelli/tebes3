@@ -33,6 +33,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import validator.ErrorMessage;
+
 
 @Stateless
 @Interceptors({Profile.class})
@@ -403,9 +405,10 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			Node actionNode = testActionListXML.item(0);
 			String globalResult = reportDOM.getGlobalResult();
 			
+			// se TestPlanExecution/GlobalResult != "undefined"
 			if ( !globalResult.equals(Report.getUndefinedResult()) ) {
 				
-				// 1. Clono actionNode
+				// Clono actionNode
 				Node actionNodeClone = actionNode.cloneNode(true);
 				actionNodeClone = reportDOM.doc.importNode(actionNodeClone, true); 
 				reportDOM.insertActionNode(actionNodeClone);
@@ -415,15 +418,15 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				actionNode = actionNodeClone;
 				
 			}
+			// se TestPlanExecution/GlobalResult == "undefined"
 			else {
-				// Se GlobalResul è "empty"
-				// dovrò individuare l'unica action contenuta
+
 
 				
 				Element actionElement = (Element) actionNode;
 				
 				 if ( (testActionListXML.getLength()!=1) || (!actionElement.getAttribute("number").equals("0")) ) {
-					 System.out.println("ERROR: Inconsistent Report Template, GlobalResult is empty but there is an executed action.");
+					 System.out.println("ERROR: Inconsistent Report Template, GlobalResult is undefined but there is an executed action.");
 					 actionNode = null;
 				 }
 				 else
@@ -457,13 +460,17 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				report.addToFullDescription("\n-- Start Execution of Action: " + action.getActionName() + "--");
 	
 				
-				
+				// istanzio il TestManager
 				TestManagerImpl testManager = new TestManagerImpl();
 				
-				// TAF Building
 				report.addToFullDescription("\nBuilding TAF for action: " + action.getActionName());
+				
+				// TAF Building
 				TAF taf = testManager.buildTAF(action);
 				
+				// TODO qui potrei già inserire le action prerequisites
+				// 1. se non ce ne sono, cancello quella presente;
+				// 2. se ce ne sono, per ogni prerequisito creo l'elemento
 				
 				// TAF Execution
 				if (taf != null) {
@@ -474,6 +481,37 @@ public class ActionManagerImpl implements ActionManagerRemote {
 					// EXECUTE TAF
 					report = testManager.executeTAF(taf, session);
 					//report.setPartialResultSuccessfully(tafResult);
+					
+					
+					// TODO
+					// la action viene eseguita, essa potrà o meno richiamare altre taf
+					// 1. nel caso abbia prerequisiti
+					// 2. nel caso sia un test case che contiene più test assertion
+					// 3. in entrambi i casi 1 e 2
+					// Nel report vengono riportati i dettagli della test action.
+					// A questi si aggiungono i risultati dei vari test man mano che vengono eseguiti
+					// come tuple (result, line, message).
+					// la (label, message) presi dalla TA dove vanno?
+					// se è una TA sia 
+					
+					
+					Node testResultsNode = reportDOM.getTestResultsElement(actionNode);
+					
+					
+					
+					
+					reportDOM.setSingleResult(testResultsNode, report.getTempResult().getMessage());
+					
+					// Fine della modifica XML che NON riguarda l'esito dell'action
+					report.setXml(reportDOM.getXMLString());	
+					
+					// TODO ADD to XML Single Result
+					// Poi azzera singleresult
+					System.out.println("runAction - tempResult: " + report.getTempResult());
+					report.setTempResult(null);
+					
+					
+					
 					
 					report.addToFullDescription("\nResult: " + report.isPartialResultSuccessfully());
 				}

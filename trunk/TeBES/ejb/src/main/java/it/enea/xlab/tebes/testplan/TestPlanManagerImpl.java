@@ -243,8 +243,10 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	private Action cloneAction(Action action1) {
 		
 		Action action2 = new Action(
+				action1.isPrerequisite(),
 				action1.getActionNumber(), 
 				action1.getActionName(), 
+				action1.getActionId(),
 				action1.getState(),
 				action1.getTestLanguage(), 
 				action1.getTestType(), 
@@ -445,10 +447,11 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			actionElement = (Element) actionNodes.item(i);
 			
 			
-			//String actionId = testPlanDOM.getIdAttribute(actionElement);	
-			int number = new Integer(testPlanDOM.getNumberAttribute(actionElement)).intValue();
-			
+				
+			int number = new Integer(testPlanDOM.getNumberAttribute(actionElement)).intValue();			
 			String name = testPlanDOM.getActionName(actionElement);
+			String actionId = testPlanDOM.getIdAttribute(actionElement);
+			
 			String description = testPlanDOM.getActionDescription(actionElement);				
 			
 			Node testNode = testPlanDOM.getTestNode(actionElement);
@@ -498,7 +501,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			
 			}
 
-			Action action = new Action(number, name, Action.getNewState(), lg, type, location, value, skip, description);
+			Action action = new Action(false, number, name, actionId, Action.getNewState(), lg, type, location, value, skip, description);
 			
 			action.setInputs(inputList);
 			
