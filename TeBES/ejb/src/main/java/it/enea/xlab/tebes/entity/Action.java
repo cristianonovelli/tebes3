@@ -22,7 +22,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
-@Table(name="TestAction")
+@Table(name="testaction")
 public class Action implements Serializable {
 
 	public static final long serialVersionUID = 1L;
