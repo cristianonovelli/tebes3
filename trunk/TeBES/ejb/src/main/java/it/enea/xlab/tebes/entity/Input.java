@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "UserInput")
+@Table(name = "userinput")
 public class Input implements Serializable {
 
 	private static final long serialVersionUID = 1L;

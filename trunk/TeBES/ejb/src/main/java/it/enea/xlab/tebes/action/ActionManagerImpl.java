@@ -266,28 +266,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		return eM.find(ActionWorkflow.class, id);
 	}
 	
-/*	public Long readWorkflowByTestPlan(TestPlan tp) {
-		
-        String queryString = "SELECT w FROM ActionWorkflow AS w";
-        
-        Query query = eM.createQuery(queryString);
 
-		try {
-			@SuppressWarnings("unchecked")
-			List<ActionWorkflow> wfList = query.getResultList();
-			
-			// TODO TROPPO INEFFICIENTE
-			for(int i=0; i<wfList.size(); i++) {
-				if (wfList.get(0).getTestPlan().getId().intValue()==tp.getId().intValue())
-					return wfList.get(0).getId();
-			}
-			
-		} catch (Exception e) {
-			return new Long(-1);
-		}
-        
-		return new Long(-2);
-	}*/
 
 	/**
 	 * DELETE Workflow

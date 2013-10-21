@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -25,6 +26,7 @@ import org.hibernate.annotations.LazyCollectionOption;
  *  1 piano di test
  */
 @Entity
+@Table(name = "testsession")
 public class Session implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
