@@ -29,11 +29,11 @@ mvn clean -Pdev-create -Dit.test=SessionManagerImplITCase verify
 mvn clean install -Pdev-create -Dit.test=SessionManagerImplITCase verify
 
 
-URL APPLICAZIONE WEB
+- URL APPLICAZIONE WEB
 http://localhost:8080/TeBES-war/index.jsf
 
 
-CONFIGURAZIONE DEL MODULO DI SICUREZZA IN JBOSS
+- CONFIGURAZIONE DEL MODULO DI SICUREZZA IN JBOSS
 Per configurare JAAS in JBOSS occorre inserire i seguenti tag xml all'interno del tag <policy>, nel file login-config.xml 
 presente nella cartella JBOSS_HOME/server/default/conf
 
@@ -47,3 +47,12 @@ presente nella cartella JBOSS_HOME/server/default/conf
             </login-module>
         </authentication>
 </application-policy>
+
+
+- DUMP
+Per creare il dump: 
+1. avviare i test con la chiamata 
+mvn clean install -Pdev-create -Dit.test=SessionManagerImplITCase verify
+2. sospendere arresto Jboss con ctrl-canc prima dell'arresto
+3. esportare db da console con:
+mysqldump -u root -p[password] tebes > tebes_dev_import.sql 
