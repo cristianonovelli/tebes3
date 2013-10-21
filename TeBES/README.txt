@@ -56,3 +56,5 @@ mvn clean install -Pdev-create -Dit.test=SessionManagerImplITCase verify
 2. sospendere arresto Jboss con ctrl-canc prima dell'arresto
 3. esportare db da console con:
 mysqldump -u root -p[password] tebes > tebes_dev_import.sql 
+4. per salvare solo i dati senza le create delle tabelle:
+mysqldump -u root -p[password] --no-create-info --complete-insert tebes > tebes_data_only.sql
