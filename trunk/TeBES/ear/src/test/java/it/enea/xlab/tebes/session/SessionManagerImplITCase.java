@@ -133,6 +133,7 @@ public class SessionManagerImplITCase {
 		String superUserSurname = PropertiesUtil.getSuperUserSurnameProperty();
 		String superUserEmail = PropertiesUtil.getSuperUserEmailProperty();
 		String superUserPassword = PropertiesUtil.getSuperUserPasswordProperty();
+		logger.info("Superuser properties from file tebes.proprties: " + superUserEmail + " " + superUserPassword);
 		superUser = new User(superUserName, superUserSurname, superUserEmail, superUserPassword);
 		Long superUserId = userAdminController.createUser(superUser, role4_superuser);
 		superUser = userAdminController.readUser(superUserId);

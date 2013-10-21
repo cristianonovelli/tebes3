@@ -387,6 +387,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		
 
 		try {
+			// Recupero Report DOM
 			ReportDOM reportDOM = new ReportDOM();
 			reportDOM.setContent(report.getXml());
 			
