@@ -65,13 +65,13 @@
 							<h:outputText styleClass="headerText" value="Azioni" />
 						</f:facet>
 						<a4j:commandLink ajaxSingle="true" id="trashlink" oncomplete="#{rich:component('deletePanel')}.show()">
-							<i class="icon-trash icon-large"></i>
+							<i class="icon-trash icon-2x"></i>
 							<a4j:actionparam name="idItemToDelete" value="#{utente.id}" assignTo="#{UserAdminController.itemToDelete}" />
 						</a4j:commandLink>
 						<rich:toolTip for="trashlink" value="Cancella" />
 						<a4j:commandLink ajaxSingle="true" id="viewlink" style="margin-left: 10px;"
 							action="#{UserAdminController.viewItemDetails}">
-							<i class="icon-folder-open icon-large"></i>
+							<i class="icon-folder-open icon-2x"></i>
 						</a4j:commandLink>
 						<rich:toolTip for="viewlink" value="Visualizza dettagli" />
 					</h:column>

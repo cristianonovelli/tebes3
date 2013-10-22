@@ -29,6 +29,9 @@ public class SUTManagerController extends WebController<SUT> {
 
 	public static final String CONTROLLER_NAME = "SUTManagerController";
 	
+	public static final String SELECT_TYPE_DEFAULT = "Seleziona il tipo";
+	public static final String SELECT_INTERACTION_DEFAULT = "Seleziona l'interazione";
+	
 	private SUTManagerRemote sutManagerBean;
 	private UserManagerRemote userManagerBean;
 	
@@ -148,6 +151,7 @@ public class SUTManagerController extends WebController<SUT> {
 		
 		if(typeSelection == null || typeSelection.size() == 0) {
 			typeSelection = new ArrayList<SelectItem>();
+			typeSelection.add(new SelectItem(SELECT_TYPE_DEFAULT));
 			for (String type : this.getSUTTypeList()) {
 				typeSelection.add(new SelectItem(type));
 			}
@@ -157,6 +161,7 @@ public class SUTManagerController extends WebController<SUT> {
 	private void updateInteractions() {
 		interactionSelection = new ArrayList<SelectItem>();
 		List<SUTInteraction> interactions = getSUTInteractionList(this.selectedType);
+		interactionSelection.add(new SelectItem(SELECT_INTERACTION_DEFAULT));
 		for (SUTInteraction sutInteraction : interactions) {
 			interactionSelection.add(new SelectItem(sutInteraction.getType()));
 		}
@@ -165,7 +170,9 @@ public class SUTManagerController extends WebController<SUT> {
 	private boolean checkSUTFields() {
 
 		if(this.sut.getName() != null && !this.getSut().getName().equals("") && this.getSut().getDescription() != null && 
-				!this.getSut().getDescription().equals("") && this.selectedInteraction != null && !this.selectedInteraction.equals("")) {
+				!this.getSut().getDescription().equals("") &&
+				this.selectedInteraction != null && !this.selectedInteraction.equals(SELECT_INTERACTION_DEFAULT) &&
+				this.selectedInteraction != null && !this.selectedInteraction.equals(SELECT_TYPE_DEFAULT)) {
 			
 			if(!this.selectedInteraction.equals(SUTConstants.INTERACTION_WEBSITE)) {
 				if(this.endpoint == null || this.endpoint.equals("")) {
