@@ -207,11 +207,11 @@ public class PropertiesUtil {
 	public static String getUsersDirPath() {
 
 		String result;
-		
+		System.out.println("getUsersDirPath1");
 		String usersDirProperty = getUsersDirProperty();
-		
+		System.out.println("getUsersDirPath2");
 		result = PropertiesUtil.getArtifactsDirPath().concat(usersDirProperty);
-		
+		System.out.println("getUsersDirPath3");
 		result = checkFinalSlash(result);
 		
 		return result;
