@@ -13,7 +13,7 @@
 	<ui:define name="content">
 		<f:view>
 			<h:form styleClass="form-horizontal">
-				<div class="span4">
+				<div class="span6">
 					<h3>Crea SUT</h3>
 					<div class="control-group">
     					<label class="control-label" for="input_name">Nome</label>
@@ -38,7 +38,7 @@
 					</div>
 					<div class="control-group">
 						<a4j:outputPanel ajaxRendered="true" id="interactionPanel">
-							<h:outputText for="menu_interaction" styleClass="control-label" rendered="#{SUTManagerController.showInteractionMenu}">Interazione</h:outputText>
+							<h:outputText for="menu_interaction" styleClass="control-label" rendered="#{SUTManagerController.showInteractionMenu}" value="Interazione" style="font-size:14px;"/>
 							<div class="controls">
 								<h:selectOneMenu id="menu_interaction" value="#{SUTManagerController.selectedInteraction}" rendered="#{SUTManagerController.showInteractionMenu}">
 									<f:selectItems value="#{SUTManagerController.interactionSelection}" />
@@ -50,22 +50,33 @@
 					<div class="control-group">
 						<a4j:outputPanel ajaxRendered="true" id="endpointPanel">
 							<h:outputText for="input_endpoint" id="value_input_endpoint" rendered="#{SUTManagerController.showEndpointInput}" 
-								value="Endpoint" styleClass="control-label" />
+								 styleClass="control-label" value="Endpoint" style="font-size:14px;"/>
 							<div class="controls">
 								<h:inputText id="input_endpoint" value="#{SUTManagerController.endpoint}" rendered="#{SUTManagerController.showEndpointInput}"/>
 							</div>
 						</a4j:outputPanel>
 					</div>
-					<div class="pagination-centered">
-	      				<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SUTManagerController.createNewSUT}" />
-	      				<h:commandLink styleClass="btn" value="Annulla" action="#{SUTManagerController.cancel}" style="margin-left: 10px;"/>
-	      						
-	      				<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true" rendered="#{SUTManagerController.showSutFormMessage}">
-	      					<div class="alert">
-								<h:outputText value="#{SUTManagerController.sutFormMessage}" rendered="#{SUTManagerController.showSutFormMessage}" />
-							</div>
-						</a4j:outputPanel>
-	  				</div>
+	  				
+	  				<div class="control-group">
+						
+						<div class="controls">
+							<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SUTManagerController.createNewSUT}" />
+	      					<h:commandLink styleClass="btn" value="Annulla" action="#{SUTManagerController.cancel}" style="margin-left: 10px;"/>
+						</div>
+					</div>
+					
+					<div class="control-group">
+						
+						<div class="controls" style="width: 230px;">
+							<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true" rendered="#{SUTManagerController.showSutFormMessage}">
+		      					<div class="alert alert-error">
+									<h:outputText value="#{SUTManagerController.sutFormMessage}" rendered="#{SUTManagerController.showSutFormMessage}" />
+								</div>
+							</a4j:outputPanel>
+						</div>
+					</div>
+	  			
+	  				
   				</div>
   				<div class="span5"> </div>
 			</h:form>

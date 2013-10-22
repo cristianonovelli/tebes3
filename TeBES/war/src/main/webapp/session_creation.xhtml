@@ -13,9 +13,9 @@
 	<ui:define name="content">
 		<f:view>
 			<h:form styleClass="form-horizontal">
-				<div class="span4">
+				<div class="span6">
 					<h3>Creazione di una nuova sessione</h3>
-					<div class="control-group">
+					<div class="control-group" style="margin-top:40px;">
 						<label for="menu_test_plan" class="control-label">Test Plan</label>
 						<div class="controls">
 							<h:selectOneMenu id="menu_test_plan" value="#{SessionManagerController.selectedTestPlan}">
@@ -33,16 +33,28 @@
 							</h:selectOneMenu>
 						</div>
 					</div>
-					<div class="pagination-centered">
-      					<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SessionManagerController.createNewSession}" />
-      					<h:commandLink styleClass="btn" value="Annulla" action="#{SessionManagerController.cancel}" style="margin-left: 10px;"/>
-      						
-      					<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true" rendered="#{SessionManagerController.showSessionFormMessage}">
-      						<div class="alert">
-								<h:outputText value="#{SessionManagerController.sessionFormMessage}" rendered="#{SessionManagerController.showSessionFormMessage}" />
-							</div>
-						</a4j:outputPanel>
-  					</div>
+  					
+  					
+  					<div class="control-group">
+						
+						<div class="controls">
+							<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SessionManagerController.createNewSession}" />
+      						<h:commandLink styleClass="btn" value="Annulla" action="#{SessionManagerController.cancel}" style="margin-left: 10px;"/>
+						</div>
+					</div>
+					
+					<div class="control-group">
+						
+						<div class="controls" style="width: 230px;">
+							<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true" rendered="#{SessionManagerController.showSessionFormMessage}">
+	      						<div class="alert alert-error">
+									<h:outputText value="#{SessionManagerController.sessionFormMessage}" rendered="#{SessionManagerController.showSessionFormMessage}" />
+								</div>
+							</a4j:outputPanel>	
+						</div>
+					</div>
+  					
+  					
   				</div>
   				<div class="span5"> </div>
 			</h:form>

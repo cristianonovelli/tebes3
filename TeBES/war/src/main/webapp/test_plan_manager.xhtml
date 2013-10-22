@@ -68,18 +68,18 @@
 						<h:outputText value="#{testPlan.location}" />
 					</h:column>
 
-					<h:column>
+					<t:column styleClass="tdVerticalAligned">
 						<f:facet name="header">
 							<h:outputText styleClass="headerText" value="Azioni" />
 						</f:facet>
 						<a4j:commandLink id="createSessionlink" style="margin-left: 10px;"
 							action="#{MyTestPlanManagerController.openCreateSessionViewFromTestPlan}"> 
-							<i class="icon-play-circle icon-large"></i>
+							<i class="icon-play-circle icon-2x"></i>
 							<a4j:actionparam name="selectedTestPlanName" value="#{testPlan.id}"
 								assignTo="#{SessionManagerController.selectedTestPlan}" />
 						</a4j:commandLink>
 						<rich:toolTip for="createSessionlink" value="Crea Sessione" />
-					</h:column>
+					</t:column>
 
 				</t:dataTable>
 
