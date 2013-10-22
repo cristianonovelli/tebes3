@@ -190,10 +190,11 @@ public class PropertiesUtil {
 	public static String getSuperUserReportAbsFileName() {
 		
 		String result;	
-		
+		System.out.println("getSuperUserReportAbsFileName1");
 		String reportFileName = getSuperUserReportProperty();
-		
+		System.out.println("getSuperUserReportAbsFileName2: " + reportFileName);
 		result = PropertiesUtil.getSuperUserReportsDirPath().concat(reportFileName);
+		System.out.println("getSuperUserReportAbsFileName3: " + result);
 		
 		return result;
 	}
