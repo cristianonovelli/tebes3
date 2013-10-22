@@ -138,11 +138,11 @@ public class PropertiesUtil {
 	public static String getSuperUserDirPath() {
 		
 		String result;
-		
+		System.out.println("getSuperUserDirPath1");
 		String superuserId = getSuperUserIdProperty();
-		
+		System.out.println("getSuperUserDirPath2: " + superuserId);
 		result = PropertiesUtil.getUsersDirPath().concat(superuserId);
-		
+		System.out.println("getSuperUserDirPath3: " + result);
 		result = checkFinalSlash(result);
 		
 		return result;
