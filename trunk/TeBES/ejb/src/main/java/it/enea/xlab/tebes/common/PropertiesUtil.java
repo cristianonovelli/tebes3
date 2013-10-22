@@ -209,9 +209,9 @@ public class PropertiesUtil {
 		String result;
 		System.out.println("getUsersDirPath1");
 		String usersDirProperty = getUsersDirProperty();
-		System.out.println("getUsersDirPath2");
+		System.out.println("getUsersDirPath2:" + usersDirProperty);
 		result = PropertiesUtil.getArtifactsDirPath().concat(usersDirProperty);
-		System.out.println("getUsersDirPath3");
+		System.out.println("getUsersDirPath3:" + result);
 		result = checkFinalSlash(result);
 		
 		return result;
