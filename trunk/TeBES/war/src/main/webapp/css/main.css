@@ -34,3 +34,19 @@ a [class^="icon-"]:hover {
 	color: #666;
 	font-weight: 600;
 }
+
+.sessionConsole {
+	font-family: 'Cutive Mono', serif;
+	background-color: #000000;
+	margin-left: 10px;
+	color: #FFFFFF;
+	padding: 10px;
+	height: 420px;
+	overflow: auto;
+	font-size: larger;
+}
+
+.headerUnderlined {
+	text-transform: uppercase;
+	border-bottom: 3px solid #33B5E5;
+}
