@@ -177,11 +177,11 @@ public class PropertiesUtil {
 	public static String getSuperUserReportsDirPath() {
 		
 		String result;
-		
+		System.out.println("getSuperUserReportsDirPath1");
 		String reportsDir = getReportsDirProperty();
-		
+		System.out.println("getSuperUserReportsDirPath2: " + reportsDir);
 		result = PropertiesUtil.getSuperUserDirPath().concat(reportsDir);
-		
+		System.out.println("getSuperUserReportsDirPath3:" + result);
 		result = checkFinalSlash(result);
 		
 		return result;
