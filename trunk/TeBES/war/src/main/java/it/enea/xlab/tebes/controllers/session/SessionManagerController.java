@@ -654,5 +654,13 @@ public class SessionManagerController extends WebController<Session> {
 		
 		return sessionManagerService.getReportURL(session);
 	}
+
+	public Action getCurrentAction() {
+		return currentAction;
+	}
+
+	public void setCurrentAction(Action currentAction) {
+		this.currentAction = currentAction;
+	}
 }
 

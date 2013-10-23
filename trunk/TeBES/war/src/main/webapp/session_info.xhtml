@@ -15,7 +15,7 @@
 			<h:form enctype="multipart/form-data">
 				<a4j:poll id="poll" interval="500"
 					enabled="#{SessionManagerController.isPollerRunning}"
-					reRender="poll,fileUploadPanel,backButtonPanel" />
+					reRender="poll,fileUploadPanel,backButtonPanel, actionList" />
 				<a4j:poll id="buttonPoller" enabled="true" interval="500"
 					reRender="buttonPanel,sessionState" />
 				<div class="row" style="margin-left: 10px;">
@@ -69,21 +69,21 @@
 									action="#{SessionManagerController.execute}"
 									reRender="poll,sessionRunning" />
 								<a4j:commandButton value="Esegui"
-									styleClass="btn btn-success disabled"
+									styleClass="btn disabled"
 									rendered="#{!SessionManagerController.canBeExecuted}" />
 								<a4j:commandButton value="Sospendi" styleClass="btn btn-danger"
 									rendered="#{SessionManagerController.canBeStopped}"
 									style="margin-left: 10px;" reRender="poll,sessionRunning"
 									action="#{SessionManagerController.suspend}" />
 								<a4j:commandButton value="Sospendi"
-									styleClass="btn btn-danger disabled"
+									styleClass="btn disabled"
 									rendered="#{!SessionManagerController.canBeStopped}"
 									style="margin-left: 10px;" />
 								<a4j:commandButton value="Riavvia" styleClass="btn btn-primary"
 									rendered="#{SessionManagerController.canBeRestarted}"
 									style="margin-left: 10px;" reRender="poll,sessionRunning" />
 								<a4j:commandButton value="Riavvia"
-									styleClass="btn btn-primary disabled"
+									styleClass="btn disabled"
 									rendered="#{!SessionManagerController.canBeRestarted}"
 									style="margin-left: 10px;" />
 							</a4j:outputPanel>
@@ -97,14 +97,22 @@
 				<div class="row" style="margin-left: 10px;">
 					<div class="span5">
 						<h5 class="headerUnderlined">Actions</h5>
-						<t:dataTable id="actionList" var="action"
-							styleClass="table table-striped"
-							value="#{SessionManagerController.viewCurrentSession.testPlan.workflow.actions}"
-							preserveDataModel="false">
-							<h:column>
-								<h:outputText value="#{action.actionName}" />
-							</h:column>
-						</t:dataTable>
+						<a4j:outputPanel>
+							<t:dataTable id="actionList" var="action"
+								styleClass="table table-striped"
+								value="#{SessionManagerController.viewCurrentSession.testPlan.workflow.actions}"
+								preserveDataModel="false">
+								<h:column>
+									<h:panelGroup rendered="#{action.actionName eq SessionManagerController.currentAction.actionName}">
+										<i class="icon-chevron-sign-right green icon-2x"></i>
+									</h:panelGroup>
+								</h:column>
+								<h:column>
+									<h:outputText value="#{action.actionName}" />
+								</h:column>
+								
+							</t:dataTable>
+						</a4j:outputPanel>
 					</div>
 
 					<a4j:outputPanel id="fileUploadPanel">
