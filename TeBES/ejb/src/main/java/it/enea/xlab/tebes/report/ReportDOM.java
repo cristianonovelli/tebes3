@@ -450,9 +450,13 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
-	public void setSingleResult(Node resultsNode, String result) {
+	public void setSingleResult(Node singleResultNode, Long id, String name, String result, int line, String message) {
 		
-		this.setNodeValue(resultsNode, "tebes:SingleResult", result);
+		this.setNodeAttribute(singleResultNode, "id", id.toString());
+		this.setNodeAttribute(singleResultNode, "name", name);
+		this.setNodeAttribute(singleResultNode, "result", result);
+		this.setNodeAttribute(singleResultNode, "line", new Integer(line).toString());
+		this.setNodeAttribute(singleResultNode, "message", message);
 	}
 
 

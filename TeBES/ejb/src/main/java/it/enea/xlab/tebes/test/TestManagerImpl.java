@@ -39,8 +39,9 @@ public class TestManagerImpl implements TestManagerRemote {
 	 * (p.es. se non sono stati definiti nello stesso Package di TestManager)
 	 * @return
 	 */
-	public TAF buildTAF(Action action) {
+	public Vector<TAF> buildTAF(Action action) {
 		
+		Vector<TAF> tafListResult = new Vector<TAF>();
 		TAF tafResult = null;
 
 		try {
@@ -48,9 +49,9 @@ public class TestManagerImpl implements TestManagerRemote {
 			String thisPackage = this.getClass().getPackage().getName();
 			Class extendedManager = Class.forName(thisPackage.concat(".").concat(action.getTestLanguage().toUpperCase().concat(TESTMANAGER_POSTFIX)));
 			Method xMethod = extendedManager.getMethod(BUILDTAF_METHOD, Action.class);
-			tafResult = (TAF) xMethod.invoke(extendedManager.newInstance(), action);
+			tafListResult = (Vector<TAF>) xMethod.invoke(extendedManager.newInstance(), action);
 
-			
+			//tafListResult.add(tafResult);
 			
 			// TODO Normalize predicate
 			//result.setPredicate(this.normalizeTestRule(result.getPredicate()));
@@ -84,7 +85,7 @@ public class TestManagerImpl implements TestManagerRemote {
 			e.printStackTrace();
 		}
 		
-		return tafResult;
+		return tafListResult;
 	}
 	
 	
@@ -132,26 +133,37 @@ public class TestManagerImpl implements TestManagerRemote {
 
 				
 				// Prerequisite TAF from Action
-				TAF t = this.buildTAF(a);
+				Vector<TAF> tafList = this.buildTAF(a);
+				
+				TAF t;
+				int j=0;
+				while ((j < tafList.size()) && (i<prerequisites.size())) {
+				
+					t = tafList.get(j);
+							
+					
+					// Recursive execution
+					report.addToFullDescription("\n---> Recursive execution");
+					
+					//boolean singleResult = this.executeTAF(t, report);
+					report = this.executeTAF(t, session);
+	
+	
+					// TODO come facevo in runAction dovrei prendere un elemento, 
+					// clonarlo, modificarlo e metterlo nella prerequisites list
+					report.addToFullDescription("\n-POST executeTAF call (into the while)");
+					
+					
+					
+					sumPrerequisites = sumPrerequisites && report.isPartialResultSuccessfully();
 
-				// Recursive execution
-				report.addToFullDescription("\n---> Recursive execution");
-				
-				//boolean singleResult = this.executeTAF(t, report);
-				report = this.executeTAF(t, session);
+					// Se il prerequisito è andato male ed era obbligatorio... esco
+					if (!report.isPartialResultSuccessfully() && t.getPrescription().equals(Constants.MANDATORY))
+						i = prerequisites.size();
+					
+					j++;
+				}
 
-
-				// TODO come facevo in runAction dovrei prendere un elemento, 
-				// clonarlo, modificarlo e metterlo nella prerequisites list
-				report.addToFullDescription("\n-POST executeTAF call (into the while)");
-				
-				
-				
-				sumPrerequisites = sumPrerequisites && report.isPartialResultSuccessfully();
-				
-				// Se il prerequisito è andato male ed era obbligatorio... esco
-				if (!report.isPartialResultSuccessfully() && t.getPrescription().equals(Constants.MANDATORY))
-					i = prerequisites.size();
 				
 				i++;
 			}

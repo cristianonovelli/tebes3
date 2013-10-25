@@ -48,35 +48,40 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	/**
 	 * Nel TAML Manager la builTAF gestisce l'action di tipo TAML
 	 */
-	public TAF buildTAF(Action action) {
+	public Vector<TAF> buildTAF(Action action) {
 
+		Vector<TAF> tafListResult = new Vector<TAF>();
+		
 		TAF taf = null;
 		
-		// Test Suite Execution
+		// Test Suite 
 		if (action.getTestType().equals(Constants.TS)) {
 			
-			taf = buildTestSuiteTAF(action);
+			tafListResult = buildTestSuiteTAF(action);
 		}
 
-		// Test Case Execution
+		// Test Case 
 		if (action.getTestType().equals(Constants.TC)) {
 			
-			taf = buildTestCaseTAF(action);
+			tafListResult = buildTestCaseTAF(action);
 		}
 		
-		// Test Assertion Execution
+		// Test Assertion 
 		if (action.getTestType().equals(Constants.TA)) {
 			
 			
 			taf = buildTestAssertionTAF(action);
+			tafListResult.add(taf);
 		}
 		
-		return taf;
+		
+		
+		return tafListResult;
 	}
 
 
 	
-	private TAF buildTestSuiteTAF(Action action) {
+	private Vector<TAF> buildTestSuiteTAF(Action action) {
 		
 		return null;
 	}
@@ -90,9 +95,11 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	 * @param action
 	 * @return TAF
 	 */	
-	private TAF buildTestCaseTAF(Action action) {
+	private Vector<TAF> buildTestCaseTAF(Action action) {
 
-		// TAF Result
+		Vector<TAF> tafListResult = new Vector<TAF>();
+		
+		// TAF 
 		TAF taf = null;
 
 		// Manager to transform TAML XML to Java executable structures
@@ -124,12 +131,16 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			
 			while (actionsEnumeration.hasMoreElements()) {
 				
-				actionsVector.add(actionsEnumeration.nextElement());
 				
+				// TODO To Check
+				tafListResult.add(this.buildTestAssertionTAF(actionsEnumeration.nextElement()));				
 			}
 			
 			System.out.println("actionsVector.size: " + actionsVector.size());
 
+			
+			
+			
 			
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
@@ -148,7 +159,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			e.printStackTrace();
 		}
 		
-		return taf;
+		return tafListResult;
 	}
 	
 	
