@@ -58,3 +58,4 @@ mvn clean install -Pdev-create -Dit.test=SessionManagerImplITCase verify
 mysqldump -u root -p[password] tebes > tebes_dev_import.sql 
 4. per salvare solo i dati senza le create delle tabelle:
 mysqldump -u root -p[password] --no-create-info --complete-insert tebes > tebes_data_only.sql
+

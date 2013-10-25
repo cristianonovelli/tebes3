@@ -78,9 +78,11 @@
 	                location="http://www.empty.it">EMPTY</tebes:Test>
                 <tebes:TestResults result="EMPTY" line="EMPTY" message="EMPTY">                	
                     <tebes:SingleResult
+                    		id="0"
+                    		name="EMPTY"
                     		result="EMPTY"
-                    		line="EMPTY"
-                            message="EMPTY">EMPTY</tebes:SingleResult>
+                    		line="0"
+                            message="EMPTY" />
                 </tebes:TestResults>
             </tebes:TestAction>
             

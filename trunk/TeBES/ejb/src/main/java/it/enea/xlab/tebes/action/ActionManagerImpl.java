@@ -14,6 +14,7 @@ import it.enea.xlab.tebes.test.TestManagerImpl;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -446,54 +447,74 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				report.addToFullDescription("\nBuilding TAF for action: " + action.getActionName());
 				
 				// TAF Building
-				TAF taf = testManager.buildTAF(action);
+				Vector<TAF> tafList = testManager.buildTAF(action);
 				
 				// TODO qui potrei già inserire le action prerequisites
 				// 1. se non ce ne sono, cancello quella presente;
 				// 2. se ce ne sono, per ogni prerequisito creo l'elemento
 				
 				// TAF Execution
-				if (taf != null) {
+				if (tafList.size() > 0) {
 					
-					report.addToFullDescription("\nBuilt TAF " + taf.getName() + " successful.");
-					report.addToFullDescription("\nStart execution TAF " + taf.getName());
+					TAF taf;
+					int i = 0;
+					while (i<tafList.size()) {
 					
-					// EXECUTE TAF
-					report = testManager.executeTAF(taf, session);
-					//report.setPartialResultSuccessfully(tafResult);
-					
-					
-					// TODO
-					// la action viene eseguita, essa potrà o meno richiamare altre taf
-					// 1. nel caso abbia prerequisiti
-					// 2. nel caso sia un test case che contiene più test assertion
-					// 3. in entrambi i casi 1 e 2
-					// Nel report vengono riportati i dettagli della test action.
-					// A questi si aggiungono i risultati dei vari test man mano che vengono eseguiti
-					// come tuple (result, line, message).
-					// la (label, message) presi dalla TA dove vanno?
-					// se è una TA sia 
-					
-					
-					Node testResultsNode = reportDOM.getTestResultsElement(actionNode);
-					
-					
-					
-					
-					reportDOM.setSingleResult(testResultsNode, report.getTempResult().getMessage());
-					
-					// Fine della modifica XML che NON riguarda l'esito dell'action
-					report.setXml(reportDOM.getXMLString());	
-					
-					// TODO ADD to XML Single Result
-					// Poi azzera singleresult
-					System.out.println("runAction - tempResult: " + report.getTempResult());
-					report.setTempResult(null);
-					
-					
-					
-					
-					report.addToFullDescription("\nResult: " + report.isPartialResultSuccessfully());
+						taf = tafList.get(i);
+						
+						report.addToFullDescription("\nBuilt TAF " + taf.getName() + " successful.");
+						report.addToFullDescription("\nStart execution TAF " + taf.getName());
+						
+						
+						
+						// EXECUTE TAF
+						report = testManager.executeTAF(taf, session);
+						//report.setPartialResultSuccessfully(tafResult);
+						
+						
+						// TODO
+						// la action viene eseguita, essa potrà o meno richiamare altre taf
+						// 1. nel caso abbia prerequisiti
+						// 2. nel caso sia un test case che contiene più test assertion
+						// 3. in entrambi i casi 1 e 2
+						// Nel report vengono riportati i dettagli della test action.
+						// A questi si aggiungono i risultati dei vari test man mano che vengono eseguiti
+						// come tuple (result, line, message).
+						
+	
+						
+						
+						
+	
+						Node testResultsNode = reportDOM.getTestResultsElement(actionNode);
+	
+						
+						// 1 sta ad indicare il primo nodo figlio, ovvero dopo il nodo testo del nodo corrente
+						Node firstSingleResultNode = testResultsNode.getChildNodes().item(1);
+	
+						// Set Single Result
+						reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
+						
+						// 	TODO com'è ora ne fa uno solo
+						
+						
+						
+						// Fine della modifica XML che NON riguarda l'esito dell'action
+						report.setXml(reportDOM.getXMLString());	
+						
+						// TODO ADD to XML Single Result
+						// Poi azzera singleresult
+						System.out.println("runAction - tempResult: " + report.getTempResult());
+						report.setTempResult(null);
+						
+						
+						
+						
+						report.addToFullDescription("\nResult: " + report.isPartialResultSuccessfully());
+						
+						
+						i++;
+					}
 				}
 				else
 					report.addToFullDescription("\nBuilt TAF Failure.");
