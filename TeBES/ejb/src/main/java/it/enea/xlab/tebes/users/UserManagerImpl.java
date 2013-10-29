@@ -81,7 +81,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		
 		
 		// CREO IL SUO FILE FILESYSTEM
-		// se la directory con quello user id esiste, c'è un problema di sistema
+		// se la directory con quello user id esiste, c'ï¿½ un problema di sistema
 		// torna -4
 		// altrimenti la creo, e poi creo le cartelle docs e report
 		String absUsersDirPath = PropertiesUtil.getUsersDirPath();
@@ -218,9 +218,9 @@ public class UserManagerImpl implements UserManagerRemote {
 
 	public Long getSuperUserId() {
 
-		// TODO  sarebbe più ottimizzato e opportuno creare procedura che nelle before legge da file properties
-		// quella stessa procedura può essere richiamata per sincronizzare DB con file di properties
-		// dopodichè si legge sempre da DB
+		// TODO  sarebbe piï¿½ ottimizzato e opportuno creare procedura che nelle before legge da file properties
+		// quella stessa procedura puï¿½ essere richiamata per sincronizzare DB con file di properties
+		// dopodichï¿½ si legge sempre da DB
 		return this.readUserbyEmailAndPassword(PropertiesUtil.getSuperUserEmailProperty(), PropertiesUtil.getSuperUserPasswordProperty()).getId();
 	}
 
@@ -262,7 +262,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		Role r = this.readRole(role.getId());
 		
 		
-		// Effettuo il Set se il Role è null oppure è diverso da superuser
+		// Effettuo il Set se il Role ï¿½ null oppure ï¿½ diverso da superuser
 		if ( ( u.getRole() == null ) || (u.getRole().getLevel() != Constants.SUPERUSER_ROLE_LEVEL ) ) {
 
 			u.setRole(r);
@@ -270,7 +270,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		}
 		
 		
-		// se il ruolo dell'utente c'è e non è lo superuser
+		// se il ruolo dell'utente c'ï¿½ e non ï¿½ lo superuser
 		if ( ( u.getRole() != null ) && (u.getRole().getLevel() != Constants.SUPERUSER_ROLE_LEVEL ) ) {
 		
 
@@ -442,7 +442,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	 */
 	public List<Long> getGroupIdList() {
 
-        String queryString = "SELECT g.id FROM UserGroup AS g";
+        String queryString = "SELECT g.id FROM usergroup AS g";
         
         Query query = eM.createQuery(queryString);
         List<Long> groupIdList = query.getResultList();
@@ -452,7 +452,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	
 	public List<Group> getGroupList() {
 
-        String queryString = "SELECT g FROM UserGroup AS g";
+        String queryString = "SELECT g FROM usergroup AS g";
         
         Query query = eM.createQuery(queryString);
         List<Group> groupList = query.getResultList();

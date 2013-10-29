@@ -44,7 +44,7 @@ public class FileStore implements Serializable {
 
 	
 	@ManyToOne(cascade=CascadeType.MERGE)
-	@JoinColumn(name="session_id")
+	//@JoinColumn(name="session_id")
 	private Session session;	
 	
 	
