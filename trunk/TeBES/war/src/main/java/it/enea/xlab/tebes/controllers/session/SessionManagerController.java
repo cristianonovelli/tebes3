@@ -319,9 +319,15 @@ public class SessionManagerController extends WebController<Session> {
 //	}
 	
 	public boolean getIsPollerRunning() {
-		if(this.viewCurrentSession.getState().equals(Session.getDoneState()))
+		if(this.viewCurrentSession.getState().equals(Session.getDoneState()) || this.viewCurrentSession.getState().equals(Session.getWaitingState())) {
 			this.isPollerRunning = false;
-		return this.isPollerRunning;
+			return false;
+		}
+		else {
+			this.isPollerRunning = true;
+			return true;
+		}
+			
 	}
 
 	public Session getViewCurrentSession() {
@@ -401,8 +407,8 @@ public class SessionManagerController extends WebController<Session> {
 	}
 
 	public String getSessionState() {
-		if(this.viewCurrentSession != null)
-			this.sessionState = this.viewCurrentSession.getState();
+		this.viewCurrentSession = this.sessionManagerService.readSession(selectedSession);
+		this.sessionState = this.viewCurrentSession.getState();
 		return sessionState;
 	}
 
@@ -503,6 +509,7 @@ public class SessionManagerController extends WebController<Session> {
 			this.canBeRestarted = false;
 			this.resetBoxFlags();
 			this.viewCurrentSession = this.runWorkflow(this.viewCurrentSession.getTestPlan().getWorkflow(), this.viewCurrentSession);
+			this.currentAction = this.viewCurrentSession.getTestPlan().getWorkflow().getCurrentAction();
 			
 			this.canBeExecuted = true;
 			this.canBeStopped = false;
@@ -556,8 +563,10 @@ public class SessionManagerController extends WebController<Session> {
 					this.canBeRestarted = false;
 				}
 				
-			} else
-				this.isSessionWaiting = false;
+			} else if(this.viewCurrentSession.getState().equals(Session.getWorkingState())) {
+				this.isPollerRunning = false;
+				this.execute();
+			}
 		}
 		
 		return isSessionWaiting;
@@ -613,6 +622,11 @@ public class SessionManagerController extends WebController<Session> {
 			action.setStateToReady();
 		
 		Session result = fileManagerService.upload(input.getFileIdRef(), fileName, type, fileContent, session);
+		
+		if (action.isStateReady()) {
+			this.showMessageOkBox = true;
+			this.guiMessage = "Action "+action.getActionName()+" conclusa. Premi OK per riprendere il workflow.";
+		}
 
 		return result;
 	}

@@ -13,11 +13,11 @@
 	<ui:define name="content">
 		<f:view>
 			<h:form enctype="multipart/form-data">
-				<a4j:poll id="poll" interval="500"
+				<a4j:poll id="poll" interval="2000"
 					enabled="#{SessionManagerController.isPollerRunning}"
-					reRender="poll,fileUploadPanel,backButtonPanel, actionList" />
-				<a4j:poll id="buttonPoller" enabled="true" interval="500"
-					reRender="buttonPanel,sessionState" />
+					reRender="poll,fileUploadPanel" />
+				<a4j:poll id="buttonPoller" enabled="true" interval="2000"
+					reRender="buttonPanel,sessionState, backButtonPanel, actionList" />
 				<div class="row" style="margin-left: 10px;">
 					<div class="span5">
 						<h3 style="display: inline-block;">Sessione di Test</h3>
@@ -31,7 +31,7 @@
 
 				</div>
 
-				<a4j:outputPanel id="sessionRunning">
+				<a4j:outputPanel id="sessionRunning" ajaxRendered="true">
 					<h:outputText styleClass="pull-right"
 						rendered="#{SessionManagerController.isSessionWorking}">
 						<i class="icon-spinner icon-spin icon-large"></i>
@@ -67,7 +67,7 @@
 								<a4j:commandButton value="Esegui" styleClass="btn btn-success"
 									rendered="#{SessionManagerController.canBeExecuted}"
 									action="#{SessionManagerController.execute}"
-									reRender="poll,sessionRunning" />
+									reRender="poll,sessionRunning, actionList" />
 								<a4j:commandButton value="Esegui"
 									styleClass="btn disabled"
 									rendered="#{!SessionManagerController.canBeExecuted}" />
@@ -119,6 +119,7 @@
 						<a4j:region
 							rendered="#{SessionManagerController.isSessionWaiting}" />
 						<div class="span4 offset3">
+							<h6><h:outputText value="#{SessionManagerController.guiMessage}" /></h6>
 							<rich:fileUpload
 								fileUploadListener="#{SessionManagerController.fileUploadListener}"
 								id="upload"
@@ -137,10 +138,11 @@
 								action="#{SessionManagerController.upload}"
 								reRender="poll,fileUploadPanel,sessionState,sessionRunning" />
 						</div>
+
 						<a4j:region
 							rendered="#{SessionManagerController.showInputTextBox}">
 							<div class="well span4 offset1">
-								<h:outputText value="#{SessionManagerController.guiMessage}" />
+								<h6><h:outputText value="#{SessionManagerController.guiMessage}"/></h6>
 								<div class="controls">
 									<h:inputText id="inputMessage"
 										value="#{SessionManagerController.inputTextMessage}" />
@@ -152,9 +154,9 @@
 						<a4j:region
 							rendered="#{SessionManagerController.showMessageOkBox}">
 							<div class="well span4 offset1">
-								<h:outputText value="#{SessionManagerController.guiMessage}" />
-								<h:commandButton styleClass="btn btn-primary" value="OK"
-									action="#{SessionManagerController.upload}" />
+								<h6><h:outputText value="#{SessionManagerController.guiMessage}"/></h6>
+								<a4j:commandButton value="OK" styleClass="btn btn-primary" style="margin-top:10px;"
+								action="#{SessionManagerController.execute}" />
 							</div>
 						</a4j:region>
 					</a4j:outputPanel>

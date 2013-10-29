@@ -59,10 +59,18 @@ public class AuthenticationManagerController {
 			if(this.principal == null)
 				this.principal = this.authenticationManager.getUser(FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName());
 
-			if(Constants.ADMIN_ROLE_NAME.equals(userManager.readRole(principal).getName()))
+			/*if(Constants.ADMIN_ROLE_NAME.equals(userManager.readRole(principal).getName()))
+				this.isAdmin = true;
+			else
+				this.isAdmin = false;*/
+			
+			
+			if (userManager.readRole(principal).getLevel() >=3)
 				this.isAdmin = true;
 			else
 				this.isAdmin = false;
+			
+			
 		}
 
 		return isAdmin;
