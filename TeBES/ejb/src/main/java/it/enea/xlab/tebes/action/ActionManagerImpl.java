@@ -495,8 +495,12 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						// Set Single Result
 						reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
 						
-						// 	TODO com'è ora ne fa uno solo
-						
+						// 	TODO com'è ora, se ci fosse una lista di TAF ne farebbe uno solo
+						// Devo:
+						// 1. controllare vedere se ce n'è uno solo e se ha id=0
+						// in questo caso lo valorizzo
+						// 2. nel caso invece ve ne sia più di uno o abbia id!=0
+						// devo clonarlo, inserirlo e poi valorizzarlo
 						
 						
 						// Fine della modifica XML che NON riguarda l'esito dell'action
