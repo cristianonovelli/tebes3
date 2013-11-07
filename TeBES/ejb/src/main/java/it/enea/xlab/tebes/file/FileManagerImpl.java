@@ -4,7 +4,9 @@ import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.FileStore;
+import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.Session;
+import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 
@@ -66,6 +68,11 @@ public class FileManagerImpl implements FileManagerRemote {
 				FileStore uploadedFile = new FileStore(fileIdRef, tebesFileName, type, datetime, fileString);
 				
 				Long id = this.createFile(uploadedFile);
+				
+                if (id > 0) {
+                	uploadedFile = this.readFile(id);
+                    this.setSessionOfFile(uploadedFile, session);
+                }
 
 				// SAVE File in TeBES FilyStem					
 				String absGenericUserDocFilePath = PropertiesUtil.getUserDocsDirPath(userId);
@@ -175,6 +182,7 @@ public class FileManagerImpl implements FileManagerRemote {
         	return false;
 	}
 
+	// TODO dovrei ottenere solo i file di una certa sessione e di un certo tipo per uno specifico utente
 	public List<FileStore> readFileListByType(String type) {
 
         String queryString = "SELECT f FROM FileStore AS f WHERE f.type = ?1";
@@ -187,9 +195,28 @@ public class FileManagerImpl implements FileManagerRemote {
         return resultList;
 	}
 
+	public List<FileStore> readFileList() {
 
+        String queryString = "SELECT f FROM FileStore AS f";
+        
+        Query query = eM.createQuery(queryString);
 
+        @SuppressWarnings("unchecked")
+		List<FileStore> resultList = query.getResultList();
 
+        return resultList;
+	}
+
+	public void setSessionOfFile(FileStore file, Session session) {
+		
+		FileStore f = this.readFile(file.getId());
+		Session s = sessionManager.readSession(session.getId());
+		
+		f.setSession(s);
+		eM.persist(f);	
+
+		return;
+	}
 	
 }
 

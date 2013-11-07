@@ -32,6 +32,7 @@ import java.util.Vector;
 import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
+import org.hibernate.validator.AssertTrue;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -495,6 +496,8 @@ public class SessionManagerImplITCase {
 
 			// Prendo l'action da eseguire e stampo il summary dell'action nel file di log
 			currentAction = workflow.getCurrentAction();
+			Assert.assertNotNull(currentAction);
+			
 			logger.info("ACTION " + actionMark + " OF " + actionsNumber + " ***********************");	
 			logger.info(currentAction.getActionSummaryString());
 						
@@ -646,6 +649,7 @@ public class SessionManagerImplITCase {
 			
 		// TODO manca il filtro per utente, per ora così agisco su i file di TUTTI
 		documentList = fileController.getFileListByType(sut.getType());
+		Assert.assertTrue(documentList.size() == 2);
 		logger.info("Documenti caricati: " + documentList.size());
 		
 
@@ -743,6 +747,8 @@ public class SessionManagerImplITCase {
 		Assert.assertTrue(sessionIdList.size() == 0);
 		
 
+		List<FileStore> documentList = fileController.getFileListByType("document");
+		Assert.assertTrue(documentList.size() == 0);
 		
 		// Cancello ogni ruolo
 		/*for (int s=0;s<sessionIdList.size();s++) {

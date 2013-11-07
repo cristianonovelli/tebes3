@@ -91,9 +91,11 @@ public class ActionWorkflow implements Serializable {
 		int actionMark = this.getActionMark();
 		List<Action> actions = this.getActions();
 				
-		if (actions.size()>0) 
+		if ((actions.size() > 0) && (actionMark <= actions.size())) 
 			currentAction = actions.get(actionMark - 1);
-
+		else
+			currentAction = null;
+		
 		return currentAction;
 	}
 	
