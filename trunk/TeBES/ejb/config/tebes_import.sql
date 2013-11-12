@@ -19,15 +19,15 @@
 -- Table structure for table `actionworkflow`
 --
 
--- DROP TABLE IF EXISTS `actionworkflow`;
+DROP TABLE IF EXISTS `actionworkflow`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `actionworkflow` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `comment` varchar(255) DEFAULT NULL,
---   `actionMark` int(11) NOT NULL,
---   PRIMARY KEY (`id`)
--- ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+CREATE TABLE `actionworkflow` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `comment` varchar(255) DEFAULT NULL,
+  `actionMark` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,14 +44,14 @@ UNLOCK TABLES;
 -- Table structure for table `choreography`
 --
 
--- DROP TABLE IF EXISTS `choreography`;
+DROP TABLE IF EXISTS `choreography`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `choreography` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `description` varchar(255) DEFAULT NULL,
---   PRIMARY KEY (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `choreography` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,22 +67,21 @@ UNLOCK TABLES;
 -- Table structure for table `filestore`
 --
 
--- DROP TABLE IF EXISTS `filestore`;
+DROP TABLE IF EXISTS `filestore`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `filestore` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `fileRefId` varchar(255) DEFAULT NULL,
---   `fileName` varchar(255) DEFAULT NULL,
---   `type` varchar(255) DEFAULT NULL,
---   `source` text,
---   `creationDatetime` varchar(255) DEFAULT NULL,
---   `lastUpdateDatetime` varchar(255) DEFAULT NULL,
---   `session_id` bigint(20) DEFAULT NULL,
---   PRIMARY KEY (`id`),
---   KEY `FK285440A5C9C715D1` (`session_id`),
---   CONSTRAINT `FK285440A5C9C715D1` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `filestore` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `fileRefId` varchar(255) DEFAULT NULL,
+  `fileName` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `source` text,
+  `creationDatetime` varchar(255) DEFAULT NULL,
+  `lastUpdateDatetime` varchar(255) DEFAULT NULL,
+  `session_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKB2A510E5C9C715D1` (`session_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,61 +94,27 @@ LOCK TABLES `filestore` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `input`
---
-
--- DROP TABLE IF EXISTS `input`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `input` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `name` varchar(255) DEFAULT NULL,
---   `description` varchar(255) DEFAULT NULL,
---   `type` varchar(255) DEFAULT NULL,
---   `lg` varchar(255) DEFAULT NULL,
---   `interaction` varchar(255) DEFAULT NULL,
---   `isInteractionOK` bit(1) NOT NULL,
---   `fileIdRef` varchar(255) DEFAULT NULL,
---   `isInputSolved` bit(1) NOT NULL,
---   `guiReaction` varchar(255) DEFAULT NULL,
---   `guiMessage` varchar(255) DEFAULT NULL,
---   `testaction_id` bigint(20) DEFAULT NULL,
---   PRIMARY KEY (`id`),
---   KEY `FK43867AAC1CFF2F1` (`testaction_id`),
---   CONSTRAINT `FK43867AAC1CFF2F1` FOREIGN KEY (`testaction_id`) REFERENCES `testaction` (`id`)
--- ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `input`
---
-
-LOCK TABLES `input` WRITE;
-/*!40000 ALTER TABLE `input` DISABLE KEYS */;
-INSERT INTO `input` VALUES (1,'UBLInvoice','Send UBL Invoice','document','xml','website','\0','FI-1_document-xml-website-IN-1_TA-1_TP-1','\0','upload','Message for Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-1',1),(2,'UBLInvoice2','Send UBL Invoice2','document','xml','website','\0','FI-2_document-xml-website-IN-2_TA-1_TP-1','\0','upload','Message for Upload of Input with fileIdRef = FI-2_document-xml-website-IN-2_TA-1_TP-1',1),(3,'UBLInvoice','Send UBL Invoice','document','xml','website','\0','FI-1_document-xml-website-IN-1_TA-1_TP-1','\0','upload','Message for Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-1',2),(4,'UBLInvoice','Send UBL Invoice','document','xml','website','\0','FI-1_document-xml-website-IN-1_TA-1_TP-2','\0','upload','Message for Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-2',3),(5,'UBLInvoice','Send UBL Invoice','document','xml','website','\0','FI-2_document-xml-website-IN-1_TA-2_TP-2','\0','upload','Message for Upload of Input with fileIdRef = FI-2_document-xml-website-IN-1_TA-2_TP-2',4);
-/*!40000 ALTER TABLE `input` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `report`
 --
 
--- DROP TABLE IF EXISTS `report`;
+DROP TABLE IF EXISTS `report`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `report` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `name` varchar(255) DEFAULT NULL,
---   `description` varchar(255) DEFAULT NULL,
---   `sessionID` bigint(20) DEFAULT NULL,
---   `datetime` varchar(255) DEFAULT NULL,
---   `state` varchar(255) DEFAULT NULL,
---   `fullDescription` mediumtext,
---   `xml` mediumtext,
---   `partialResultSuccessfully` bit(1) NOT NULL,
---   `finalResultSuccessfully` bit(1) NOT NULL,
---   PRIMARY KEY (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `report` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `sessionID` bigint(20) DEFAULT NULL,
+  `datetime` varchar(255) DEFAULT NULL,
+  `state` varchar(255) DEFAULT NULL,
+  `fullDescription` mediumtext,
+  `xml` mediumtext,
+  `partialResultSuccessfully` bit(1) NOT NULL,
+  `finalResultSuccessfully` bit(1) NOT NULL,
+  `tempResult_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKC84C553424E8F41` (`tempResult_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,16 +130,16 @@ UNLOCK TABLES;
 -- Table structure for table `role`
 --
 
--- DROP TABLE IF EXISTS `role`;
+DROP TABLE IF EXISTS `role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `role` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `name` varchar(255) DEFAULT NULL,
---   `description` varchar(255) DEFAULT NULL,
---   `level` int(11) NOT NULL,
---   PRIMARY KEY (`id`)
--- ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+CREATE TABLE `role` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `level` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -188,61 +153,22 @@ INSERT INTO `role` VALUES (1,'standard_user','Standard User Role: he can execute
 UNLOCK TABLES;
 
 --
--- Table structure for table `session`
---
-
--- DROP TABLE IF EXISTS `session`;
--- /*!40101 SET @saved_cs_client     = @@character_set_client */;
--- /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `session` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `state` varchar(255) DEFAULT NULL,
---   `creationDateTime` varchar(255) DEFAULT NULL,
---   `lastUpdateDateTime` varchar(255) DEFAULT NULL,
---   `messageStore` text,
---   `sut_id` bigint(20) DEFAULT NULL,
---   `report_id` bigint(20) DEFAULT NULL,
---   `testPlan_id` bigint(20) DEFAULT NULL,
---   `user_id` bigint(20) DEFAULT NULL,
---   PRIMARY KEY (`id`),
---   KEY `FKD9891A76AC268D63` (`user_id`),
---   KEY `FKD9891A76D92EA83` (`report_id`),
---   KEY `FKD9891A764041EF03` (`testPlan_id`),
---   KEY `FKD9891A76C8782BD1` (`sut_id`),
---   CONSTRAINT `FKD9891A76C8782BD1` FOREIGN KEY (`sut_id`) REFERENCES `sut` (`id`),
---   CONSTRAINT `FKD9891A764041EF03` FOREIGN KEY (`testPlan_id`) REFERENCES `testplan` (`id`),
---   CONSTRAINT `FKD9891A76AC268D63` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
---   CONSTRAINT `FKD9891A76D92EA83` FOREIGN KEY (`report_id`) REFERENCES `report` (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
--- /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `session`
---
-
-LOCK TABLES `session` WRITE;
-/*!40000 ALTER TABLE `session` DISABLE KEYS */;
-/*!40000 ALTER TABLE `session` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `sut`
 --
 
--- DROP TABLE IF EXISTS `sut`;
--- /*!40101 SET @saved_cs_client     = @@character_set_client */;
--- /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `sut` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `name` varchar(255) DEFAULT NULL,
---   `description` varchar(255) DEFAULT NULL,
---   `type` varchar(255) DEFAULT NULL,
---   `user_id` bigint(20) DEFAULT NULL,
---   PRIMARY KEY (`id`),
---   KEY `FK14232AC268D63` (`user_id`),
---   CONSTRAINT `FK14232AC268D63` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
--- ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
--- /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sut`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sut` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK1BE52AC268D63` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `sut`
@@ -258,19 +184,19 @@ UNLOCK TABLES;
 -- Table structure for table `sutinteraction`
 --
 
--- DROP TABLE IF EXISTS `sutinteraction`;
--- /*!40101 SET @saved_cs_client     = @@character_set_client */;
--- /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `sutinteraction` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `type` varchar(255) DEFAULT NULL,
---   `endpoint` varchar(255) DEFAULT NULL,
---   `sut_id` bigint(20) DEFAULT NULL,
---   PRIMARY KEY (`id`),
---   KEY `FKC4084080C8782BD1` (`sut_id`),
---   CONSTRAINT `FKC4084080C8782BD1` FOREIGN KEY (`sut_id`) REFERENCES `sut` (`id`)
--- ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
--- /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sutinteraction`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sutinteraction` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `type` varchar(255) DEFAULT NULL,
+  `endpoint` varchar(255) DEFAULT NULL,
+  `sut_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK62ED4880C8782BD1` (`sut_id`),
+  CONSTRAINT `FK62ED4880C8782BD1` FOREIGN KEY (`sut_id`) REFERENCES `sut` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `sutinteraction`
@@ -283,51 +209,31 @@ INSERT INTO `sutinteraction` VALUES (1,'website',NULL,1),(2,'email',NULL,2),(3,'
 UNLOCK TABLES;
 
 --
--- Table structure for table `taf`
---
-
--- DROP TABLE IF EXISTS `taf`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `taf` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   PRIMARY KEY (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
--- /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `taf`
---
-
-LOCK TABLES `taf` WRITE;
-/*!40000 ALTER TABLE `taf` DISABLE KEYS */;
-/*!40000 ALTER TABLE `taf` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `testaction`
 --
 
--- DROP TABLE IF EXISTS `testaction`;
--- /*!40101 SET @saved_cs_client     = @@character_set_client */;
--- /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `testaction` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `state` varchar(255) DEFAULT NULL,
---   `actionNumber` int(11) NOT NULL,
---   `actionName` varchar(255) DEFAULT NULL,
---   `testLanguage` varchar(255) DEFAULT NULL,
---   `testType` varchar(255) DEFAULT NULL,
---   `testLocation` varchar(255) DEFAULT NULL,
---   `testValue` varchar(255) DEFAULT NULL,
---   `skipTurnedON` bit(1) NOT NULL,
---   `description` varchar(255) DEFAULT NULL,
---   `workflow_id` bigint(20) DEFAULT NULL,
---   PRIMARY KEY (`id`),
---   KEY `FKBE2755886864CDF9` (`workflow_id`),
---   CONSTRAINT `FKBE2755886864CDF9` FOREIGN KEY (`workflow_id`) REFERENCES `actionworkflow` (`id`)
--- ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
--- /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `testaction`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `testaction` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `state` varchar(255) DEFAULT NULL,
+  `prerequisite` bit(1) NOT NULL,
+  `actionNumber` int(11) NOT NULL,
+  `actionName` varchar(255) DEFAULT NULL,
+  `actionId` varchar(255) DEFAULT NULL,
+  `testLanguage` varchar(255) DEFAULT NULL,
+  `testType` varchar(255) DEFAULT NULL,
+  `testLocation` varchar(255) DEFAULT NULL,
+  `testValue` varchar(255) DEFAULT NULL,
+  `skipTurnedON` bit(1) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `workflow_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK7DF08D486864CDF9` (`workflow_id`),
+  CONSTRAINT `FK7DF08D486864CDF9` FOREIGN KEY (`workflow_id`) REFERENCES `actionworkflow` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `testaction`
@@ -335,7 +241,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `testaction` WRITE;
 /*!40000 ALTER TABLE `testaction` DISABLE KEYS */;
-INSERT INTO `testaction` VALUES (1,'new',1,'XMLSchema-UBL-T10','taml','TestAssertion','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml','TA-001_TC-001_TS-001','','UBL Invoice XML Schema Validation.',1),(2,'new',2,'SDI-UBL','taml','TestAssertion','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml','TA-001_TC-001_TS-005','\0','Italian INTERCENT-ER UBL Invoice Schematron Validation.',1),(3,'new',1,'XMLSchema-UBL-T10','taml','TestAssertion','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml','TA-001_TC-001_TS-001','','UBL Invoice XML Schema Validation.',2),(4,'new',2,'SDI-UBL','taml','TestAssertion','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml','TA-001_TC-001_TS-005','\0','Italian INTERCENT-ER UBL Invoice Schematron Validation.',2);
+INSERT INTO `testaction` VALUES (1,'new','\0',1,'XMLSchema-UBL-T10','TA-1_TP-1','taml','TestAssertion','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml','TA-001_TC-001_TS-001','','UBL Invoice XML Schema Validation.',1),(2,'new','\0',2,'SDI-UBL','TA-2_TP-1','taml','TestAssertion','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml','TA-001_TC-001_TS-005','\0','Italian INTERCENT-ER UBL Invoice Schematron Validation.',1),(3,'new','\0',1,'XMLSchema-UBL-T10','TA-1_TP-2','taml','TestAssertion','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml','TA-001_TC-001_TS-001','','UBL Invoice XML Schema Validation.',2),(4,'new','\0',2,'SDI-UBL','TA-2_TP-2','taml','TestAssertion','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml','TA-001_TC-001_TS-005','\0','Italian INTERCENT-ER UBL Invoice Schematron Validation.',2);
 /*!40000 ALTER TABLE `testaction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -343,29 +249,29 @@ UNLOCK TABLES;
 -- Table structure for table `testplan`
 --
 
--- DROP TABLE IF EXISTS `testplan`;
--- /*!40101 SET @saved_cs_client     = @@character_set_client */;
--- /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `testplan` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `name` varchar(255) DEFAULT NULL,
---   `description` varchar(255) DEFAULT NULL,
---   `creationDatetime` varchar(255) DEFAULT NULL,
---   `lastUpdateDatetime` varchar(255) DEFAULT NULL,
---   `state` varchar(255) DEFAULT NULL,
---   `location` varchar(255) DEFAULT NULL,
---   `user_id` bigint(20) DEFAULT NULL,
---   `workflow_id` bigint(20) DEFAULT NULL,
---   `testplanxml_id` bigint(20) DEFAULT NULL,
---   PRIMARY KEY (`id`),
---   KEY `FKBBB236BBE3ACFC51` (`testplanxml_id`),
---   KEY `FKBBB236BBAC268D63` (`user_id`),
---   KEY `FKBBB236BB6864CDF9` (`workflow_id`),
---   CONSTRAINT `FKBBB236BB6864CDF9` FOREIGN KEY (`workflow_id`) REFERENCES `actionworkflow` (`id`),
---   CONSTRAINT `FKBBB236BBAC268D63` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
---   CONSTRAINT `FKBBB236BBE3ACFC51` FOREIGN KEY (`testplanxml_id`) REFERENCES `testplanxml` (`id`)
--- ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
--- /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `testplan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `testplan` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `creationDatetime` varchar(255) DEFAULT NULL,
+  `lastUpdateDatetime` varchar(255) DEFAULT NULL,
+  `state` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `workflow_id` bigint(20) DEFAULT NULL,
+  `testplanxml_id` bigint(20) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKBBB236BBAC268D63` (`user_id`),
+  KEY `FKBBB236BBE3ACFC51` (`testplanxml_id`),
+  KEY `FKBBB236BB6864CDF9` (`workflow_id`),
+  CONSTRAINT `FKBBB236BB6864CDF9` FOREIGN KEY (`workflow_id`) REFERENCES `actionworkflow` (`id`),
+  CONSTRAINT `FKBBB236BBAC268D63` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FKBBB236BBE3ACFC51` FOREIGN KEY (`testplanxml_id`) REFERENCES `testplanxml` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `testplan`
@@ -373,7 +279,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `testplan` WRITE;
 /*!40000 ALTER TABLE `testplan` DISABLE KEYS */;
-INSERT INTO `testplan` VALUES (1,'TP-1','Test Plan TP-1 defined for the TeBES development','2013-09-25T16:39:05Z','2013-09-25T16:39:05Z','draft','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/0/testplans/TP-1.xml',1,1,1),(2,'TP-2','Test Plan TP-2 defined for the TeBES development','2013-09-25T16:39:05Z','2013-09-25T16:39:05Z','draft','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/0/testplans/TP-2.xml',1,2,2);
+INSERT INTO `testplan` VALUES (1,'TP-1','Test Plan TP-1 defined for the TeBES development','2013-11-11T12:06:35Z','2013-11-11T12:06:35Z','draft','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/0/testplans/TP-1.xml',1,1,1),(2,'TP-2','Test Plan TP-2 defined for the TeBES development','2013-11-11T12:06:35Z','2013-11-11T12:06:35Z','draft','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/0/testplans/TP-2.xml',2,2,1);
 /*!40000 ALTER TABLE `testplan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -381,16 +287,16 @@ UNLOCK TABLES;
 -- Table structure for table `testplanxml`
 --
 
--- DROP TABLE IF EXISTS `testplanxml`;
--- /*!40101 SET @saved_cs_client     = @@character_set_client */;
--- /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `testplanxml` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `absFileName` varchar(255) DEFAULT NULL,
---   `xml` text,
---   PRIMARY KEY (`id`)
--- ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
--- /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `testplanxml`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `testplanxml` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `absFileName` varchar(255) DEFAULT NULL,
+  `xml` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `testplanxml`
@@ -403,19 +309,57 @@ INSERT INTO `testplanxml` VALUES (1,'C:/Java/jboss-4.2.3.GA/server/default/TeBES
 UNLOCK TABLES;
 
 --
+-- Table structure for table `testresult`
+--
+
+DROP TABLE IF EXISTS `testresult`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `testresult` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `globalResult` varchar(255) DEFAULT NULL,
+  `line` int(11) NOT NULL,
+  `message` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `testresult`
+--
+
+LOCK TABLES `testresult` WRITE;
+/*!40000 ALTER TABLE `testresult` DISABLE KEYS */;
+/*!40000 ALTER TABLE `testresult` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `testsession`
 --
 
--- DROP TABLE IF EXISTS `testsession`;
+DROP TABLE IF EXISTS `testsession`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `testsession` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `user` tinyblob,
---   `sut` tinyblob,
---   `testPlan` tinyblob,
---   PRIMARY KEY (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `testsession` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `state` varchar(255) DEFAULT NULL,
+  `creationDateTime` varchar(255) DEFAULT NULL,
+  `lastUpdateDateTime` varchar(255) DEFAULT NULL,
+  `messageStore` text,
+  `sut_id` bigint(20) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  `testPlan_id` bigint(20) DEFAULT NULL,
+  `report_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKFBB155C4D92EA83` (`report_id`),
+  KEY `FKFBB155C4AC268D63` (`user_id`),
+  KEY `FKFBB155C44041EF03` (`testPlan_id`),
+  KEY `FKFBB155C4C8782BD1` (`sut_id`),
+  CONSTRAINT `FKFBB155C4C8782BD1` FOREIGN KEY (`sut_id`) REFERENCES `sut` (`id`),
+  CONSTRAINT `FKFBB155C44041EF03` FOREIGN KEY (`testPlan_id`) REFERENCES `testplan` (`id`),
+  CONSTRAINT `FKFBB155C4AC268D63` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FKFBB155C4D92EA83` FOREIGN KEY (`report_id`) REFERENCES `report` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -431,23 +375,23 @@ UNLOCK TABLES;
 -- Table structure for table `user`
 --
 
--- DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `user` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `name` varchar(255) DEFAULT NULL,
---   `surname` varchar(255) DEFAULT NULL,
---   `eMail` varchar(255) DEFAULT NULL,
---   `password` varchar(255) DEFAULT NULL,
---   `role_id` bigint(20) DEFAULT NULL,
---   `group_id` bigint(20) DEFAULT NULL,
---   PRIMARY KEY (`id`),
---   KEY `FK285FEB6FBC983` (`role_id`),
---   KEY `FK285FEB5F12AF1` (`group_id`),
---   CONSTRAINT `FK285FEB5F12AF1` FOREIGN KEY (`group_id`) REFERENCES `usergroup` (`id`),
---   CONSTRAINT `FK285FEB6FBC983` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
--- ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+CREATE TABLE `user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `surname` varchar(255) DEFAULT NULL,
+  `eMail` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `role_id` bigint(20) DEFAULT NULL,
+  `group_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK36EBCB6FBC983` (`role_id`),
+  KEY `FK36EBCB5F12AF1` (`group_id`),
+  CONSTRAINT `FK36EBCB5F12AF1` FOREIGN KEY (`group_id`) REFERENCES `usergroup` (`id`),
+  CONSTRAINT `FK36EBCB6FBC983` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -456,7 +400,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Cristiano','Novelli','cristiano.novelli@gmail.com','xcristiano',4,NULL),(2,'Angelo','Frascella','angelo.frascella@enea.it','xangelo',1,NULL),(3,'Arianna','Brutti','arianna.brutti@enea.it','arianna.brutti@enea.it',1,NULL);
+INSERT INTO `user` VALUES (1,'Cristiano','Novelli','cristiano.novelli@gmail.com','xcristiano',4,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -464,15 +408,15 @@ UNLOCK TABLES;
 -- Table structure for table `usergroup`
 --
 
--- DROP TABLE IF EXISTS `usergroup`;
+DROP TABLE IF EXISTS `usergroup`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `usergroup` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `name` varchar(255) DEFAULT NULL,
---   `description` varchar(255) DEFAULT NULL,
---   PRIMARY KEY (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `usergroup` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -485,21 +429,57 @@ LOCK TABLES `usergroup` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `userinput`
+--
+
+DROP TABLE IF EXISTS `userinput`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `userinput` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `lg` varchar(255) DEFAULT NULL,
+  `interaction` varchar(255) DEFAULT NULL,
+  `isInteractionOK` bit(1) NOT NULL,
+  `fileIdRef` varchar(255) DEFAULT NULL,
+  `isInputSolved` bit(1) NOT NULL,
+  `guiReaction` varchar(255) DEFAULT NULL,
+  `guiMessage` varchar(255) DEFAULT NULL,
+  `testaction_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK14C712DFC1CFF2F1` (`testaction_id`),
+  CONSTRAINT `FK14C712DFC1CFF2F1` FOREIGN KEY (`testaction_id`) REFERENCES `testaction` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userinput`
+--
+
+LOCK TABLES `userinput` WRITE;
+/*!40000 ALTER TABLE `userinput` DISABLE KEYS */;
+INSERT INTO `userinput` VALUES (1,'UBLInvoice','Send UBL Invoice','document','xml','website','\0','FI-1_document-xml-website-IN-1_TA-1_TP-1','\0','upload','Message for Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-1',1),(2,'UBLInvoice2','Send UBL Invoice2','document','xml','website','\0','FI-2_document-xml-website-IN-2_TA-1_TP-1','\0','upload','Message for Upload of Input with fileIdRef = FI-2_document-xml-website-IN-2_TA-1_TP-1',1),(3,'UBLInvoice','Send UBL Invoice','document','xml','website','\0','FI-1_document-xml-website-IN-1_TA-1_TP-1','\0','upload','Message for Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-1',2),(4,'UBLInvoice','Send UBL Invoice','document','xml','website','\0','FI-1_document-xml-website-IN-1_TA-1_TP-2','\0','upload','Message for Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-2',3),(5,'UBLInvoice','Send UBL Invoice','document','xml','website','\0','FI-2_document-xml-website-IN-1_TA-2_TP-2','\0','upload','Message for Upload of Input with fileIdRef = FI-2_document-xml-website-IN-1_TA-2_TP-2',4);
+/*!40000 ALTER TABLE `userinput` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `userinteraction`
 --
 
--- DROP TABLE IF EXISTS `userinteraction`;
+DROP TABLE IF EXISTS `userinteraction`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
--- CREATE TABLE `userinteraction` (
---   `id` bigint(20) NOT NULL AUTO_INCREMENT,
---   `message` varchar(255) DEFAULT NULL,
---   `inputInterfaceType` varchar(255) DEFAULT NULL,
---   `session_id` bigint(20) DEFAULT NULL,
---   PRIMARY KEY (`id`),
---   KEY `FKA49D8527C9C715D1` (`session_id`),
---   CONSTRAINT `FKA49D8527C9C715D1` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `userinteraction` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `message` varchar(255) DEFAULT NULL,
+  `inputInterfaceType` varchar(255) DEFAULT NULL,
+  `session_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK7CA12567C9C715D1` (`session_id`),
+  CONSTRAINT `FK7CA12567C9C715D1` FOREIGN KEY (`session_id`) REFERENCES `testsession` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -520,4 +500,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-09-25 16:44:05
+-- Dump completed on 2013-11-11 12:18:54
