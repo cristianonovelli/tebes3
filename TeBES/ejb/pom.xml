@@ -108,8 +108,8 @@
 										<!-- import prod-import.sql -->
 										<delete
 											file="src/main/resources/import.sql.not" />
-										<!-- copy file="config/prod-import.sql.not"
-											tofile="src/main/resources/import.sql.not" / -->
+										<!--  copy file="config/tebes_import.sql"
+											tofile="src/main/resources/import.sql" / -->
 										
 										<!-- import update_persistence.xml -->
 										<delete

@@ -27,9 +27,12 @@ mvn clean install -Pdev-update
 mvn clean install -Pprod
 mvn clean -Pdev-create -Dit.test=SessionManagerImplITCase verify
 mvn clean install -Pdev-create -Dit.test=SessionManagerImplITCase verify
+mvn clean install -Pprod -Dit.test=SessionManagerImplITCase verify
 
+8. To prepare database, import in MySQL the file ejb\config\tebes_import.sql:
+mysql -u root -proot7 -h localhost tebes < tebes_import.sql
 
-- URL APPLICAZIONE WEB
+9. URL APPLICAZIONE WEB
 http://localhost:8080/TeBES-war/index.jsf
 
 
