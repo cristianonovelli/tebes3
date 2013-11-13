@@ -267,7 +267,8 @@ public class SessionManagerImplITCase {
 
 			testPlan = systemTestPlanList.get(i);
 			Assert.assertNotNull(testPlan);
-			 
+			logger.info("TestPlan name: " + testPlan.getName()); 
+						
 			tpString.concat(testPlan.getName() + " ");
 			
 			Assert.assertNotNull(testPlan.getWorkflow());

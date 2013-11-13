@@ -304,7 +304,7 @@ public class SessionManagerController extends WebController<Session> {
 	public String getLogMessage() {
 		if(logMessage == null)
 			logMessage = "console: ";
-		return this.logMessage + this.viewCurrentSession.getReport().getXml();
+		return this.logMessage + this.viewCurrentSession.getReport().getFullDescription();
 	}
 
 //	public boolean getIsRunning() {
