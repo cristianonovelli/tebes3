@@ -25,9 +25,9 @@ mvn clean install -Pdev-create -DskipTests
 mvn clean install -Pdev-create
 mvn clean install -Pdev-update
 mvn clean install -Pprod
-mvn clean -Pdev-create -Dit.test=SessionManagerImplITCase verify
 mvn clean install -Pdev-create -Dit.test=SessionManagerImplITCase verify
 mvn clean install -Pprod -Dit.test=SessionManagerImplITCase verify
+(check if the folder TeBES_Artifacts is created in the location specified in the tebes.properties)
 
 8. To prepare database, import in MySQL the file ejb\config\tebes_import.sql:
 mysql -u root -proot7 -h localhost tebes < tebes_import.sql
