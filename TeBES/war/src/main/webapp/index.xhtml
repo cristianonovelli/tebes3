@@ -8,16 +8,11 @@
 
 <ui:composition template="layout/layout.xhtml">
 	<ui:define name="content">
-		<f:view>
+		<f:view locale="#{LocalizationController.locale}">
 			<h:form>
 				<div class="hero-unit">
 					<h1>TeBES</h1>
-					<p>Vestibulum viverra consequat fermentum. Quisque a
-						scelerisque massa. Donec eget elit eget massa egestas luctus vel
-						sit amet quam. Sed varius magna sit amet malesuada commodo. Ut
-						ultrices arcu turpis, at hendrerit lorem aliquam quis. Ut nulla
-						lacus, auctor id justo a, suscipit vulputate sapien. In hac
-						habitasse platea dictumst.</p>
+					<p><h:outputText value="#{msgs.IndexHeroParagraph}"/></p>
 					<p>
 						<a href="#" class="btn btn-primary btn-large">How To</a>
 					</p>

@@ -11,10 +11,10 @@
 
 <ui:composition template="layout/layout.xhtml">
 	<ui:define name="content">
-		<f:view>
+		<f:view locale="#{LocalizationController.locale}">
 			<a4j:form ajaxSubmit="true" reRender="utentiList,scrollValidationDown,scroll_1_div">
 				<h3>Session Manager</h3>
-				<h4 style="display: inline-block;">Sessioni attive</h4>
+				<h4 style="display: inline-block;"><h:outputText value="#{msgs.SessionsActiveSessions}"/></h4>
 				<h:commandLink styleClass="btn btn-success pull-right" value="Crea Sessione" action="#{SessionManagerController.openCreateSessionView}" />
 				
 				<t:dataTable id="activeSessionList" var="testSession" styleClass="table table-striped"

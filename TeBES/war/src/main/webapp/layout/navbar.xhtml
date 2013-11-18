@@ -17,11 +17,28 @@
 							<ul class="nav">
 								<li id="home_navbar"><a href="index.jsf">Home</a></li>
 								<li id="info_navbar"><a href="#about">Info</a></li>
-								<li id="admin_navbar"><h:commandLink value="Admin" rendered="#{AuthenticationManagerController.isAdmin}" action="index_admin"/></li>
+								<li id="admin_navbar"><h:commandLink value="Admin"
+										rendered="#{AuthenticationManagerController.isAdmin}"
+										action="index_admin" /></li>
 							</ul>
+							
 							<ul class="nav pull-right" id="navbar_logout">
-								<li><h:commandLink value="ESCI" action="#{AuthenticationManagerController.logout}" /></li>
+								<li><h:commandLink value="ESCI"
+										action="#{AuthenticationManagerController.logout}" /></li>
 							</ul>
+							
+							<div class="btn-group pull-right">
+								<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+									<h:outputText value="#{LocalizationController.locale}" style="text-transform:uppercase;"/> <span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li><h:commandLink value="Italiano"
+										action="#{LocalizationController.italianLocalization}" /></li>
+									<li><h:commandLink value="English"
+										action="#{LocalizationController.englishLocalization}" /></li>
+								</ul>
+							</div>
+							
 						</div>
 						<!--/.nav-collapse -->
 					</div>
