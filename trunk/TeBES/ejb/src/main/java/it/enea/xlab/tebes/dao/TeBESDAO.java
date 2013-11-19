@@ -40,6 +40,23 @@ public class TeBESDAO {
 		
 		return localLocation;
 	}
+	
+	public static String location2publication(String location) {
+	
+		String publication = null;
+		String relativeLocation = null;
+		
+		if (location.startsWith(PropertiesUtil.getArtifactsDirPath())) {
+			
+			// Get relative location
+			relativeLocation = location.substring(PropertiesUtil.getArtifactsDirPath().length(), location.length());
+			
+			// Add file system local path
+			publication = PropertiesUtil.getTeBESURL().concat(relativeLocation);			
+		}
+		
+		return publication;
+	}
 }
 
 

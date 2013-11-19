@@ -79,8 +79,11 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			// TODO creare prima le action e persistere il WF
 			if ( testPlan.getId() == null ) {
 				
+				//String publication = null;
+				String publication = TeBESDAO.location2publication(testPlan.getLocation());
+				
 				// Creo il TestPlan SENZA il Workflow
-				testPlan2 = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), null, null);
+				testPlan2 = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), publication, null, null);
 				eM.persist(testPlan2);	
 				
 				// TODO CREATE Workflow
@@ -202,7 +205,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 		TestPlanXML tpXMLClone = this.cloneTestPlanXML(testPlan.getTestplanxml());
 		
-		testPlanClone = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), wfClone, tpXMLClone);
+		testPlanClone = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), testPlan.getPublication(), wfClone, tpXMLClone);
 		Long testPlanCloneId = this.createTestPlan(testPlanClone, userId);	
 
 		return testPlanCloneId;
@@ -420,8 +423,10 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				
 				TestPlanXML tpXML = new TestPlanXML(testPlanDOM.getXMLString(), testPlanAbsFileName);
 
+				String publication = TeBESDAO.location2publication(testPlanAbsFileName);
+				
 				testPlan = new TestPlan(testPlanDOM.getRootNameAttribute(), testPlanDOM.getRootDescriptionAttribute(), testPlanDOM.getRootCreationDatetimeAttribute(), testPlanDOM.getRootLastUpdateDatetimeAttribute(), 
-						testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, workflow, tpXML);
+						testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, publication, workflow, tpXML);
 			}
 		} catch (Exception e) {
 			

@@ -1,5 +1,8 @@
 package it.enea.xlab.tebes.test.rule;
 
+import java.io.File;
+import java.io.IOException;
+
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.Profile;
@@ -137,6 +140,8 @@ public class RuleManagerImpl implements RuleManagerRemote {
 
 	public Report xmlSchemaValidation(String xmlString, String xsdString, Report report) {
 
+		
+		
 		// TODO
 		// verifica sia uno schematron valido
 

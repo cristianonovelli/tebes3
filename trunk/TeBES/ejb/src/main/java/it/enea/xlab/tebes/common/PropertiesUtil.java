@@ -273,7 +273,7 @@ public class PropertiesUtil {
 		return result;
 	}
 	
-	public static String getUserReportURL(Long userId, String reportName) {
+	public static String getUserReportURL(Long userId, String reportFileName) {
 		
 		String result = getTeBESURL();
 		result = checkFinalSlash(result);
@@ -281,11 +281,39 @@ public class PropertiesUtil {
 		result = result.concat(getUserReportRelPath(userId));
 		result = checkFinalSlash(result);		
 
-		result = result.concat(reportName);
+		result = result.concat(reportFileName);
 		
 		return result;
 	}
 		
+	// Path Relativo (necessario per fornire l'URL)
+	// p.es. users/1/testplans/
+	private static String getTestPlanRelPath(Long userId) {
+		
+		String result = getUsersDirProperty();
+		result = checkFinalSlash(result);
+		
+		result = result.concat(userId.toString());
+		result = checkFinalSlash(result);		
+
+		result = result.concat(getTestPlansDirProperty());
+		result = checkFinalSlash(result);	
+		
+		return result;
+	}
+	
+	public static String getTestPlanURL(Long userId, String testPlanFileName) {
+		
+		String result = getTeBESURL();
+		result = checkFinalSlash(result);
+		
+		result = result.concat(getTestPlanRelPath(userId));
+		result = checkFinalSlash(result);		
+
+		result = result.concat(testPlanFileName);
+		
+		return result;
+	}
 	
 	
 	public static String getUserReportsDirPath(Long id) {
