@@ -37,6 +37,7 @@ public class TestPlan implements Serializable {
 	private String state;
 	
 	private String location;
+	private String publication;
 	
 
 
@@ -71,7 +72,7 @@ public class TestPlan implements Serializable {
 
 	}
 	
-	public TestPlan(String name, String description, String creationDatetime, String lastUpdateDatetime, String state, String location, ActionWorkflow workflow, TestPlanXML testPlanXML) {
+	public TestPlan(String name, String description, String creationDatetime, String lastUpdateDatetime, String state, String location, String publication, ActionWorkflow workflow, TestPlanXML testPlanXML) {
 
 		this.setName(name);	
 		this.setDescription(description);	
@@ -79,6 +80,7 @@ public class TestPlan implements Serializable {
 		this.setLastUpdateDatetime(lastUpdateDatetime);
 		this.setState(state);
 		this.setLocation(location);	
+		this.setPublication(publication);
 		this.setWorkflow(workflow);
 		this.setTestplanxml(testPlanXML);
 	}
@@ -167,6 +169,22 @@ public class TestPlan implements Serializable {
 
 	public void setLastUpdateDatetime(String lastUpdateDatetime) {
 		this.lastUpdateDatetime = lastUpdateDatetime;
+	}
+
+	public List<Session> getSessions() {
+		return sessions;
+	}
+
+	public void setSessions(List<Session> sessions) {
+		this.sessions = sessions;
+	}
+
+	public String getPublication() {
+		return publication;
+	}
+
+	public void setPublication(String publication) {
+		this.publication = publication;
 	}
 
 
