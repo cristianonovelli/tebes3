@@ -1,0 +1,8 @@
+rm /Users/fulvio/Programming/Java/jboss-4.2.3.GA/server/default/deploy/TeBES-ear.ear
+rm -R /Users/fulvio/Programming/Java/jboss-4.2.3.GA/server/default/tmp/deploy/tmp*TeBES-ear.ear-contents/
+mvn clean install -Pdev-create -DskipTests
+sleep 10s
+mysql -u root -proot tebes < scripts/tebes_data_only.sql
+cp -R /Users/fulvio/Programming/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/0/ /Users/fulvio/Programming/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/1/
+cp -R /Users/fulvio/Programming/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/0/ /Users/fulvio/Programming/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/2/
+rm /Users/fulvio/Programming/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/2/docs/ubl-invoice.xml
