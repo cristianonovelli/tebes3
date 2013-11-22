@@ -13,6 +13,7 @@ import it.enea.xlab.tebes.entity.TestPlanXML;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -76,7 +77,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 			String datetime = XLabDates.getCurrentUTC();
 			
-			// TODO creare prima le action e persistere il WF
+			// SE l'id è NULL lo sto creando da zero (è il caso in cui importo gli XML)
 			if ( testPlan.getId() == null ) {
 				
 				//String publication = null;
@@ -134,6 +135,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				
 				return testPlan2.getId();
 			}
+			// Se l'id != null lo sto clonando (è il caso in cui copio un TP di sistema)
+			// in questo caso devo anche copiare il file
 			else {
 				
 				// Qui chiamo la CLONE
@@ -205,13 +208,46 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 		TestPlanXML tpXMLClone = this.cloneTestPlanXML(testPlan.getTestplanxml());
 		
-		testPlanClone = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), testPlan.getPublication(), wfClone, tpXMLClone);
+		String newLocation = PropertiesUtil.getTestPlansDirPath(userId).concat(testPlan.getName()).concat(Constants.XML_EXTENSION);
+		String newPublication = TeBESDAO.location2publication(newLocation);
+		
+		testPlanClone = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, newLocation, newPublication, wfClone, tpXMLClone);
 		Long testPlanCloneId = this.createTestPlan(testPlanClone, userId);	
-
-		return testPlanCloneId;
+		
+		boolean copying = false;
+		if (testPlanCloneId.intValue() > 0) {
+			
+			String src = testPlan.getLocation();
+			
+			
+			
+			try {
+				
+				logger.info("Copying TestPlan: " + testPlanClone.getName() + " for UserId: " + userId + "...");
+				copying = XLabFileManager.copy(new File(src), new File(newLocation));
+				if (copying)
+					logger.info("Copied TestPlan: " + newLocation);
+				
+			} catch (IOException e) {
+				copying = false;
+				logger.error(e.getMessage());
+				logger.error("EXCEPTION: see the stacktrace.");
+				e.printStackTrace();
+			}			
+		}
+		
+		if (copying) {
+			
+			return testPlanCloneId;
+		}
+		else
+			return null;
 	}
 
-
+	/*private boolean copyFile(String src, String dst) {
+		
+		return XLabFileManager.copy(srcDirPath, srcFileName, dstDirPath, dstFileName);
+	}*/
 	
 	/*private TestPlan cloneTestPlanBean(TestPlan testPlan1) {
 		

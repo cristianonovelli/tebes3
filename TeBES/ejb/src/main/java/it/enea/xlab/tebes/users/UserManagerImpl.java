@@ -4,6 +4,7 @@ import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
@@ -11,6 +12,8 @@ import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.testplan.TestPlanManagerImpl;
 import it.enea.xlab.tebes.validation.ValidationManagerRemote;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -52,7 +55,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	 */
 	public Long createUser(User user) {
 
-		Long result;
+		Long userId;
 		
 		List<User> userList = this.readUsersByEmail(user.geteMail());
 		
@@ -60,12 +63,14 @@ public class UserManagerImpl implements UserManagerRemote {
 			if ( (userList == null) || (userList.size() == 0) ) {
 				eM.persist(user);
 				
-				result = user.getId();
+				userId = user.getId();
 				
-				if (user.getId() > 0)
-					result = this.createUserFileSystem(user.getId());
-
-				return result;
+				if (userId.intValue() > 0) {
+					
+					logger.info("Created User with id: " + userId);
+					userId = this.createUserFileSystem(userId);
+				}
+				return userId;
 			}
 			else {
 				return new Long(-1);
@@ -77,33 +82,35 @@ public class UserManagerImpl implements UserManagerRemote {
 	}
 	
 	
-	private Long createUserFileSystem(Long userId) {
+	public Long createUserFileSystem(Long userId) {
 		
+		System.out.println("createUserFileSystem for user: " + userId);
 		
 		// CREO IL SUO FILE FILESYSTEM
 		// se la directory con quello user id esiste, c'� un problema di sistema
 		// torna -4
 		// altrimenti la creo, e poi creo le cartelle docs e report
-		String absUsersDirPath = PropertiesUtil.getUsersDirPath();
-		String absGenericUserFilePath = absUsersDirPath.concat(userId.toString()).concat(Constants.SLASH);
+		String absGenericUserFilePath = PropertiesUtil.getUserDirPath(userId);
 		
+		System.out.println("createUserFileSystem - preif: " + absGenericUserFilePath);
 		if ( !XLabFileManager.isFileOrDirectoryPresent(absGenericUserFilePath) ) {
+		
+			System.out.println("createUserFileSystem - precreatedir");
 			
 			// CREO
 			boolean dirCreation = XLabFileManager.createDir(absGenericUserFilePath);
 			if (dirCreation) {
 				
-				XLabFileManager.createDir(absGenericUserFilePath.concat(Constants.DOCS_DIR));
-				XLabFileManager.createDir(absGenericUserFilePath.concat(Constants.REPORTS_DIR));	
+				System.out.println("dirCreation true");
+				
+				XLabFileManager.createDir(absGenericUserFilePath.concat(PropertiesUtil.getDocsDirProperty()));						
+				XLabFileManager.createDir(absGenericUserFilePath.concat(PropertiesUtil.getReportsDirProperty()));
+				XLabFileManager.createDir(absGenericUserFilePath.concat(PropertiesUtil.getTestPlansDirProperty()));
+				
+				logger.info("created dirs");
 			}
 				
 			
-		}
-		else {
-			// se il file systeCancello l'utente e ritorno -4
-			
-			this.deleteUser(userId);
-			return new Long(-4);
 		}
 		
 		return userId;
@@ -143,22 +150,23 @@ public class UserManagerImpl implements UserManagerRemote {
 		 return result;
 	}
 	
+	
 	/**
 	 * DELETE User
 	 */
 	public Boolean deleteUser(Long id) {
-
+		
 		User user = this.readUser(id);
 		
 		if (user == null)
 			return false;
 		
 		try {
-			
-			// TODO Deleting Sut List?
-			
-			
-			
+
+			// Remove file system
+			this.deleteUserFileSystem(id);
+
+			// Remove from DB
 			eM.remove(user);
 			
 		} catch (IllegalArgumentException e) {
@@ -169,6 +177,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		
 		return true;
 	}
+	
 	
 	public Boolean deleteUserByEmail(String email) {
 		
@@ -189,6 +198,20 @@ public class UserManagerImpl implements UserManagerRemote {
 		return result;
 	}
 
+	public void deleteUserFileSystem(Long userId) {
+		
+		System.out.println("ENTER deleteUserFileSystem");
+		
+		String absUserFileDirPath = PropertiesUtil.getUserDirPath(userId);
+		
+		if ( XLabFileManager.isFileOrDirectoryPresent(absUserFileDirPath) ) {	
+			System.out.println("PRE deleteUserFileSystem");
+			XLabFileManager.delete(absUserFileDirPath);
+			System.out.println("deleteUserFileSystem:" + absUserFileDirPath);
+		}
+		
+		return;
+	}
 	
 	/**
 	 * GET User LIST
@@ -540,7 +563,11 @@ public class UserManagerImpl implements UserManagerRemote {
 			
 			if (user.getPassword().equals(userPassword)) {
 				result = user;
-				logger.warn("LOGIN User: " + user.getName() + " " + user.getSurname());
+				logger.info("LOGIN User: " + user.getName() + " " + user.getSurname());
+				System.out.println("LOGIN User: " + user.getName() + " " + user.getSurname());
+
+				// If doesn't exist, create the user file system
+				this.createUserFileSystem(user.getId());
 			}
 		}
 		

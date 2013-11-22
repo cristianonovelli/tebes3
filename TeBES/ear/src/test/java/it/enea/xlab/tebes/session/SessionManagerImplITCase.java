@@ -32,7 +32,6 @@ import java.util.Vector;
 import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
-import org.hibernate.validator.AssertTrue;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -670,6 +669,7 @@ public class SessionManagerImplITCase {
 		else
 			logger.info("Report NULL!");
 		logger.info("***************");
+		
 	}
 		
 	
@@ -728,6 +728,7 @@ public class SessionManagerImplITCase {
 			// DELETE User
 			if (tempUser.getRole().getLevel() != role4_superuser.getLevel() ) {			
 				deleting = userAdminController.deleteUser(tempUser.getId());
+				logger.info("Deleting User with ID: " + tempUser.getId());
 				Assert.assertTrue(deleting);			
 			}
 		}

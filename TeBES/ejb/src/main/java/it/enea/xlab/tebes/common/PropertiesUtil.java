@@ -207,11 +207,11 @@ public class PropertiesUtil {
 	public static String getUsersDirPath() {
 
 		String result;
-		System.out.println("getUsersDirPath1");
+
 		String usersDirProperty = getUsersDirProperty();
-		System.out.println("getUsersDirPath2:" + usersDirProperty);
+
 		result = PropertiesUtil.getArtifactsDirPath().concat(usersDirProperty);
-		System.out.println("getUsersDirPath3:" + result);
+
 		result = checkFinalSlash(result);
 		
 		return result;
@@ -298,6 +298,17 @@ public class PropertiesUtil {
 
 		result = result.concat(getTestPlansDirProperty());
 		result = checkFinalSlash(result);	
+		
+		return result;
+	}
+	
+	public static String getTestPlansDirPath(Long id) {
+		
+		String result = getUserDirPath(id);
+		
+		String testPlanDir = getTestPlansDirProperty();
+		result = result.concat(testPlanDir);
+		result = checkFinalSlash(result);
 		
 		return result;
 	}
