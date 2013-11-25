@@ -586,7 +586,7 @@ public class SessionManagerImplITCase {
 				logger.info("");
 				failuresForAction=0;
 			}
-			// Se actionMark == actionMarkPreRun alora la action ha fallito
+			// Se actionMark == actionMarkPreRun sono ancora sulla stessa action
 			else {
 				
 				failuresForAction++;	

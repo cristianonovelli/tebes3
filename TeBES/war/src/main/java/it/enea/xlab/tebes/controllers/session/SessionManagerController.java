@@ -139,7 +139,7 @@ public class SessionManagerController extends WebController<Session> {
 		if (result.intValue()>0)
 			return sessionManagerService.createSession(userId, sutId, testPlanId);
 		else
-			return new Long(-1);
+			return result;
 	} 
 
 	public Report getReport(Long sessionId) {
@@ -240,13 +240,36 @@ public class SessionManagerController extends WebController<Session> {
 	}
 	
 	public String createNewSession() {
-		if(createSession(getCurrentUser().getId(), selectedSUT, selectedTestPlan) > 0) {
+		
+		Long sessionId = createSession(getCurrentUser().getId(), selectedSUT, selectedTestPlan);
+		
+		if (sessionId.intValue() > 0) {
 			this.updateDataModel();
 			return "session_creation_success";
 		}
 		else {
+			
+			
+			/** 
+			 * CODIFICA DEL VALORE DI RITORNO
+			 * CHECK
+			 * @return	 1 if OK
+			 * 			-1 one or more ID isn't a valid identifier
+			 * 			-2 there isn't match testplan-sut of user
+			 * 			-3 there is match testplan-sut of user but it isn't supported in tebes
+			 * 
+			 * CREATE SESSION	 
+			 * -4 an unexpected exception happened
+			 * -5 report null
+			 * sessionId if ok
+			 */
 			this.showSessionFormMessage = true;
-			this.sessionFormMessage = Messages.FORM_SESSION_CREATION_FAIL;
+			
+			if (sessionId.intValue() == -2)
+				this.sessionFormMessage = "There isn't match between TestPlan and SUT. Specify a different TestPlan-SUT combination OR define a new TestPlan or SUT before to create a new Sesion Test.";
+			else
+				this.sessionFormMessage = Messages.FORM_SESSION_CREATION_FAIL;
+			
 			return "session_creation_fail";
 		}
 	}

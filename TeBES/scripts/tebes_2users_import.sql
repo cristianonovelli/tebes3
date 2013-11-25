@@ -395,7 +395,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Cristiano','Novelli','cristiano.novelli@gmail.com','xcristiano',NULL,4),(4,'Generic','StandardUser','cristiano.novelli@enea.it','xcristiano2',NULL,1);
+INSERT INTO `user` VALUES (1,'Cristiano','Novelli','cristiano.novelli@gmail.com','xcristiano',NULL,4),(2,'Generic','StandardUser','cristiano.novelli@enea.it','xcristiano2',NULL,1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -111,8 +111,8 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	 * 
 	 * @return	sessionId > 0
 
-	 * 			-2 an unexpected exception happened
-	 * 			-3 report null
+	 * 			-4 an unexpected exception happened
+	 * 			-5 report null
 	 */
 	public Long createSession(Long userId, Long sutId, Long testPlanId) {
 		
@@ -139,12 +139,12 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				
 			} catch (Exception e) {
 				e.printStackTrace();
-				return new Long(-2);
+				return new Long(-4);
 			}				
 			
 			
 			if (report == null)
-				return new Long(-3);
+				return new Long(-5);
 
 			// ADD Report To Session
 			this.addReportToSession(report.getId(), session.getId());

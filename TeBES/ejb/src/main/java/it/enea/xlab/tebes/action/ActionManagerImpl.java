@@ -493,8 +493,10 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						Node firstSingleResultNode = testResultsNode.getChildNodes().item(1);
 	
 						// Set Single Result
-						reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
-						
+						if (report.getTempResult() != null)
+							reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
+						else
+							reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), "failure", 0, "Validation Failure: check Validation Project.");
 						// 	TODO com'è ora, se ci fosse una lista di TAF ne farebbe uno solo
 						// Devo:
 						// 1. controllare vedere se ce n'è uno solo e se ha id=0
