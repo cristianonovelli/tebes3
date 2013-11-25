@@ -96,8 +96,7 @@ public class ReportManagerImpl implements ReportManagerRemote {
 	}
 
 	
-	// TODO forse aggiornerei qui dentro l'XML
-	// essendo parte della struttura
+
 	public Report createReportForNewSession(Session session) throws Exception {
 		
 		System.out.println("createReportForNewSession START");
