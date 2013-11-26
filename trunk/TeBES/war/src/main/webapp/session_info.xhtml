@@ -13,17 +13,19 @@
 	<ui:define name="content">
 		<f:view>
 			<h:form enctype="multipart/form-data">
-				<a4j:poll id="poll" interval="2000"
+				<a4j:poll id="poll" interval="2000" ajaxRendered="true"
 					enabled="#{SessionManagerController.isPollerRunning}"
-					reRender="poll,fileUploadPanel" />
+					reRender="fileUploadPanel,UploadFileBox,InputTextBox,MessageOkBox,MessageBox" />
 				<a4j:poll id="buttonPoller" enabled="true" interval="2000"
 					reRender="buttonPanel,sessionState, backButtonPanel, actionList" />
 				<div class="row" style="margin-left: 10px;">
 					<div class="span5">
 						<h3 style="display: inline-block;">Sessione di Test</h3>
-						<div style="display: inline-block; float: right; height: 60px; line-height: 60px;">
+						<div
+							style="display: inline-block; float: right; height: 60px; line-height: 60px;">
 							<strong style="margin-right: 10px;">Stato</strong> &nbsp;
-							<a4j:outputPanel id="sessionState" styleClass="label label-info" style="text-transform:uppercase;">
+							<a4j:outputPanel id="sessionState" styleClass="label label-info"
+								style="text-transform:uppercase;">
 								<h:outputText value="#{SessionManagerController.sessionState}" />
 							</a4j:outputPanel>
 						</div>
@@ -31,12 +33,6 @@
 
 				</div>
 
-				<a4j:outputPanel id="sessionRunning" ajaxRendered="true">
-					<h:outputText styleClass="pull-right"
-						rendered="#{SessionManagerController.isSessionWorking}">
-						<i class="icon-spinner icon-spin icon-large"></i>
-					</h:outputText>
-				</a4j:outputPanel>
 
 				<div class="row" style="margin-left: 10px;">
 					<div class="span5">
@@ -60,30 +56,27 @@
 						</table>
 					</div>
 					<div class="span4 offset3">
-					
+
 						<h5 class="headerUnderlined">Controlli</h5>
 						<div>
 							<a4j:outputPanel id="buttonPanel">
 								<a4j:commandButton value="Esegui" styleClass="btn btn-success"
 									rendered="#{SessionManagerController.canBeExecuted}"
 									action="#{SessionManagerController.execute}"
-									reRender="poll,sessionRunning, actionList" />
-								<a4j:commandButton value="Esegui"
-									styleClass="btn disabled"
+									reRender="actionList, fileUploadPanel,UploadFileBox,InputTextBox,MessageOkBox,MessageBox" />
+								<a4j:commandButton value="Esegui" styleClass="btn disabled"
 									rendered="#{!SessionManagerController.canBeExecuted}" />
 								<a4j:commandButton value="Sospendi" styleClass="btn btn-danger"
 									rendered="#{SessionManagerController.canBeStopped}"
-									style="margin-left: 10px;" reRender="poll,sessionRunning"
+									style="margin-left: 10px;"
 									action="#{SessionManagerController.suspend}" />
-								<a4j:commandButton value="Sospendi"
-									styleClass="btn disabled"
+								<a4j:commandButton value="Sospendi" styleClass="btn disabled"
 									rendered="#{!SessionManagerController.canBeStopped}"
 									style="margin-left: 10px;" />
 								<a4j:commandButton value="Riavvia" styleClass="btn btn-primary"
 									rendered="#{SessionManagerController.canBeRestarted}"
-									style="margin-left: 10px;" reRender="poll,sessionRunning" />
-								<a4j:commandButton value="Riavvia"
-									styleClass="btn disabled"
+									style="margin-left: 10px;" />
+								<a4j:commandButton value="Riavvia" styleClass="btn disabled"
 									rendered="#{!SessionManagerController.canBeRestarted}"
 									style="margin-left: 10px;" />
 							</a4j:outputPanel>
@@ -103,69 +96,87 @@
 								value="#{SessionManagerController.viewCurrentSession.testPlan.workflow.actions}"
 								preserveDataModel="false">
 								<h:column>
-									<h:panelGroup rendered="#{action.actionName eq SessionManagerController.currentAction.actionName}">
+									<h:panelGroup
+										rendered="#{action.actionName eq SessionManagerController.currentAction.actionName}">
 										<i class="icon-chevron-sign-right green icon-2x"></i>
 									</h:panelGroup>
 								</h:column>
 								<h:column>
 									<h:outputText value="#{action.actionName}" />
 								</h:column>
-								
+
 							</t:dataTable>
 						</a4j:outputPanel>
 					</div>
 
 					<a4j:outputPanel id="fileUploadPanel">
-						<a4j:region
-							rendered="#{SessionManagerController.isSessionWaiting}" />
-						<div class="span4 offset3">
-							<h6><h:outputText value="#{SessionManagerController.guiMessage}" /></h6>
-							<rich:fileUpload
-								fileUploadListener="#{SessionManagerController.fileUploadListener}"
-								id="upload"
-								maxFilesQuantity="#{SessionManagerController.uploadsAvailable}"
-								immediateUpload="true" allowFlash="false"
-								acceptedTypes="pdf,png,jpg,txt,html,xml"
-								rendered="#{SessionManagerController.showUploadFileBox}"
-								noDuplicate="true" clearAllControlLabel="Cancella tutto"
-								clearControlLabel="Cancella" doneLabel="Caricato">
-								<a4j:support event="onuploadcomplete" reRender="poll" />
-								<a4j:support event="onclear" reRender="poll,fileUploadPanel"
-									actionListener="#{SessionManagerController.clearUploadedFile}" />
-							</rich:fileUpload>
-							<a4j:commandButton value="Procedi" styleClass="btn btn-primary" style="margin-top:10px; float:right;"
-								rendered="#{SessionManagerController.showUploadFileBox}"
-								action="#{SessionManagerController.upload}"
-								reRender="poll,fileUploadPanel,sessionState,sessionRunning" />
-						</div>
+						<a4j:outputPanel
+							rendered="#{SessionManagerController.isSessionWaiting}"></a4j:outputPanel>
+						<a4j:outputPanel id="UploadFileBox"
+							rendered="#{SessionManagerController.showUploadFileBox}">
+							<div class="span4 offset3">
+								<h6>
+									<h:outputText value="#{SessionManagerController.guiMessage}" />
+								</h6>
+								<rich:fileUpload
+									fileUploadListener="#{SessionManagerController.fileUploadListener}"
+									id="upload"
+									maxFilesQuantity="#{SessionManagerController.uploadsAvailable}"
+									immediateUpload="true" allowFlash="false"
+									acceptedTypes="pdf,png,jpg,txt,html,xml"
+									noDuplicate="true" clearAllControlLabel="Cancella tutto"
+									clearControlLabel="Cancella" doneLabel="Caricato">
+									<a4j:support event="onuploadcomplete" />
+									<a4j:support event="onclear" reRender="fileUploadPanel"
+										actionListener="#{SessionManagerController.clearUploadedFile}" />
+								</rich:fileUpload>
+								<a4j:commandButton value="Salva e procedi"
+									styleClass="btn btn-primary"
+									style="margin-top:10px; float:right;"
+									action="#{SessionManagerController.upload}"
+									reRender="fileUploadPanel,sessionState" />
+							</div>
+						</a4j:outputPanel>
 
-						<a4j:region
+						<a4j:outputPanel id="InputTextBox"
 							rendered="#{SessionManagerController.showInputTextBox}">
 							<div class="well span4 offset1">
-								<h6><h:outputText value="#{SessionManagerController.guiMessage}"/></h6>
+								<h6>
+									<h:outputText value="#{SessionManagerController.guiMessage}" />
+								</h6>
 								<div class="controls">
 									<h:inputText id="inputMessage"
 										value="#{SessionManagerController.inputTextMessage}" />
 								</div>
-								<h:commandButton styleClass="btn btn-primary" value="OK"
+								<a4j:commandButton styleClass="btn btn-primary" value="OK"
+									style="margin-top:10px;"
 									action="#{SessionManagerController.upload}" />
 							</div>
-						</a4j:region>
-						<a4j:region
+						</a4j:outputPanel>
+						<a4j:outputPanel id="MessageOkBox"
 							rendered="#{SessionManagerController.showMessageOkBox}">
 							<div class="well span4 offset1">
-								<h6><h:outputText value="#{SessionManagerController.guiMessage}"/></h6>
-								<a4j:commandButton value="OK" styleClass="btn btn-primary" style="margin-top:10px;"
-								action="#{SessionManagerController.execute}" />
+								<h6>
+									<h:outputText value="#{SessionManagerController.guiMessage}" />
+								</h6>
+								<a4j:commandButton value="OK" styleClass="btn btn-primary"
+									style="margin-top:10px;"
+									action="#{SessionManagerController.execute}" />
 							</div>
-						</a4j:region>
+						</a4j:outputPanel>
+						<a4j:outputPanel id="MessageBox"
+							rendered="#{SessionManagerController.showMessageBox}">
+							<div class="alert alert-info span4 offset3">
+								<h:outputText value="#{SessionManagerController.guiMessage}" />
+							</div>
+						</a4j:outputPanel>
 					</a4j:outputPanel>
 				</div>
 
 				<hr />
 
-				<div class="row" style="margin-left: 10px;">
-					<h5 class="headerUnderlined">Controlli</h5>
+				<div class="row" style="margin-left: 10px;" >
+					<h5 class="headerUnderlined">Console</h5>
 				</div>
 				<div class="row sessionConsole">
 					<a4j:outputPanel id="consolePanel" ajaxRendered="true">
@@ -173,11 +184,6 @@
 					</a4j:outputPanel>
 				</div>
 
-				<a4j:outputPanel id="backButtonPanel" ajaxRendered="true">
-					<h:commandButton styleClass="btn btn-primary" value="Indietro"
-						rendered="#{SessionManagerController.isBackEnabled}"
-						action="backToSessionManager" />
-				</a4j:outputPanel>
 
 			</h:form>
 		</f:view>

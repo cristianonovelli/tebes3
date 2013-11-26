@@ -93,8 +93,8 @@ public class FilterablePagedDataModel <T> extends DataModel {
 	 * returned includes the current rowIndex row; see getRowData.
 	 */
 	public DataPage<T> getPage() {
-		if (page != null)
-			return page;
+		//if (page != null)
+			//return page;
 
 		int rowIndex = getRowIndex();
 		int startRow = rowIndex;
@@ -126,9 +126,9 @@ public class FilterablePagedDataModel <T> extends DataModel {
 		// ensure page exists; if rowIndex is beyond dataset size, then 
 		// we should still get back a DataPage object with the dataset size
 		// in it...
-		if (page == null) {
+		//if (page == null) {
 			page = fetchPage(rowIndex, pageSize);
-		}
+		//}
 
 		int datasetSize = page.getDatasetSize();
 		int startRow = page.getStartRow();
