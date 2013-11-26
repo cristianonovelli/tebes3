@@ -79,6 +79,7 @@ public class SessionManagerController extends WebController<Session> {
 	private boolean showUploadFileBox = false;
 	private boolean showInputTextBox = false;
 	private boolean showMessageOkBox = false;
+	private boolean showMessageBox = false;
 	private String sessionState;
 	private boolean canBeExecuted = false;
 	private boolean canBeStopped = false;
@@ -398,7 +399,7 @@ public class SessionManagerController extends WebController<Session> {
 	}
 
 	public boolean getShowUploadFileBox() {
-		return showUploadFileBox;
+		return this.showUploadFileBox;
 	}
 
 	public void setShowUploadFileBox(boolean showUploadFileBox) {
@@ -527,16 +528,11 @@ public class SessionManagerController extends WebController<Session> {
 		
 		if(this.viewCurrentSession != null) {
 			this.isPollerRunning = true;
-			this.canBeExecuted = false;
-			this.canBeStopped = true;
-			this.canBeRestarted = false;
-			this.resetBoxFlags();
+			
+			//this.resetBoxFlags();
 			this.viewCurrentSession = this.runWorkflow(this.viewCurrentSession.getTestPlan().getWorkflow(), this.viewCurrentSession);
 			this.currentAction = this.viewCurrentSession.getTestPlan().getWorkflow().getCurrentAction();
 			
-			this.canBeExecuted = true;
-			this.canBeStopped = false;
-			this.canBeRestarted = false;
 		}
 
 		return "";
@@ -546,49 +542,62 @@ public class SessionManagerController extends WebController<Session> {
 		
 		if(this.viewCurrentSession != null) {
 			if(this.viewCurrentSession.getState().equals(Session.getWaitingState())) {
-				this.isPollerRunning = false;
+				//this.isPollerRunning = false;
 				this.isSessionWaiting = true;
 				
 				this.currentAction = this.viewCurrentSession.getTestPlan().getWorkflow().getCurrentAction();
+				System.out.println("TEBES DEBUG - CURRENT ACTION: "+currentAction.getActionName()+", STATE: "+currentAction.getState()+ ", TOTAL INPUTS: "+currentAction.getInputs().size());
 				boolean found = false;
 				
 				for (Input input : this.currentAction.getInputs()) {
 					if(!input.isInputSolved()) {
+						System.out.println("TEBES DEBUG - INPUT: "+input.getName()+" not solved. TYPE: "+input.getGuiReaction());
 						found = true;
+						this.canBeExecuted = false;
 						this.currentInput = input;
 						this.guiMessage = input.getGuiMessage();
 						if(input.getGuiReaction().equals("upload")) {
 							this.showUploadFileBox = true;
 							this.showInputTextBox = false;
 							this.showMessageOkBox = false;
+							this.showMessageBox = false;
 							break;
 						} else if(input.getGuiReaction().equals("text")) {
 							this.showUploadFileBox = false;
 							this.showInputTextBox = true;
 							this.showMessageOkBox = false;
+							this.showMessageBox = false;
 							break;
 						} else if(input.getGuiReaction().equals("message")) {
 							this.showUploadFileBox = false;
 							this.showInputTextBox = false;
 							this.showMessageOkBox = true;
+							this.showMessageBox = false;
 							break;
 						}
 					}
 				}
 				
 				if(!found) {
+					System.out.println("TEBES DEBUG - ALL INPUTS SOLVED for action "+currentAction.getActionName()+", resetting box flags.");
 					this.resetBoxFlags();
 					this.isPollerRunning = true;
 					this.isSessionWaiting = false;
-					
 					this.canBeExecuted = true;
 					this.canBeStopped = false;
 					this.canBeRestarted = false;
+					
+					this.guiMessage = "Tutti gli input richiesti dalla Action "+this.currentAction.getActionName()+" sono stati forniti. Premi ESEGUI per eseguire la Action.";
+					this.showMessageBox = true;
+					
 				}
 				
 			} else if(this.viewCurrentSession.getState().equals(Session.getWorkingState())) {
-				this.isPollerRunning = false;
-				this.execute();
+				System.out.println("TEBES DEBUG - SESSION IN WORKING STATE");
+				this.guiMessage = "Action "+this.currentAction.getActionName()+" conclusa correttamente. Premi ESEGUI per riprendere il workflow con la successiva Action.";
+				this.showMessageBox = true;
+				//this.isPollerRunning = false;
+				//this.execute();
 			}
 		}
 		
@@ -599,6 +608,7 @@ public class SessionManagerController extends WebController<Session> {
 		this.showUploadFileBox = false;
 		this.showInputTextBox = false;
 		this.showMessageOkBox = false;
+		this.showMessageBox = false;
 	} 
 	
 	private byte[] convertInputStreamToByteArray(InputStream is) throws IOException { 
@@ -646,10 +656,10 @@ public class SessionManagerController extends WebController<Session> {
 		
 		Session result = fileManagerService.upload(input.getFileIdRef(), fileName, type, fileContent, session);
 		
-		if (action.isStateReady()) {
+		/*if (action.isStateReady()) {
+			this.guiMessage = "Action "+action.getActionName()+" conclusa. Premi ESEGUI per riprendere il workflow.";
 			this.showMessageOkBox = true;
-			this.guiMessage = "Action "+action.getActionName()+" conclusa. Premi OK per riprendere il workflow.";
-		}
+		}*/
 
 		return result;
 	}
@@ -698,6 +708,14 @@ public class SessionManagerController extends WebController<Session> {
 
 	public void setCurrentAction(Action currentAction) {
 		this.currentAction = currentAction;
+	}
+
+	public boolean isShowMessageBox() {
+		return showMessageBox;
+	}
+
+	public void setShowMessageBox(boolean showMessageBox) {
+		this.showMessageBox = showMessageBox;
 	}
 }
 
