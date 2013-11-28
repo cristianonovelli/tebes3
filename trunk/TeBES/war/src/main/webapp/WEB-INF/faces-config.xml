@@ -10,12 +10,6 @@
 	<!-- CONTROLLERS -->
 
 	<managed-bean>
-		<managed-bean-name>HelloController</managed-bean-name>
-		<managed-bean-class>HelloController</managed-bean-class>
-		<managed-bean-scope>request</managed-bean-scope>
-	</managed-bean>
-
-	<managed-bean>
 		<managed-bean-name>AuthenticationManagerController</managed-bean-name>
 		<managed-bean-class>it.enea.xlab.tebes.controllers.authentication.AuthenticationManagerController</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>

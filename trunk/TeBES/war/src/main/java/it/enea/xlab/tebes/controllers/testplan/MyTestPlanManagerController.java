@@ -40,6 +40,8 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 	
 	private String testPlanFormMessage;
 	private boolean showTestPlanFormMessage = false;
+	
+	private List<TestPlan> userTestPlanList;
 
 	private Long selectedTestPlanId;
 	
@@ -263,6 +265,17 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 
 	public boolean getShowTestPlanFormMessage() {
 		return showTestPlanFormMessage;
+	}
+
+
+	public List<TestPlan> getUserTestPlanList() {
+		User currentUser = userManagerService.readUsersByEmail(FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName()).get(0);
+		return testPlanManagerService.readUserTestPlanList(currentUser);
+	}
+
+
+	public void setUserTestPlanList(List<TestPlan> userTestPlanList) {
+		this.userTestPlanList = userTestPlanList;
 	}
 
 }
