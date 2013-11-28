@@ -22,7 +22,7 @@
 					<h:outputText id="formMessage" value="#{MyTestPlanManagerController.testPlanFormMessage}" rendered="#{MyTestPlanManagerController.showTestPlanFormMessage}" />
 				</a4j:outputPanel>
 				
-				<t:dataTable id="myTestPlanList" var="testPlan" styleClass="table table-striped"
+				<t:dataTable id="myTestPlanList" var="myTestPlan" styleClass="table table-striped"
 					value="#{MyTestPlanManagerController.dataModel}" preserveDataModel="false"
 					rows="#{MyTestPlanManagerController.rowsPerPage}" style="margin-top: 20px;">
 
@@ -30,42 +30,42 @@
 						<f:facet name="header">
 							<h:outputText value="Nome" />
 						</f:facet>
-						<h:outputText value="#{testPlan.name}" />
+						<h:outputText value="#{myTestPlan.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Descrizione" />
 						</f:facet>
-						<h:outputText value="#{testPlan.description}" />
+						<h:outputText value="#{myTestPlan.description}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Data di creazione" />
 						</f:facet>
-						<h:outputText value="#{testPlan.creationDatetime}" />
+						<h:outputText value="#{myTestPlan.creationDatetime}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Data ultimo aggiornamento" />
 						</f:facet>
-						<h:outputText value="#{testPlan.lastUpdateDatetime}" />
+						<h:outputText value="#{myTestPlan.lastUpdateDatetime}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Stato" />
 						</f:facet>
-						<h:outputText value="#{testPlan.state}" />
+						<h:outputText value="#{myTestPlan.state}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Locazione" />
 						</f:facet>
-						<h:outputText value="#{testPlan.publication}" />
+						<h:outputText value="#{myTestPlan.publication}" />
 					</h:column>
 
 					<t:column styleClass="tdVerticalAligned">
@@ -75,11 +75,20 @@
 						<a4j:commandLink id="createSessionlink" style="margin-left: 10px;"
 							action="#{MyTestPlanManagerController.openCreateSessionViewFromTestPlan}"> 
 							<i class="icon-play-circle icon-2x"></i>
-							<a4j:actionparam name="selectedTestPlanName" value="#{testPlan.id}"
+							<a4j:actionparam name="selectedTestPlanName" value="#{myTestPlan.id}"
 								assignTo="#{SessionManagerController.selectedTestPlan}" />
 						</a4j:commandLink>
 						<rich:toolTip for="createSessionlink" value="Crea Sessione" />
+						
+						<a4j:commandLink id="removeSessionlink" style="margin-left: 10px;"
+							action="#{MyTestPlanManagerController.deleteTestPlan}"> 
+							<i class="icon-remove icon-2x"></i>
+							<a4j:actionparam name="selectedTestPlanName" value="#{myTestPlan.id}"
+								assignTo="#{MyTestPlanManagerController.selectedTestPlanId}" />
+						</a4j:commandLink>
+						<rich:toolTip for="createSessionlink" value="Crea Sessione" />
 					</t:column>
+
 
 				</t:dataTable>
 

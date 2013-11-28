@@ -32,6 +32,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.Application;
+import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
@@ -166,6 +168,17 @@ public class SessionManagerController extends WebController<Session> {
 	@Override
 	public void updateDataModel() {
 		super.updateDataModel();
+		
+		if (dataModel.getRowCount() == 0) {
+			
+			FacesContext fctx = FacesContext.getCurrentInstance();
+
+		     Application application = fctx.getApplication();
+
+		     NavigationHandler navHandler = application.getNavigationHandler();
+
+		     navHandler.handleNavigation(fctx,null, "create_session");
+		}
 	}
 
 	@Override
