@@ -12,11 +12,14 @@
 
 		<f:view>
 
-		<div class="" id="loginModal">
-			<div class="modal-header">
-				<h3>Hai un account?</h3>
-			</div>
+			<div class="" id="loginModal">
+				<div class="modal-header">
+					<h3>Hai un account?</h3>
+				</div>
 				<div class="well">
+
+
+
 					<ul class="nav nav-tabs" id="loginTab">
 						<li class="active"><a href="#login" data-toggle="tab">Login</a></li>
 						<li><a href="#create" data-toggle="tab">Crea un account</a></li>
@@ -34,7 +37,7 @@
 										<label class="control-label" for="username">e-mail</label>
 										<div class="controls">
 											<input type="text" id="username" name="j_username"
-												placeholder="" class="input-xlarge" value="cristiano.novelli@gmail.com"/>
+												placeholder="" class="input-xlarge"	/>
 										</div>
 									</div>
 
@@ -43,10 +46,9 @@
 										<label class="control-label" for="password">password</label>
 										<div class="controls">
 											<input type="password" id="password" name="j_password"
-												placeholder="" class="input-xlarge" value="xcristiano"/>
+												placeholder="" class="input-xlarge" />
 										</div>
 									</div>
-
 
 									<div class="control-group">
 										<!-- Button -->
@@ -59,48 +61,57 @@
 						</div>
 						<div class="tab-pane fade" id="create">
 							<h:form id="tab">
+								<a4j:outputPanel styleClass="formErrorMessage"
+									ajaxRendered="true">
+									<h:outputText value="#{UserManagerController.userFormMessage}"
+										rendered="#{UserManagerController.showUserFormMessage}" />
+								</a4j:outputPanel>
 								<div class="control-group">
-    								<label class="control-label" for="input_username">Nome</label>
+
+									<label class="control-label" for="input_username">Nome</label>
 									<div class="controls">
-										<h:inputText id="input_username" value="#{UserManagerController.user.name}" />
-									</div>
-  								</div>
-								<div class="control-group">
-    								<label class="control-label" for="input_surname">Cognome</label>
-									<div class="controls">
-										<h:inputText id="input_surname" value="#{UserManagerController.user.surname}" />
-									</div>
-								</div>
-								<div class="control-group">
-    								<label class="control-label" for="input_email">E-mail</label>
-									<div class="controls">
-										<h:inputText id="input_email" value="#{UserManagerController.user.eMail}" />
+										<h:inputText id="input_username"
+											value="#{UserManagerController.user.name}" />
 									</div>
 								</div>
 								<div class="control-group">
-    								<label class="control-label" for="input_password">Password</label>
+									<label class="control-label" for="input_surname">Cognome</label>
 									<div class="controls">
-										<h:inputSecret id="input_password" redisplay="true" value="#{UserManagerController.user.password}" />
+										<h:inputText id="input_surname"
+											value="#{UserManagerController.user.surname}" />
 									</div>
 								</div>
 								<div class="control-group">
-    								<label class="control-label" for="input_password_confirm">Conferma password</label>
+									<label class="control-label" for="input_email">E-mail</label>
 									<div class="controls">
-										<h:inputSecret id="input_password_confirm" redisplay="true" value="#{UserManagerController.confirmPassword}" />
+										<h:inputText id="input_email"
+											value="#{UserManagerController.user.eMail}" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="input_password">Password</label>
+									<div class="controls">
+										<h:inputSecret id="input_password" redisplay="true"
+											value="#{UserManagerController.user.password}" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="input_password_confirm">Conferma
+										password</label>
+									<div class="controls">
+										<h:inputSecret id="input_password_confirm" redisplay="true"
+											value="#{UserManagerController.confirmPassword}" />
 									</div>
 								</div>
 								<div>
-      								<h:commandLink styleClass="btn btn-success" value="Registrati" action="#{UserManagerController.createUser}"/>
-      						
-      								<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true">
-										<h:outputText value="#{UserManagerController.userFormMessage}" rendered="#{UserManagerController.showUserFormMessage}" />
-									</a4j:outputPanel>
-  								</div>
-							</h:form>	
+									<h:commandLink styleClass="btn btn-success" value="Registrati"
+										action="#{UserManagerController.createUser}" />
+								</div>
+							</h:form>
 						</div>
 					</div>
 				</div>
-		</div>
+			</div>
 		</f:view>
 
 	</ui:define>

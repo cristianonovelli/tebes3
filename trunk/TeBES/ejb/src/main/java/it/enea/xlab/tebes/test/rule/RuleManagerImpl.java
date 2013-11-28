@@ -165,7 +165,12 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			emList = validationManager.validation(xmlString, xsdString);
 			
 			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
-			TestResult result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
+			TestResult result;
+			if (emList.length > 0)
+				result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
+			else
+				result = new TestResult("success", 0, "Success: Empty Error Message List");
+			
 			report.setTempResult(result);
 
 		} catch (Exception e) {
@@ -206,7 +211,12 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			System.out.println("schematronValidation! azx4");
 			
 			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
-			TestResult result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
+			TestResult result;
+			if (emList.length > 0)
+				result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
+			else
+				result = new TestResult("success", 0, "Success: Empty Error Message List");
+				
 			report.setTempResult(result);
 
 		} catch (Exception e) {

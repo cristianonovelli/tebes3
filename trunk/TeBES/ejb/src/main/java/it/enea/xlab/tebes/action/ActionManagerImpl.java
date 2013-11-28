@@ -493,11 +493,15 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						Node firstSingleResultNode = testResultsNode.getChildNodes().item(1);
 	
 						// Set Single Result
-						if (report.getTempResult() != null)
+						if (report.getTempResult() != null) {
 							reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
-						else
+							System.out.println("runAction - tempResult: " + report.getTempResult().getGlobalResult());
+						}
+						else {
 							reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), "failure", 0, "Validation Failure: check Validation Project.");
-						// 	TODO com'è ora, se ci fosse una lista di TAF ne farebbe uno solo
+							System.out.println("runAction - tempResult: failure");
+						}
+							// 	TODO com'è ora, se ci fosse una lista di TAF ne farebbe uno solo
 						// Devo:
 						// 1. controllare vedere se ce n'è uno solo e se ha id=0
 						// in questo caso lo valorizzo
@@ -510,7 +514,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						
 						// TODO ADD to XML Single Result
 						// Poi azzera singleresult
-						System.out.println("runAction - tempResult: " + report.getTempResult());
+						
 						report.setTempResult(null);
 						
 						

@@ -71,9 +71,9 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 		return testPlanManagerService.createTestPlan(testPlan, userId);
 	}
 
-	public Boolean deleteTestPlan(Long testPlanId) {
+	public Boolean deleteTestPlan() {
 		
-		return testPlanManagerService.deleteTestPlan(testPlanId);
+		return testPlanManagerService.deleteTestPlan(selectedTestPlanId);
 	}
 	
 	public List<TestPlan> readTestPlanByUserIdAndDatetime(String datetime, Long userId) {
