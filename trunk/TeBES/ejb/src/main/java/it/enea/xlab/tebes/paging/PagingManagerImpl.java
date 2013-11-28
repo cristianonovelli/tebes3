@@ -57,6 +57,11 @@ public class PagingManagerImpl implements PagingManager{
 						criteria.addOrder(orderBy);
 				}
 			}
+			
+			/*if (distinct) {
+				criteria.setProjection(Projections.distinct(Projections.id()));
+			}*/
+			
 			return criteria.list();	
 		} catch (Exception e) {
 			logger.warn("Error calling CrudManagerBean.findByCriteria()", e);
