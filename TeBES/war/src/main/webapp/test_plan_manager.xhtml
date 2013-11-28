@@ -22,50 +22,49 @@
 					<h:outputText id="formMessage" value="#{MyTestPlanManagerController.testPlanFormMessage}" rendered="#{MyTestPlanManagerController.showTestPlanFormMessage}" />
 				</a4j:outputPanel>
 				
-				<t:dataTable id="myTestPlanList" var="myTestPlan" styleClass="table table-striped"
-					value="#{MyTestPlanManagerController.dataModel}" preserveDataModel="false"
-					rows="#{MyTestPlanManagerController.rowsPerPage}" style="margin-top: 20px;">
+				<t:dataTable id="myTestPlanList" var="testPlan" styleClass="table table-striped"
+					value="#{MyTestPlanManagerController.userTestPlanList}" preserveDataModel="false"  style="margin-top: 20px;">
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Nome" />
 						</f:facet>
-						<h:outputText value="#{myTestPlan.name}" />
+						<h:outputText value="#{testPlan.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Descrizione" />
 						</f:facet>
-						<h:outputText value="#{myTestPlan.description}" />
+						<h:outputText value="#{testPlan.description}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Data di creazione" />
 						</f:facet>
-						<h:outputText value="#{myTestPlan.creationDatetime}" />
+						<h:outputText value="#{testPlan.creationDatetime}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Data ultimo aggiornamento" />
 						</f:facet>
-						<h:outputText value="#{myTestPlan.lastUpdateDatetime}" />
+						<h:outputText value="#{testPlan.lastUpdateDatetime}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Stato" />
 						</f:facet>
-						<h:outputText value="#{myTestPlan.state}" />
+						<h:outputText value="#{testPlan.state}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="Locazione" />
 						</f:facet>
-						<h:outputText value="#{myTestPlan.publication}" />
+						<h:outputText value="#{testPlan.publication}" />
 					</h:column>
 
 					<t:column styleClass="tdVerticalAligned">
@@ -75,52 +74,18 @@
 						<a4j:commandLink id="createSessionlink" style="margin-left: 10px;"
 							action="#{MyTestPlanManagerController.openCreateSessionViewFromTestPlan}"> 
 							<i class="icon-play-circle icon-2x"></i>
-							<a4j:actionparam name="selectedTestPlanName" value="#{myTestPlan.id}"
+							<a4j:actionparam name="selectedTestPlanName" value="#{testPlan.id}"
 								assignTo="#{SessionManagerController.selectedTestPlan}" />
-						</a4j:commandLink>
-						<rich:toolTip for="createSessionlink" value="Crea Sessione" />
-						
-						<a4j:commandLink id="removeSessionlink" style="margin-left: 10px;"
-							action="#{MyTestPlanManagerController.deleteTestPlan}"> 
-							<i class="icon-remove icon-2x"></i>
-							<a4j:actionparam name="selectedTestPlanName" value="#{myTestPlan.id}"
-								assignTo="#{MyTestPlanManagerController.selectedTestPlanId}" />
 						</a4j:commandLink>
 						<rich:toolTip for="createSessionlink" value="Crea Sessione" />
 					</t:column>
 
-
 				</t:dataTable>
-
-				<t:div id="scroll_1_div">
-					<t:dataScroller id="scrollValidationDown" for="myTestPlanList"
-						fastStep="10" pageCountVar="pageCount" pageIndexVar="scrollerPage"
-						paginator="true" paginatorMaxPages="9" immediate="true"
-						rendered="#{MyTestPlanManagerController.dataSize gt 10}" >
-
-						<f:facet name="first">
-							<h:graphicImage url="img/first.png" />
-						</f:facet>
-
-						<f:facet name="last">
-							<h:graphicImage url="img/last.png" />
-						</f:facet>
-
-						<f:facet name="previous">
-							<h:graphicImage url="img/previous.png" />
-						</f:facet>
-
-						<f:facet name="next">
-							<h:graphicImage url="img/next.png" />
-						</f:facet>
-					</t:dataScroller>
-				</t:div>
 				
 				<h4>Test Plan di Sistema</h4>
 				
 				<t:dataTable id="systemTestPlanList" var="testPlan" styleClass="table table-striped"
-					value="#{TestPlanManagerController.dataModel}" preserveDataModel="false"
-					rows="#{TestPlanManagerController.rowsPerPage}" style="margin-top: 20px;">
+					value="#{TestPlanManagerController.systemTestPlans}"  style="margin-top: 20px;">
 
 					<h:column>
 						<f:facet name="header">
@@ -179,29 +144,6 @@
 
 				</t:dataTable>
 
-				<t:div id="scroll_2_div">
-					<t:dataScroller id="scrollValidationDown2" for="systemTestPlanList"
-						fastStep="10" pageCountVar="pageCount" pageIndexVar="scrollerPage"
-						paginator="true" paginatorMaxPages="9" immediate="true"
-						rendered="#{TestPlanManagerController.dataSize gt 10}">
-
-						<f:facet name="first">
-							<h:graphicImage url="img/first.png" />
-						</f:facet>
-
-						<f:facet name="last">
-							<h:graphicImage url="img/last.png" />
-						</f:facet>
-
-						<f:facet name="previous">
-							<h:graphicImage url="img/previous.png" />
-						</f:facet>
-
-						<f:facet name="next">
-							<h:graphicImage url="img/next.png" />
-						</f:facet>
-					</t:dataScroller>
-				</t:div>
 				
 			</a4j:form>
 		</f:view>

@@ -3,6 +3,7 @@ package it.enea.xlab.tebes.controllers.testplan;
 import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
+import it.enea.xlab.tebes.controllers.bean.FilterablePagedDataModel;
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.dao.NestedCriterion;
 import it.enea.xlab.tebes.entity.Action;
@@ -29,12 +30,12 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 	private TestPlanManagerRemote testPlanManagerService;
 	private ActionManagerRemote actionManagerService;
 	private UserManagerRemote userManagerService;
+	
+	private List<TestPlan> systemTestPlans;
 
 	
 	// CONTROLLER Constructor
 	public TestPlanManagerController() throws NamingException {
-
-
 		testPlanManagerService = JNDIServices.getTestPlanManagerService(); 
 		actionManagerService = JNDIServices.getActionManagerService();
 		userManagerService = JNDIServices.getUserManagerService();
@@ -48,6 +49,11 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 		actionManagerService = JNDIServices.getActionManagerService();
 	}
 
+	@Override
+	public void updateDataModel(){
+		super.updateDataModel();
+		System.out.println("[DEBUG] TestPlanManagerController data model size: "+this.dataModel.getRowCount());
+	}
 
 	
 	/*public TestPlan getTestPlanFromXML(String testPlanAbsPathName) {
@@ -171,14 +177,12 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 	}
 
 	public Long cloneTestPlan(TestPlan testPlan, Long userId) {
-		
 		return testPlanManagerService.cloneTestPlan(testPlan, userId);
 	}
 
 
 
 	public boolean importSystemTestPlanFile(User superUser) {
-		
 		return testPlanManagerService.importSystemTestPlanFiles(superUser);
 	}
 
@@ -200,5 +204,15 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 	protected List<Order> determineOrder() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public List<TestPlan> getSystemTestPlans() {
+		return testPlanManagerService.getSystemTestPlanList();
+	}
+
+
+	public void setSystemTestPlans(List<TestPlan> systemTestPlans) {
+		this.systemTestPlans = systemTestPlans;
 	}
 }
