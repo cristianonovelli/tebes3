@@ -436,15 +436,15 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				
 				// ORA SI ESEGUE L'ACTION
 				
-				report.addToFullDescription("\n");
-				report.addToFullDescription("\n");
-				report.addToFullDescription("\n-- Start Execution of Action: " + action.getActionName() + "--");
+				report.addToFullDescription("<br>");
+				report.addToFullDescription("<br>");
+				report.addToFullDescription("<br>-- Start Execution of Action: " + action.getActionName() + "--");
 	
 				
 				// istanzio il TestManager
 				TestManagerImpl testManager = new TestManagerImpl();
 				
-				report.addToFullDescription("\nBuilding TAF for action: " + action.getActionName());
+				report.addToFullDescription("<br>Building TAF for action: " + action.getActionName());
 				
 				// TAF Building
 				Vector<TAF> tafList = testManager.buildTAF(action);
@@ -462,8 +462,8 @@ public class ActionManagerImpl implements ActionManagerRemote {
 					
 						taf = tafList.get(i);
 						
-						report.addToFullDescription("\nBuilt TAF " + taf.getName() + " successful.");
-						report.addToFullDescription("\nStart execution TAF " + taf.getName());
+						report.addToFullDescription("<br>Built TAF " + taf.getName() + " successful.");
+						report.addToFullDescription("<br>Start execution TAF " + taf.getName());
 						
 						
 						
@@ -520,17 +520,17 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						
 						
 						
-						report.addToFullDescription("\nResult: " + report.isPartialResultSuccessfully());
+						report.addToFullDescription("<br>Result: " + report.isPartialResultSuccessfully());
 						
 						
 						i++;
 					}
 				}
 				else
-					report.addToFullDescription("\nBuilt TAF Failure.");
+					report.addToFullDescription("<br>Built TAF Failure.");
 	
 				
-				report.addToFullDescription("\n-- End Execution of Action: " + action.getActionName() + "--");
+				report.addToFullDescription("<br>-- End Execution of Action: " + action.getActionName() + "--");
 				
 				if ( report.isPartialResultSuccessfully() ) {
 					reportDOM.setGlobalResult(Report.getSuccessfulResult());
