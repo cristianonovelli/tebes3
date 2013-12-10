@@ -4,16 +4,13 @@ import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
-import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.testplan.TestPlanManagerImpl;
-import it.enea.xlab.tebes.validation.ValidationManagerRemote;
+import it.enea.xlab.validation.ValidationManagerRemote;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import javax.ejb.EJB;

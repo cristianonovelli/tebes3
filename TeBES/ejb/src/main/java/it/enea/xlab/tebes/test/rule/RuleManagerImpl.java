@@ -15,7 +15,8 @@ import it.enea.xlab.tebes.entity.TestResult;
 import it.enea.xlab.tebes.file.FileManagerRemote;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.TestRule;
-import it.enea.xlab.tebes.validation.ValidationManagerRemote;
+import it.enea.xlab.validation.ValidationManagerRemote;
+import it.enea.xlab.validation.XErrorMessage;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -44,21 +45,21 @@ public class RuleManagerImpl implements RuleManagerRemote {
 	 */
 	public Report executeTestRule(TAF taf, Session session) { 
 		
-		System.out.println("\n executeTestRule: START");
+		System.out.println("<br> executeTestRule: START");
 		
 		Report report = session.getReport();
 		
 		TestRule testRule = taf.getPredicate();
 
 		
-		report.addToFullDescription("\n- Prerequisite OK... EXE Predicate");
-		report.addToFullDescription("\n- Language: " + testRule.getLanguage());
-		report.addToFullDescription("\n- Value: " + testRule.getValue());
+		report.addToFullDescription("<br>- Prerequisite OK... EXE Predicate");
+		report.addToFullDescription("<br>- Language: " + testRule.getLanguage());
+		report.addToFullDescription("<br>- Value: " + testRule.getValue());
 
-		report.addToFullDescription("\n-executeTestRule: taf.getName(): " + taf.getName());
-		report.addToFullDescription("\n-executeTestRule: taf.getInputs().size(): " + taf.getInputs().size());
-		report.addToFullDescription("\n-executeTestRule: testRule.getLanguage(): " + testRule.getLanguage());
-		report.addToFullDescription("\n-executeTestRule: testRule.getValue(): " + testRule.getValue());
+		report.addToFullDescription("<br>-executeTestRule: taf.getName(): " + taf.getName());
+		report.addToFullDescription("<br>-executeTestRule: taf.getInputs().size(): " + taf.getInputs().size());
+		report.addToFullDescription("<br>-executeTestRule: testRule.getLanguage(): " + testRule.getLanguage());
+		report.addToFullDescription("<br>-executeTestRule: testRule.getValue(): " + testRule.getValue());
 		
 		
 		try {
@@ -67,9 +68,9 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			Input input = taf.getInputs().get(0);
 			
 			FileStore file = fileManager.readFilebyIdRef(input.getFileIdRef());
-			report.addToFullDescription("\n-executeTestRule: file: " + file.getFileRefId());
-			report.addToFullDescription("\n-executeTestRule: file: " + file.getFileName());
-			report.addToFullDescription("\n-executeTestRule: file: " + file.getType());
+			report.addToFullDescription("<br>-executeTestRule: file: " + file.getFileRefId());
+			report.addToFullDescription("<br>-executeTestRule: file: " + file.getFileName());
+			report.addToFullDescription("<br>-executeTestRule: file: " + file.getType());
 			
 			String userDocsAbsDir = PropertiesUtil.getUserDocsDirPath(session.getUser().getId());
 	
@@ -82,7 +83,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			// XML Schema validation
 			if (testRule.getLanguage().equals(Constants.XMLSCHEMA)) { 
 				
-				report.addToFullDescription("\n-START validation XMLSCHEMA");
+				report.addToFullDescription("<br>-START validation XMLSCHEMA");
 
 						
 				//String fileRelPath = file.getFileName();
@@ -90,23 +91,23 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				
 				String fileRelPath = userDocsAbsDir.concat(file.getFileName());
 				
-				report.addToFullDescription("\n-executeTestRule: xml: " + fileRelPath);
-				report.addToFullDescription("\n-executeTestRule: xsd: " + testRule.getValue());
+				report.addToFullDescription("<br>-executeTestRule: xml: " + fileRelPath);
+				report.addToFullDescription("<br>-executeTestRule: xsd: " + testRule.getValue());
 				
 				report = xmlSchemaValidation( fileRelPath, testRule.getValue(), report );
 				
-				report.addToFullDescription("\n-END XMLSCHEMA Validation");
+				report.addToFullDescription("<br>-END XMLSCHEMA Validation");
 			}			
 				
 			
 			
 			if (testRule.getLanguage().equals(Constants.SCHEMATRON)) {
 				
-				report.addToFullDescription("\n-START SCHEMATRON Validation");
+				report.addToFullDescription("<br>-START SCHEMATRON Validation");
 				
 				report = schematronValidation(xmlString, testRule.getValue(), report);
 				
-				report.addToFullDescription("\n-END SCHEMATRON Validation");
+				report.addToFullDescription("<br>-END SCHEMATRON Validation");
 			}
 
 			
@@ -114,13 +115,13 @@ public class RuleManagerImpl implements RuleManagerRemote {
 	
 			if (testRule.getLanguage().equals(Constants.XPATH)) {
 				
-				report.addToFullDescription("\n-START XPATH Validation");	 
+				report.addToFullDescription("<br>-START XPATH Validation");	 
 				
-				report.addToFullDescription("\n-TESTRULE: " + testRule.getValue());
+				report.addToFullDescription("<br>-TESTRULE: " + testRule.getValue());
 	
 				report = xPathValidation(xmlString, testRule.getValue(), report);
 				
-				report.addToFullDescription("\n-END XPATH Validation");
+				report.addToFullDescription("<br>-END XPATH Validation");
 			}
 		
 			
@@ -152,7 +153,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		//String xmlRelPathFileName = "TeBES_Artifacts/users/0/docs/ubl-invoice.xml";
 		//String xsdURL = "http://winter.bologna.enea.it/peppol_schema_rep/xsd/maindoc/UBL-Invoice-2.0.xsd";
 		
-		ErrorMessage emList[] = null;
+		XErrorMessage emList[] = null;
 
 		try {
 			validationManager = JNDIServices.getValidationManagerService();
@@ -195,7 +196,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		// TODO
 		// verifica sia uno schematron valido
 		
-		ErrorMessage emList[] = null;
+		XErrorMessage emList[] = null;
 
 		try {
 			System.out.println("schematronValidation! azx2");

@@ -110,15 +110,15 @@ public class TestManagerImpl implements TestManagerRemote {
 		boolean okPrerequisites = false;
 		
 		
-		report.addToFullDescription("\n----");
-		report.addToFullDescription("\nSTART executeTAF: " + taf.getName());
+		report.addToFullDescription("<br>----");
+		report.addToFullDescription("<br>START executeTAF: " + taf.getName());
 		
 		
 		// Prerequisites
 		Vector<Action> prerequisites = taf.getTests();
 		if ( !taf.isSkipTurnedON() && (prerequisites != null) ) {
 		
-			report.addToFullDescription("\nThere are Prerequisites");
+			report.addToFullDescription("<br>There are Prerequisites");
 			
 			// Ciclo sui prerequisites
 			int i=0;
@@ -128,8 +128,8 @@ public class TestManagerImpl implements TestManagerRemote {
 				// Prerequisite Action
 				Action a = prerequisites.elementAt(i);
 				
-				report.addToFullDescription("\nPrerequisite: " + a.getActionName());
-				report.addToFullDescription("\nBuilding TAF from: " + a.getActionName());
+				report.addToFullDescription("<br>Prerequisite: " + a.getActionName());
+				report.addToFullDescription("<br>Building TAF from: " + a.getActionName());
 
 				
 				// Prerequisite TAF from Action
@@ -143,7 +143,7 @@ public class TestManagerImpl implements TestManagerRemote {
 							
 					
 					// Recursive execution
-					report.addToFullDescription("\n---> Recursive execution");
+					report.addToFullDescription("<br>---> Recursive execution");
 					
 					//boolean singleResult = this.executeTAF(t, report);
 					report = this.executeTAF(t, session);
@@ -151,7 +151,7 @@ public class TestManagerImpl implements TestManagerRemote {
 	
 					// TODO come facevo in runAction dovrei prendere un elemento, 
 					// clonarlo, modificarlo e metterlo nella prerequisites list
-					report.addToFullDescription("\n-POST executeTAF call (into the while)");
+					report.addToFullDescription("<br>-POST executeTAF call (into the while)");
 					
 					
 					
@@ -173,9 +173,9 @@ public class TestManagerImpl implements TestManagerRemote {
 		else {
 			
 			if (taf.isSkipTurnedON())
-				report.addToFullDescription("\nSkip Prerequisite turned ON");
+				report.addToFullDescription("<br>Skip Prerequisite turned ON");
 			else
-				report.addToFullDescription("\nSkip Prerequisite turned OFF but there is not prerequisites");
+				report.addToFullDescription("<br>Skip Prerequisite turned OFF but there is not prerequisites");
 			
 			okPrerequisites = true;
 		}
@@ -191,12 +191,12 @@ public class TestManagerImpl implements TestManagerRemote {
 			// TODO Execution of Predicate
 			report = testRuleManager.executeTestRule(taf, session);
 			//report.setPartialResultSuccessfully(okPredicate);
-			report.addToFullDescription("\n-POST executeTAF call (okPrerequisites)\n");
+			report.addToFullDescription("<br>-POST executeTAF call (okPrerequisites)<br>");
 			
 			if (report.getTempResult() != null)
-				report.addToFullDescription("\n Test Rule Output: " + report.getTempResult());
+				report.addToFullDescription("<br> Test Rule Output: " + report.getTempResult());
 			else
-				report.addToFullDescription("\nNo output to append. Test Rule RESULT SUCCESSFUL\n");
+				report.addToFullDescription("<br>No output to append. Test Rule RESULT SUCCESSFUL<br>");
 			
 			// TODO MI SERVE SAPERE SE SI TRATTA DI ACTION O DI PREREQUISITE
 			// SE TAF = ACTION INSERISCO IN RESULTS > TESTRESULT			
@@ -208,16 +208,16 @@ public class TestManagerImpl implements TestManagerRemote {
 			
 			
 			// TODO Gestione Report
-			report.addToFullDescription("\nReport Message: " + taf.getReportFragments().get("pass").getMessage());
-			report.addToFullDescription("\nReport Fragment: " + taf.getReportFragments().get("pass").getDescription());	
+			report.addToFullDescription("<br>Report Message: " + taf.getReportFragments().get("pass").getMessage());
+			report.addToFullDescription("<br>Report Fragment: " + taf.getReportFragments().get("pass").getDescription());	
 		
 		}
 		else {
-			report.addToFullDescription("\nThe Execution of Predicate of TAF: " + taf.getName());
+			report.addToFullDescription("<br>The Execution of Predicate of TAF: " + taf.getName());
 		}
 		
-		report.addToFullDescription("\nEND executeTAF: " + taf.getName());
-		report.addToFullDescription("\n----\n");
+		report.addToFullDescription("<br>END executeTAF: " + taf.getName());
+		report.addToFullDescription("<br>----<br>");
 		
 // TODO QUI IL REPORT NON VIENE PERSISISTITO (POSSO RICHIAMARE DA QUESTA CLASSE L'EJB?)
 		// FORSE IN QUESTO CASO E' MEGLIO RITORNARLO COME VALORE DI RITORNO

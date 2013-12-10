@@ -21,13 +21,10 @@
         <dependent-module archiveName="xlab-common-1.4.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/xlab-common/1.4/xlab-common-1.4.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="Validation-1.0-SNAPSHOT.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/tebes/validation/Validation/1.0-SNAPSHOT/Validation-1.0-SNAPSHOT.jar">
+        <dependent-module archiveName="Validation-1.1.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/validation/Validation/1.1/Validation-1.1.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="validation-1.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/validation/1.0/validation-1.0.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="saxon9-dom-1.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/saxon9-dom/1.0/saxon9-dom-1.0.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="mysql-connector-java-5.1.21.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar">
