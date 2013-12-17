@@ -410,7 +410,8 @@ public class UserAdminController extends WebController<User> {
 
 		public boolean checkValidation() {
 				
-			return userManagerService.checkValidation();
+			return true;
+					//userManagerService.checkValidation();
 		}
 
 }

@@ -529,7 +529,11 @@ public class SessionManagerImplITCase {
 						// 1. UPLOAD
 						// a livello di Test passo il file al FileController 
 						// questo file viene copiato dalla cartella TeBES_Artifacts/users/0/docs/
-						fileName = "ubl-invoice.xml";
+						if (i==0)
+							fileName = "ubl-invoice_withError.xml";
+						else
+							fileName = "ubl-invoice.xml";
+						
 						
 						// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
 						// per ora assumo che venga estratto l'array di byte e gli venga passata quello

@@ -96,7 +96,6 @@
 						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>start</goal>
-
 							<goal>deploy</goal>
 						</goals>
 					</execution>

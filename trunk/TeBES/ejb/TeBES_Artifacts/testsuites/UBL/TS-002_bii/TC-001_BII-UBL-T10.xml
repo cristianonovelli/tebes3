@@ -96,7 +96,7 @@
         <taml:var vname="BIIPROFILES-UBL-T10" vtype="http://purl.oclc.org/dsdl/schematron">http://winter.bologna.enea.it/peppol_schema_rep/schematron/biiprofiles/BIIPROFILES-UBL-T10.sch</taml:var>
         
         <!-- XML document, target of Test -->
-        <taml:target type="xml">document</taml:target>
+        <taml:target type="document" lg="xml">document</taml:target>
         
         <taml:prerequisite>TA-001_TC-001_TS-002</taml:prerequisite>
         

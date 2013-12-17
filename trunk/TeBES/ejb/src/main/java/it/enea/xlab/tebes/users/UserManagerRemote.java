@@ -51,7 +51,7 @@ public interface UserManagerRemote {
 
 	public List<Long> getActionIdList();
 
-	public boolean checkValidation();
+	//public boolean checkValidation();
 
 	
 

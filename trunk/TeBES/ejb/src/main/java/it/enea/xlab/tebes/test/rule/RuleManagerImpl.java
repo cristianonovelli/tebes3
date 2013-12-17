@@ -1,8 +1,5 @@
 package it.enea.xlab.tebes.test.rule;
 
-import java.io.File;
-import java.io.IOException;
-
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.Profile;
@@ -18,12 +15,12 @@ import it.enea.xlab.tebes.model.TestRule;
 import it.enea.xlab.validation.ValidationManagerRemote;
 import it.enea.xlab.validation.XErrorMessage;
 
+//import it.enea.xlab.tebes.validation.XErrorMessage;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.naming.NamingException;
-
-import validator.ErrorMessage;
 
  
 
@@ -162,11 +159,13 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			e.printStackTrace();
 		}
 		
+		TestResult result;
+		
 		try {
 			emList = validationManager.validation(xmlString, xsdString);
 			
 			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
-			TestResult result;
+			
 			if (emList.length > 0)
 				result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
 			else
@@ -175,9 +174,13 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			report.setTempResult(result);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 			
+			result = new TestResult("exception", 0, e.getMessage());		
+			report.setTempResult(result);
+			report.setPartialResultSuccessfully(true);
+			return report;
 		}
 		
 		report.setPartialResultSuccessfully(true);
@@ -205,14 +208,14 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		TestResult result;
 		try {
 			System.out.println("schematronValidation! azx3");
 			emList = validationManager.validation(xmlString, xmlSchematron);
 			System.out.println("schematronValidation! azx4");
 			
 			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
-			TestResult result;
+			
 			if (emList.length > 0)
 				result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
 			else
@@ -221,9 +224,14 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			report.setTempResult(result);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
+			result = new TestResult("exception", 0, e.getMessage());		
+			report.setTempResult(result);
+			
 			e.printStackTrace();
 			
+			report.setPartialResultSuccessfully(true);
+			return report;
 		}
 		
 		report.setPartialResultSuccessfully(true);
