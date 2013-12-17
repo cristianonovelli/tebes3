@@ -164,7 +164,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<!-- dependency>
         	<groupId>it.enea.xlab.tebes.validation</groupId>
         	<artifactId>Validation</artifactId>
@@ -187,7 +187,7 @@
 		
 		<!-- dependency> <groupId>javaee</groupId> <artifactId>javaee-api</artifactId> 
 			<version>5</version> <scope>provided</scope> </dependency -->
-		<!-- dependency>
+		<dependency>
 			<groupId>net.sf.saxon</groupId>
 			<artifactId>saxon-dom</artifactId>
 			<version>9.0</version>
@@ -198,7 +198,7 @@
           			<artifactId>IdentityTransformer</artifactId>
         		</exclusion>
         		</exclusions>
-		</dependency -->
+		</dependency>
 		<dependency>
 			<groupId>jboss</groupId>
 			<artifactId>jboss-ejb3x</artifactId>
@@ -255,7 +255,7 @@
     <version>3.2.1.ga</version>
     <scope>provided</scope>
   </dependency>
-      
+
 	</dependencies>
 </project>
 

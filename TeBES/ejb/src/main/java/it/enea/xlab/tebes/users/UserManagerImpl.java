@@ -9,7 +9,7 @@ import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.testplan.TestPlanManagerImpl;
-import it.enea.xlab.validation.ValidationManagerRemote;
+//import it.enea.xlab.validation.ValidationManagerRemote;
 
 import java.util.List;
 
@@ -161,7 +161,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		try {
 
 			// Remove file system
-			this.deleteUserFileSystem(id);
+			//this.deleteUserFileSystem(id);
 
 			// Remove from DB
 			eM.remove(user);
@@ -667,8 +667,9 @@ public class UserManagerImpl implements UserManagerRemote {
 
 	
 	
-	@EJB
-	private ValidationManagerRemote validationManager; 	
+/*	@EJB
+	private it.enea.xlab.tebes.validation.ValidationManagerRemote validationManager;
+	
 	public boolean checkValidation() {
 
 		boolean result = false;
@@ -680,7 +681,7 @@ public class UserManagerImpl implements UserManagerRemote {
 			result = false;
 		}
 		return result;
-	}
+	}*/
 
 /*	public Boolean deleteTestPlan(Long userId, Long testPlanId) {
 		

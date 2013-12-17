@@ -46,7 +46,7 @@
 
         <taml:var vname="ublin" vtype="http://www.w3.org/TR/xpath20/">count(//ublin:Invoice) ge 1</taml:var>
         
-        <taml:target type="xml">document</taml:target>
+        <taml:target type="document" lg="xml">document</taml:target>
         
         <!-- 
             The XPath expression executes the XML Schema validation 
