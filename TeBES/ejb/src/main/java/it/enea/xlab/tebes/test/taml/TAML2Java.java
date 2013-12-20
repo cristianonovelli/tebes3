@@ -116,7 +116,7 @@ public class TAML2Java {
 				String location = tamlDOM.getSourcedocAttribute(externalTANodeList.item(i));
 				
 				// String actionId = "ta-taref".concat((new Integer(i+1)).toString());
-				Action taAction = new Action(false, i+1, name, value, Action.getReadyState(), Constants.TAML, Constants.TA, location, value, false, null);
+				Action taAction = new Action(true, i+1, name, value, Action.getReadyState(), Constants.TAML, Constants.TA, location, value, false, null);
 				taAction.setInputs(inputs);
 				actionTable.put(value, taAction);
 			}

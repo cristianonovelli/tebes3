@@ -42,21 +42,21 @@ public class RuleManagerImpl implements RuleManagerRemote {
 	 */
 	public Report executeTestRule(TAF taf, Session session) { 
 		
-		System.out.println("<br> executeTestRule: START");
+		System.out.println("\n executeTestRule: START");
 		
 		Report report = session.getReport();
 		
 		TestRule testRule = taf.getPredicate();
 
 		
-		report.addToFullDescription("<br>- Prerequisite OK... EXE Predicate");
-		report.addToFullDescription("<br>- Language: " + testRule.getLanguage());
-		report.addToFullDescription("<br>- Value: " + testRule.getValue());
+		report.addToFullDescription("\n- Prerequisite OK... EXE Predicate");
+		report.addToFullDescription("\n- Language: " + testRule.getLanguage());
+		report.addToFullDescription("\n- Value: " + testRule.getValue());
 
-		report.addToFullDescription("<br>-executeTestRule: taf.getName(): " + taf.getName());
-		report.addToFullDescription("<br>-executeTestRule: taf.getInputs().size(): " + taf.getInputs().size());
-		report.addToFullDescription("<br>-executeTestRule: testRule.getLanguage(): " + testRule.getLanguage());
-		report.addToFullDescription("<br>-executeTestRule: testRule.getValue(): " + testRule.getValue());
+		report.addToFullDescription("\n-executeTestRule: taf.getName(): " + taf.getName());
+		report.addToFullDescription("\n-executeTestRule: taf.getInputs().size(): " + taf.getInputs().size());
+		report.addToFullDescription("\n-executeTestRule: testRule.getLanguage(): " + testRule.getLanguage());
+		report.addToFullDescription("\n-executeTestRule: testRule.getValue(): " + testRule.getValue());
 		
 		
 		try {
@@ -65,9 +65,9 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			Input input = taf.getInputs().get(0);
 			
 			FileStore file = fileManager.readFilebyIdRef(input.getFileIdRef());
-			report.addToFullDescription("<br>-executeTestRule: file: " + file.getFileRefId());
-			report.addToFullDescription("<br>-executeTestRule: file: " + file.getFileName());
-			report.addToFullDescription("<br>-executeTestRule: file: " + file.getType());
+			report.addToFullDescription("\n-executeTestRule: file: " + file.getFileRefId());
+			report.addToFullDescription("\n-executeTestRule: file: " + file.getFileName());
+			report.addToFullDescription("\n-executeTestRule: file: " + file.getType());
 			
 			String userDocsAbsDir = PropertiesUtil.getUserDocsDirPath(session.getUser().getId());
 	
@@ -80,7 +80,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			// XML Schema validation
 			if (testRule.getLanguage().equals(Constants.XMLSCHEMA)) { 
 				
-				report.addToFullDescription("<br>-START validation XMLSCHEMA");
+				report.addToFullDescription("\n-START validation XMLSCHEMA");
 
 						
 				//String fileRelPath = file.getFileName();
@@ -88,23 +88,23 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				
 				String fileRelPath = userDocsAbsDir.concat(file.getFileName());
 				
-				report.addToFullDescription("<br>-executeTestRule: xml: " + fileRelPath);
-				report.addToFullDescription("<br>-executeTestRule: xsd: " + testRule.getValue());
+				report.addToFullDescription("\n-executeTestRule: xml: " + fileRelPath);
+				report.addToFullDescription("\n-executeTestRule: xsd: " + testRule.getValue());
 				
 				report = xmlSchemaValidation( fileRelPath, testRule.getValue(), report );
 				
-				report.addToFullDescription("<br>-END XMLSCHEMA Validation");
+				report.addToFullDescription("\n-END XMLSCHEMA Validation");
 			}			
 				
 			
 			
 			if (testRule.getLanguage().equals(Constants.SCHEMATRON)) {
 				
-				report.addToFullDescription("<br>-START SCHEMATRON Validation");
+				report.addToFullDescription("\n-START SCHEMATRON Validation");
 				
 				report = schematronValidation(xmlString, testRule.getValue(), report);
 				
-				report.addToFullDescription("<br>-END SCHEMATRON Validation");
+				report.addToFullDescription("\n-END SCHEMATRON Validation");
 			}
 
 			
@@ -112,13 +112,13 @@ public class RuleManagerImpl implements RuleManagerRemote {
 	
 			if (testRule.getLanguage().equals(Constants.XPATH)) {
 				
-				report.addToFullDescription("<br>-START XPATH Validation");	 
+				report.addToFullDescription("\n-START XPATH Validation");	 
 				
-				report.addToFullDescription("<br>-TESTRULE: " + testRule.getValue());
+				report.addToFullDescription("\n-TESTRULE: " + testRule.getValue());
 	
 				report = xPathValidation(xmlString, testRule.getValue(), report);
 				
-				report.addToFullDescription("<br>-END XPATH Validation");
+				report.addToFullDescription("\n-END XPATH Validation");
 			}
 		
 			

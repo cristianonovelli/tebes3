@@ -466,6 +466,51 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
+	public Node getPrerequisitesElement(Node actionNode) {
+		
+		return ((Element) actionNode).getElementsByTagName("tebes:Prerequisites").item(0);
+	}
+
+
+	public void insertPrerequisiteResultNode(Node clonePrerequisiteResultNode, Node prerequisiteResultNode, Node actionContext) {
+		
+		System.out.println("A)insertPrerequisiteResultNode");
+		System.out.println("B)" + clonePrerequisiteResultNode.getNodeName());
+		System.out.println("C)" + prerequisiteResultNode.getNodeName());
+		System.out.println("D)" + actionContext.getNodeName());
+		Node prerequisitesNode = this.getPrerequisitesNode((Element) actionContext);
+		System.out.println("E)" + prerequisitesNode.getNodeName());
+		clonePrerequisiteResultNode = prerequisitesNode.insertBefore(clonePrerequisiteResultNode, prerequisiteResultNode);
+		System.out.println("F)" + clonePrerequisiteResultNode.getNodeName());
+	}
+
+
+	private Node getPrerequisitesNode(Element actionNode) {
+		
+		return actionNode.getElementsByTagName("tebes:Prerequisites").item(0);
+	}
+
+
+	public void setPrerequisiteResult(Node prerequisiteResultNode, Long id,
+			String name, String result, int line, String message) {
+		
+		this.setNodeAttribute(prerequisiteResultNode, "id", id.toString());
+		this.setNodeAttribute(prerequisiteResultNode, "name", name);
+		this.setNodeAttribute(prerequisiteResultNode, "result", result);
+		this.setNodeAttribute(prerequisiteResultNode, "line", new Integer(line).toString());
+		this.setNodeAttribute(prerequisiteResultNode, "message", message);
+	}
+
+
+	public Node getTestAction(String actionId) {
+
+		String xpath = "//Report/TestPlanExecution/TestActionList/TestAction[@number='" + actionId + "']";
+
+		return this.getNodesByXPath(xpath).item(0);
+
+	}
+
+
 
 
 
