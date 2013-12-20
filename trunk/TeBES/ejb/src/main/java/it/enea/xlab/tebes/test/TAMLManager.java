@@ -269,7 +269,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			String comment = "Generated from Action: ".concat(action.getActionName());
 			
 			///// Creazione della TAF ///// 			
-			taf = new TAF(action.getActionName(), target, predicate, prerequisites, action.isSkipTurnedON(), prescription, reportHashtable, action.getInputs(), comment);
+			taf = new TAF(action.getActionName(), action.isPrerequisite(), target, predicate, prerequisites, action.isSkipTurnedON(), prescription, reportHashtable, action.getInputs(), comment);
 			
 	
 		} catch (SAXException e) {

@@ -3,14 +3,16 @@ package it.enea.xlab.tebes.model;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.Input;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
 public class TAF {
 
+	
 	private String name;
+	
+	private boolean prerequisite;
 	private Target target;
 	private TestRule predicate;
 	private Vector<Action> tests;
@@ -25,11 +27,12 @@ public class TAF {
 	}
 
 
-	public TAF(String name, Target target, TestRule predicate, Vector<Action> prerequisites,
+	public TAF(String name, boolean prerequisite, Target target, TestRule predicate, Vector<Action> prerequisites,
 			boolean skipTurnedON, String prescription,
 			Hashtable<String, ReportFragment> reportFragments, List<Input> inputs, String note) {
 
 		this.name = name;
+		this.setPrerequisite(prerequisite);
 		this.target = target;
 		this.predicate = predicate;
 		this.tests = prerequisites;
@@ -115,6 +118,16 @@ public class TAF {
 
 	public void setInputs(List<Input> inputs) {
 		this.inputs = inputs;
+	}
+
+
+	public boolean isPrerequisite() {
+		return prerequisite;
+	}
+
+
+	public void setPrerequisite(boolean prerequisite) {
+		this.prerequisite = prerequisite;
 	}
 
 }

@@ -358,38 +358,45 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	 */
 	public Report runAction(Action action, Session session) {
 	
+		// Il metodo runAction lancia l'esecuzione di una action presa dal TestPlan,
+		// ciò implica l'esecuzione di una o più Test Assertion e dei loro Prerequisiti
+		//
+		// SUMMARY
+		// 1. Recupero Report
+		// 2. Gestione Action XML (template o clonata)
+		// 3. Aggiornamento Action XML
+		// 4. BUILD TAF list da Action (no prerequisites)
+		// 5. EXE TAF
+		// 6. Aggiorno il Report
+		// 7. Setto Action come "Done"
 		
+		
+		
+		// 1.1 Recupero entity Report
 		Report report = session.getReport();
 		
-		//boolean result = false;
+		// 1.2 Set risultato parziale a false
+		// (il risultato parziale è il risultato momentaneo dell'esecuzione di tutti i test della nostra action)
 		report.setPartialResultSuccessfully(false);
 
 		
 
 		try {
-			// Recupero Report DOM
+			// 1.3 Recupero Report DOM
 			ReportDOM reportDOM = new ReportDOM();
 			reportDOM.setContent(report.getXml());
 			
-			// prendo <GlobalResult>empty</GlobalResult>
-			// se è empty
-			// modifico la prima action
-			// altrimenti ne faccio una copia e la modifico
 
-			
-			
-			// Se GlobalResult non è "empty"
-			// clono la action
-			// poi in ogni caso modifico la action
+			// 2.1 Se GlobalResult != "undefined" vuol dire che non è la prima action che eseguo,
+			// allora Clono quella presente e la modifico
 			NodeList testActionListXML = reportDOM.getTestActionNodeList();
-			
 			Node actionNode = testActionListXML.item(0);
 			String globalResult = reportDOM.getGlobalResult();
 			
 			// se TestPlanExecution/GlobalResult != "undefined"
 			if ( !globalResult.equals(Report.getUndefinedResult()) ) {
 				
-				// Clono actionNode
+				// 2.2 Clono actionNode
 				Node actionNodeClone = actionNode.cloneNode(true);
 				actionNodeClone = reportDOM.doc.importNode(actionNodeClone, true); 
 				reportDOM.insertActionNode(actionNodeClone);
@@ -399,23 +406,29 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				actionNode = actionNodeClone;
 				
 			}
-			// se TestPlanExecution/GlobalResult == "undefined"
+			// 2.2 Se TestPlanExecution/GlobalResult == "undefined" vuol dire che è la prima action che eseguo			
 			else {
-
-
-				
+		
 				Element actionElement = (Element) actionNode;
+				
+				// Se c'è più di una action OPPURE se l'attributo number != 0 allora c'è qualcosa che non va, 
+				// perché non è la situazione che mi aspetto utilizzando il template la prima volta
 				
 				 if ( (testActionListXML.getLength()!=1) || (!actionElement.getAttribute("number").equals("0")) ) {
 					 System.out.println("ERROR: Inconsistent Report Template, GlobalResult is undefined but there is an executed action.");
 					 actionNode = null;
 				 }
+				 // Se è tutto ok allora semplicemente aggiorno l'attributo @number
 				 else
 					 reportDOM.setNumberAttribute(actionNode, new Integer(action.getActionNumber()).toString());
 			}
 			
-			// Modifica dell'action individuata (template o clonata che sia)
+			
 			if (actionNode != null) {
+							
+				// 3. Action pronta, aggiorno XML
+				// l'action XML (template o clonata che sia) è pronta per essere aggiornata 
+				// Aggiorno Action XML (info NON relative all'esecuzione del test)
 				
 				// Set Name
 				reportDOM.setActionName(actionNode, action.getActionName());
@@ -434,26 +447,30 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				// Fine della modifica XML che NON riguarda l'esito dell'action
 				report.setXml(reportDOM.getXMLString());	
 				
-				// ORA SI ESEGUE L'ACTION
 				
-				report.addToFullDescription("<br>");
-				report.addToFullDescription("<br>");
-				report.addToFullDescription("<br>-- Start Execution of Action: " + action.getActionName() + "--");
+				
+				
+				// 4. BUILD TAF dalla Action
+				
+				report.addToFullDescription("\n");
+				report.addToFullDescription("\n");
+				report.addToFullDescription("\n-- Start Execution of Action: " + action.getActionName() + "--");
 	
 				
-				// istanzio il TestManager
+				// 4.1 Istanzio il TestManager
 				TestManagerImpl testManager = new TestManagerImpl();
 				
-				report.addToFullDescription("<br>Building TAF for action: " + action.getActionName());
+				report.addToFullDescription("\nBuilding... TAF for action: " + action.getActionName());
 				
-				// TAF Building
+				
+				// 4.2 BUILD Lista di TAF Building from Action
+				// (in questa lista non ci sono prerequisiti!)
 				Vector<TAF> tafList = testManager.buildTAF(action);
+				report.addToFullDescription("\nBuilt TAF List of " + tafList.size() + " TAF.");
 				
-				// TODO qui potrei già inserire le action prerequisites
-				// 1. se non ce ne sono, cancello quella presente;
-				// 2. se ce ne sono, per ogni prerequisito creo l'elemento
 				
-				// TAF Execution
+				
+				// 5. TAF List Execution
 				if (tafList.size() > 0) {
 					
 					TAF taf;
@@ -462,148 +479,100 @@ public class ActionManagerImpl implements ActionManagerRemote {
 					
 						taf = tafList.get(i);
 						
-						report.addToFullDescription("<br>Built TAF " + taf.getName() + " successful.");
-						report.addToFullDescription("<br>Start execution TAF " + taf.getName());
+						report.addToFullDescription("\nBuilt TAF " + taf.getName() + " OK.");
+						report.addToFullDescription("\nStart execution TAF " + taf.getName());
 						
+
 						
-						
-						// EXECUTE TAF
-						report = testManager.executeTAF(taf, session);
+						// 5.1 EXECUTE TAF						
+						report = testManager.executeTAF(taf, session, reportDOM, reportDOM.getAttribute("number", actionNode));
 						//report.setPartialResultSuccessfully(tafResult);
 						
-						
-						// TODO
-						// la action viene eseguita, essa potrà o meno richiamare altre taf
-						// 1. nel caso abbia prerequisiti
-						// 2. nel caso sia un test case che contiene più test assertion
-						// 3. in entrambi i casi 1 e 2
-						// Nel report vengono riportati i dettagli della test action.
-						// A questi si aggiungono i risultati dei vari test man mano che vengono eseguiti
-						// come tuple (result, line, message).
-						
-	
+
+						// Aggiorno local reportDOM (potrebbe essere cambiato nell'esecuzione della taf)
+						//reportDOM.setContent(report.getXml());						
+
 						
 						
 						
-	
-						Node testResultsNode = reportDOM.getTestResultsElement(actionNode);
-	
-						
-						// 1 sta ad indicare il primo nodo figlio, ovvero dopo il nodo testo del nodo corrente
+						// 5.2 Gestisco risultato in ritorno e lo metto dentro SingleResult
+						Node testResultsNode = reportDOM.getTestResultsElement(actionNode);					
+						// "1" sta ad indicare il primo nodo figlio, ovvero dopo il nodo testo del nodo corrente
 						Node firstSingleResultNode = testResultsNode.getChildNodes().item(1);
-	
+						
 						// Set Single Result
 						if (report.getTempResult() != null) {
 							reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
-							System.out.println("runAction - tempResult: " + report.getTempResult().getGlobalResult());
+							System.out.println("TAF Execution: " + report.getTempResult().getGlobalResult());
+							report.addToFullDescription("\nTAF Execution: " + report.getTempResult().getGlobalResult());
+							report.addToFullDescription("\nisPrerequisite: " + taf.isPrerequisite());
+							
 						}
 						else {
-							reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), "failure", 0, "Validation Failure: check Validation Project.");
-							System.out.println("runAction - tempResult: failure");
+							
+							reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), "syserror", 0, "Validation Failure: check Validation Project.");
+							System.out.println("runAction - tempResult NULL: error");
+							report.addToFullDescription("\nTAF Execution: tempResult NULL");
 						}
-							// 	TODO com'è ora, se ci fosse una lista di TAF ne farebbe uno solo
+
+						// 5.3 Gestione Action che esegue più Test
+						// 	TODO com'è ora, se ci fosse una lista di TAF ne farebbe uno solo
 						// Devo:
 						// 1. controllare vedere se ce n'è uno solo e se ha id=0
 						// in questo caso lo valorizzo
 						// 2. nel caso invece ve ne sia più di uno o abbia id!=0
 						// devo clonarlo, inserirlo e poi valorizzarlo
 						
-						
-						// Fine della modifica XML che NON riguarda l'esito dell'action
+
+						// 6.1 Aggiorno Report
 						report.setXml(reportDOM.getXMLString());	
-						
-						// TODO ADD to XML Single Result
-						// Poi azzera singleresult
-						
+						// Poi azzero tempResult per la prossima esecuzione					
 						report.setTempResult(null);
-						
-						
-						
-						
-						report.addToFullDescription("<br>Result: " + report.isPartialResultSuccessfully());
-						
+
+						report.addToFullDescription("\nResult: " + report.isPartialResultSuccessfully());
 						
 						i++;
 					}
 				}
 				else
-					report.addToFullDescription("<br>Built TAF Failure.");
+					report.addToFullDescription("\nBuilt TAF Failure.");
 	
 				
-				report.addToFullDescription("<br>-- End Execution of Action: " + action.getActionName() + "--");
+				// 6.2 Aggiorno Full Description
+				report.addToFullDescription("\n-- End Execution of Action: " + action.getActionName() + "--");
 				
-				if ( report.isPartialResultSuccessfully() ) {
+				// 6.3 Aggiorno Global Result
+				//if ( report.isPartialResultSuccessfully() ) {
 					reportDOM.setGlobalResult(Report.getSuccessfulResult());
 					report.setXml(reportDOM.getXMLString());	
-				}
-				
+				//}
+				// TODO non manca il caso di false?
 				
 
-				// Persist Report
+				// 6.4 Update Report
 				//report.setState(Report.getFinalState());
 				boolean updating = reportManager.updateReport(report);
+				report.setPartialResultSuccessfully(report.isPartialResultSuccessfully() && updating);
 				
-				
-				// SET Action as DONE
+				// 6.5 SET Action as DONE
 				action = this.readAction(action.getId());
 				action.setStateToDone();
 				eM.persist(action);
 				
 				
-				report.setPartialResultSuccessfully(report.isPartialResultSuccessfully() && updating);
-					
-
-				
-
-				
-				
 			}
+			// Nel caso actionNode == null
 			else {
-				System.out.println("TODO: SYSTEM ERROR nel Report");
-				
+				report.addToFullDescription("SYSTEM ERROR: il metodo ActionManagerImpl.runAction incontra un'inconsistente (actionNode == null) dopo l'inizializzazione della Action XML.");
+				logger.error("SYSTEM ERROR: il metodo ActionManagerImpl.runAction incontra un'inconsistente (actionNode == null) dopo l'inizializzazione della Action XML.");
 				report.setPartialResultSuccessfully(false);
 			}
 			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 
-
-			
-			
-			
-			
-			
-			
-			
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerFactoryConfigurationError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-			
-
-		
-		
-		
 		return report;
-		//return result && updating;
 	}
 
 

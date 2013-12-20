@@ -84,6 +84,14 @@
                     		line="0"
                             message="EMPTY" />
                 </tebes:TestResults>
+                <tebes:Prerequisites result="EMPTY" line="EMPTY" message="EMPTY">                	
+                    <tebes:PrerequisiteResult
+                    		id="0"
+                    		name="EMPTY"
+                    		result="EMPTY"
+                    		line="0"
+                            message="EMPTY" />
+                </tebes:Prerequisites>
             </tebes:TestAction>
             
         </tebes:TestActionList>
