@@ -118,6 +118,8 @@ public class TestManagerImpl implements TestManagerRemote {
 		//
 		// SUMMARY
 		// 1. Valutazione Prerequisiti della TAF
+		// 2. Richiamo ricorsivamente il Prerequisito
+		// 3. Eseguo il Test della TAF
 		
 		Report report = session.getReport();		
 		boolean okPrerequisites = false;
@@ -133,7 +135,7 @@ public class TestManagerImpl implements TestManagerRemote {
 		// 2. la TAF è una Action che richiama un TestCase o una TestSuite e, quindi, una serie di test (taf.getTests);
 		// 3. la TAF è uno o più prerequisiti
 		// A QUESTI CASI VA AGGIUNTO CHE LA TAF PUO' AVERE O MENO PREREQUISITI CHE VANNO IN QUEL CASO RICHIAMATI
-		
+		// RICORSIVAMENTE COME PRIMA AZIONE
 		
 		
 		
