@@ -1,32 +1,22 @@
 package it.enea.xlab.tebes.test;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Vector;
-
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactoryConfigurationError;
- 
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
-
-import it.enea.xlab.tebes.common.Constants; 
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.model.TAF;
-import it.enea.xlab.tebes.model.TestRule;
 import it.enea.xlab.tebes.report.ReportDOM;
-import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.test.rule.RuleManagerImpl;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Vector;
+
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+
+import org.w3c.dom.Node;
 
 
 @Stateless
