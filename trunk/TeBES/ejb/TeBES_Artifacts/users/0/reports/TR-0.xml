@@ -68,7 +68,7 @@
         		    
         <tebes:TestActionList>
 
-            <tebes:TestAction number="0">
+            <tebes:TestAction id="0" number="0">
                 <tebes:ActionName>EMPTY</tebes:ActionName>
                 <tebes:ActionDescription>EMPTY</tebes:ActionDescription>
                 <tebes:Test 
