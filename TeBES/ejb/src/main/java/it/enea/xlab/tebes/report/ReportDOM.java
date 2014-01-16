@@ -474,14 +474,9 @@ public class ReportDOM extends JXLabDOM {
 
 	public void insertPrerequisiteResultNode(Node clonePrerequisiteResultNode, Node prerequisiteResultNode, Node actionContext) {
 		
-		System.out.println("A)insertPrerequisiteResultNode");
-		System.out.println("B)" + clonePrerequisiteResultNode.getNodeName());
-		System.out.println("C)" + prerequisiteResultNode.getNodeName());
-		System.out.println("D)" + actionContext.getNodeName());
 		Node prerequisitesNode = this.getPrerequisitesNode((Element) actionContext);
-		System.out.println("E)" + prerequisitesNode.getNodeName());
 		clonePrerequisiteResultNode = prerequisitesNode.insertBefore(clonePrerequisiteResultNode, prerequisiteResultNode);
-		System.out.println("F)" + clonePrerequisiteResultNode.getNodeName());
+
 	}
 
 
@@ -504,7 +499,7 @@ public class ReportDOM extends JXLabDOM {
 
 	public Node getTestAction(String actionId) {
 
-		String xpath = "//Report/TestPlanExecution/TestActionList/TestAction[@number='" + actionId + "']";
+		String xpath = "//Report/TestPlanExecution/TestActionList/TestAction[@id='" + actionId + "']";
 
 		return this.getNodesByXPath(xpath).item(0);
 

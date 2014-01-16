@@ -1,8 +1,11 @@
 package it.enea.xlab.tebes.report;
 
+import java.util.List;
+
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
@@ -19,6 +22,8 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xlab.utilities.XLabDates;
 
 @Stateless
@@ -99,41 +104,41 @@ public class ReportManagerImpl implements ReportManagerRemote {
 
 	public Report createReportForNewSession(Session session) throws Exception {
 		
-		System.out.println("createReportForNewSession START");
+		String firstString = "\ncreateReportForNewSession START";
 		
 		// Create Report by JPA
 		Report report = new Report();
 		Long reportId = this.createReport(report);		
 		report = this.readReport(reportId);
-		System.out.println("createReportForNewSession - reportId:" + reportId);
+		firstString.concat("\ncreateReportForNewSession - reportId:" + reportId);
 		
 		// Define report name as "TR-" + [reportId]
 		report.setName(Report.getReportnamePrefix().concat(reportId.toString()));
-		System.out.println("createReportForNewSession - name:" + report.getName());
+		firstString.concat("\ncreateReportForNewSession - name:" + report.getName());
 		
 		// Define report description as "Report " + [reportName]
 		report.setDescription(Report.getReportdescription().concat(report.getName()));
-		System.out.println("createReportForNewSession - description:" + report.getDescription());
+		firstString.concat("\ncreateReportForNewSession - description:" + report.getDescription());
 		
 		// Set sessionID
 		report.setSessionID(session.getId());
-		System.out.println("createReportForNewSession - sessionId:" + report.getSessionID());
+		firstString.concat("\ncreateReportForNewSession - sessionId:" + report.getSessionID());
 		
 		// Get and Set current Datetime
 		report.setDatetime(XLabDates.getCurrentUTC());
-		System.out.println("createReportForNewSession - datetime:" + report.getDatetime());
+		firstString.concat("\ncreateReportForNewSession - datetime:" + report.getDatetime());
 
 		
 		// XML di Sistema da cui prendere il template
 		String xmlReportPathName = PropertiesUtil.getSuperUserReportAbsFileName(); 
-		System.out.println("createReportForNewSession - xmlReportPathName:" + xmlReportPathName);
+		firstString.concat("\ncreateReportForNewSession - xmlReportPathName:" + xmlReportPathName);
 		
 		ReportDOM reportDOM = null;
 
 		// Get ReportDOM
-		System.out.println("createReportForNewSession - PRE-DOM");
+		firstString.concat("\ncreateReportForNewSession - PRE-DOM");
 		reportDOM = new ReportDOM(xmlReportPathName);
-		System.out.println("createReportForNewSession - POST-DOM");
+		firstString.concat("\ncreateReportForNewSession - POST-DOM");
 		
 		 
 		Element rootElement = reportDOM.root;
@@ -181,6 +186,46 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			// questo vorrebbe dire che deve essere stato salvato da qualche parte nel momento dell'importazione
 			// valutare se ne vale la pena (import su file, creazione cartella utente ecc.)
 			//reportDOM.setTestPlanReference(testPlan.getLocation());
+	
+			// recuper actions per creare nel report l'equivalente numero
+			TestPlan tp = session.getTestPlan();
+			List<Action> actionTPList = tp.getWorkflow().getActions();
+			int actionCounter;
+			Action actionTP = actionTPList.get(0);
+	
+			// Prendo l'unica action del nuovo Report
+			NodeList actionNodeList = reportDOM.getTestActionNodeList();
+			Node actionTRNode = actionNodeList.item(0);
+
+			
+			// Setto gli attributi della PRIMA action del report con quelli della action del TP
+			reportDOM.setIdAttribute(actionTRNode, actionTP.getActionId());
+			reportDOM.setNumberAttribute(actionTRNode, new Integer(actionTP.getActionNumber()).toString());
+			
+			
+			Node actionTRNodeClone;	
+			
+			// Ciclo: clono actionList.size()-1 volte (poiché una è già presente)
+			actionCounter=1;
+			while (actionCounter < actionTPList.size()) {
+				
+				
+				
+				// Clono action del report
+				actionTRNodeClone = actionTRNode.cloneNode(true);
+				actionTRNodeClone = reportDOM.doc.importNode(actionTRNodeClone, true); 
+				reportDOM.insertActionNode(actionTRNodeClone);
+				
+				// prendo la prossima action dal TP
+				actionTP = actionTPList.get(actionCounter);
+				
+				// Setto id e number
+				reportDOM.setIdAttribute(actionTRNodeClone, actionTP.getActionId());
+				reportDOM.setNumberAttribute(actionTRNodeClone, new Integer(actionTP.getActionNumber()).toString());
+				
+				actionCounter++;
+			}		
+			
 			
 			// Set XML into the Report Bean
 			report.setXml(reportDOM.getXMLString());
@@ -191,13 +236,15 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			// READING
 			if (updating) {
 				report = this.readReport(reportId);
-				System.out.println("createReportForNewSession - UPDATING OK");
+				firstString.concat("\ncreateReportForNewSession - UPDATING OK");
 			}
 			else
-				System.out.println("createReportForNewSession - UPDATING NO");
+				firstString.concat("\ncreateReportForNewSession - UPDATING NO");
 		}
 
-		System.out.println("createReportForNewSession END");
+		firstString.concat("\ncreateReportForNewSession END");
+		
+		report.addToFullDescription(firstString);
 		
 		return report;
 	}

@@ -389,12 +389,13 @@ public class ActionManagerImpl implements ActionManagerRemote {
 
 			// 2.1 Se GlobalResult != "undefined" vuol dire che non è la prima action che eseguo,
 			// allora Clono quella presente e la modifico
-			NodeList testActionListXML = reportDOM.getTestActionNodeList();
-			Node actionNode = testActionListXML.item(0);
-			String globalResult = reportDOM.getGlobalResult();
+			//NodeList testActionListXML = reportDOM.getTestActionNodeList();
+			Node actionTRNode = reportDOM.getTestAction(action.getActionId());
+					//testActionListXML.item(0);
+			//String globalResult = reportDOM.getGlobalResult();
 			
 			// se TestPlanExecution/GlobalResult != "undefined"
-			if ( !globalResult.equals(Report.getUndefinedResult()) ) {
+			/*if ( !globalResult.equals(Report.getUndefinedResult()) ) {
 				
 				// 2.2 Clono actionNode
 				Node actionNodeClone = actionNode.cloneNode(true);
@@ -421,24 +422,24 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				 // Se è tutto ok allora semplicemente aggiorno l'attributo @number
 				 else
 					 reportDOM.setNumberAttribute(actionNode, new Integer(action.getActionNumber()).toString());
-			}
+			}*/
 			
 			
-			if (actionNode != null) {
+			if (actionTRNode != null) {
 							
 				// 3. Action pronta, aggiorno XML
 				// l'action XML (template o clonata che sia) è pronta per essere aggiornata 
 				// Aggiorno Action XML (info NON relative all'esecuzione del test)
 				
 				// Set Name
-				reportDOM.setActionName(actionNode, action.getActionName());
+				reportDOM.setActionName(actionTRNode, action.getActionName());
 				
 				// Set Description
-				reportDOM.setActionDescription(actionNode, action.getDescription());
+				reportDOM.setActionDescription(actionTRNode, action.getDescription());
 				
 				// Set Test Value and attributes
-				reportDOM.setActionTest(actionNode, action.getTestValue());				
-				Node testNode = reportDOM.getTestElement(actionNode);
+				reportDOM.setActionTest(actionTRNode, action.getTestValue());				
+				Node testNode = reportDOM.getTestElement(actionTRNode);
 				reportDOM.setTestSkipPrerequisitesAttribute(testNode, action.isSkipTurnedON());
 				reportDOM.setTestLgAttribute(testNode, action.getTestLanguage());
 				reportDOM.setTestLocationAttribute(testNode, action.getTestLocation());
@@ -485,7 +486,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 
 						
 						// 5.1 EXECUTE TAF						
-						report = testManager.executeTAF(taf, session, reportDOM, reportDOM.getAttribute("number", actionNode));
+						report = testManager.executeTAF(taf, session, reportDOM, reportDOM.getAttribute("id", actionTRNode));
 						//report.setPartialResultSuccessfully(tafResult);
 						
 
@@ -496,7 +497,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						
 						
 						// 5.2 Gestisco risultato in ritorno e lo metto dentro SingleResult
-						Node testResultsNode = reportDOM.getTestResultsElement(actionNode);					
+						Node testResultsNode = reportDOM.getTestResultsElement(actionTRNode);					
 						// "1" sta ad indicare il primo nodo figlio, ovvero dopo il nodo testo del nodo corrente
 						Node firstSingleResultNode = testResultsNode.getChildNodes().item(1);
 						

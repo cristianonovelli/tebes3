@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+    Document Description:		Test Plan created for the TeBES Platform (X-Lab, Cross-TEC, ENEA)
+    Creation Date:             	2014, 1 January
+    Last Update Date:			2014, 1 January  
+    Author:              		Cristiano Novelli
+    Project:                    Tecnopolo
+-->
+
+<tebes:TestPlan 
+	xmlns:tebes="http://www.ubl-italia.org/TeBES"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	id="10"
+	name="TP-10"
+	description="Test Plan TP-10 defined for the TeBES development"
+	userID="0" 
+	creationDatetime="2014-01-13T15:46:00Z"
+	lastUpdateDatetime="2014-01-13T15:46:00Z"  
+	state="draft">
+	
+	<tebes:TestActionList>
+	
+		<tebes:TestAction id="TA-1_TP-10" number="1">
+			
+			<tebes:ActionName>XMLSchema-UBL-T10</tebes:ActionName>
+			<tebes:ActionDescription>UBL Invoice XML Schema Validation.</tebes:ActionDescription>
+			<tebes:Test 
+				lg="taml" 
+				type="TestAssertion" 
+				skipPrerequisites="true"
+				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml">TA-001_TC-001_TS-001</tebes:Test>
+			<tebes:Input 
+				id="IN-1_TA-1_TP-10"
+				name="UBLInvoice"
+				description="Send UBL Invoice"
+				type="document" 
+				lg="xml"
+				sutInteraction="website"
+				fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-10"
+				guiReaction="upload"
+				guiMessage="Message for Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-10">
+			</tebes:Input>
+		</tebes:TestAction>
+		
+	</tebes:TestActionList>
+
+	<tebes:Choreography />
+	
+</tebes:TestPlan>
