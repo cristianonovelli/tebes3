@@ -191,15 +191,6 @@ public class TestManagerImpl implements TestManagerRemote {
 									String resultValue = reportDOM.getAttribute("result", prerequisiteResultNode);
 									report.addToFullDescription("\nresultValue: " + resultValue);
 									
-									try {
-										report.addToFullDescription("\n" + reportDOM.getXMLString());
-									} catch (TransformerFactoryConfigurationError e1) {
-										// TODO Auto-generated catch block
-										e1.printStackTrace();
-									} catch (TransformerException e1) {
-										// TODO Auto-generated catch block
-										e1.printStackTrace();
-									}
 									
 									Node selectedPrerequisiteNode;
 									if (!resultValue.equals("EMPTY")) {
@@ -223,28 +214,23 @@ public class TestManagerImpl implements TestManagerRemote {
 									}
 				
 									
+									
 									// Set Prerequisite
+									
 									if (report.getTempResult() != null) {
 										report.addToFullDescription("\nTAF Execution: " + report.getTempResult().getGlobalResult());
 										report.addToFullDescription("\nisPrerequisite: " + tafRicorsiva.isPrerequisite());
 										
 										reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), tafRicorsiva.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
-										try {
-											report.addToFullDescription("\n" + reportDOM.getXMLString());
-										} catch (TransformerFactoryConfigurationError e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										} catch (TransformerException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
 
 									}
 									else {
 										reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), tafRicorsiva.getName(), "syserror", 0, "Validation System Error: check Validation Project from TestManagerImpl.executeTAF method.");
+										
 										report.addToFullDescription("\nTAF Execution: tempResult NULL");
 									}
 									
+									reportDOM.setNodeAttribute(selectedPrerequisiteNode, "id", tafRicorsiva.getName() + "-" + i + "-" + j);
 									
 									try {
 										report.setXml(reportDOM.getXMLString());

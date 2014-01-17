@@ -26,7 +26,7 @@
         -->
         <taml:testAssertionRef 
             taid="TA-001_TC-001_TS-001" 
-            name="UBL Invoice XML Schema Validation" 
+            name="XMLSchema-UBL-T10" 
             sourcedoc="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml" 
             tebes:version="0.1" />   
     </taml:testAssertionRefList>	        	

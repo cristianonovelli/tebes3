@@ -30,7 +30,7 @@
     
     <taml:testAssertion 
         id="TA-001_TC-001_TS-001" 
-        name="UBL Invoice XML Schema Validation" 
+        name="XMLSchema-UBL-T10" 
         tebes:isNotePresent="true">
 
         <taml:description>TAML Test Case to validate digital Invoice against UBL 2.0 XML Schema.</taml:description>
