@@ -49,7 +49,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		TestRule testRule = taf.getPredicate();
 
 		
-		report.addToFullDescription("\n- Prerequisite OK... EXE Predicate");
+		
 		report.addToFullDescription("\n- Language: " + testRule.getLanguage());
 		report.addToFullDescription("\n- Value: " + testRule.getValue());
 
@@ -166,24 +166,35 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			
 			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
 			
-			if (emList.length > 0)
-				result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
-			else
-				result = new TestResult("success", 0, "Success: Empty Error Message List");
-			
+			if (emList.length > 0) {
+				
+				String errorType;
+				if (emList[0].getErrorType().equals("ERROR"))
+					errorType = TestResult.FAILURE_RESULT;
+				else
+					errorType = TestResult.ERROR_RESULT;
+				
+				result = new TestResult(errorType, emList[0].getLineNumber(), emList[0].getDescription());
+				report.setPartialResultSuccessfully(false);
+			}
+			else {
+				result = new TestResult(TestResult.PASS_RESULT, 0, "Success: Empty Error Message List");
+				report.setPartialResultSuccessfully(true);
+			}
+		
 			report.setTempResult(result);
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
 			
-			result = new TestResult("exception", 0, e.getMessage());		
+			result = new TestResult(TestResult.ERROR_RESULT, 0, e.getMessage());		
 			report.setTempResult(result);
-			report.setPartialResultSuccessfully(true);
+			report.setPartialResultSuccessfully(false);
 			return report;
 		}
 		
-		report.setPartialResultSuccessfully(true);
+
 		return report;
 	}	
 
@@ -216,25 +227,37 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			
 			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
 			
-			if (emList.length > 0)
+			if (emList.length > 0) {
 				result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
-			else
-				result = new TestResult("success", 0, "Success: Empty Error Message List");
+				report.setPartialResultSuccessfully(false);
+			}
+			else {
 				
+				String errorType;
+				if (emList[0].getErrorType().equals("ERROR"))
+					errorType = TestResult.FAILURE_RESULT;
+				else
+					errorType = TestResult.ERROR_RESULT;
+				
+				result = new TestResult(errorType, 0, "Success: Empty Error Message List");
+				report.setPartialResultSuccessfully(true);
+			}
+			
 			report.setTempResult(result);
 
 		} catch (Exception e) {
 			
-			result = new TestResult("exception", 0, e.getMessage());		
+			result = new TestResult(TestResult.ERROR_RESULT, 0, e.getMessage());		
 			report.setTempResult(result);
 			
 			e.printStackTrace();
 			
-			report.setPartialResultSuccessfully(true);
+			
+			report.setPartialResultSuccessfully(false);
 			return report;
 		}
 		
-		report.setPartialResultSuccessfully(true);
+		
 		return report;
 	}
 

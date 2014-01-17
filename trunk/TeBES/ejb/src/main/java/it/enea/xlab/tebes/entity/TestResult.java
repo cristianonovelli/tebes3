@@ -15,6 +15,11 @@ public class TestResult implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public static final String PASS_RESULT = "pass";
+	public static final String FAILURE_RESULT = "fail";
+	public static final String NOTQUALIFIED_RESULT = "notQualified";
+	public static final String ERROR_RESULT = "error";
+	
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -30,7 +35,7 @@ public class TestResult implements Serializable {
 	}
 
 	public TestResult(String globalResult, int line, String message) {
-		super();
+
 		this.globalResult = globalResult;
 		this.line = line;
 		this.message = message;
@@ -53,6 +58,14 @@ public class TestResult implements Serializable {
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	

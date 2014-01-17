@@ -76,7 +76,7 @@
 					type="TestAssertion"
 	                skipPrerequisites="true"
 	                location="http://www.empty.it">EMPTY</tebes:Test>
-                <tebes:TestResults result="EMPTY" line="EMPTY" message="EMPTY">                	
+                <tebes:TestResults result="EMPTY" message="EMPTY">                	
                     <tebes:SingleResult
                     		id="0"
                     		name="EMPTY"
@@ -84,7 +84,7 @@
                     		line="0"
                             message="EMPTY" />
                 </tebes:TestResults>
-                <tebes:Prerequisites result="EMPTY" line="EMPTY" message="EMPTY">                	
+                <tebes:Prerequisites>                	
                     <tebes:PrerequisiteResult
                     		id="0"
                     		name="EMPTY"

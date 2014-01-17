@@ -36,9 +36,7 @@
         name="BIICORE-UBL-T10" 
         tebes:isNotePresent="false">
 
-        <taml:description>
-            BIICORE UBL Invoice Schematron Validation.
-        </taml:description>
+        <taml:description>BIICORE UBL Invoice Schematron Validation.</taml:description>
         
         <taml:normativeSource>
             <taml:comment></taml:comment>
@@ -61,19 +59,13 @@
         
         <taml:report 
             label="pass" 
-            message="OK BIICORE Schematron validation of UBL Invoice">
-                The file is valid against BIICORE UBL Invoice Schematron.
-        </taml:report>
+            message="OK BIICORE Schematron validation of UBL Invoice">The file is valid against BIICORE UBL Invoice Schematron.</taml:report>
         <taml:report 
             label="fail" 
-            message="Failed BIICORE Schematron UBL Invoice validation">
-            The file does not contain an UBL Invoice valid against BIICORE Schematron.
-        </taml:report>
+            message="Failed BIICORE Schematron UBL Invoice validation">The file does not contain an UBL Invoice valid against BIICORE Schematron.</taml:report>
         <taml:report 
             label="notQualified" 
-            message="Not qualified to perform the BIICORE Schematron UBL Invoice validation">
-            The file is not valid against UBL Invoice XML Schema.
-        </taml:report>
+            message="Not qualified to perform the BIICORE Schematron UBL Invoice validation">The file is not qualified to perform the BIICORE Schematron UBL Invoice validation.</taml:report>
     </taml:testAssertion>
 	
     <taml:testAssertion 
@@ -106,19 +98,13 @@
         
         <taml:report 
             label="pass" 
-            message="OK BIIPROFILES-UBL-T10 Schematron validation of UBL Invoice">
-            The file is valid against UBL2 Invoice BIIPROFILES-UBL-T10 Schematron.
-        </taml:report>
+            message="OK BIIPROFILES-UBL-T10 Schematron validation of UBL Invoice">The file is valid against UBL2 Invoice BIIPROFILES-UBL-T10 Schematron.</taml:report>
         <taml:report 
             label="fail" 
-            message="Failed BIIPROFILES-UBL-T10 Schematron UBL Invoice validation">
-            The file does not contain an UBL Invoice valid against BIIPROFILES-UBL-T10 Schematron.
-        </taml:report>
+            message="Failed BIIPROFILES-UBL-T10 Schematron UBL Invoice validation">The file does not contain an UBL Invoice valid against BIIPROFILES-UBL-T10 Schematron.</taml:report>
         <taml:report 
             label="notQualified" 
-            message="Not qualified to perform the BIIPROFILES Schematron UBL Invoice validation">
-            Not qualified to perform the BIIPROFILES Schematron UBL Invoice validation
-        </taml:report>
+            message="Not qualified to perform the BIIPROFILES Schematron UBL Invoice validation">The file is not qualified to perform the BIIPROFILES Schematron UBL Invoice validation</taml:report>
     </taml:testAssertion>
     
     <taml:testAssertion 
@@ -151,19 +137,13 @@
         
         <taml:report 
             label="pass" 
-            message="OK BIIRULES-UBL-T10 Schematron validation of UBL Invoice">
-            The file is valid against UBL2 Invoice BIIRULES-UBL-T10 Schematron.
-        </taml:report>
+            message="OK BIIRULES-UBL-T10 Schematron validation of UBL Invoice">The file is valid against UBL2 Invoice BIIRULES-UBL-T10 Schematron.</taml:report>
         <taml:report 
             label="fail" 
-            message="Failed BIIRULES-UBL-T10 Schematron UBL Invoice validation">
-            The file does not contain an UBL Invoice valid against BIIRULES-UBL-T10 Schematron.
-        </taml:report>
+            message="Failed BIIRULES-UBL-T10 Schematron UBL Invoice validation">The file does not contain an UBL Invoice valid against BIIRULES-UBL-T10 Schematron.</taml:report>
         <taml:report 
             label="notQualified" 
-            message="Not qualified to perform the BIIRULES Schematron UBL Invoice validation">
-            Not qualified to perform the BIIRULES Schematron UBL Invoice validation
-        </taml:report>
+            message="Not qualified to perform the BIIRULES Schematron UBL Invoice validation">The file is not qualified to perform the BIIRULES Schematron UBL Invoice validation.</taml:report>
     </taml:testAssertion>
     
 </taml:testAssertionSet>

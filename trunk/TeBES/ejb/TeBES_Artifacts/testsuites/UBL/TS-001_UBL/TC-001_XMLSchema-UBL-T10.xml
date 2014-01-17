@@ -33,9 +33,7 @@
         name="UBL Invoice XML Schema Validation" 
         tebes:isNotePresent="true">
 
-        <taml:description>
-            TAML Test Case to validate digital Invoice against UBL 2.0 XML Schema.
-        </taml:description>
+        <taml:description>TAML Test Case to validate digital Invoice against UBL 2.0 XML Schema.</taml:description>
         
         <taml:normativeSource>
             <taml:comment></taml:comment>
@@ -59,15 +57,11 @@
         
         <taml:report 
             label="pass" 
-            message="OK validation standard UBL 2 invoice">
-            The file is valid against UBL2 Invoice XML Schema.
-        </taml:report>
+            message="OK validation standard UBL 2 invoice">The file is valid against UBL2 Invoice XML Schema.</taml:report>
         <taml:report 
             label="fail" 
             when="count(//in:Invoice) eq 0"
-            message="Not a standard UBL 2 invoice">
-            The file does not contain a valid UBL 2 invoice.
-        </taml:report>
+            message="Not a standard UBL 2 invoice">The file does not contain a valid UBL 2 invoice.</taml:report>
 
         <tebes:note id="NT-001" lg="it">Work in progress...</tebes:note>
     </taml:testAssertion>

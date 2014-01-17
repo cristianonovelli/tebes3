@@ -506,6 +506,12 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
+	public void removePrerequisitesNode(Node prerequisitesNode) {
+		
+		prerequisitesNode.getParentNode().removeChild(prerequisitesNode);		
+	}
+
+
 
 
 

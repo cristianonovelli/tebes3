@@ -377,7 +377,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		
 		// 1.2 Set risultato parziale a false
 		// (il risultato parziale è il risultato momentaneo dell'esecuzione di tutti i test della nostra action)
-		report.setPartialResultSuccessfully(false);
+		report.setPartialResultSuccessfully(true);
 
 		
 
@@ -485,9 +485,10 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						
 
 						
-						// 5.1 EXECUTE TAF						
+						// 5.1 EXECUTE TAF		
+						report.addToFullDescription("pre-executeTAF check: " + taf.getReportFragments().get("fail").getDescription());
 						report = testManager.executeTAF(taf, session, reportDOM, reportDOM.getAttribute("id", actionTRNode));
-						//report.setPartialResultSuccessfully(tafResult);
+
 						
 
 						// Aggiorno local reportDOM (potrebbe essere cambiato nell'esecuzione della taf)
@@ -497,7 +498,29 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						
 						
 						// 5.2 Gestisco risultato in ritorno e lo metto dentro SingleResult
-						Node testResultsNode = reportDOM.getTestResultsElement(actionTRNode);					
+						Node testResultsNode = reportDOM.getTestResultsElement(actionTRNode);	
+						
+						// 5.2.1 Setto attributi testResultsNode
+						if (report.getTempResult().getGlobalResult().equals("pass")) {
+							
+							// set "pass" report
+							reportDOM.setNodeAttribute(testResultsNode, "result", report.getTempResult().getGlobalResult());
+							reportDOM.setNodeAttribute(testResultsNode, "message", taf.getReportFragments().get("pass").getDescription());
+						}
+						else if (report.getTempResult().getGlobalResult().equals("notQualified")) {
+							
+							// set "notQualified" report
+							reportDOM.setNodeAttribute(testResultsNode, "result", report.getTempResult().getGlobalResult());
+							reportDOM.setNodeAttribute(testResultsNode, "message", taf.getReportFragments().get("notQualified").getDescription());
+						}
+						else {
+							
+							// set "fail" report
+							reportDOM.setNodeAttribute(testResultsNode, "result", report.getTempResult().getGlobalResult());
+							reportDOM.setNodeAttribute(testResultsNode, "message", taf.getReportFragments().get("fail").getDescription());							
+						}
+						
+						
 						// "1" sta ad indicare il primo nodo figlio, ovvero dopo il nodo testo del nodo corrente
 						Node firstSingleResultNode = testResultsNode.getChildNodes().item(1);
 						

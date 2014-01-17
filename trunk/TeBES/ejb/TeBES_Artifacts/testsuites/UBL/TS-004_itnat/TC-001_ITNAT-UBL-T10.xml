@@ -36,9 +36,7 @@
         name="ITNAT-UBL-T10" 
         tebes:isNotePresent="false">
 
-        <taml:description>
-            Italian PEPPOL UBL Invoice Schematron Validation.
-        </taml:description>
+        <taml:description> Italian PEPPOL UBL Invoice Schematron Validation.</taml:description>
         
         <taml:normativeSource>
             <taml:comment></taml:comment>
@@ -60,19 +58,13 @@
         
         <taml:report 
             label="pass" 
-            message="OK Italian PEPPOL (ITNAT-UBL-T10) Schematron validation of UBL Invoice">
-            The file is valid against Italian PEPPOL UBL2 Invoice Schematron.
-        </taml:report>
+            message="OK Italian PEPPOL (ITNAT-UBL-T10) Schematron validation of UBL Invoice">The file is valid against Italian PEPPOL (ITNAT-UBL-T10) UBL2 Invoice Schematron.</taml:report>
         <taml:report 
             label="fail" 
-            message="Failed Italian PEPPOL (ITNAT-UBL-T10) Schematron UBL Invoice validation">
-            The file does not contain an UBL Invoice valid against BIICORE Schematron.
-        </taml:report>
+            message="Failed Italian PEPPOL (ITNAT-UBL-T10) Schematron UBL Invoice validation">The file does not contain an UBL Invoice valid against PEPPOL (ITNAT-UBL-T10) Schematron.</taml:report>
         <taml:report 
             label="notQualified" 
-            message="Not qualified to perform the Italian PEPPOL (ITNAT-UBL-T10) Schematron UBL Invoice validation">
-            The file is not valid against UBL Invoice XML Schema.
-        </taml:report>
+            message="Not qualified to perform the Italian PEPPOL (ITNAT-UBL-T10) Schematron UBL Invoice validation">The file is not qualified to perform the Italian PEPPOL (ITNAT-UBL-T10) Schematron UBL Invoice validation.</taml:report>
     </taml:testAssertion>           
     
 </taml:testAssertionSet>
