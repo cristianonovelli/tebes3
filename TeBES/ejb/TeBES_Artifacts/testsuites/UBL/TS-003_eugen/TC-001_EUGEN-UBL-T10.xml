@@ -46,9 +46,7 @@
         name="EUGEN-UBL-T10" 
         tebes:isNotePresent="false">
 
-        <taml:description>
-            European PEPPOL UBL Invoice Schematron Validation.
-        </taml:description>
+        <taml:description>European PEPPOL UBL Invoice Schematron Validation.</taml:description>
         
         <taml:normativeSource>
             <taml:comment></taml:comment>
@@ -73,19 +71,13 @@
         
         <taml:report 
             label="pass" 
-            message="OK European PEPPOL (EUGEN-UBL-T10) Schematron validation of UBL Invoice">
-            The file is valid against European PEPPOL UBL2 Invoice Schematron.
-        </taml:report>
+            message="OK European PEPPOL (EUGEN-UBL-T10) Schematron validation of UBL Invoice">The file is valid against European PEPPOL (EUGEN-UBL-T10) UBL2 Invoice Schematron.</taml:report>
         <taml:report 
             label="fail" 
-            message="Failed European PEPPOL (EUGEN-UBL-T10) Schematron UBL Invoice validation">
-            The file does not contain an UBL Invoice valid against BIICORE Schematron.
-        </taml:report>
+            message="Failed European PEPPOL (EUGEN-UBL-T10) Schematron UBL Invoice validation">The file does not contain an UBL Invoice valid against PEPPOL (EUGEN-UBL-T10) Schematron.</taml:report>
         <taml:report 
             label="notQualified" 
-            message="Not qualified to perform the European PEPPOL (EUGEN-UBL-T10) Schematron UBL Invoice validation">
-            The file is not valid against UBL Invoice XML Schema.
-        </taml:report>
+            message="Not qualified to perform the European PEPPOL (EUGEN-UBL-T10) Schematron UBL Invoice validation">The file is not qualified to perform the European PEPPOL (EUGEN-UBL-T10) Schematron UBL Invoice validation.</taml:report>
     </taml:testAssertion>
 
 </taml:testAssertionSet>

@@ -18,6 +18,8 @@ public class TAF {
 	private Vector<Action> tests;
 	private boolean skipTurnedON;
 	private String prescription;
+	
+	// label= "fail" , "pass"
 	private Hashtable<String, ReportFragment> reportFragments;
 	private String note;
 	private List<Input> inputs;

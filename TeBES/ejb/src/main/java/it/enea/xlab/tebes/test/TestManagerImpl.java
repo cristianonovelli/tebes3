@@ -5,6 +5,7 @@ import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
+import it.enea.xlab.tebes.entity.TestResult;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.report.ReportDOM;
 import it.enea.xlab.tebes.test.rule.RuleManagerImpl;
@@ -15,6 +16,8 @@ import java.util.Vector;
 
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.w3c.dom.Node;
 
@@ -127,223 +130,178 @@ public class TestManagerImpl implements TestManagerRemote {
 		// 2. eseguo la taf corrente
 		// 3. setto il risultato
 		
-		// 1di3
-		/*Vector<Action> prerequisites = taf.getTests();
+		// 1di3 PREREQUISITI
+		Vector<Action> prerequisites = taf.getTests();
 		TAF tafRicorsiva = null;
 		Node resultNode;
-		if ( !taf.isSkipTurnedON() && (prerequisites != null) ) {
+		boolean sumPrerequisites = true;
+		if ( (prerequisites != null) && !taf.isSkipTurnedON() ) {
 
-			// Ciclo sui prerequisites
+			
 			int i=0;
-			boolean sumPrerequisites = true;
-			while (i<prerequisites.size()) {
+			
+			// Ciclo sui prerequisites
+			while (i<prerequisites.size() && sumPrerequisites) {
 				
-				// Prerequisite Action
+				// GET Action Prerequisite 
 				Action prerequisiteAction = prerequisites.elementAt(i);
 				
 				report.addToFullDescription("\nPrerequisite: " + prerequisiteAction.getActionName());
 				report.addToFullDescription("\nBuilding TAF from: " + prerequisiteAction.getActionName());
 
 				
-				// TAF from Action
+				// BUILD TAF from Action
 				Vector<TAF> tafList = this.buildTAF(prerequisiteAction);
+				report.addToFullDescription("\nTAF list size: " + tafList.size());
 				
-				// Per ogni TAF
-				int j=0;				
-				while ( (j < tafList.size()) && report.isPartialResultSuccessfully() ) {
 				
-					// Get TAF
-					tafRicorsiva = tafList.get(j);
+				int j=0;	
+				// Una action potrebbe generare una o più TAF >>> CICLO per eseguirle tutte
+				while ( (j < tafList.size()) && sumPrerequisites ) {
 
 					// Recursive execution
 					report.addToFullDescription("\n---> Recursive execution");
 
+					// GET TAF prerequisito
+					tafRicorsiva = tafList.get(j);
+					report.addToFullDescription("\nTAFPrerequisite with j: " + j + " and name " + tafRicorsiva.getName());
+					
+
+					
+					// EXECUTE TAF PREREQUISITE
 					report = this.executeTAF(tafRicorsiva, session, reportDOM, actionId);
 					
 					
+					report.addToFullDescription("\nPartial Result: " + report.isPartialResultSuccessfully());
 					
-				} // end while TAFList for each prerequisite
-				
-			} // end while prerequisites
-			
-		}*/
-		
-
-		
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// 1. La TAF ha prerequisiti che devono essere eseguiti? 
-		// nel caso dell'ultimo prerequisito in fondo alla cascata, no
-		Vector<Action> prerequisites = taf.getTests();
-		if ( !taf.isSkipTurnedON() && (prerequisites != null) ) {
-		
-			report.addToFullDescription("\nThere are Prerequisites");
-			
-			// Ciclo sui prerequisites
-			int i=0;
-			boolean sumPrerequisites = true;
-			while (i<prerequisites.size()) {
-				
-				// Prerequisite Action
-				Action a = prerequisites.elementAt(i);
-				
-				report.addToFullDescription("\nPrerequisite: " + a.getActionName());
-				report.addToFullDescription("\nBuilding TAF from: " + a.getActionName());
-
-				
-				// Prerequisite TAF from Action
-				Vector<TAF> tafList = this.buildTAF(a);
-				
-				TAF t;
-				int j=0;
-				while ((j < tafList.size()) && (i<prerequisites.size())) {
-				
-					t = tafList.get(j);
+									// SET prerequisite RESULT
+									
+									Node actionNode = reportDOM.getTestAction(actionId);
+									report.addToFullDescription("\nactionId: " + actionId);
+									report.addToFullDescription("\nisPrerequisite > new Node");
+									
+									Node prerequisitesNode = reportDOM.getPrerequisitesElement(actionNode);		
+									
+									// "1" sta ad indicare il primo nodo figlio, ovvero dopo il nodo testo del nodo corrente
+									Node prerequisiteResultNode = prerequisitesNode.getChildNodes().item(1);
+									report.addToFullDescription("\n 0.PrerequisiteResult/@result=EMPTY > " + prerequisiteResultNode.getNodeName());
+									
+									// Se NON è un nodo template, lo clono
+									// Se E' il nodo template, uso quello
+									String resultValue = reportDOM.getAttribute("result", prerequisiteResultNode);
+									report.addToFullDescription("\nresultValue: " + resultValue);
+									
+									try {
+										report.addToFullDescription("\n" + reportDOM.getXMLString());
+									} catch (TransformerFactoryConfigurationError e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									} catch (TransformerException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
+									
+									Node selectedPrerequisiteNode;
+									if (!resultValue.equals("EMPTY")) {
+										
+										report.addToFullDescription("\n1.PrerequisiteResult/@result=EMPTY > Clone!");
+										Node clonePrerequisiteResultNode = prerequisiteResultNode.cloneNode(true);
+										report.addToFullDescription("\n2.PrerequisiteResult/@result=EMPTY > " + clonePrerequisiteResultNode.getNodeName());
 							
-					
-					// Recursive execution
-					report.addToFullDescription("\n---> Recursive execution");
-					
-					//boolean singleResult = this.executeTAF(t, report);
-					
-					
-					try {
-					
-						report = this.executeTAF(t, session, reportDOM, actionId);
-						reportDOM.setContent(report.getXml());
-						
-						
-					
-					//ReportDOM reportDOM = null;
-					
-	
-						//reportDOM = new ReportDOM();
-						//reportDOM.setContent(report.getXml());
-						
-
-					if (reportDOM != null) {
-					
-						Node actionNode = reportDOM.getTestAction(actionId);
-						report.addToFullDescription("getTestActionNode: " + actionNode.getNodeName());
-
-											// 
-						//Node testResultsNode = reportDOM.getTestResultsElement(actionNode);
-						
-						
-						
-						if (taf.isPrerequisite()) {
-						
-								System.out.println("\nisPrerequisite > new Node");
-								report.addToFullDescription("\nisPrerequisite > new Node");
-								
-								Node prerequisitesNode = reportDOM.getPrerequisitesElement(actionNode);		
-								
-								// "1" sta ad indicare il primo nodo figlio, ovvero dopo il nodo testo del nodo corrente
-								Node prerequisiteResultNode = prerequisitesNode.getChildNodes().item(1);
-								report.addToFullDescription("\n0.PrerequisiteResult/@result=EMPTY > " + prerequisiteResultNode.getNodeName());
-								
-								// Se NON è un nodo template, lo clono
-								// Se E' il nodo template, uso quello
-								String resultValue = reportDOM.getAttribute("result", prerequisiteResultNode);
-								
-								report.addToFullDescription(reportDOM.getXMLString());
-								
-								Node selectedPrerequisiteNode;
-								if (!resultValue.equals("EMPTY")) {
-									
-									report.addToFullDescription("\n1.PrerequisiteResult/@result=EMPTY > Clone!");
-									Node clonePrerequisiteResultNode = prerequisiteResultNode.cloneNode(true);
-									report.addToFullDescription("\n2.PrerequisiteResult/@result=EMPTY > " + clonePrerequisiteResultNode.getNodeName());
-						
-									clonePrerequisiteResultNode = reportDOM.doc.importNode(clonePrerequisiteResultNode, true); 
-									report.addToFullDescription("\n3.PrerequisiteResult/@result=EMPTY taf: " + taf.getName());
-									reportDOM.insertPrerequisiteResultNode(clonePrerequisiteResultNode, prerequisiteResultNode, actionNode);
-									report.addToFullDescription("\n5.EndPrequisiteResult Clone!");
-									
-									// il PrerequisiteNode selezionato è quello clonato
-									selectedPrerequisiteNode = clonePrerequisiteResultNode;
-								}	
-								else {
-									// il PrerequisiteNode selezionato è quello template
-									report.addToFullDescription("n1.PrerequisiteResult/@result=EMPTY > Template!");
-									selectedPrerequisiteNode = prerequisiteResultNode;
-								}
-	
-								
-								// Set Prerequisite
-								if (report.getTempResult() != null) {
-									reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), taf.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
-									System.out.println("TAF Execution: " + report.getTempResult().getGlobalResult());
-									report.addToFullDescription("\nTAF Execution: " + report.getTempResult().getGlobalResult());
-									report.addToFullDescription("\nisPrerequisite: " + taf.isPrerequisite());
-								}
-								else {
-									reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), taf.getName(), "syserror", 0, "Validation Failure: check Validation Project.");
-									System.out.println("executeTAF - tempResult: failure");
-									report.addToFullDescription("\nTAF Execution: tempResult NULL");
-								}
-								
-								
-									report.setXml(reportDOM.getXMLString());
-									
-
-							
-						}
-						else
-							// TODO
-							System.out.println("TODO: situazione non gestita!!!!!!!!!!!!!!!!!!!!!!!!!");
-						
-					}
-					
-						} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}	
+										clonePrerequisiteResultNode = reportDOM.doc.importNode(clonePrerequisiteResultNode, true); 
+										report.addToFullDescription("\n3.PrerequisiteResult/@result=EMPTY taf: " + tafRicorsiva.getName());
+										reportDOM.insertPrerequisiteResultNode(clonePrerequisiteResultNode, prerequisiteResultNode, actionNode);
+										report.addToFullDescription("\n5.EndPrequisiteResult Clone!");
+										
+										// il PrerequisiteNode selezionato è quello clonato
+										selectedPrerequisiteNode = clonePrerequisiteResultNode;
+									}	
+									else {
+										// il PrerequisiteNode selezionato è quello template
+										report.addToFullDescription("\n1.PrerequisiteResult/@result=EMPTY > Template!");
+										selectedPrerequisiteNode = prerequisiteResultNode;
+									}
 				
-					// TODO come facevo in runAction dovrei prendere un elemento, 
-					// clonarlo, modificarlo e metterlo nella prerequisites list
-					report.addToFullDescription("\n-POST executeTAF call (into the while)");
-					
-					
-					
-					sumPrerequisites = sumPrerequisites && report.isPartialResultSuccessfully();
+									
+									// Set Prerequisite
+									if (report.getTempResult() != null) {
+										report.addToFullDescription("\nTAF Execution: " + report.getTempResult().getGlobalResult());
+										report.addToFullDescription("\nisPrerequisite: " + tafRicorsiva.isPrerequisite());
+										
+										reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), tafRicorsiva.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
+										try {
+											report.addToFullDescription("\n" + reportDOM.getXMLString());
+										} catch (TransformerFactoryConfigurationError e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										} catch (TransformerException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
 
-					// Se il prerequisito è andato male ed era obbligatorio... esco
-					if (!report.isPartialResultSuccessfully() && t.getPrescription().equals(Constants.MANDATORY))
-						i = prerequisites.size();
+									}
+									else {
+										reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), tafRicorsiva.getName(), "syserror", 0, "Validation System Error: check Validation Project from TestManagerImpl.executeTAF method.");
+										report.addToFullDescription("\nTAF Execution: tempResult NULL");
+									}
+									
+									
+									try {
+										report.setXml(reportDOM.getXMLString());
+									} catch (TransformerFactoryConfigurationError e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									} catch (TransformerException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 					
-					j++;
-				}
-
+					
+									
+									sumPrerequisites = sumPrerequisites && report.isPartialResultSuccessfully();
+									report.addToFullDescription("\nsumPrerequisites: " + sumPrerequisites);
+									
+									// Se il prerequisito è andato male ed era obbligatorio... esco
+									if (!report.isPartialResultSuccessfully() && tafRicorsiva.getPrescription().equals(Constants.MANDATORY))
+										i = prerequisites.size();
+									
+									j++;
+					
+				} // end while TAFList for each prerequisite (j)
 				
 				i++;
-			}
-			okPrerequisites = sumPrerequisites;
-			report.addToFullDescription("\n-okPrerequisites: " + okPrerequisites);
+				
+			} // end while prerequisites (i)
+
 			
-		}
+		} // end if prerequisites
 		else {
 			
-			if (taf.isSkipTurnedON())
-				report.addToFullDescription("\nSkip Prerequisite turned ON");
-			else
-				report.addToFullDescription("\nSkip Prerequisite turned OFF but there is not prerequisites");
+			// Nel caso in cui 
+			// 1. non ci sono prerequisiti o non si vogliono eseguire e 
+			// 2. questo non è un prerequisito
+			// allora elimino il nodo prerequisites
+			if (!taf.isPrerequisite()) {
+				
+				Node actionNode = reportDOM.getTestAction(actionId);				
+				Node prerequisitesNode = reportDOM.getPrerequisitesElement(actionNode);		
+				reportDOM.removePrerequisitesNode(prerequisitesNode);
+			}
 			
-			okPrerequisites = true;
 		}
+
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+			okPrerequisites = sumPrerequisites;
+			
 		
 		// Una volta superati i prerequisiti, eseguo il Test (può anche essere un prerequisito questa taf)
 		if (okPrerequisites) {
@@ -352,14 +310,17 @@ public class TestManagerImpl implements TestManagerRemote {
 
 			RuleManagerImpl testRuleManager = new RuleManagerImpl();
 			
+			report.addToFullDescription("\n- Prerequisite OK... EXE Predicate");
 			
 			// TODO Execution of Predicate
 			report = testRuleManager.executeTestRule(taf, session);
 			//report.setPartialResultSuccessfully(okPredicate);
 			report.addToFullDescription("\n-POST executeTAF call (okPrerequisites)\n");
 			
-			if (report.getTempResult() != null)
-				report.addToFullDescription("\n Test Rule Output: " + report.getTempResult().getGlobalResult());
+			if (report.getTempResult() != null) {
+				report.addToFullDescription("\nTest Rule Output: " + report.getTempResult().getGlobalResult());
+				report.addToFullDescription("\nPartial Result post executeTestRule: " + report.isPartialResultSuccessfully());
+			}
 			else
 				report.addToFullDescription("\nNo output to append. Test Rule RESULT SUCCESSFUL\n");
 			
@@ -368,22 +329,33 @@ public class TestManagerImpl implements TestManagerRemote {
 			// SE TAF = PREREQUISITE INSERISCO RESULTS > TESTRESULT > PrerequisiteList
 			
 			
-			// QUA!!!
-			// SE E' UN PREREQUISITO LO INSERISCO COME PREREQUISITO, ALTRIMENTI NO!
-			if (taf.isPrerequisite()) {
-				
-				//reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), taf.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
-			}
+
 			
 			
-			
-			// TODO Gestione Report
-			report.addToFullDescription("\nReport Message: " + taf.getReportFragments().get("pass").getMessage());
-			report.addToFullDescription("\nReport Fragment: " + taf.getReportFragments().get("pass").getDescription());	
+			// TODO Gestione Report IF SUCCESS.... ALLORA REPORT FRAGMENT
+			//report.addToFullDescription("\nReport Message: " + taf.getReportFragments().get("pass").getMessage());
+			//report.addToFullDescription("\nReport Fragment: " + taf.getReportFragments().get("pass").getDescription());	
 		
 		}
 		else {
-			report.addToFullDescription("\nThe Execution of Predicate of TAF: " + taf.getName());
+			report.addToFullDescription("\nPrerequisite FAIL in the Execution of TAF: " + taf.getName());
+			
+			String message = "";
+			if (tafRicorsiva != null) {
+				message = tafRicorsiva.getName();
+			}
+			
+			TestResult result = new TestResult("notQualified", 0, "Failure: Prerequisite " + message + " failed!");
+			
+			
+			
+			report.setTempResult(result);
+			report.setPartialResultSuccessfully(false);
+
+	
+			
+			
+			
 		}
 		
 		report.addToFullDescription("\nEND executeTAF: " + taf.getName());

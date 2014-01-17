@@ -61,19 +61,13 @@
         
         <taml:report 
             label="pass" 
-            message="OK Italian Intercent-ER (SDI-UBL) Schematron validation of UBL Invoice">
-            The file is valid against Italian Intercent-ER UBL2 Invoice Schematron.
-        </taml:report>
+            message="OK Italian Intercent-ER (SDI-UBL) Schematron validation of UBL Invoice">The file is valid against Italian Intercent-ER (SDI-UBL) UBL2 Invoice Schematron.</taml:report>
         <taml:report 
             label="fail" 
-            message="Failed Italian Intercent-ER (SDI-UBL) Schematron UBL Invoice validation">
-            The file does not contain an UBL Invoice valid against BIICORE Schematron.
-        </taml:report>
+            message="Failed Italian Intercent-ER (SDI-UBL) Schematron UBL Invoice validation">Failed Italian Intercent-ER (SDI-UBL) Schematron UBL Invoice validation.</taml:report>
         <taml:report 
             label="notQualified" 
-            message="Not qualified to perform the Italian Intercent-ER (SDI-UBL) Schematron UBL Invoice validation">
-            The file is not valid against UBL Invoice XML Schema.
-        </taml:report>
+            message="Not qualified to perform the Italian Intercent-ER (SDI-UBL) Schematron UBL Invoice validation">The file is not qualified to perform the Italian Intercent-ER (SDI-UBL) Schematron UBL Invoice validation.</taml:report>
     </taml:testAssertion>	             
     
 </taml:testAssertionSet>
