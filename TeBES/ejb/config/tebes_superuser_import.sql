@@ -107,6 +107,7 @@ CREATE TABLE `report` (
   `sessionID` bigint(20) DEFAULT NULL,
   `datetime` varchar(255) DEFAULT NULL,
   `state` varchar(255) DEFAULT NULL,
+  `absoluteFilePath` varchar(255) DEFAULT NULL,
   `fullDescription` mediumtext,
   `xml` mediumtext,
   `partialResultSuccessfully` bit(1) NOT NULL,
@@ -193,8 +194,7 @@ CREATE TABLE `sutinteraction` (
   `endpoint` varchar(255) DEFAULT NULL,
   `sut_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK62ED4880C8782BD1` (`sut_id`),
-  CONSTRAINT `FK62ED4880C8782BD1` FOREIGN KEY (`sut_id`) REFERENCES `sut` (`id`)
+  KEY `FK62ED4880C8782BD1` (`sut_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -230,8 +230,7 @@ CREATE TABLE `testaction` (
   `description` varchar(255) DEFAULT NULL,
   `workflow_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK7DF08D486864CDF9` (`workflow_id`),
-  CONSTRAINT `FK7DF08D486864CDF9` FOREIGN KEY (`workflow_id`) REFERENCES `actionworkflow` (`id`)
+  KEY `FK7DF08D486864CDF9` (`workflow_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -260,16 +259,14 @@ CREATE TABLE `testplan` (
   `lastUpdateDatetime` varchar(255) DEFAULT NULL,
   `state` varchar(255) DEFAULT NULL,
   `location` varchar(255) DEFAULT NULL,
-  `workflow_id` bigint(20) DEFAULT NULL,
-  `testplanxml_id` bigint(20) DEFAULT NULL,
+  `publication` varchar(255) DEFAULT NULL,
   `user_id` bigint(20) DEFAULT NULL,
+  `testplanxml_id` bigint(20) DEFAULT NULL,
+  `workflow_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FKBBB236BBAC268D63` (`user_id`),
   KEY `FKBBB236BBE3ACFC51` (`testplanxml_id`),
-  KEY `FKBBB236BB6864CDF9` (`workflow_id`),
-  CONSTRAINT `FKBBB236BB6864CDF9` FOREIGN KEY (`workflow_id`) REFERENCES `actionworkflow` (`id`),
-  CONSTRAINT `FKBBB236BBAC268D63` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `FKBBB236BBE3ACFC51` FOREIGN KEY (`testplanxml_id`) REFERENCES `testplanxml` (`id`)
+  KEY `FKBBB236BBAC268D63` (`user_id`),
+  KEY `FKBBB236BB6864CDF9` (`workflow_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -279,7 +276,7 @@ CREATE TABLE `testplan` (
 
 LOCK TABLES `testplan` WRITE;
 /*!40000 ALTER TABLE `testplan` DISABLE KEYS */;
-INSERT INTO `testplan` VALUES (1,'TP-1','Test Plan TP-1 defined for the TeBES development','2013-11-11T12:06:35Z','2013-11-11T12:06:35Z','draft','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/0/testplans/TP-1.xml',1,1,1),(2,'TP-2','Test Plan TP-2 defined for the TeBES development','2013-11-11T12:06:35Z','2013-11-11T12:06:35Z','draft','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/0/testplans/TP-2.xml',2,2,1);
+INSERT INTO `testplan` VALUES (1,'TP-1','Test Plan TP-1 defined for the TeBES development','2013-11-19T18:06:40Z','2013-11-19T18:06:40Z','draft','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/0/testplans/TP-1.xml','http://www.ubl-italia.org/TeBES/users/0/testplans/TP-1.xml',1,1,1),(2,'TP-2','Test Plan TP-2 defined for the TeBES development','2013-11-19T18:06:40Z','2013-11-19T18:06:40Z','draft','C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/users/0/testplans/TP-2.xml','http://www.ubl-italia.org/TeBES/users/0/testplans/TP-2.xml',1,2,2);
 /*!40000 ALTER TABLE `testplan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -355,10 +352,9 @@ CREATE TABLE `testsession` (
   KEY `FKFBB155C4AC268D63` (`user_id`),
   KEY `FKFBB155C44041EF03` (`testPlan_id`),
   KEY `FKFBB155C4C8782BD1` (`sut_id`),
-  CONSTRAINT `FKFBB155C4C8782BD1` FOREIGN KEY (`sut_id`) REFERENCES `sut` (`id`),
   CONSTRAINT `FKFBB155C44041EF03` FOREIGN KEY (`testPlan_id`) REFERENCES `testplan` (`id`),
   CONSTRAINT `FKFBB155C4AC268D63` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `FKFBB155C4D92EA83` FOREIGN KEY (`report_id`) REFERENCES `report` (`id`)
+  CONSTRAINT `FKFBB155C4C8782BD1` FOREIGN KEY (`sut_id`) REFERENCES `sut` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -384,8 +380,8 @@ CREATE TABLE `user` (
   `surname` varchar(255) DEFAULT NULL,
   `eMail` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `role_id` bigint(20) DEFAULT NULL,
   `group_id` bigint(20) DEFAULT NULL,
+  `role_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK36EBCB6FBC983` (`role_id`),
   KEY `FK36EBCB5F12AF1` (`group_id`),
@@ -400,7 +396,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Cristiano','Novelli','cristiano.novelli@gmail.com','xcristiano',4,NULL);
+INSERT INTO `user` VALUES (1,'Cristiano','Novelli','cristiano.novelli@gmail.com','xcristiano',NULL,4);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -500,4 +496,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-11-11 12:18:54
+-- Dump completed on 2013-11-19 18:11:55

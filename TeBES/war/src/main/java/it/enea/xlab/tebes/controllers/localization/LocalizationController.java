@@ -6,7 +6,7 @@ import javax.faces.context.FacesContext;
 
 public class LocalizationController {
 
-	private static String locale = "it";
+	private static String locale = "en";
 
 	public void setLocale(String newLocale) {
 		LocalizationController.locale = newLocale;

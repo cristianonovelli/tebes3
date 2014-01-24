@@ -12,6 +12,7 @@ import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.report.ReportDOM;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
@@ -28,10 +29,12 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.xlab.file.XLabFileManager;
 import org.xlab.utilities.XLabDates;
+import org.xml.sax.SAXException;
 
 
 @Stateless
@@ -116,6 +119,8 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	 */
 	public Long createSession(Long userId, Long sutId, Long testPlanId) {
 		
+		System.out.println("createSession ENTER");
+		
 		User user = userManager.readUser(userId);
 		SUT sut = sutManager.readSUT(sutId);
 		TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);
@@ -133,9 +138,13 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			Report report;
 			try {
 				
-				
+				System.out.println("createSession PRE createReportForNewSession");
 				
 				report = reportManager.createReportForNewSession(session);
+				
+				System.out.println("createSession POST createReportForNewSession");
+				System.out.println(report.getFullDescription());
+
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -149,7 +158,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			// ADD Report To Session
 			this.addReportToSession(report.getId(), session.getId());
 
-			
+			System.out.println("createSession EXIT");
 			return sessionId;
 
 	}
@@ -401,6 +410,18 @@ public class SessionManagerImpl implements SessionManagerRemote {
 					// Report state
 					report.setState(Report.getFinalState());	
 					
+					try {
+						ReportDOM reportDOM = new ReportDOM(report.getLocation());
+						reportDOM.setStateAttribute(reportDOM.root, Report.getFinalState());
+						reportDOM.save();
+						report.setXml(reportDOM.getXMLString());
+						session.setReport(report);
+						
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+					
 					// Session state
 					session.setStateToDone();
 					updating = this.updateSession(session);
@@ -426,6 +447,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			return session;
 		}
 
+		
 		// Suspend Session
 		public Session suspendSession(Session session) {
 		
@@ -433,7 +455,8 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			if (!session.isStateCancelled() && !session.isStateDone()) { 
 				
 				// Set Report state to Draft
-				session.getReport().setState(Report.getDraftState());	
+				// non serve!!! è già draft!
+				//session.getReport().setState(Report.getDraftState());	
 				
 				// Set Session state to SUSPENDED
 				session.setStateToSuspended();
@@ -458,7 +481,20 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			if (!session.isStateCancelled() && !session.isStateDone()) { 
 			
 				// Report state
-				session.getReport().setState(Report.getFinalState());	
+				Report report = session.getReport(); 
+				report.setState(Report.getFinalState());
+
+				try {
+					ReportDOM reportDOM = new ReportDOM(report.getLocation());
+					reportDOM.setStateAttribute(reportDOM.root, Report.getFinalState());
+					reportDOM.save();
+					report.setXml(reportDOM.getXMLString());
+					session.setReport(report);
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
 				
 				// Session state
 				session.setStateToCancelled();
@@ -499,22 +535,12 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			return session;
 		}
 
+		// GET Report URL
 		public String getReportURL(Session session) {
 
-			String result = null;
-			
-			String absUserReportsPath = PropertiesUtil.getUserReportsDirPath(session.getUser().getId());		
 			String reportFileName = session.getReport().getName().concat(Constants.XML_EXTENSION);	
-			try {			
-				XLabFileManager.create(absUserReportsPath.concat(reportFileName), session.getReport().getXml());	
-				
-				result = PropertiesUtil.getUserReportURL(session.getUser().getId(), reportFileName);
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			return result;
+
+			return PropertiesUtil.getUserReportURL(session.getUser().getId(), reportFileName);
 		}
 		
 }
