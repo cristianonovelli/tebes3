@@ -16,7 +16,7 @@ public interface SessionManagerRemote {
 	// public List<Session> readSessionListbyUserId(Long userId);
 
 
-	public Long createSession(Long userId, Long sutId, Long testPlanId);
+	public Long createSession(Long userId, Long sutId, Long testPlanId, String localization);
 
 	public List<Long> getSessionIdList(User superUser);
 

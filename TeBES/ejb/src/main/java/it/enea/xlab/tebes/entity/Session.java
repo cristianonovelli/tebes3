@@ -51,7 +51,7 @@ public class Session implements Serializable {
 	private static final String DONE_STATE = "done";
 
 	private String state;
-	
+	private String localization;	
 
 	@ManyToOne
 	private User user;
@@ -77,6 +77,8 @@ public class Session implements Serializable {
 	@OneToMany(mappedBy="session",cascade = {CascadeType.ALL})
 	@LazyCollection(LazyCollectionOption.TRUE)
 	private List<FileStore> files;
+
+
 	
 
 	// Empty Constructor
@@ -85,7 +87,7 @@ public class Session implements Serializable {
 	}
 
 	// Constructor
-	public Session(User user, TestPlan testPlan, SUT sut) {
+	public Session(User user, TestPlan testPlan, SUT sut, String localization) {
 
 		this.user = user;
 		this.testPlan = testPlan;
@@ -95,6 +97,8 @@ public class Session implements Serializable {
 		
 		// Set state to "new"
 		this.setStateToNew();
+		
+		this.setLocalization(localization);
 	}
 	
 	
@@ -280,6 +284,14 @@ public class Session implements Serializable {
 
 	public void setFiles(List<FileStore> files) {
 		this.files = files;
+	}
+
+	public String getLocalization() {
+		return localization;
+	}
+	
+	public void setLocalization(String localization) {
+		this.localization = localization;
 	}
 
 }

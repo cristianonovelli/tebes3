@@ -117,7 +117,7 @@ public class ReportManagerImpl implements ReportManagerRemote {
 
 	public Report createReportForNewSession(Session session) throws Exception {
 		
-		String firstString = "\ncreateReportForNewSession START";
+		
 
 		// Create Report by JPA
 		Report report = new Report();
@@ -129,30 +129,39 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		// Get User
 		User user = session.getUser();
 		
-		firstString = firstString.concat("\ncreateReportForNewSession - reportId:" + reportId);
+		String firstString = "\nNew Session for User: " + user.getName() + " " + user.getSurname();
+		firstString = firstString.concat("\nCurrent DateTime: " + XLabDates.getCurrentUTC());
+		firstString = firstString.concat("\nLocalization: " + session.getLocalization());
+		
+		firstString = firstString.concat("\nReport ID: " + reportId);
 		
 		// Define report name as "TR-" + [reportId]
 		report.setName(Report.getReportnamePrefix().concat(reportId.toString()));
-		firstString = firstString.concat("\ncreateReportForNewSession - name:" + report.getName());
 	
 		// Set Absolute Location and Publication
 		String reportDirPath = PropertiesUtil.getUserReportsDirPath(user.getId());
 		String absReportFilePath = reportDirPath.concat(report.getName().concat(Constants.XML_EXTENSION));
 		report.setLocation(absReportFilePath);
+		firstString = firstString.concat("\nReport Location: " + report.getLocation());
 		
 		String publication = TeBESDAO.location2publication(absReportFilePath);
 		report.setPublication(publication);
+		firstString = firstString.concat("\nReport Publication: " + report.getPublication());
 		
+		// Log
+		String logsUserDirPath = PropertiesUtil.getUserLogsDirPath(user.getId());
+		String logUserName = Report.getLognamePrefix().concat(reportId.toString()).concat(Constants.LOG_EXTENSION);
+		String absLogUserFilePath = logsUserDirPath.concat(logUserName);
+				
 		
-		// CREATE Report File		
+		// CREATE Report and Log Files		
 		try {
 			XLabFileManager.create(report.getLocation(), "");
+			XLabFileManager.create(absLogUserFilePath, firstString);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
-		System.out.println("\nCreated Report file: " + absReportFilePath);
-		firstString = firstString.concat("Created Report file: " + absReportFilePath);
 		
 		// Define report description as "Report " + [reportName]
 		report.setDescription(Report.getReportdescription().concat(report.getName()));

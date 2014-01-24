@@ -94,5 +94,6 @@ public class Constants {
 	public static final String MINUS = "-";
 	
 	public static final String XML_EXTENSION = ".xml";
+	public static final String LOG_EXTENSION = ".log";
 	
 }
