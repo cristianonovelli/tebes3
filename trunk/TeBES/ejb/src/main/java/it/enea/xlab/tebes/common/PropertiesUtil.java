@@ -382,6 +382,30 @@ public class PropertiesUtil {
 		else
 			return path;
 	}
+
+
+
+
+
+	public static String getUserLogsDirPath(Long id) {
+
+		String result = getUserDirPath(id);
+		
+		String logsDir = getLogsDirProperty();
+		result = result.concat(logsDir);
+		result = checkFinalSlash(result);
+		
+		return result;
+	}
+
+
+
+
+
+	public static String getLogsDirProperty() {
+		
+		return getConfiguration().getString("logs.dir");
+	}
 	
 
 }

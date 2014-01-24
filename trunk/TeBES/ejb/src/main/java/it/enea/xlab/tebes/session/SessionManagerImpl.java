@@ -117,18 +117,22 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	 * 			-4 an unexpected exception happened
 	 * 			-5 report null
 	 */
-	public Long createSession(Long userId, Long sutId, Long testPlanId) {
+	public Long createSession(Long userId, Long sutId, Long testPlanId, String localization) {
 		
 		System.out.println("createSession ENTER");
+		
+		
+		
 		
 		User user = userManager.readUser(userId);
 		SUT sut = sutManager.readSUT(sutId);
 		TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);
 
 			// CREATE Session
-			Session session = new Session(user, testPlan, sut);
+			Session session = new Session(user, testPlan, sut, localization);
 			session.setCreationDateTime(XLabDates.getCurrentUTC());
 			session.setLastUpdateDateTime(XLabDates.getCurrentUTC());
+			session.setLocalization(localization);
 			
 			Long sessionId = this.createSession(session);
 			session = this.readSession(sessionId);

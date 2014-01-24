@@ -4,6 +4,7 @@ import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.controllers.file.FileManagerController;
+import it.enea.xlab.tebes.controllers.localization.LocalizationController;
 import it.enea.xlab.tebes.dao.NestedCriterion;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
@@ -56,6 +57,9 @@ public class SessionManagerController extends WebController<Session> {
 	private TestPlanManagerRemote testPlanManagerService;
 	private FileManagerRemote fileManagerService;
 	private ActionManagerRemote actionManagerService;
+	
+	LocalizationController lc = new LocalizationController();
+	
 	
 	private List<Session> sessionsList;
 	
@@ -140,9 +144,10 @@ public class SessionManagerController extends WebController<Session> {
 		Long result = sessionManagerService.check(userId, sutId, testPlanId);
 		System.out.println("userId, sutId, testPlanId: " + userId + " " + sutId + " " + testPlanId);
 		
-		
-		if (result.intValue()>0)
-			return sessionManagerService.createSession(userId, sutId, testPlanId);
+		if (result.intValue()>0) {
+			
+			return sessionManagerService.createSession(userId, sutId, testPlanId, lc.getLocale());
+		}
 		else
 			return result;
 	} 
@@ -152,6 +157,9 @@ public class SessionManagerController extends WebController<Session> {
 	public String createNewSession() {
 		
 		Long sessionId = createSession(getCurrentUser().getId(), selectedSUT, selectedTestPlan);
+		
+		
+		
 		
 		if (sessionId.intValue() > 0) {
 			this.updateDataModel();

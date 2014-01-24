@@ -341,6 +341,7 @@ DROP TABLE IF EXISTS `testsession`;
 CREATE TABLE `testsession` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `state` varchar(255) DEFAULT NULL,
+  `localization` varchar(255) DEFAULT NULL,
   `creationDateTime` varchar(255) DEFAULT NULL,
   `lastUpdateDateTime` varchar(255) DEFAULT NULL,
   `messageStore` text,

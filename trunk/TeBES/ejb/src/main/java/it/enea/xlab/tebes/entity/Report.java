@@ -1,9 +1,6 @@
 package it.enea.xlab.tebes.entity;
 
 
-import it.enea.xlab.tebes.common.Constants;
-import it.enea.xlab.tebes.common.PropertiesUtil;
-
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
@@ -37,6 +34,7 @@ public class Report implements Serializable {
 	private static final String ERROR_RESULT = "error";
 	
 	private static final String REPORTNAME_PREFIX = "TR-";
+	private static final String LOGNAME_PREFIX = "LG-";
 	private static final String REPORTDESCRIPTION = "Report ";
 	
 	
@@ -192,7 +190,10 @@ public class Report implements Serializable {
 		this.xml = xml;
 	}
 
-
+	public static String getLognamePrefix() {
+		return LOGNAME_PREFIX;
+	}
+	
 	public static String getReportnamePrefix() {
 		return REPORTNAME_PREFIX;
 	}
