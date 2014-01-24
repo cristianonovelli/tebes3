@@ -420,6 +420,10 @@ public class SessionManagerImpl implements SessionManagerRemote {
 						reportDOM.save();
 						report.setXml(reportDOM.getXMLString());
 						session.setReport(report);
+										
+						// Log
+						String log = "*** LOG FILE FOR SESSION: " + session.getId() + " ***\n";
+						XLabFileManager.create(report.getLogLocation(), log.concat(report.getFullDescription()));
 						
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -487,13 +491,21 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				// Report state
 				Report report = session.getReport(); 
 				report.setState(Report.getFinalState());
+				
+				
+				
 
 				try {
+					// Report
 					ReportDOM reportDOM = new ReportDOM(report.getLocation());
 					reportDOM.setStateAttribute(reportDOM.root, Report.getFinalState());
 					reportDOM.save();
 					report.setXml(reportDOM.getXMLString());
 					session.setReport(report);
+					
+					// Log
+					XLabFileManager.create(report.getLogLocation(), report.getFullDescription());
+					
 					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block

@@ -117,8 +117,6 @@ public class ReportManagerImpl implements ReportManagerRemote {
 
 	public Report createReportForNewSession(Session session) throws Exception {
 		
-		
-
 		// Create Report by JPA
 		Report report = new Report();
 		
@@ -129,11 +127,12 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		// Get User
 		User user = session.getUser();
 		
-		String firstString = "\nNew Session for User: " + user.getName() + " " + user.getSurname();
-		firstString = firstString.concat("\nCurrent DateTime: " + XLabDates.getCurrentUTC());
-		firstString = firstString.concat("\nLocalization: " + session.getLocalization());
+		String fullDescription = "\nUser: " + user.getName() + " " + user.getSurname();
+		fullDescription = fullDescription.concat("\nUser ID: " + user.getId());
+		fullDescription = fullDescription.concat("\nCurrent DateTime: " + XLabDates.getCurrentUTC());
+		fullDescription = fullDescription.concat("\nLocalization: " + session.getLocalization());
 		
-		firstString = firstString.concat("\nReport ID: " + reportId);
+		fullDescription = fullDescription.concat("\n\nReport ID: " + reportId);
 		
 		// Define report name as "TR-" + [reportId]
 		report.setName(Report.getReportnamePrefix().concat(reportId.toString()));
@@ -142,22 +141,23 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		String reportDirPath = PropertiesUtil.getUserReportsDirPath(user.getId());
 		String absReportFilePath = reportDirPath.concat(report.getName().concat(Constants.XML_EXTENSION));
 		report.setLocation(absReportFilePath);
-		firstString = firstString.concat("\nReport Location: " + report.getLocation());
+		fullDescription = fullDescription.concat("\nReport Location: " + report.getLocation());
 		
 		String publication = TeBESDAO.location2publication(absReportFilePath);
 		report.setPublication(publication);
-		firstString = firstString.concat("\nReport Publication: " + report.getPublication());
+		fullDescription = fullDescription.concat("\nReport Publication: " + report.getPublication());
 		
 		// Log
 		String logsUserDirPath = PropertiesUtil.getUserLogsDirPath(user.getId());
 		String logUserName = Report.getLognamePrefix().concat(reportId.toString()).concat(Constants.LOG_EXTENSION);
 		String absLogUserFilePath = logsUserDirPath.concat(logUserName);
-				
+		report.setLogLocation(absLogUserFilePath);		
+		fullDescription = fullDescription.concat("\nThis Log File Location: " + report.getLogLocation());
 		
 		// CREATE Report and Log Files		
 		try {
 			XLabFileManager.create(report.getLocation(), "");
-			XLabFileManager.create(absLogUserFilePath, firstString);
+			XLabFileManager.create(absLogUserFilePath, fullDescription);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -165,27 +165,23 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		
 		// Define report description as "Report " + [reportName]
 		report.setDescription(Report.getReportdescription().concat(report.getName()));
-		firstString = firstString.concat("\ncreateReportForNewSession - description:" + report.getDescription());
+		fullDescription = fullDescription.concat("\nReport Description:" + report.getDescription());
 		
 		// Set sessionID
 		report.setSessionID(session.getId());
-		firstString = firstString.concat("\ncreateReportForNewSession - sessionId:" + report.getSessionID());
 		
 		// Get and Set current Datetime
 		report.setDatetime(XLabDates.getCurrentUTC());
-		firstString = firstString.concat("\ncreateReportForNewSession - datetime:" + report.getDatetime());
-
 		
 		// XML di Sistema da cui prendere il template
 		String xmlReportPathName = PropertiesUtil.getSuperUserReportAbsFileName(); 
-		firstString = firstString.concat("\ncreateReportForNewSession - xmlReportPathName:" + xmlReportPathName);
+		fullDescription = fullDescription.concat("\nReport Template Location: " + xmlReportPathName);
 		
 		ReportDOM reportDOM = null;
 
 		// Get ReportDOM
-		firstString = firstString.concat("\ncreateReportForNewSession - PRE-DOM");
 		reportDOM = new ReportDOM(xmlReportPathName);
-		firstString = firstString.concat("\ncreateReportForNewSession - POST-DOM");
+		fullDescription = fullDescription.concat("\nReport DOM Creation");
 		
 		 
 		Element rootElement = reportDOM.root;
@@ -202,17 +198,20 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			//reportDOM.setSessionIDAttribute(rootElement, report.getSessionID().toString());
 			reportDOM.setStateAttribute(rootElement, report.getState());
 			//reportDOM.setDatetimeAttribute(rootElement, report.getDatetime());
+			fullDescription = fullDescription.concat("\nReport DOM XML Root updated");
 			
 			// Aggiorno XML Session
 			reportDOM.setIdAttribute(reportDOM.getSessionElement(), report.getSessionID().toString());						
 			reportDOM.setSessionCreationDateTime(session.getCreationDateTime());
 			reportDOM.setSessionLastUpdateDateTime(session.getLastUpdateDateTime());
+			fullDescription = fullDescription.concat("\nReport DOM XML Session updated");
 			
 			// Aggiorno XML User			
 			reportDOM.setIdAttribute(reportDOM.getUserElement(), user.getId().toString());
 			reportDOM.setUserName(user.getName());
 			reportDOM.setUserSurname(user.getSurname());
-
+			fullDescription = fullDescription.concat("\nReport DOM XML User updated");
+			
 			// Aggiorno XML SUT
 			SUT sut = session.getSut();
 			reportDOM.setSUTId(sut.getId());
@@ -220,6 +219,7 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			reportDOM.setSUTType(sut.getType());
 			reportDOM.setSUTInteraction(sut.getInteraction().getType());						
 			reportDOM.setSUTDescription(sut.getDescription());
+			fullDescription = fullDescription.concat("\nReport DOM XML SUT updated");
 					
 			// Aggiorno XML TestPlan	
 			TestPlan testPlan = session.getTestPlan();
@@ -228,7 +228,8 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			reportDOM.setTestPlanDescription(testPlan.getDescription());
 			reportDOM.setTestPlanCreationDatetime(testPlan.getCreationDatetime());
 			reportDOM.setTestPlanLastUpdateDatetime(testPlan.getLastUpdateDatetime());
-			reportDOM.setTestPlanState(testPlan.getState());			
+			reportDOM.setTestPlanState(testPlan.getState());	
+			fullDescription = fullDescription.concat("\nReport DOM XML TestPlan updated");
 			// TODO location deve contenere la posizione (relativa o assoluta o url pubblico del TP utente)
 			// questo vorrebbe dire che deve essere stato salvato da qualche parte nel momento dell'importazione
 			// valutare se ne vale la pena (import su file, creazione cartella utente ecc.)
@@ -248,7 +249,7 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			// Setto gli attributi della PRIMA action del report con quelli della action del TP
 			reportDOM.setIdAttribute(actionTRNode, actionTP.getActionId());
 			reportDOM.setNumberAttribute(actionTRNode, new Integer(actionTP.getActionNumber()).toString());
-			
+			fullDescription = fullDescription.concat("\nReport DOM XML Action 1 updated");
 			
 			Node actionTRNodeClone;	
 			
@@ -270,7 +271,7 @@ public class ReportManagerImpl implements ReportManagerRemote {
 				reportDOM.setIdAttribute(actionTRNodeClone, actionTP.getActionId());
 				reportDOM.setNumberAttribute(actionTRNodeClone, new Integer(actionTP.getActionNumber()).toString());
 				
-				
+				fullDescription = fullDescription.concat("\nReport DOM XML Action " + actionCounter+1 + " updated");
 				
 				actionCounter++;
 			}		
@@ -278,6 +279,7 @@ public class ReportManagerImpl implements ReportManagerRemote {
 
 			// Set XML into the Report Bean
 			report.setXml(reportDOM.getXMLString());
+			fullDescription = fullDescription.concat("\nSet XML into the Report Bean");
 			
 			// UPDATING
 			boolean updating = this.updateReport(report);
@@ -285,21 +287,16 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			// READING
 			if (updating) {
 				report = this.readReport(reportId);
-				firstString = firstString.concat("\ncreateReportForNewSession - UPDATING OK");
+				fullDescription = fullDescription.concat("\nUpdating Report OK");
 				
 
 			}
 			else
-				firstString = firstString.concat("\ncreateReportForNewSession - UPDATING NO");
+				fullDescription = fullDescription.concat("\nUpdating Report ERROR!");
 		}
 
-		firstString = firstString.concat("\ncreateReportForNewSession END");
-		
-		System.out.println(firstString);
-		
-		report.addToFullDescription(firstString);
-		
-
+		fullDescription = fullDescription.concat("\nCreated Report for new Session.");	
+		report.addToFullDescription(fullDescription);
 		
 		return report;
 	}
