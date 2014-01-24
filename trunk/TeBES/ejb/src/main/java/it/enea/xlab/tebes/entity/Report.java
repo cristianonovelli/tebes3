@@ -49,7 +49,8 @@ public class Report implements Serializable {
 	private String state;
 	private String location;
 	private String publication;
-
+	private String logLocation;
+	
 	@OneToOne(cascade=CascadeType.ALL)
 	private TestResult tempResult;
 	
@@ -61,6 +62,8 @@ public class Report implements Serializable {
 	
 	private boolean partialResultSuccessfully;
 	private boolean finalResultSuccessfully;
+
+
 	
 	
 	
@@ -256,6 +259,14 @@ public class Report implements Serializable {
 
 	public void setPublication(String publication) {
 		this.publication = publication;
+	}
+
+	public String getLogLocation() {
+		return logLocation;
+	}
+	
+	public void setLogLocation(String logLocation) {
+		this.logLocation = logLocation;
 	}
 	
 }
