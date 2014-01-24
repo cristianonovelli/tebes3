@@ -35,7 +35,6 @@ import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.xlab.file.XLabFileManager;
 
 
 public class SessionManagerImplITCase {
@@ -354,6 +353,7 @@ public class SessionManagerImplITCase {
 		// SE questa funzione ha successo si passa alla createSession()
 		// ALTRIMENTI è necessario specificare/creare un altro SUT da abbinare gli input "inconsistenti"
 		logger.info("5) CREATING SESSION...");
+		
 		Long sessionId = sessionController.createSession(currentUserId, sutId, testPlanId);
 		Assert.assertNotNull(sessionId);
 		System.out.println("sessionId:" + sessionId);

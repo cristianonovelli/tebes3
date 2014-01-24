@@ -31,16 +31,14 @@
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Data di creazione" />
+							<h:outputText styleClass="headerText" value="Esegui" />
 						</f:facet>
-						<h:outputText value="#{testSession.creationDateTime}" />
-					</h:column>
-
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="Data ultima modifica" />
-						</f:facet>
-						<h:outputText value="#{testSession.lastUpdateDateTime}" />
+						<a4j:commandLink id="openSessionlink" style="margin-left: 10px;" action="#{SessionManagerController.viewSession}"> 
+							<i class="icon-search icon-2x"></i>
+							<a4j:actionparam name="selectedTestPlanName" value="#{testSession.id}"
+								assignTo="#{SessionManagerController.selectedSession}" />
+						</a4j:commandLink>
+						<rich:toolTip for="openSessionlink" value="Esegui Sessione" />
 					</h:column>
 
 					<h:column>
@@ -54,21 +52,33 @@
 						<f:facet name="header">
 							<h:outputText value="Test Plan" />
 						</f:facet>
-						<h:outputText value="#{testSession.testPlan.name}" />
+						 
+						<a href="#{testSession.testPlan.publication}" target="_blank"><h:outputText value="#{testSession.testPlan.name}" /></a> 
+						
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText styleClass="headerText" value="Azioni" />
+							<h:outputText value="Report" />
 						</f:facet>
-						<a4j:commandLink id="openSessionlink" style="margin-left: 10px;" action="#{SessionManagerController.viewSession}"> 
-							<i class="icon-search icon-2x"></i>
-							<a4j:actionparam name="selectedTestPlanName" value="#{testSession.id}"
-								assignTo="#{SessionManagerController.selectedSession}" />
-						</a4j:commandLink>
-						<rich:toolTip for="openSessionlink" value="Visualizza Sessione" />
+						 
+						<a href="#{testSession.report.publication}" target="_blank"><h:outputText value="#{testSession.report.name}" /></a> 
+						
 					</h:column>
 
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Data di creazione" />
+						</f:facet>
+						<h:outputText value="#{testSession.creationDateTime}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="Data ultima modifica" />
+						</f:facet>
+						<h:outputText value="#{testSession.lastUpdateDateTime}" />
+					</h:column>
 				</t:dataTable>
 				
 			</a4j:form>

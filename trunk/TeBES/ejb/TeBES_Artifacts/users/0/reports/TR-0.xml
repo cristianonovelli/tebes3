@@ -20,15 +20,6 @@
 	
     <tebes:Session id="0">
     <!-- The Session element describes the session related to current Report and the triple (User, SUT, TestPlan) -->
-    
-        <tebes:State>working</tebes:State>
-        <!-- State of Session can take the following 5 values: 
-				"new": new session
-        		"working": started and now is working (default value for a new Report);
-        		"waiting": waiting for input by user; 
-        		"suspended", suspended by user, the session CAN be resumed;
-        		"cancelled", aborted by user the session CAN'T be resumed;
-        		"done", the test plan execution is done and the session finished. -->
         
         <tebes:CreationDateTime>2012-06-16T18:43:00</tebes:CreationDateTime>
         <tebes:LastUpdateDateTime>2012-06-18T18:44:00</tebes:LastUpdateDateTime>

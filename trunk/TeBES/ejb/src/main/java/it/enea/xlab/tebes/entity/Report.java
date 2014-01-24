@@ -1,6 +1,9 @@
 package it.enea.xlab.tebes.entity;
 
 
+import it.enea.xlab.tebes.common.Constants;
+import it.enea.xlab.tebes.common.PropertiesUtil;
+
 import java.io.Serializable;
 
 import javax.persistence.CascadeType;
@@ -46,6 +49,8 @@ public class Report implements Serializable {
 	private Long sessionID;
 	private String datetime;
 	private String state;
+	private String location;
+	private String publication;
 
 	@OneToOne(cascade=CascadeType.ALL)
 	private TestResult tempResult;
@@ -232,5 +237,25 @@ public class Report implements Serializable {
 		this.tempResult = result;
 	}
 
+
+	public String getLocation() {
+		return location;
+	}
+
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+
+	public String getPublication() {
+		return publication;
+	}
+
+
+	public void setPublication(String publication) {
+		this.publication = publication;
+	}
+	
 }
 

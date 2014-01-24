@@ -107,6 +107,8 @@ CREATE TABLE `report` (
   `sessionID` bigint(20) DEFAULT NULL,
   `datetime` varchar(255) DEFAULT NULL,
   `state` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `publication` varchar(255) DEFAULT NULL,
   `fullDescription` mediumtext,
   `xml` mediumtext,
   `partialResultSuccessfully` bit(1) NOT NULL,
