@@ -23,6 +23,16 @@
 		The "datetime" attribute is related to the export file datetime.
 		The state attribute can take 2 values: "draft" or "final" 
 	-->
+	
+	<tebes:TestPlanHeader>
+	    <tebes:Id>2</tebes:Id>
+	    <tebes:Name>TP-2</tebes:Name>
+	    <tebes:Description lg="en">TP-2 Test Plan defined and used for the TeBES platform development.</tebes:Description>
+	    <tebes:Description lg="it">Test Plan TP-2 definito e utilizzato per lo sviluppo della piattaforma TeBES.</tebes:Description>
+	    <tebes:UserId>0</tebes:UserId>
+	    <tebes:CreationDatetime>2013-06-27T18:43:00Z</tebes:CreationDatetime>
+	    <tebes:LastUpdateDatetime>2014-02-04T17:15:00Z</tebes:LastUpdateDatetime>
+	</tebes:TestPlanHeader>
 			
 	<tebes:TestActionList>
 	

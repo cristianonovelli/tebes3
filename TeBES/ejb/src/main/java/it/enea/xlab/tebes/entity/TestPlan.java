@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.entity;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -30,6 +31,12 @@ public class TestPlan implements Serializable {
 	
 	private String name;	
 	private String description;	
+	
+	@OneToMany(mappedBy="testPlan", cascade=CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<Description> descriptions;	
+	
+	
 	private String creationDatetime;
 	private String lastUpdateDatetime;
 	
@@ -39,7 +46,6 @@ public class TestPlan implements Serializable {
 	private String location;
 	private String publication;
 	
-
 
 	/**
 	 * USER proprietario del TestPlan
@@ -83,6 +89,9 @@ public class TestPlan implements Serializable {
 		this.setPublication(publication);
 		this.setWorkflow(workflow);
 		this.setTestplanxml(testPlanXML);
+	
+		
+		
 	}
 	
 	
@@ -187,8 +196,14 @@ public class TestPlan implements Serializable {
 		this.publication = publication;
 	}
 
+	public List<Description> getDescriptions() {
+		return descriptions;
+	}
 
-	
+	public void setDescriptions(List<Description> descriptions) {
+		this.descriptions = descriptions;
+	}
+
 
 	
 }
