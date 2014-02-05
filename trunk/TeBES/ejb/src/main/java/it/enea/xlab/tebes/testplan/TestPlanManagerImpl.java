@@ -8,6 +8,7 @@ import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Input;
+import it.enea.xlab.tebes.entity.Description;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.TestPlanXML;
 import it.enea.xlab.tebes.entity.User;
@@ -84,10 +85,13 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				String publication = TeBESDAO.location2publication(testPlan.getLocation());
 				
 				// Creo il TestPlan SENZA il Workflow
-				testPlan2 = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), publication, null, null);
+				testPlan2 = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), publication, null, null);				
 				eM.persist(testPlan2);	
 				
-				// TODO CREATE Workflow
+
+				
+				
+				// CREATE Workflow
 				ActionWorkflow wf = testPlan.getWorkflow();
 				ActionWorkflow wf2 = new ActionWorkflow();	
 				wf2.setComment(wf.getComment());
@@ -126,6 +130,18 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				// ADD Workflow and TestPlanXML to TestPlan
 				this.addWorkflowToTestPlan(wf2Id, testPlan2.getId());
 				this.addTestPlanXMLToTestPlan(tpXML2Id, testPlan2.getId());
+	
+				
+				// ADD TestPlan Descriptions
+				Description description = new Description("it", testPlan.getDescription());
+				Long descriptionId = this.createDescription(description, testPlan2.getId());
+				
+				//Vector<Description> table = new Vector<Description>();
+				
+				//table.add(description);
+				//testPlan2.setDescriptions(table);
+				
+				
 				
 				
 				// ADD TestPlan to User
@@ -461,8 +477,16 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 				String publication = TeBESDAO.location2publication(testPlanAbsFileName);
 				
-				testPlan = new TestPlan(testPlanDOM.getRootNameAttribute(), testPlanDOM.getRootDescriptionAttribute(), testPlanDOM.getRootCreationDatetimeAttribute(), testPlanDOM.getRootLastUpdateDatetimeAttribute(), 
-						testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, publication, workflow, tpXML);
+				//testPlan = new TestPlan(testPlanDOM.getRootNameAttribute(), testPlanDOM.getRootDescriptionAttribute(), testPlanDOM.getRootCreationDatetimeAttribute(), testPlanDOM.getRootLastUpdateDatetimeAttribute(), 
+				//		testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, publication, workflow, tpXML);
+
+				testPlan = new TestPlan(testPlanDOM.getTPName(), 
+						testPlanDOM.getTPDescription("it"), 
+						testPlanDOM.getTPCreationDatetime(), 
+						testPlanDOM.getTPLastUpdateDatetime(), 
+						testPlanDOM.getTPName(), 
+						testPlanAbsFileName, publication, workflow, tpXML);
+				
 			}
 		} catch (Exception e) {
 			
@@ -711,7 +735,42 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		return superUserTestPlanList;
 	}
 
+	
+	public Long createDescription(Description description, Long testPlanId) {
+		
+		try {
+			eM.persist(description);
+							
+			this.addDescriptionToTestPlan(description.getId(), testPlanId);
+							
+			return description.getId();
+		}
+		catch(Exception e) {
+			
+			e.printStackTrace();
+			return new Long(-1);
+		}
+	}
 
+	
+	
+	private void addDescriptionToTestPlan(Long descriptionId, Long testPlanId) {
+		
+		Description d = this.readDescription(descriptionId);
+		TestPlan tp = this.readTestPlan(testPlanId);
+		
+		d.setTestPlan(tp);
+		
+		eM.persist(tp);
+		
+		return;
+	}
+
+
+	private Description readDescription(Long id) {
+		
+		return eM.find(Description.class, id);
+	}
 }
 
 

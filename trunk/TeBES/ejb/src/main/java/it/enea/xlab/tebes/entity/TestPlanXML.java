@@ -25,7 +25,6 @@ public class TestPlanXML implements Serializable {
 	private String xml;
 	
 
-
 	public TestPlanXML() {
 
 	}
@@ -59,7 +58,7 @@ public class TestPlanXML implements Serializable {
 	public void setXml(String xml) {
 		this.xml = xml;
 	}
-	
+
 	
 }
 

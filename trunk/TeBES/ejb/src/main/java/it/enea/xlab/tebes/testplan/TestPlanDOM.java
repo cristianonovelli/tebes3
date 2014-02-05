@@ -33,7 +33,47 @@ public class TestPlanDOM extends JXLabDOM {
 			
 			super();
 			
-		} 
+	} 
+
+	
+	////////////////////////////
+	//// HEADER information ////
+	////////////////////////////
+	
+	public String getTPName() {
+
+		return this.getNodesByXPath("//TestPlan/TestPlanHeader/Name").item(0).getFirstChild().getNodeValue();	 
+	}
+	
+	public String getTPState() {
+
+		return this.getNodesByXPath("//TestPlan/TestPlanHeader/State").item(0).getFirstChild().getNodeValue();	 
+	}
+	
+	public String getTPDescription(String lg) {
+
+		return this.getNodesByXPath("//TestPlan/TestPlanHeader/Description[@lg=\"" + lg + "\"]").item(0).getFirstChild().getNodeValue();	 
+	}
+
+	public String getTPDescriptionList(String lg) {
+
+		return this.getNodesByXPath("//TestPlan/TestPlanHeader/Description[@lg=\"" + lg + "\"]").item(0).getFirstChild().getNodeValue();	 
+	}
+	
+	public String getTPCreationDatetime() {
+
+		return this.getNodesByXPath("//TestPlan/TestPlanHeader/CreationDatetime").item(0).getFirstChild().getNodeValue();	 
+	}
+
+	public String getTPLastUpdateDatetime() {
+
+		return this.getNodesByXPath("//TestPlan/TestPlanHeader/LastUpdateDatetime").item(0).getFirstChild().getNodeValue();	 
+	}
+	
+	
+	/////////////////////////////
+	//// TESTACTION NodeList ////
+	/////////////////////////////	
 	
 	public NodeList getTestActionNodeList() {
 
@@ -113,6 +153,7 @@ public class TestPlanDOM extends JXLabDOM {
 		
 		return this.getDescriptionAttribute(this.root);
 	}
+	
 	
 	////////////////////////////////////////
 	//// Methods to get node ATTRIBUTES ////

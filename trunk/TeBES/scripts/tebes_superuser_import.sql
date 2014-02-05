@@ -109,6 +109,7 @@ CREATE TABLE `report` (
   `state` varchar(255) DEFAULT NULL,
   `location` varchar(255) DEFAULT NULL,
   `publication` varchar(255) DEFAULT NULL,
+  `logLocation` varchar(255) DEFAULT NULL,
   `fullDescription` mediumtext,
   `xml` mediumtext,
   `partialResultSuccessfully` bit(1) NOT NULL,
