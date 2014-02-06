@@ -55,9 +55,9 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getNodesByXPath("//TestPlan/TestPlanHeader/Description[@lg=\"" + lg + "\"]").item(0).getFirstChild().getNodeValue();	 
 	}
 
-	public String getTPDescriptionList(String lg) {
+	public NodeList getTPDescriptionList() {
 
-		return this.getNodesByXPath("//TestPlan/TestPlanHeader/Description[@lg=\"" + lg + "\"]").item(0).getFirstChild().getNodeValue();	 
+		return this.getNodesByXPath("//TestPlan/TestPlanHeader/Description");	 
 	}
 	
 	public String getTPCreationDatetime() {
@@ -93,10 +93,15 @@ public class TestPlanDOM extends JXLabDOM {
 		return actionElement.getElementsByTagName("tebes:ActionName").item(0).getFirstChild().getNodeValue();
 	}
 
-	public String getActionDescription(Element actionElement) {
+	/*public String getActionDescription(Element actionElement) {
 		
 		return actionElement.getElementsByTagName("tebes:ActionDescription").item(0).getFirstChild().getNodeValue();
-	} 	
+	} 	*/
+	
+	public NodeList getActDescriptionList(Element actionElement) {
+		return actionElement.getElementsByTagName("tebes:ActionDescription");
+	}
+
 	
 	public Node getTestNode(Element actionElement) {
 
@@ -114,7 +119,7 @@ public class TestPlanDOM extends JXLabDOM {
 	//// Methods to get Root ATTRIBUTES ////
 	////////////////////////////////////////
 
-	public String getRootNameAttribute() {
+	/*public String getRootNameAttribute() {
 		
 		return this.getNodeAttribute(this.root, "name");
 	}
@@ -152,7 +157,7 @@ public class TestPlanDOM extends JXLabDOM {
 	public String getRootDescriptionAttribute() {
 		
 		return this.getDescriptionAttribute(this.root);
-	}
+	}*/
 	
 	
 	////////////////////////////////////////
@@ -249,7 +254,6 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getAttribute(attributeLabel, node);
 		
 	}
-
 
 
 }

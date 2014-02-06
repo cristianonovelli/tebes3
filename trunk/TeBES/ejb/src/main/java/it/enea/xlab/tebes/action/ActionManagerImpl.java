@@ -3,8 +3,8 @@ package it.enea.xlab.tebes.action;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.ActionDescription;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
-import it.enea.xlab.tebes.entity.Description;
 import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
@@ -13,7 +13,6 @@ import it.enea.xlab.tebes.report.ReportDOM;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.test.TestManagerImpl;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
@@ -25,17 +24,9 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import validator.ErrorMessage;
 
 
 @Stateless
@@ -45,7 +36,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT) 
 	private EntityManager eM; 
-
+ 
 	// Logger
 	private static Logger logger = Logger.getLogger(ActionManagerImpl.class);
 	
@@ -175,6 +166,23 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	}
 	
 	
+	public Long createActionDescription(ActionDescription actionDescription,
+			Long actionId) {
+		
+		try {
+			eM.persist(actionDescription);
+							
+			this.addDescriptionToAction(actionDescription.getId(), actionId);
+							
+			return actionDescription.getId();
+		}
+		catch(Exception e) {
+			
+			e.printStackTrace();
+			return new Long(-1);
+		}
+	}
+
 
 
 
@@ -185,6 +193,11 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	public Input readInput(Long id) {
 
 		return eM.find(Input.class, id);
+	}
+
+	private ActionDescription readActionDescription(Long id) {
+		
+		return eM.find(ActionDescription.class, id);
 	}
 
 	
@@ -240,10 +253,24 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		return;
 	}
 	
+	private void addDescriptionToAction(Long id, Long actionId) {
+
+		ActionDescription ad = this.readActionDescription(id);
+		Action a = this.readAction(actionId);
+		
+		ad.setTestAction(a);
+		
+		eM.persist(a);
+		
+		return;
+	}
+
 	
 	////////////////////////
 	/// WORKFLOW METHODS ///
 	////////////////////////
+
+
 
 	/**
 	 * CREATE Workflow
@@ -440,7 +467,12 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				reportDOM.setActionName(actionTRNode, action.getActionName());
 				
 				// Set Description
-				reportDOM.setActionDescription(actionTRNode, action.getDescription());
+				ActionDescription aDescription;
+				List<ActionDescription> actionDescriptionList = action.getActionDescriptions();
+				for(int ad=0; ad<actionDescriptionList.size(); ad++) {
+					aDescription = actionDescriptionList.get(ad);
+					reportDOM.setTestActionDescription(actionTRNode, aDescription.getLanguage(), aDescription.getValue());
+				}
 				
 				// Set Test Value and attributes
 				reportDOM.setActionTest(actionTRNode, action.getTestValue());				
@@ -642,6 +674,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		
 		return isReady;
 	}
+
 
 
 

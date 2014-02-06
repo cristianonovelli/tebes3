@@ -371,14 +371,14 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 						
 						// prendo la TA esterna
 						// TODO qui prendo il nome della variabile
-						Action schematron = new Action(prerequisite, i+1, var.getName(), actionId, Action.getReadyState(), TAML2Java.SCHEMATRON_TYPE, Constants.TA, var.getValue(), var.getValue(), skip, null);
+						Action schematron = new Action(prerequisite, i+1, var.getName(), actionId, Action.getReadyState(), TAML2Java.SCHEMATRON_TYPE, Constants.TA, var.getValue(), var.getValue(), skip);
 						
 						result.add(schematron);
 					}
 					
 					if (var.getType().equals(TAML2Java.XPATH_TYPE)) {
 						
-						Action xpathAction = new Action(prerequisite, i+1, var.getName(), actionId, Action.getReadyState(), TAML2Java.XPATH_TYPE, Constants.TA, var.getValue(), var.getValue(), skip, null);
+						Action xpathAction = new Action(prerequisite, i+1, var.getName(), actionId, Action.getReadyState(), TAML2Java.XPATH_TYPE, Constants.TA, var.getValue(), var.getValue(), skip);
 						
 						if ( xpathAction.getTestValue().startsWith("count(//") && xpathAction.getTestValue().endsWith(") ge 1")) {
 							
@@ -393,7 +393,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 					
 					
 					String xpathId = "xpath".concat((new Integer(i+1)).toString());
-					Action xpath = new Action(prerequisite, i+1, xpathId, xpathId, Action.getReadyState(), TAML2Java.XPATH_TYPE, Constants.TA, singleTestRule.getValue(), singleTestRule.getValue(), skip, null);
+					Action xpath = new Action(prerequisite, i+1, xpathId, xpathId, Action.getReadyState(), TAML2Java.XPATH_TYPE, Constants.TA, singleTestRule.getValue(), singleTestRule.getValue(), skip);
 					
 					result.add(xpath);
 				}

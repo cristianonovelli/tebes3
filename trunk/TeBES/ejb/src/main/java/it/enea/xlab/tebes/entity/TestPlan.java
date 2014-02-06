@@ -30,11 +30,11 @@ public class TestPlan implements Serializable {
 	private Long id;
 	
 	private String name;	
-	private String description;	
+	//private String description;	
 	
 	@OneToMany(mappedBy="testPlan", cascade=CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<Description> descriptions;	
+	private List<TestPlanDescription> testPlanDescriptions;	
 	
 	
 	private String creationDatetime;
@@ -78,10 +78,10 @@ public class TestPlan implements Serializable {
 
 	}
 	
-	public TestPlan(String name, String description, String creationDatetime, String lastUpdateDatetime, String state, String location, String publication, ActionWorkflow workflow, TestPlanXML testPlanXML) {
+	public TestPlan(String name, String creationDatetime, String lastUpdateDatetime, String state, String location, String publication, ActionWorkflow workflow, TestPlanXML testPlanXML) {
 
 		this.setName(name);	
-		this.setDescription(description);	
+		//this.setDescription(description);	
 		this.setCreationDatetime(creationDatetime);
 		this.setLastUpdateDatetime(lastUpdateDatetime);
 		this.setState(state);
@@ -116,13 +116,13 @@ public class TestPlan implements Serializable {
 		this.name = name;
 	}	
 
-	public String getDescription() {
+	/*public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
+	}*/
 
 	public String getCreationDatetime() {
 		return creationDatetime;
@@ -196,13 +196,14 @@ public class TestPlan implements Serializable {
 		this.publication = publication;
 	}
 
-	public List<Description> getDescriptions() {
-		return descriptions;
+	public List<TestPlanDescription> getTestPlanDescriptions() {
+		return testPlanDescriptions;
 	}
 
-	public void setDescriptions(List<Description> descriptions) {
-		this.descriptions = descriptions;
+	public void setTestPlanDescriptions(List<TestPlanDescription> testPlanDescriptions) {
+		this.testPlanDescriptions = testPlanDescriptions;
 	}
+
 
 
 	
