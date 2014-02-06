@@ -48,11 +48,11 @@ public class Action implements Serializable {
 	private String testLocation;
 	private String testValue;
 	private boolean skipTurnedON;
-	private String description;
+	// private String description;
 
-	//private String inputType;
-	//private String inputLanguage;
-	//private String inputInteraction;	
+	@OneToMany(mappedBy="testAction", cascade=CascadeType.REMOVE)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<ActionDescription> actionDescriptions;		
 	
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="workflow_id")
@@ -69,7 +69,7 @@ public class Action implements Serializable {
 	}
 	
 	public Action(boolean prerequisite, int number, String name, String actionId, String state, 
-			String lg, String type, String location, String value, boolean skipTurnedON, String description) {
+			String lg, String type, String location, String value, boolean skipTurnedON) {
 		
 		this.setPrerequisite(prerequisite);
 		
@@ -89,8 +89,9 @@ public class Action implements Serializable {
 		
 		this.setTestValue(value);	
 		this.setSkipTurnedON(skipTurnedON);
-		this.setDescription(description);
-				
+		//this.setDescription(description);
+		
+		this.setActionDescriptions(new Vector<ActionDescription>());
 		this.setInputs(new Vector<Input>());
 	}
 
@@ -101,7 +102,7 @@ public class Action implements Serializable {
 		result = result.concat("STATE: " + this.getState() +"\n");
 		result = result.concat("is a Prerequisite: " + this.isPrerequisite() + "\n");
 		result = result.concat("Action Name: " + this.getActionName() +"\n");
-		result = result.concat("Action Description: " + this.getDescription() +"\n");
+		//result = result.concat("Action Description: " + this.getDescription() +"\n");
 		
 		result = result.concat("Test Language: " + this.getTestLanguage() +"\n");
 		result = result.concat("Test Type: " + this.getTestType() +"\n");	
@@ -250,13 +251,6 @@ public class Action implements Serializable {
 		this.skipTurnedON = skipTurnedON;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
 	public ActionWorkflow getWorkflow() {
 		return workflow;
@@ -328,6 +322,14 @@ public class Action implements Serializable {
 
 	public void setPrerequisite(boolean prerequisite) {
 		this.prerequisite = prerequisite;
+	}
+
+	public List<ActionDescription> getActionDescriptions() {
+		return actionDescriptions;
+	}
+
+	public void setActionDescriptions(List<ActionDescription> actionDescriptions) {
+		this.actionDescriptions = actionDescriptions;
 	}
 
 

@@ -39,7 +39,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
 	private EntityManager eM; 
 	
-
+ 
 	////////////////////
 	// USER FUNCTIONS //
 	////////////////////

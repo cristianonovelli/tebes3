@@ -42,7 +42,8 @@
         
         <tebes:TestPlan id="0">
         	<tebes:Name>EMPTY</tebes:Name>
-            <tebes:Description>EMPTY</tebes:Description>
+            <tebes:Description lg="en">EMPTY</tebes:Description>
+            <tebes:Description lg="it">EMPTY</tebes:Description>
             <tebes:CreationDateTime>2012-06-13T18:43:00</tebes:CreationDateTime>
             <tebes:LastUpdateDateTime>2012-06-14T18:43:00</tebes:LastUpdateDateTime>
             <tebes:State>EMPTY</tebes:State>
@@ -63,7 +64,8 @@
 
             <tebes:TestAction id="0" number="0">
                 <tebes:ActionName>EMPTY</tebes:ActionName>
-                <tebes:ActionDescription>EMPTY</tebes:ActionDescription>
+                <tebes:ActionDescription lg="en">EMPTY</tebes:ActionDescription>
+                <tebes:ActionDescription lg="it">EMPTY</tebes:ActionDescription>
                 <tebes:Test 
 					lg="taml" 
 					type="TestAssertion"

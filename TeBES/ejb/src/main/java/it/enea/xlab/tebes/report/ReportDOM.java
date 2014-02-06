@@ -312,9 +312,14 @@ public class ReportDOM extends JXLabDOM {
 		this.setTestPlanChildNode("tebes:Name", name);
 	}
 	
-	public void setTestPlanDescription(String description) {
-		
-		this.setTestPlanChildNode("tebes:Description", description);
+	public Node getTestPlanDescriptionNode(String language) {
+
+		return this.getNodesByXPath("//Report/Session/TestPlan/Description[@lg=\"" + language + "\"]").item(0);	 
+	}
+	
+	public void setTestPlanDescription(String language, String description) {
+
+		this.getTestPlanDescriptionNode(language).getFirstChild().setNodeValue(description);
 	}
 	
 	public void setTestPlanCreationDatetime(String creationDatetime) {
@@ -409,9 +414,28 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
-	public void setActionDescription(Node actionNode, String description) {
+	/*public void setActionDescription(Node actionNode, String description) {
 
 		this.setNodeValue(actionNode, "tebes:ActionDescription", description);
+	}*/
+	
+	public void setTestActionDescription(Node action, String language, String description) {
+
+		this.getTestActionDescriptionNode(action, language).getFirstChild().setNodeValue(description);
+	}
+
+
+	private Node getTestActionDescriptionNode(Node action, String language) {
+		
+		Node resultNode = null;
+		
+		NodeList actionDescriptionNodeList = ((Element) action).getElementsByTagName("tebes:ActionDescription");
+		
+		for (int i=0; i<actionDescriptionNodeList.getLength(); i++)
+			if (this.getAttribute("lg", actionDescriptionNodeList.item(i)).equals(language))
+					resultNode= actionDescriptionNodeList.item(i);
+
+		return resultNode;
 	}
 
 

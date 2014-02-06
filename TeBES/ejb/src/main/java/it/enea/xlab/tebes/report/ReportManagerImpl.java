@@ -11,6 +11,7 @@ import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.TestPlanDescription;
 import it.enea.xlab.tebes.entity.User;
 
 import javax.ejb.Stateless;
@@ -191,7 +192,7 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		// Aggiorno XML
 		if ( reportDOM.root != null ) {
 			
-			// Aggiorno XML Root
+			// Aggiorno blocco XML relativo a Root
 			reportDOM.setIdAttribute(rootElement, report.getId().toString());
 			reportDOM.setNameAttribute(rootElement, report.getName());
 			reportDOM.setDescriptionAttribute(rootElement, report.getDescription());
@@ -200,19 +201,19 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			//reportDOM.setDatetimeAttribute(rootElement, report.getDatetime());
 			fullDescription = fullDescription.concat("\nReport DOM XML Root updated");
 			
-			// Aggiorno XML Session
+			// Aggiorno blocco XML relativo a Session 
 			reportDOM.setIdAttribute(reportDOM.getSessionElement(), report.getSessionID().toString());						
 			reportDOM.setSessionCreationDateTime(session.getCreationDateTime());
 			reportDOM.setSessionLastUpdateDateTime(session.getLastUpdateDateTime());
 			fullDescription = fullDescription.concat("\nReport DOM XML Session updated");
 			
-			// Aggiorno XML User			
+			// Aggiorno blocco XML relativo a User			
 			reportDOM.setIdAttribute(reportDOM.getUserElement(), user.getId().toString());
 			reportDOM.setUserName(user.getName());
 			reportDOM.setUserSurname(user.getSurname());
 			fullDescription = fullDescription.concat("\nReport DOM XML User updated");
 			
-			// Aggiorno XML SUT
+			// Aggiorno blocco XML relativo a SUT
 			SUT sut = session.getSut();
 			reportDOM.setSUTId(sut.getId());
 			reportDOM.setSUTName(sut.getName());
@@ -221,14 +222,24 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			reportDOM.setSUTDescription(sut.getDescription());
 			fullDescription = fullDescription.concat("\nReport DOM XML SUT updated");
 					
-			// Aggiorno XML TestPlan	
+			// Aggiorno blocco XML relativo a TestPlan	
 			TestPlan testPlan = session.getTestPlan();
 			reportDOM.setTestPlanId(testPlan.getId());
 			reportDOM.setTestPlanName(testPlan.getName());
-			reportDOM.setTestPlanDescription(testPlan.getDescription());
 			reportDOM.setTestPlanCreationDatetime(testPlan.getCreationDatetime());
 			reportDOM.setTestPlanLastUpdateDatetime(testPlan.getLastUpdateDatetime());
-			reportDOM.setTestPlanState(testPlan.getState());	
+			reportDOM.setTestPlanState(testPlan.getState());
+			
+			List<TestPlanDescription> table = testPlan.getTestPlanDescriptions();
+			
+			for (int i=0; i<table.size(); i++) {
+				
+				reportDOM.setTestPlanDescription(table.get(i).getLanguage(), table.get(i).getValue());
+			}
+			
+			
+			
+			
 			fullDescription = fullDescription.concat("\nReport DOM XML TestPlan updated");
 			// TODO location deve contenere la posizione (relativa o assoluta o url pubblico del TP utente)
 			// questo vorrebbe dire che deve essere stato salvato da qualche parte nel momento dell'importazione

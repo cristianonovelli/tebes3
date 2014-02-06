@@ -61,10 +61,10 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 		return testPlanManagerService.getTestPlanFromXML(testPlanAbsPathName);
 	}*/
 
-	public Long createTestPlan(TestPlan testPlan, Long userId) {
+	/*public Long createTestPlan(TestPlan testPlan, Long userId) {
 		
 		return testPlanManagerService.createTestPlan(testPlan, userId);
-	}
+	}*/
 
 	public Boolean deleteTestPlan(Long testPlanId) {
 		

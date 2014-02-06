@@ -6,9 +6,10 @@ import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
+import it.enea.xlab.tebes.entity.ActionDescription;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Input;
-import it.enea.xlab.tebes.entity.Description;
+import it.enea.xlab.tebes.entity.TestPlanDescription;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.TestPlanXML;
 import it.enea.xlab.tebes.entity.User;
@@ -16,6 +17,7 @@ import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -72,7 +74,6 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	public Long createTestPlan(TestPlan testPlan, Long userId) {
 
 		TestPlan testPlan2 = null;
-
 		
 		try {
 
@@ -85,7 +86,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				String publication = TeBESDAO.location2publication(testPlan.getLocation());
 				
 				// Creo il TestPlan SENZA il Workflow
-				testPlan2 = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), publication, null, null);				
+				testPlan2 = new TestPlan(testPlan.getName(), datetime, datetime, Constants.STATE_DRAFT, testPlan.getLocation(), publication, null, null);				
 				eM.persist(testPlan2);	
 				
 
@@ -99,8 +100,11 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				Long wf2Id = actionManager.createWorkflow(wf2);
 				wf2 = actionManager.readWorkflow(wf2Id);
 				
+
+				
 				Vector<Action> actionList = (Vector<Action>) wf.getActions(); 
 				Vector<Input> inputList;
+				Vector<ActionDescription> actionDescriptionList;
 				Long actionId;
 				Action actionTemp;
 				for (int i=0; i<actionList.size(); i++) {				
@@ -109,9 +113,18 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 					
 					actionId = actionManager.createAction(actionTemp, wf2Id);
 
-					// prendo lista input					
-					inputList = (Vector<Input>) actionTemp.getInputs();
 					
+					// prendo lista actionDescriptions					
+					actionDescriptionList = (Vector<ActionDescription>) actionTemp.getActionDescriptions();					
+					// creo input
+					for (int ad=0; ad<actionDescriptionList.size(); ad++) {	
+						
+						actionManager.createActionDescription(actionDescriptionList.get(ad), actionId);
+					}					
+					
+					
+					// prendo lista input					
+					inputList = (Vector<Input>) actionTemp.getInputs();					
 					// creo input
 					for (int j=0; j<inputList.size(); j++) {	
 						
@@ -132,22 +145,25 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				this.addTestPlanXMLToTestPlan(tpXML2Id, testPlan2.getId());
 	
 				
-				// ADD TestPlan Descriptions
-				Description description = new Description("it", testPlan.getDescription());
-				Long descriptionId = this.createDescription(description, testPlan2.getId());
-				
-				//Vector<Description> table = new Vector<Description>();
-				
-				//table.add(description);
-				//testPlan2.setDescriptions(table);
-				
-				
+				// ADD TestPlanDescriptions to TestPlan
+				List<TestPlanDescription> table1 = testPlan.getTestPlanDescriptions();
+				Vector<TestPlanDescription> table2 = new Vector<TestPlanDescription>();
+				TestPlanDescription singleDescription, singleDescription2;
+				for (int i=0; i<table1.size(); i++) {
+					
+					singleDescription = table1.get(i);
+					singleDescription2 = new TestPlanDescription(singleDescription.getLanguage(), singleDescription.getValue());
+					this.createTestPlanDescription(singleDescription2, testPlan2.getId());
+					
+					table2.add(singleDescription2);
+					
+				}
 				
 				
 				// ADD TestPlan to User
 				this.addTestPlanToUser(testPlan2.getId(), userId);
 
-				logger.debug("CREATED TestPlan with ID " + testPlan2.getId() + ": " + testPlan2.getDescription());
+				logger.debug("CREATED TestPlan with ID " + testPlan2.getId() + ": " + testPlan2.getName());
 				
 				return testPlan2.getId();
 			}
@@ -227,7 +243,19 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		String newLocation = PropertiesUtil.getTestPlansDirPath(userId).concat(testPlan.getName()).concat(Constants.XML_EXTENSION);
 		String newPublication = TeBESDAO.location2publication(newLocation);
 		
-		testPlanClone = new TestPlan(testPlan.getName(), testPlan.getDescription(), datetime, datetime, Constants.STATE_DRAFT, newLocation, newPublication, wfClone, tpXMLClone);
+		
+		
+		testPlanClone = new TestPlan(testPlan.getName(), datetime, datetime, Constants.STATE_DRAFT, newLocation, newPublication, wfClone, tpXMLClone);
+		
+		List<TestPlanDescription> table = testPlan.getTestPlanDescriptions();
+		List<TestPlanDescription> tableClone = new Vector<TestPlanDescription>();
+		for (int i=0; i<table.size(); i++) {				
+			
+			tableClone.add(new TestPlanDescription(table.get(i).getLanguage(), table.get(i).getValue()));
+		}		
+		
+		testPlanClone.setTestPlanDescriptions(tableClone);
+		
 		Long testPlanCloneId = this.createTestPlan(testPlanClone, userId);	
 		
 		boolean copying = false;
@@ -307,10 +335,20 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				action1.getTestType(), 
 				action1.getTestLocation(),
 				action1.getTestValue(), 
-				action1.isSkipTurnedON(), 
-				action1.getDescription()				
+				action1.isSkipTurnedON()			
 				);
 
+		
+		List<ActionDescription> descriptionList1 = action1.getActionDescriptions();
+		Vector<ActionDescription> descriptionList2 = new Vector<ActionDescription>();
+		for (int i=0; i<descriptionList1.size(); i++) {				
+			
+			descriptionList2.add(new ActionDescription(descriptionList1.get(i).getLanguage(), descriptionList1.get(i).getValue()));		
+		}
+		
+		action2.setActionDescriptions(descriptionList2);	
+		
+		
 		List<Input> inputList1 = action1.getInputs();
 		Vector<Input> inputList2 = new Vector<Input>();
 		for (int i=0; i<inputList1.size(); i++) {				
@@ -401,7 +439,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			 
 			 if (testPlan != null) {
 				 result = true;
-				 logger.debug("UPDATED TestPlan with ID " + testPlan.getId() + ": " + testPlan.getDescription());
+				 logger.debug("UPDATED TestPlan with ID " + testPlan.getId() + ": " + testPlan.getName());
 			 }
 		 }
 		
@@ -425,7 +463,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			testPlan.getUser().getTestPlans().remove(testPlan);
 			
 			eM.remove(testPlan);
-			logger.debug("DELETED TestPlan with ID " + testPlan.getId() + ": " + testPlan.getDescription());
+			logger.debug("DELETED TestPlan with ID " + testPlan.getId() + ": " + testPlan.getName());
 			
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
@@ -481,11 +519,29 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				//		testPlanDOM.getRootStateAttribute(), testPlanAbsFileName, publication, workflow, tpXML);
 
 				testPlan = new TestPlan(testPlanDOM.getTPName(), 
-						testPlanDOM.getTPDescription("it"), 
 						testPlanDOM.getTPCreationDatetime(), 
 						testPlanDOM.getTPLastUpdateDatetime(), 
 						testPlanDOM.getTPName(), 
 						testPlanAbsFileName, publication, workflow, tpXML);
+				
+				NodeList descriptionsNodeList = testPlanDOM.getTPDescriptionList();
+				
+				Vector<TestPlanDescription> table = new Vector<TestPlanDescription>();
+				TestPlanDescription singleDescription;
+				Node descriptionNode;
+				String language, value;
+				for (int i=0; i<descriptionsNodeList.getLength(); i++) {
+					
+					descriptionNode = descriptionsNodeList.item(i);
+					language = testPlanDOM.getAttribute("lg", descriptionNode);
+					value = descriptionNode.getFirstChild().getNodeValue();
+					
+					singleDescription = new TestPlanDescription(language, value);
+					
+					table.add(singleDescription);
+					testPlan.setTestPlanDescriptions(table);
+				}
+				
 				
 			}
 		} catch (Exception e) {
@@ -517,7 +573,29 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			String name = testPlanDOM.getActionName(actionElement);
 			String actionId = testPlanDOM.getIdAttribute(actionElement);
 			
-			String description = testPlanDOM.getActionDescription(actionElement);				
+			//String description = testPlanDOM.getActionDescription(actionElement);				
+			
+			
+			
+			NodeList actionDescriptionsNodeList = testPlanDOM.getActDescriptionList(actionElement);
+			
+			
+			Vector<ActionDescription> actionDescriptionTable = new Vector<ActionDescription>();
+			ActionDescription singleDescription;
+			Node actionDescriptionNode;
+			String language, description;
+			for (int a=0; a<actionDescriptionsNodeList.getLength(); a++) {
+				
+				actionDescriptionNode = actionDescriptionsNodeList.item(a);
+				language = testPlanDOM.getAttribute("lg", actionDescriptionNode);
+				description = actionDescriptionNode.getFirstChild().getNodeValue();
+				
+				singleDescription = new ActionDescription(language, description);
+				
+				actionDescriptionTable.add(singleDescription);
+			} 
+			
+			
 			
 			Node testNode = testPlanDOM.getTestNode(actionElement);
 			String lg = testPlanDOM.getLgAttribute(testNode);
@@ -566,8 +644,10 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			
 			}
 
-			Action action = new Action(false, number, name, actionId, Action.getNewState(), lg, type, location, value, skip, description);
+			Action action = new Action(false, number, name, actionId, Action.getNewState(), lg, type, location, value, skip);
 			
+			
+			action.setActionDescriptions(actionDescriptionTable);
 			action.setInputs(inputList);
 			
 			actionsList.add(action);
@@ -736,7 +816,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	}
 
 	
-	public Long createDescription(Description description, Long testPlanId) {
+	public Long createTestPlanDescription(TestPlanDescription description, Long testPlanId) {
 		
 		try {
 			eM.persist(description);
@@ -756,7 +836,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	
 	private void addDescriptionToTestPlan(Long descriptionId, Long testPlanId) {
 		
-		Description d = this.readDescription(descriptionId);
+		TestPlanDescription d = this.readDescription(descriptionId);
 		TestPlan tp = this.readTestPlan(testPlanId);
 		
 		d.setTestPlan(tp);
@@ -767,9 +847,9 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	}
 
 
-	private Description readDescription(Long id) {
+	private TestPlanDescription readDescription(Long id) {
 		
-		return eM.find(Description.class, id);
+		return eM.find(TestPlanDescription.class, id);
 	}
 }
 
