@@ -3,9 +3,7 @@ package it.enea.xlab.tebes.report;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
-import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -33,8 +31,7 @@ public class ReportDOM extends JXLabDOM {
 	public ReportDOM() 
 			throws SAXException, IOException, ParserConfigurationException {
 			
-			super();
-			
+			super();		
 		} 
 
 	
@@ -73,46 +70,58 @@ public class ReportDOM extends JXLabDOM {
 	
 	
 
-	////////////////////////////////////////
-	//// Methods to get Root ATTRIBUTES ////
-	////////////////////////////////////////
+	////////////////
+	//// HEADER ////
+	////////////////
 	
-	
-	public String getRootIdAttribute() {
-		
-		return this.getIdAttribute(this.root);
+	private Node getHeaderChildNode(String childNodeName) {
+
+		return this.getNodesByXPath("//Report/ReportHeader/" + childNodeName).item(0);
 	}
 
-	public String getRootNameAttribute() {
+	public void setHeaderId(String id) {
 		
-		return this.getNameAttribute(this.root);
-	}
-	
-	public String getRootDescriptionAttribute() {
-		
-		return this.getDescriptionAttribute(this.root);
+		Node headerIdNode = this.getHeaderChildNode("Id");
+		headerIdNode.getFirstChild().setNodeValue(id);
 	}
 
+	public void setHeaderName(String name) {
+		
+		Node headerNameNode = this.getHeaderChildNode("Name");
+		headerNameNode.getFirstChild().setNodeValue(name);		
+	}
+
+	public void setHeaderState(String state) {
+		
+		Node headerStateNode = this.getHeaderChildNode("State");
+		headerStateNode.getFirstChild().setNodeValue(state);
+	}
+
+	public void setHeaderDescription(String language, String value) {
+
+		Node headerDescriptionNode = this.getNodesByXPath("//Report/ReportHeader/Description[@lg=\"" + language + "\"]").item(0);		
+		headerDescriptionNode.getFirstChild().setNodeValue(value);
+	}
+
+
 	
-/*	public String getRootSessionIDAttribute() {
-		
-		return this.getSessionIDAttribute(this.root);
-	}*/
+	
+	
+	
 
-/*	public String getRootDatetimeAttribute() {
-		
-		return this.getNodeAttribute(this.root, "datetime");
-	}*/
 
-	public String getRootStateAttribute() {
+	/*public String getRootStateAttribute() {
 		
 		return this.getStateAttribute(this.root);
-	}
+	}*/
+	
 	
 	////////////////////////////////////////////
 	//// Methods to get/set node ATTRIBUTES ////
 	////////////////////////////////////////////
 
+	
+	
 	public String getIdAttribute(Node node) {
 		
 		return this.getNodeAttribute(node, "id");
@@ -163,7 +172,7 @@ public class ReportDOM extends JXLabDOM {
 		this.setNodeAttribute(node, "datetime", datetime);
 	}*/
 	
-	public String getStateAttribute(Node node) {
+	/*public String getStateAttribute(Node node) {
 		
 		return this.getNodeAttribute(node, "state");
 	}
@@ -171,7 +180,7 @@ public class ReportDOM extends JXLabDOM {
 	public void setStateAttribute(Node node, String state) {
 		
 		this.setNodeAttribute(node, "state", state);
-	}
+	}*/
 	
 	// Get generic node Attribute
 	private String getNodeAttribute(Node node, String attributeLabel) {
@@ -534,13 +543,6 @@ public class ReportDOM extends JXLabDOM {
 		
 		prerequisitesNode.getParentNode().removeChild(prerequisitesNode);		
 	}
-
-
-
-
-
-
-
 
 	
 	

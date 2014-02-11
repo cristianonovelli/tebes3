@@ -85,10 +85,10 @@ public class Action implements Serializable {
 		if (type.equals(Constants.TA) || type.equals(Constants.TS) || type.equals(Constants.TC))
 			this.setTestType(type);
 		else
-			this.setTestType(null);
+			this.setTestType(null); 
 		
 		this.setTestValue(value);	
-		this.setSkipTurnedON(skipTurnedON);
+		this.setSkipTurnedON(skipTurnedON); 
 		//this.setDescription(description);
 		
 		this.setActionDescriptions(new Vector<ActionDescription>());

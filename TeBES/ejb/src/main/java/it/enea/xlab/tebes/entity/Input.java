@@ -30,7 +30,11 @@ public class Input implements Serializable {
 	
 	// descrizione testuale
 	private String description;
-	
+
+	/*@OneToMany(mappedBy="userInput", cascade=CascadeType.REMOVE)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<InputDescription> inputDescriptions;		*/
+
 	// tipi possibili: document, transport, process
 	private String type;
 
@@ -50,7 +54,10 @@ public class Input implements Serializable {
 	// reaction can take values: "upload", "text", "message"
 	private String guiReaction;
 	private String guiMessage;
-	
+
+	/*@OneToMany(mappedBy="userInput", cascade=CascadeType.REMOVE)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<GUIDescription> guiDescriptions;	*/
 	
 	@ManyToOne
 	@JoinColumn(name="testaction_id")
@@ -227,6 +234,10 @@ public class Input implements Serializable {
 	public void setGuiMessage(String guiMessage) {
 		this.guiMessage = guiMessage;
 	}
+
+
+
+
 
 
 }

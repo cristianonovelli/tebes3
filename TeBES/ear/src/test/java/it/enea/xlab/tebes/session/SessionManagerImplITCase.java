@@ -610,6 +610,7 @@ public class SessionManagerImplITCase {
 			// 		(lo stato passa in SUSPENDED solo se NON era DONE o CANCELLED)
 			currentSession = sessionController.suspendSession(currentSession);	
 			
+			
 			// 3. decide di annullare la sessione di test 
 			// 		(lo stato passa in CANCELLED solo se NON era DONE o già in CANCELLED)
 			//currentSession = sessionController.annulSession(currentSession);		

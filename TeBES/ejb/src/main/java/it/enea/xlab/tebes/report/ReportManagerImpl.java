@@ -165,8 +165,8 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		}	
 		
 		// Define report description as "Report " + [reportName]
-		report.setDescription(Report.getReportdescription().concat(report.getName()));
-		fullDescription = fullDescription.concat("\nReport Description:" + report.getDescription());
+		//report.setDescription(Report.getReportdescription().concat(report.getName()));
+		
 		
 		// Set sessionID
 		report.setSessionID(session.getId());
@@ -193,13 +193,21 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		if ( reportDOM.root != null ) {
 			
 			// Aggiorno blocco XML relativo a Root
-			reportDOM.setIdAttribute(rootElement, report.getId().toString());
+			/*reportDOM.setIdAttribute(rootElement, report.getId().toString());
 			reportDOM.setNameAttribute(rootElement, report.getName());
-			reportDOM.setDescriptionAttribute(rootElement, report.getDescription());
+			//reportDOM.setDescriptionAttribute(rootElement, report.getDescription());
 			//reportDOM.setSessionIDAttribute(rootElement, report.getSessionID().toString());
 			reportDOM.setStateAttribute(rootElement, report.getState());
 			//reportDOM.setDatetimeAttribute(rootElement, report.getDatetime());
-			fullDescription = fullDescription.concat("\nReport DOM XML Root updated");
+			fullDescription = fullDescription.concat("\nReport DOM XML Root updated");*/
+			
+			// Aggiorno blocco XML relativo a Header
+			reportDOM.setHeaderId(report.getId().toString());
+			reportDOM.setHeaderName(report.getName());
+			reportDOM.setHeaderState(report.getState());
+			reportDOM.setHeaderDescription("it", report.getName() + " Report File");
+			reportDOM.setHeaderDescription("en", "File Report " + report.getName());
+			fullDescription = fullDescription.concat("\nReport HEADER updated in XML through DOM");
 			
 			// Aggiorno blocco XML relativo a Session 
 			reportDOM.setIdAttribute(reportDOM.getSessionElement(), report.getSessionID().toString());						

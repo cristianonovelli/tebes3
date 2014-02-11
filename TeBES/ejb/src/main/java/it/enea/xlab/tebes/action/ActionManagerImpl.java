@@ -27,6 +27,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
+import org.xlab.utilities.XLabDates;
 
 
 @Stateless
@@ -481,6 +482,9 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				reportDOM.setTestLgAttribute(testNode, action.getTestLanguage());
 				reportDOM.setTestLocationAttribute(testNode, action.getTestLocation());
 				reportDOM.setTestTypeAttribute(testNode, action.getTestType());
+				
+				// Adjust Last Update Datetime
+				reportDOM.setSessionLastUpdateDateTime(XLabDates.getCurrentUTC());
 				
 				// Fine della modifica XML che NON riguarda l'esito dell'action
 				report.setXml(reportDOM.getXMLString());	

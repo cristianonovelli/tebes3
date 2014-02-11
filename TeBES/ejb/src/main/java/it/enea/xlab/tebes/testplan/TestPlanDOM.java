@@ -31,8 +31,7 @@ public class TestPlanDOM extends JXLabDOM {
 	public TestPlanDOM() 
 			throws SAXException, IOException, ParserConfigurationException {
 			
-			super();
-			
+			super();			
 	} 
 
 	
@@ -109,12 +108,64 @@ public class TestPlanDOM extends JXLabDOM {
 	}	
 	
 
+	
+	
+	////////////////////
+	//// INPUT NODE ////
+	////////////////////
+	
 	public NodeList getInputNodeList(Element actionElement) {
 
 		return actionElement.getElementsByTagName("tebes:Input");	 
 	}
-	
 
+	public String getInputName(Node inputNode) {
+		
+		return ((Element) inputNode).getElementsByTagName("tebes:Name").item(0).getFirstChild().getNodeValue();
+	}
+
+	public Node getSutNode(Node inputNode) {
+		
+		return ((Element) inputNode).getElementsByTagName("tebes:SUT").item(0);
+	}
+	
+	public String getInputSutInteraction(Node sutNode) {
+		
+		return this.getAttribute("interaction", sutNode);
+	}
+
+	public String getInputSUTType(Node sutNode) {
+		
+		return this.getAttribute("type", sutNode);
+	}
+
+	public String getInputSUTLg(Node sutNode) {
+		
+		return this.getAttribute("lg", sutNode);
+	}
+
+	public String getInputSUTFileIdRef(Node sutNode) {
+		
+		return this.getAttribute("fileIdRef", sutNode);
+	}
+	
+	
+	public Node getGUINode(Node inputNode) {
+		
+		return ((Element) inputNode).getElementsByTagName("tebes:GUI").item(0);
+	}
+
+
+	public String getInputGuiReaction(Node guiNode) {
+		
+		return this.getAttribute("reaction", guiNode);
+	}
+
+	public NodeList getInputGuiDescriptionNodeList(Node guiNode) {
+		
+		return ((Element) guiNode).getElementsByTagName("tebes:GUIDescription");
+	}
+	
 	////////////////////////////////////////
 	//// Methods to get Root ATTRIBUTES ////
 	////////////////////////////////////////
@@ -254,6 +305,18 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getAttribute(attributeLabel, node);
 		
 	}
+
+
+	public NodeList getInputDescriptionList(Node inputNode) {
+		
+		return ((Element) inputNode).getElementsByTagName("tebes:InputDescription");
+	}
+
+
+
+
+
+
 
 
 }

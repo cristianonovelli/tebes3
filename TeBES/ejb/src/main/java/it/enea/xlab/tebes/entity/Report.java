@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.entity;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,8 +10,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 @Table(name = "report")
@@ -35,7 +40,6 @@ public class Report implements Serializable {
 	
 	private static final String REPORTNAME_PREFIX = "TR-";
 	private static final String LOGNAME_PREFIX = "LG-";
-	private static final String REPORTDESCRIPTION = "Report ";
 	
 	
 	@Id
@@ -43,7 +47,12 @@ public class Report implements Serializable {
 	@Column(name="id")
 	private Long id;
 	private String name;
-	private String description;
+	//private String description;
+	
+	//@OneToMany(mappedBy="report", cascade=CascadeType.ALL)
+	//@LazyCollection(LazyCollectionOption.FALSE)
+	//private List<ReportDescription> reportDescriptions;	
+	
 	private Long sessionID;
 	private String datetime;
 	private String state;
@@ -154,16 +163,6 @@ public class Report implements Serializable {
 	}
 
 
-	public String getDescription() {
-		return description;
-	}
-
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-
 	public Long getSessionID() {
 		return sessionID;
 	}
@@ -200,12 +199,6 @@ public class Report implements Serializable {
 	public static String getReportnamePrefix() {
 		return REPORTNAME_PREFIX;
 	}
-
-
-	public static String getReportdescription() {
-		return REPORTDESCRIPTION;
-	}
-
 
 	public static String getUndefinedResult() {
 		return UNDEFINED_RESULT;
@@ -268,6 +261,7 @@ public class Report implements Serializable {
 	public void setLogLocation(String logLocation) {
 		this.logLocation = logLocation;
 	}
-	
+
+
 }
 
