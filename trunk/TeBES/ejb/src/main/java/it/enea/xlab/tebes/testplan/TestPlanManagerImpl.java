@@ -8,16 +8,17 @@ import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionDescription;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.GUIDescription;
 import it.enea.xlab.tebes.entity.Input;
-import it.enea.xlab.tebes.entity.TestPlanDescription;
+import it.enea.xlab.tebes.entity.InputDescription;
 import it.enea.xlab.tebes.entity.TestPlan;
+import it.enea.xlab.tebes.entity.TestPlanDescription;
 import it.enea.xlab.tebes.entity.TestPlanXML;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -156,7 +157,6 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 					this.createTestPlanDescription(singleDescription2, testPlan2.getId());
 					
 					table2.add(singleDescription2);
-					
 				}
 				
 				
@@ -563,6 +563,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 		// Ciclo su ogni azione
 		Element actionElement = null;
+		NodeList actionDescriptionsNodeList;
 		for (int i = 0; i < actionNodes.getLength(); i++) {
 			
 			actionElement = (Element) actionNodes.item(i);
@@ -577,7 +578,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			
 			
 			
-			NodeList actionDescriptionsNodeList = testPlanDOM.getActDescriptionList(actionElement);
+			actionDescriptionsNodeList = testPlanDOM.getActDescriptionList(actionElement);
 			
 			
 			Vector<ActionDescription> actionDescriptionTable = new Vector<ActionDescription>();
@@ -616,34 +617,90 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			// Input
 			NodeList inputNodeList = testPlanDOM.getInputNodeList(actionElement);
 			
-			Node inputNode;
+			System.out.println("inputtt1:" + inputNodeList.getLength());
+			
+			Node inputNode, sutNode, guiNode;
 			String inputName, inputDescription, inputType, inputLanguage; 
 			String inputInteraction, inputFileIdRef, inputGuiReaction, inputGuiMessage;
 			Vector<Input> inputList = new Vector<Input>();
+			NodeList inputDescriptionsNodeList, guiDescriptionsNodeList;
+			Node inputDescriptionNode, guiDescriptionNode;
+			InputDescription singleInputDescription;
+			GUIDescription singleGuiDescription;
+			Vector<InputDescription> inputDescriptionTable = new Vector<InputDescription>();
+			Vector<GUIDescription> guiDescriptionTable = new Vector<GUIDescription>();
 			for (int j = 0; j < inputNodeList.getLength(); j++) {
 			
 				// Get Input Node
 				inputNode = inputNodeList.item(j);
 				
 				// Get Input values
-				inputName = testPlanDOM.getNameAttribute(inputNode);
-				inputDescription = testPlanDOM.getDescriptionAttribute(inputNode);	
-				inputType = testPlanDOM.getTypeAttribute(inputNode);		
-				inputLanguage = testPlanDOM.getLgAttribute(inputNode);				
-				inputInteraction = testPlanDOM.getSutInteractionAttribute(inputNode);
-				inputFileIdRef = testPlanDOM.getFileIdRefAttribute(inputNode);		
-				inputGuiReaction = testPlanDOM.getGuiReactionAttribute(inputNode);
-				inputGuiMessage = testPlanDOM.getGuiMessageAttribute(inputNode);
+				inputName = testPlanDOM.getInputName(inputNode);
 				
+				inputDescriptionsNodeList = testPlanDOM.getInputDescriptionList(inputNode);			
+				for (int inDe=0; inDe<inputDescriptionsNodeList.getLength(); inDe++) {
+					
+					inputDescriptionNode = inputDescriptionsNodeList.item(inDe);
+					
+					language = testPlanDOM.getAttribute("lg", inputDescriptionNode);
+					description = inputDescriptionNode.getFirstChild().getNodeValue();
+					
+					singleInputDescription = new InputDescription(language, description);					
+					inputDescriptionTable.add(singleInputDescription);
+				} 
+				System.out.println("inputDescriptionTable: " + inputDescriptionTable.size());
+				
+				//TODO 1. aggiungere la lista dei description al singolo nella persistenza
+				//TODO 2. report
+				// TODO 3. togliere il singolo description
+				
+				// Get Input/SUT values
+				sutNode = testPlanDOM.getSutNode(inputNode);
+				inputInteraction = testPlanDOM.getInputSutInteraction(sutNode);
+				inputType = testPlanDOM.getInputSUTType(sutNode);
+				inputLanguage = testPlanDOM.getInputSUTLg(sutNode);
+				inputFileIdRef = testPlanDOM.getInputSUTFileIdRef(sutNode);
+				
+				//System.out.println("inputtt2:" + inputFileIdRef);
+				
+				// Get Input values
+				//inputName = testPlanDOM.getNameAttribute(inputNode);
+				inputDescription = testPlanDOM.getDescriptionAttribute(inputNode);	
+				//inputType = testPlanDOM.getTypeAttribute(inputNode);		
+				//inputLanguage = testPlanDOM.getLgAttribute(inputNode);				
+				//inputInteraction = testPlanDOM.getSutInteractionAttribute(inputNode);
+				//inputFileIdRef = testPlanDOM.getFileIdRefAttribute(inputNode);	
+				
+				// Get Input/GUI values
+				guiNode = testPlanDOM.getGUINode(inputNode);
+				System.out.println("inputtt2:" + guiNode.getNodeName());
+				inputGuiReaction = testPlanDOM.getInputGuiReaction(guiNode);				
+				
+				guiDescriptionsNodeList = testPlanDOM.getInputDescriptionList(inputNode);	
+				for (int inGui=0; inGui<guiDescriptionsNodeList.getLength(); inGui++) {
+					
+					guiDescriptionNode = guiDescriptionsNodeList.item(inGui);
+					
+					language = testPlanDOM.getAttribute("lg", guiDescriptionNode);
+					description = guiDescriptionNode.getFirstChild().getNodeValue();
+					
+					singleGuiDescription = new GUIDescription(language, description);		 			
+					guiDescriptionTable.add(singleGuiDescription);
+				}			
+				
+				System.out.println("guiDescriptionTable: " + guiDescriptionTable.size());
+				//inputGuiReaction = testPlanDOM.getGuiReactionAttribute(inputNode);
+				inputGuiMessage = testPlanDOM.getGuiMessageAttribute(inputNode);
+				System.out.println("inputtt2:" + inputGuiReaction);
 				// Create Input object
 				Input input = new Input(inputName, inputDescription, inputType, inputLanguage,
 						inputInteraction, inputFileIdRef, inputGuiReaction, inputGuiMessage, false);
 				
 				// Add Input object to List
 				inputList.add(input);
-			
+				System.out.println("inputtt3:" + input.getName());
 			}
-
+			System.out.println("inputtt4");
 			Action action = new Action(false, number, name, actionId, Action.getNewState(), lg, type, location, value, skip);
 			
 			

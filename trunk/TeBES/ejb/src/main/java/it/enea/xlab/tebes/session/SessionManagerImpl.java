@@ -415,8 +415,10 @@ public class SessionManagerImpl implements SessionManagerRemote {
 					report.setState(Report.getFinalState());	
 					
 					try {
+						
 						ReportDOM reportDOM = new ReportDOM(report.getLocation());
-						reportDOM.setStateAttribute(reportDOM.root, Report.getFinalState());
+						reportDOM.setHeaderState(Report.getFinalState());
+						reportDOM.setSessionLastUpdateDateTime(XLabDates.getCurrentUTC());
 						reportDOM.save();
 						report.setXml(reportDOM.getXMLString());
 						session.setReport(report);
@@ -498,7 +500,8 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				try {
 					// Report
 					ReportDOM reportDOM = new ReportDOM(report.getLocation());
-					reportDOM.setStateAttribute(reportDOM.root, Report.getFinalState());
+					reportDOM.setHeaderState(Report.getFinalState());
+					reportDOM.setSessionLastUpdateDateTime(XLabDates.getCurrentUTC());
 					reportDOM.save();
 					report.setXml(reportDOM.getXMLString());
 					session.setReport(report);

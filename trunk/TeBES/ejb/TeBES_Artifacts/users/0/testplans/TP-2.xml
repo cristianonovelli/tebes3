@@ -49,6 +49,25 @@
 				fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-2"
 				guiReaction="upload"
 				guiMessage="Message for Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-2">
+				
+			    <tebes:Id>IN-1_TA-1_TP-2</tebes:Id>
+			    <tebes:Name>IN-1_TA-1_TP-2</tebes:Name>
+			    
+				<tebes:InputDescription lg="en">Send UBL Invoice.</tebes:InputDescription>
+				<tebes:InputDescription lg="it">Invia Fattura UBL.</tebes:InputDescription>	
+				
+				<tebes:SUT 
+				    interaction="website"
+					type="document" 
+					lg="xml"
+					fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-2">		    
+				</tebes:SUT>
+				
+				<tebes:GUI reaction="upload">
+					<tebes:GUIDescription lg="en">Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-2.</tebes:GUIDescription>				
+					<tebes:GUIDescription lg="it">Upload dell'Input con fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-2.</tebes:GUIDescription>				    				    
+				</tebes:GUI>
+				
 			</tebes:Input>		
 		</tebes:TestAction>
 	
@@ -140,6 +159,25 @@
 				fileIdRef="FI-2_document-xml-website-IN-1_TA-2_TP-2"
 				guiReaction="upload"
 				guiMessage="Message for Upload of Input with fileIdRef = FI-2_document-xml-website-IN-1_TA-2_TP-2">
+				
+			    <tebes:Id>IN-1_TA-2_TP-1</tebes:Id>
+			    <tebes:Name>IN-1_TA-2_TP-1</tebes:Name>
+			    
+				<tebes:InputDescription lg="en">Send UBL Invoice.</tebes:InputDescription>
+				<tebes:InputDescription lg="it">Invia Fattura UBL.</tebes:InputDescription>	
+				
+				<tebes:SUT 
+				    interaction="website"
+					type="document" 
+					lg="xml"
+					fileIdRef="FI-2_document-xml-website-IN-1_TA-2_TP-2">		    
+				</tebes:SUT>
+				
+				<tebes:GUI reaction="upload">
+					<tebes:GUIDescription lg="en">Upload of Input with fileIdRef = FI-2_document-xml-website-IN-1_TA-2_TP-2.</tebes:GUIDescription>				
+					<tebes:GUIDescription lg="it">Upload dell'Input con fileIdRef = FI-2_document-xml-website-IN-1_TA-2_TP-2.</tebes:GUIDescription>				    				    
+				</tebes:GUI>
+				
 			</tebes:Input>		
 		</tebes:TestAction>
 		
