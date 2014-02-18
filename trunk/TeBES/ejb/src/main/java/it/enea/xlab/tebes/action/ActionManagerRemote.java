@@ -3,6 +3,8 @@ package it.enea.xlab.tebes.action;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionDescription;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.GUIDescription;
+import it.enea.xlab.tebes.entity.InputDescription;
 import it.enea.xlab.tebes.entity.TestPlanDescription;
 import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
@@ -39,6 +41,9 @@ public interface ActionManagerRemote {
 	public Boolean checkActionReady(Action action);
 	public Long createActionDescription(ActionDescription actionDescription,
 			Long actionId);
+	public Long createInputDescription(InputDescription inputDescription,
+			Long inputId);
+	public Long createGUIDescription(GUIDescription guiDescription, Long inputId);
 
 	
 

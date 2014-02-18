@@ -106,8 +106,11 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				Vector<Action> actionList = (Vector<Action>) wf.getActions(); 
 				Vector<Input> inputList;
 				Vector<ActionDescription> actionDescriptionList;
-				Long actionId;
+				Vector<InputDescription> inputDescriptionList;
+				Vector<GUIDescription> guiDescriptionList;
+				Long actionId, inputId;
 				Action actionTemp;
+				Input inputTemp;
 				for (int i=0; i<actionList.size(); i++) {				
 					
 					actionTemp = actionList.get(i);
@@ -117,7 +120,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 					
 					// prendo lista actionDescriptions					
 					actionDescriptionList = (Vector<ActionDescription>) actionTemp.getActionDescriptions();					
-					// creo input
+
 					for (int ad=0; ad<actionDescriptionList.size(); ad++) {	
 						
 						actionManager.createActionDescription(actionDescriptionList.get(ad), actionId);
@@ -129,7 +132,22 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 					// creo input
 					for (int j=0; j<inputList.size(); j++) {	
 						
-						actionManager.createInput(inputList.get(j), actionId);
+						inputTemp = inputList.get(j);
+						
+						inputId = actionManager.createInput(inputTemp, actionId);
+						
+						inputDescriptionList = (Vector<InputDescription>) inputTemp.getInputDescriptions();
+						for (int in=0; in<inputDescriptionList.size(); in++) {	
+							
+							actionManager.createInputDescription(inputDescriptionList.get(in), inputId);
+						}	
+						
+						
+						guiDescriptionList = (Vector<GUIDescription>) inputTemp.getGuiDescriptions();
+						for (int gu=0; gu<guiDescriptionList.size(); gu++) {	
+							
+							actionManager.createGUIDescription(guiDescriptionList.get(gu), inputId);
+						}							
 					}
 				}			
 				
@@ -365,7 +383,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	
 	private Input cloneInput(Input input1) {
 		
-		return new Input(
+		Input input2 =  new Input(
 				input1.getName(), 
 				input1.getDescription(), 
 				input1.getType(), 
@@ -375,9 +393,39 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				input1.getGuiReaction(),
 				input1.getGuiMessage(),
 				input1.isInteractionOK());	
+		
+		// Clone Input Descriptions
+		List<InputDescription> inputDescriptionList1 = input1.getInputDescriptions();
+		Vector<InputDescription> inputDescriptionList2 = new Vector<InputDescription>();
+		for (int inDe=0; inDe<inputDescriptionList1.size(); inDe++) {				
+			
+			inputDescriptionList2.add(this.cloneInputDescription(inputDescriptionList1.get(inDe)));		
+		}
+		input2.setInputDescriptions(inputDescriptionList2);
+
+		// Clone Input/GUI Descriptions
+		List<GUIDescription> guiDescriptionList1 = input1.getGuiDescriptions();
+		Vector<GUIDescription> guiDescriptionList2 = new Vector<GUIDescription>();
+		for (int inGui=0; inGui<guiDescriptionList1.size(); inGui++) {				
+			
+			guiDescriptionList2.add(this.cloneGUIDescription(guiDescriptionList1.get(inGui)));		
+		}
+		input2.setGuiDescriptions(guiDescriptionList2);
+		
+		return input2;
 	}
 	
 	
+	private InputDescription cloneInputDescription(InputDescription inputDescription) {
+
+		return new InputDescription(inputDescription.getLanguage(), inputDescription.getValue());
+	}
+
+	private GUIDescription cloneGUIDescription(GUIDescription guiDescription) {
+
+		return new GUIDescription(guiDescription.getLanguage(), guiDescription.getValue());
+	}
+
 	private TestPlanXML cloneTestPlanXML(TestPlanXML tpXML1) {
 		
 		TestPlanXML tpXML2 = new TestPlanXML(tpXML1.getXml(),tpXML1.getAbsFileName());
@@ -652,7 +700,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				
 				//TODO 1. aggiungere la lista dei description al singolo nella persistenza
 				//TODO 2. report
-				// TODO 3. togliere il singolo description
+				//TODO 3. togliere il singolo description
 				
 				// Get Input/SUT values
 				sutNode = testPlanDOM.getSutNode(inputNode);
@@ -665,7 +713,12 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				
 				// Get Input values
 				//inputName = testPlanDOM.getNameAttribute(inputNode);
-				inputDescription = testPlanDOM.getDescriptionAttribute(inputNode);	
+				
+				// TODO TEMP (il campo description sparirà)
+				if (inputDescriptionTable.size()>0)
+					inputDescription = inputDescriptionTable.get(0).getValue();	
+				else
+					inputDescription = null;
 				//inputType = testPlanDOM.getTypeAttribute(inputNode);		
 				//inputLanguage = testPlanDOM.getLgAttribute(inputNode);				
 				//inputInteraction = testPlanDOM.getSutInteractionAttribute(inputNode);
@@ -676,7 +729,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				System.out.println("inputtt2:" + guiNode.getNodeName());
 				inputGuiReaction = testPlanDOM.getInputGuiReaction(guiNode);				
 				
-				guiDescriptionsNodeList = testPlanDOM.getInputDescriptionList(inputNode);	
+				guiDescriptionsNodeList = testPlanDOM.getGUIDescriptionList(guiNode);	
 				for (int inGui=0; inGui<guiDescriptionsNodeList.getLength(); inGui++) {
 					
 					guiDescriptionNode = guiDescriptionsNodeList.item(inGui);
@@ -690,11 +743,22 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				
 				System.out.println("guiDescriptionTable: " + guiDescriptionTable.size());
 				//inputGuiReaction = testPlanDOM.getGuiReactionAttribute(inputNode);
-				inputGuiMessage = testPlanDOM.getGuiMessageAttribute(inputNode);
+				
+				// TODO TEMP (il campo description sparirà)
+				if (guiDescriptionTable.size()>0)
+					inputGuiMessage = guiDescriptionTable.get(0).getValue();	
+				else
+					inputGuiMessage = null;
+				
+				
+				//inputGuiMessage = testPlanDOM.getGuiMessageAttribute(inputNode);
 				System.out.println("inputtt2:" + inputGuiReaction);
 				// Create Input object
 				Input input = new Input(inputName, inputDescription, inputType, inputLanguage,
 						inputInteraction, inputFileIdRef, inputGuiReaction, inputGuiMessage, false);
+				
+				input.setInputDescriptions(inputDescriptionTable);
+				input.setGuiDescriptions(guiDescriptionTable);
 				
 				// Add Input object to List
 				inputList.add(input);
