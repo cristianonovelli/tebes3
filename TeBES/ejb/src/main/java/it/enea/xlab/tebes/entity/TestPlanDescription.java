@@ -69,7 +69,6 @@ public class TestPlanDescription implements Serializable {
 	public void setTestPlan(TestPlan testPlan) {
 		this.testPlan = testPlan;
 	}
-	
 }
 
 

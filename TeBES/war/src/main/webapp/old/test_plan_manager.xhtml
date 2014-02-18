@@ -37,8 +37,8 @@
 							<h:outputText value="Descrizione" />
 						</f:facet>
 						<h:outputText value="#{TestPlanManagerController.tempDescription}" />
+						<h:outputText value="#{TestPlanManagerController.getTestPlanDescription(testPlan, LocalizationController.locale)}" />
 					</h:column>
-
 
 					<h:column>
 						<f:facet name="header">
@@ -99,7 +99,6 @@
 						<f:facet name="header">
 							<h:outputText value="Descrizione" />
 						</f:facet>
-
 						<h:outputText value="#{TestPlanManagerController.tempDescription}" />
 					</h:column>
 

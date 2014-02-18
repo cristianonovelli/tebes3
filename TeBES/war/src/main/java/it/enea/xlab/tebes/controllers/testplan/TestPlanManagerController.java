@@ -3,7 +3,6 @@ package it.enea.xlab.tebes.controllers.testplan;
 import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
-import it.enea.xlab.tebes.controllers.bean.FilterablePagedDataModel;
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.dao.NestedCriterion;
 import it.enea.xlab.tebes.entity.Action;
@@ -207,12 +206,25 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 	}
 
 
-	public List<TestPlan> getSystemTestPlans() {
+	public List<TestPlan> getSystemTestPlans() { 
 		return testPlanManagerService.getSystemTestPlanList();
 	}
 
 
 	public void setSystemTestPlans(List<TestPlan> systemTestPlans) {
 		this.systemTestPlans = systemTestPlans;
+	}
+	
+	public String getTempDescription() {
+		return "temp";
+	}
+	
+	public String getTestPlanDescription(TestPlan tp, String locale) {
+		String result = "";
+		for (int i=0; i<tp.getTestPlanDescriptions().size(); i++) {
+			if (tp.getTestPlanDescriptions().get(i).getLanguage().equals(locale))
+				result = tp.getTestPlanDescriptions().get(i).getValue();
+		}
+		return result;
 	}
 }

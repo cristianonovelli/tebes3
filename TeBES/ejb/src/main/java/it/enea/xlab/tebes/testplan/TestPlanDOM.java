@@ -263,10 +263,10 @@ public class TestPlanDOM extends JXLabDOM {
 		return this.getNodeAttribute(inputNode, "name");
 	}
 
-	public String getSutInteractionAttribute(Node node) {
+	/*public String getSutInteractionAttribute(Node node) {
 		
 		return this.getNodeAttribute(node, "sutInteraction");
-	}
+	}*/
 	
 	public String getTypeAttribute(Node node) {
 		
@@ -313,10 +313,10 @@ public class TestPlanDOM extends JXLabDOM {
 	}
 
 
+	public NodeList getGUIDescriptionList(Node guiNode) {
 
-
-
-
+		return ((Element) guiNode).getElementsByTagName("tebes:GUIDescription");
+	}
 
 
 }

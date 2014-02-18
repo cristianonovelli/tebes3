@@ -23,9 +23,9 @@ public class InputDescription implements Serializable {
 	private String language;
 	private String value;
 	
-	/*@ManyToOne
+	@ManyToOne
 	@JoinColumn(name="userinput_id")
-	Input userInput;*/
+	Input userInput;
 	
 	public InputDescription() {
 
@@ -59,6 +59,14 @@ public class InputDescription implements Serializable {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public Input getUserInput() {
+		return userInput;
+	}
+
+	public void setUserInput(Input userInput) {
+		this.userInput = userInput;
 	}
 
 

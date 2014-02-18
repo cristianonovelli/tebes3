@@ -31,9 +31,9 @@ public class Input implements Serializable {
 	// descrizione testuale
 	private String description;
 
-	/*@OneToMany(mappedBy="userInput", cascade=CascadeType.REMOVE)
+	@OneToMany(mappedBy="userInput", cascade=CascadeType.REMOVE)
 	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<InputDescription> inputDescriptions;		*/
+	private List<InputDescription> inputDescriptions;		
 
 	// tipi possibili: document, transport, process
 	private String type;
@@ -55,9 +55,9 @@ public class Input implements Serializable {
 	private String guiReaction;
 	private String guiMessage;
 
-	/*@OneToMany(mappedBy="userInput", cascade=CascadeType.REMOVE)
+	@OneToMany(mappedBy="userInput", cascade=CascadeType.REMOVE)
 	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<GUIDescription> guiDescriptions;	*/
+	private List<GUIDescription> guiDescriptions;	
 	
 	@ManyToOne
 	@JoinColumn(name="testaction_id")
@@ -233,6 +233,26 @@ public class Input implements Serializable {
 
 	public void setGuiMessage(String guiMessage) {
 		this.guiMessage = guiMessage;
+	}
+
+
+	public List<InputDescription> getInputDescriptions() {
+		return inputDescriptions;
+	}
+
+
+	public void setInputDescriptions(List<InputDescription> inputDescriptions) {
+		this.inputDescriptions = inputDescriptions;
+	}
+
+
+	public List<GUIDescription> getGuiDescriptions() {
+		return guiDescriptions;
+	}
+
+
+	public void setGuiDescriptions(List<GUIDescription> guiDescriptions) {
+		this.guiDescriptions = guiDescriptions;
 	}
 
 

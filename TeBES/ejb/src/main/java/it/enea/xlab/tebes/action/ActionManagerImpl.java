@@ -5,7 +5,9 @@ import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionDescription;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.GUIDescription;
 import it.enea.xlab.tebes.entity.Input;
+import it.enea.xlab.tebes.entity.InputDescription;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.model.TAF;
@@ -184,7 +186,77 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		}
 	}
 
+	public Long createInputDescription(InputDescription inputDescription, Long inputId) {
 
+		try {
+			eM.persist(inputDescription);
+							
+			this.addDescriptionToInput(inputDescription.getId(), inputId);
+							
+			return inputDescription.getId();
+		}
+		catch(Exception e) {
+			
+			e.printStackTrace();
+			return new Long(-1);
+		}
+	}
+
+
+	private void addDescriptionToInput(Long inDescriptionId, Long inputId) {
+
+		InputDescription inDe = this.readInputDescription(inDescriptionId);
+		Input in = this.readInput(inputId);
+		
+		inDe.setUserInput(in);
+		
+		eM.persist(in);
+		
+		return;
+	}
+
+
+	private InputDescription readInputDescription(Long inDescriptionId) {
+		
+		return eM.find(InputDescription.class, inDescriptionId);
+	}
+
+
+	public Long createGUIDescription(GUIDescription guiDescription, Long inputId) {
+		
+		try {
+			eM.persist(guiDescription);
+							
+			this.addGUIDescriptionToInput(guiDescription.getId(), inputId);
+							
+			return guiDescription.getId();
+		}
+		catch(Exception e) {
+			
+			e.printStackTrace();
+			return new Long(-1);
+		}
+	}
+
+
+
+	private void addGUIDescriptionToInput(Long guiDescriptionId, Long inputId) {
+
+		GUIDescription inGui = this.readGUIDescription(guiDescriptionId);
+		Input in = this.readInput(inputId);
+		
+		inGui.setUserInput(in);
+		
+		eM.persist(in);
+		
+		return;
+	}
+
+
+	private GUIDescription readGUIDescription(Long guiDescriptionId) {
+		
+		return eM.find(GUIDescription.class, guiDescriptionId);
+	}
 
 
 	/**
@@ -678,6 +750,9 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		
 		return isReady;
 	}
+
+
+
 
 
 
