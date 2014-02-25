@@ -132,6 +132,9 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 
 	public List<TestPlan> getSystemTestPlanList() {
 		
+		
+		
+		
 		return testPlanManagerService.getSystemTestPlanList();
 	}
 
@@ -227,4 +230,24 @@ public class TestPlanManagerController extends WebController<TestPlan> {
 		}
 		return result;
 	}
+
+	   private String propertyName1;
+	    private String propertyName2;
+	    
+    public void action() {
+        System.out.println("propertyName1: " + propertyName1);
+        System.out.println("propertyName2: " + propertyName2);
+    }
+
+    // Setters -----------------------------------------------------------------------------------
+
+    public void setPropertyName1(String propertyName1) {
+        this.propertyName1 = propertyName1;
+    }
+
+    public void setPropertyName2(String propertyName2) {
+        this.propertyName2 = propertyName2;
+    }
+	
+	
 }

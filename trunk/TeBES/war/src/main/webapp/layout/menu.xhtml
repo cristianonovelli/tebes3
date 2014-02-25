@@ -6,10 +6,10 @@
 		<h:form>
 			<div class="well sidebar-nav">
 				<ul class="nav nav-list">
-					<li class="nav-header">TEBES</li>
-					<li><a href="session_manager.jsf">Sessioni</a></li>
-					<li><h:commandLink value="Test Plans" action="#{MyTestPlanManagerController.showTestPlanManagerView}"/></li>
-					<li><a href="sut_manager.jsf">System Under Test</a></li>
+					<li class="nav-header">MENU</li>
+					<li><a href="sut_manager.jsf"><h:outputText value="#{msgs.Menu1}"/></a></li>
+					<li><h:commandLink value="#{msgs.Menu2}" action="#{MyTestPlanManagerController.showTestPlanManagerView}"/></li>
+					<li><a href="session_manager.jsf"><h:outputText value="#{msgs.Menu3}"/></a></li>				
 				</ul>
 			</div>
 		</h:form>
