@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<f:view>
+<f:view locale="#{LocalizationController.locale}">
 	<h4>Suppliers</h4>
 	
 		<h:messages infoClass="infoClass" errorClass="errorClass"

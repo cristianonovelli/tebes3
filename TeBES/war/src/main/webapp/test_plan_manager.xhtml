@@ -11,12 +11,12 @@
 
 <ui:composition template="layout/layout.xhtml">
 	<ui:define name="content">
-		<f:view>
+		<f:view locale="#{LocalizationController.locale}">
 			<a4j:form ajaxSubmit="true"
 				reRender="myTestPlanList,systemTestPlanList,scrollValidationDown,scrollValidationDown2,scroll_1_div,scroll_2_div">
 
 				<h3>Test Plan Manager</h3>
-				<h4>Miei Test Plan</h4>
+				<h4><h:outputText value="#{msgs.TestPlan1MyTP}" /></h4>
 				
 				<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true">
 					<h:outputText id="formMessage" value="#{MyTestPlanManagerController.testPlanFormMessage}" rendered="#{MyTestPlanManagerController.showTestPlanFormMessage}" />
@@ -27,50 +27,48 @@
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Nome" />
+							<h:outputText value="#{msgs.TestPlan3Name}" />
 						</f:facet>
 						<h:outputText value="#{testPlan.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Descrizione" />
+							<h:outputText value="#{msgs.TestPlan4Description}" />
 						</f:facet>
 						<h:outputText value="#{TestPlanManagerController.tempDescription}" />
 					</h:column>
-
-
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Data di creazione" />
+							<h:outputText value="#{msgs.TestPlan5CreationDate}" />
 						</f:facet>
 						<h:outputText value="#{testPlan.creationDatetime}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Data ultimo aggiornamento" />
+							<h:outputText value="#{msgs.TestPlan6LastUpdateDate}" />
 						</f:facet>
 						<h:outputText value="#{testPlan.lastUpdateDatetime}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Stato" />
+							<h:outputText value="#{msgs.TestPlan7State}" />
 						</f:facet>
 						<h:outputText value="#{testPlan.state}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Locazione" />
+							<h:outputText value="#{msgs.TestPlan8Location}" />
 						</f:facet>
 						<h:outputText value="#{testPlan.publication}" />
 					</h:column>
 
 					<t:column styleClass="tdVerticalAligned">
 						<f:facet name="header">
-							<h:outputText styleClass="headerText" value="Azioni" />
+							<h:outputText styleClass="headerText" value="#{msgs.TestPlan9Action}" />
 						</f:facet>
 						<a4j:commandLink id="createSessionlink" style="margin-left: 10px;"
 							action="#{MyTestPlanManagerController.openCreateSessionViewFromTestPlan}"> 
@@ -78,63 +76,59 @@
 							<a4j:actionparam name="selectedTestPlanName" value="#{testPlan.id}"
 								assignTo="#{SessionManagerController.selectedTestPlan}" />
 						</a4j:commandLink>
-						<rich:toolTip for="createSessionlink" value="Crea Sessione" />
+						<rich:toolTip for="createSessionlink" value="#{msgs.TestPlan10CreateSession}" />
 					</t:column>
 
 				</t:dataTable>
 				
-				<h4>Test Plan di Sistema</h4>
+				<h4><h:outputText value="#{msgs.TestPlan2SysTP}" /></h4>
 				
 				<t:dataTable id="systemTestPlanList" var="testPlan" styleClass="table table-striped"
 					value="#{TestPlanManagerController.systemTestPlans}"  style="margin-top: 20px;">
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Nome" />
+							<h:outputText value="#{msgs.TestPlan3Name}" />
 						</f:facet>
 						<h:outputText value="#{testPlan.name}" />
 					</h:column>
-
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Descrizione" />
+							<h:outputText value="#{msgs.TestPlan4Description}" />
 						</f:facet>
-
-
-					    
+						<h:outputText value="Description TODO" />
 					</h:column>
-
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Data di creazione" />
+							<h:outputText value="#{msgs.TestPlan5CreationDate}" />
 						</f:facet>
 						<h:outputText value="#{testPlan.creationDatetime}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Data ultimo aggiornamento" />
+							<h:outputText value="#{msgs.TestPlan6LastUpdateDate}" />
 						</f:facet>
 						<h:outputText value="#{testPlan.lastUpdateDatetime}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Stato" />
+							<h:outputText value="#{msgs.TestPlan7State}" />
 						</f:facet>
 						<h:outputText value="#{testPlan.state}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Locazione" />
+							<h:outputText value="#{msgs.TestPlan8Location}" />
 						</f:facet>
 						<h:outputText value="#{testPlan.publication}" />
 					</h:column>
 
 					<t:column styleClass="tdVerticalAligned">
 						<f:facet name="header">
-							<h:outputText styleClass="headerText" value="Azioni" />
+							<h:outputText styleClass="headerText" value="#{msgs.TestPlan9Action}" />
 						</f:facet>
 						<a4j:commandLink id="importlink"
 							action="#{MyTestPlanManagerController.importTestPlan}">
@@ -142,7 +136,7 @@
 							<a4j:actionparam name="selectedItem" value="#{testPlan.id}"
 								assignTo="#{MyTestPlanManagerController.selectedTestPlanId}" />
 						</a4j:commandLink>
-						<rich:toolTip for="importlink" value="Importa" />
+						<rich:toolTip for="importlink" value="#{msgs.Common3Import}" />
 					</t:column>
 
 				</t:dataTable>

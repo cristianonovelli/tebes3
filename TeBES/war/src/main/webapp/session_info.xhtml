@@ -11,7 +11,7 @@
 
 <ui:composition template="layout/layout.xhtml">
 	<ui:define name="content">
-		<f:view>
+		<f:view locale="#{LocalizationController.locale}">
 			<h:form enctype="multipart/form-data">
 				<a4j:poll id="poll" interval="2000" ajaxRendered="true"
 					enabled="#{SessionManagerController.isPollerRunning}"
@@ -20,10 +20,10 @@
 					reRender="buttonPanel,sessionState, backButtonPanel, actionList" />
 				<div class="row" style="margin-left: 10px;">
 					<div class="span5">
-						<h3 style="display: inline-block;">Sessione di Test</h3>
+						<h3 style="display: inline-block;"><h:outputText value="#{msgs.Session21Title}" /></h3>
 						<div
 							style="display: inline-block; float: right; height: 60px; line-height: 60px;">
-							<strong style="margin-right: 10px;">Stato</strong> &nbsp;
+							<strong style="margin-right: 10px;"><h:outputText value="#{msgs.Session3State}" /></strong> &nbsp;
 							<a4j:outputPanel id="sessionState" styleClass="label label-info"
 								style="text-transform:uppercase;">
 								<h:outputText value="#{SessionManagerController.sessionState}" />
@@ -36,18 +36,17 @@
 
 				<div class="row" style="margin-left: 10px;">
 					<div class="span5">
-						<h5 class="headerUnderlined">Dettagli della sessione di test</h5>
+						<h5 class="headerUnderlined"><h:outputText value="#{msgs.Session22Details}" /></h5>
 
 						<table class="table table-striped">
 							<tr>
-								<td><label class="control-label" for="output_test_plan">Test
-										Plan</label></td>
+								<td><label class="control-label" for="output_test_plan"><h:outputText value="#{msgs.Session6TestPlan}" /></label></td>
 								<td><h:outputText id="output_test_plan"
 										value="#{SessionManagerController.viewCurrentSession.testPlan.name}" />
 								</td>
 							</tr>
 							<tr>
-								<td><label class="control-label" for="output_sut">SUT</label>
+								<td><label class="control-label" for="output_sut"><h:outputText value="#{msgs.Session5SUT}" /></label>
 								</td>
 								<td><h:outputText id="output_sut"
 										value="#{SessionManagerController.viewCurrentSession.sut.name}" />
@@ -57,26 +56,26 @@
 					</div>
 					<div class="span4 offset3">
 
-						<h5 class="headerUnderlined">Controlli</h5>
+						<h5 class="headerUnderlined"><h:outputText value="#{msgs.Session24Controls}" /></h5>
 						<div>
 							<a4j:outputPanel id="buttonPanel">
-								<a4j:commandButton value="Esegui" styleClass="btn btn-success"
+								<a4j:commandButton value="#{msgs.Session241Run}" styleClass="btn btn-success"
 									rendered="#{SessionManagerController.canBeExecuted}"
 									action="#{SessionManagerController.execute}"
 									reRender="actionList, fileUploadPanel,UploadFileBox,InputTextBox,MessageOkBox,MessageBox" />
-								<a4j:commandButton value="Esegui" styleClass="btn disabled"
+								<a4j:commandButton value="#{msgs.Session241Run}" styleClass="btn disabled"
 									rendered="#{!SessionManagerController.canBeExecuted}" />
-								<a4j:commandButton value="Sospendi" styleClass="btn btn-danger"
+								<a4j:commandButton value="#{msgs.Session242Suspend}" styleClass="btn btn-danger"
 									rendered="#{SessionManagerController.canBeStopped}"
 									style="margin-left: 10px;"
 									action="#{SessionManagerController.suspend}" />
-								<a4j:commandButton value="Sospendi" styleClass="btn disabled"
+								<a4j:commandButton value="#{msgs.Session242Suspend}" styleClass="btn disabled"
 									rendered="#{!SessionManagerController.canBeStopped}"
 									style="margin-left: 10px;" />
-								<a4j:commandButton value="Riavvia" styleClass="btn btn-primary"
+								<a4j:commandButton value="#{msgs.Session243Resume}" styleClass="btn btn-primary"
 									rendered="#{SessionManagerController.canBeRestarted}"
 									style="margin-left: 10px;" />
-								<a4j:commandButton value="Riavvia" styleClass="btn disabled"
+								<a4j:commandButton value="#{msgs.Session243Resume}" styleClass="btn disabled"
 									rendered="#{!SessionManagerController.canBeRestarted}"
 									style="margin-left: 10px;" />
 							</a4j:outputPanel>
@@ -89,7 +88,7 @@
 
 				<div class="row" style="margin-left: 10px;">
 					<div class="span5">
-						<h5 class="headerUnderlined">Actions</h5>
+						<h5 class="headerUnderlined"><h:outputText value="#{msgs.Session23Actions}" /></h5>
 						<a4j:outputPanel>
 							<t:dataTable id="actionList" var="action"
 								styleClass="table table-striped"
@@ -124,13 +123,13 @@
 									maxFilesQuantity="#{SessionManagerController.uploadsAvailable}"
 									immediateUpload="true" allowFlash="false"
 									acceptedTypes="pdf,png,jpg,txt,html,xml"
-									noDuplicate="true" clearAllControlLabel="Cancella tutto"
-									clearControlLabel="Cancella" doneLabel="Caricato">
+									noDuplicate="true" clearAllControlLabel="#{msgs.Session246DeleteAll}"
+									clearControlLabel="#{msgs.Session247Delete}" doneLabel="#{msgs.Session248Done}">
 									<a4j:support event="onuploadcomplete" />
 									<a4j:support event="onclear" reRender="fileUploadPanel"
 										actionListener="#{SessionManagerController.clearUploadedFile}" />
 								</rich:fileUpload>
-								<a4j:commandButton value="Salva e procedi"
+								<a4j:commandButton value="#{msgs.Session249Save}"
 									styleClass="btn btn-primary"
 									style="margin-top:10px; float:right;"
 									action="#{SessionManagerController.upload}"
@@ -148,7 +147,7 @@
 									<h:inputText id="inputMessage"
 										value="#{SessionManagerController.inputTextMessage}" />
 								</div>
-								<a4j:commandButton styleClass="btn btn-primary" value="OK"
+								<a4j:commandButton styleClass="btn btn-primary" value="#{msgs.Session245Ok}"
 									style="margin-top:10px;"
 									action="#{SessionManagerController.upload}" />
 							</div>
@@ -159,7 +158,7 @@
 								<h6>
 									<h:outputText value="#{SessionManagerController.guiMessage}" />
 								</h6>
-								<a4j:commandButton value="OK" styleClass="btn btn-primary"
+								<a4j:commandButton value="#{msgs.Session245Ok}" styleClass="btn btn-primary"
 									style="margin-top:10px;"
 									action="#{SessionManagerController.execute}" />
 							</div>
@@ -176,7 +175,7 @@
 				<hr />
 
 				<div class="row" style="margin-left: 10px;" >
-					<h5 class="headerUnderlined">Console</h5>
+					<h5 class="headerUnderlined"><h:outputText value="#{msgs.Session25Console}" /></h5>
 				</div>
 				<div class="row sessionConsole">
 					<a4j:outputPanel id="consolePanel" ajaxRendered="true">

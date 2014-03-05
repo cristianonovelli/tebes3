@@ -14,7 +14,7 @@
 		<ui:include src="layout/menu_admin.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<f:view>
+		<f:view locale="#{LocalizationController.locale}">
 			<a4j:form ajaxSubmit="true"
 				reRender="utentiList,scrollValidationDown,scroll_1_div">
 

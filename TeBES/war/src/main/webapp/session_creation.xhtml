@@ -11,10 +11,10 @@
 
 <ui:composition template="layout/layout.xhtml">
 	<ui:define name="content">
-		<f:view>
+		<f:view locale="#{LocalizationController.locale}">
 			<h:form styleClass="form-horizontal">
 				<div class="span6">
-					<h3>Creazione di una nuova sessione</h3>
+					<h3><h:outputText value="#{msgs.Session1Creation}" /></h3>
 					<div class="control-group" style="margin-top:40px;">
 						<label for="menu_test_plan" class="control-label">Test Plan</label>
 						<div class="controls">
@@ -38,8 +38,8 @@
   					<div class="control-group">
 						
 						<div class="controls">
-							<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SessionManagerController.createNewSession}" />
-      						<h:commandLink styleClass="btn" value="Annulla" action="#{SessionManagerController.cancel}" style="margin-left: 10px;"/>
+							<h:commandLink styleClass="btn btn-primary" value="#{msgs.Common1Create}" action="#{SessionManagerController.createNewSession}" />
+      						<h:commandLink styleClass="btn" value="#{msgs.Common2Cancel}" action="#{SessionManagerController.cancel}" style="margin-left: 10px;"/>
 						</div>
 					</div>
 					

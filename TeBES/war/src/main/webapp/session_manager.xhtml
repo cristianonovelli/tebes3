@@ -14,9 +14,9 @@
 		<f:view locale="#{LocalizationController.locale}">
 			<a4j:form ajaxSubmit="true" reRender="utentiList,scrollValidationDown,scroll_1_div">
 			
-				<h3>Session Manager</h3>
-				<h4 style="display: inline-block;"><h:outputText value="#{msgs.SessionsActiveSessions}"/></h4>
-				<h:commandLink styleClass="btn btn-success pull-right" value="Crea Sessione" action="#{SessionManagerController.openCreateSessionView}" />
+				<h3>Test Session Manager</h3>
+				<h4 style="display: inline-block;"><h:outputText value="#{msgs.Session2List}"/></h4>
+				<h:commandLink styleClass="btn btn-success pull-right" value="#{msgs.Session8CreateButton}" action="#{SessionManagerController.openCreateSessionView}" />
 				
 				<t:dataTable id="activeSessionList" var="testSession" styleClass="table table-striped"
 					value="#{SessionManagerController.dataModel}" preserveDataModel="false"
@@ -24,33 +24,33 @@
 
 					<t:column style="text-transform: uppercase;font-weight: bold;">
 						<f:facet name="header">
-							<h:outputText value="Stato" />
+							<h:outputText value="#{msgs.Session3State}" />
 						</f:facet>
 						<h:outputText value="#{testSession.state}" />
 					</t:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText styleClass="headerText" value="Esegui" />
+							<h:outputText styleClass="headerText" value="#{msgs.Session4Exe}" />
 						</f:facet>
 						<a4j:commandLink id="openSessionlink" style="margin-left: 10px;" action="#{SessionManagerController.viewSession}"> 
 							<i class="icon-search icon-2x"></i>
 							<a4j:actionparam name="selectedTestPlanName" value="#{testSession.id}"
 								assignTo="#{SessionManagerController.selectedSession}" />
 						</a4j:commandLink>
-						<rich:toolTip for="openSessionlink" value="Esegui Sessione" />
+						<rich:toolTip for="openSessionlink" value="#{msgs.Session4Exe2}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="SUT" />
+							<h:outputText value="#{msgs.Session5SUT}" />
 						</f:facet>
 						<h:outputText value="#{testSession.sut.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Test Plan" />
+							<h:outputText value="#{msgs.Session6TestPlan}" />
 						</f:facet>
 						 
 						<a href="#{testSession.testPlan.publication}" target="_blank"><h:outputText value="#{testSession.testPlan.name}" /></a> 
@@ -59,7 +59,7 @@
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Report" />
+							<h:outputText value="#{msgs.Session7Report}" />
 						</f:facet>
 						 
 						<a href="#{testSession.report.publication}" target="_blank"><h:outputText value="#{testSession.report.name}" /></a> 
@@ -68,14 +68,14 @@
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Data di creazione" />
+							<h:outputText value="#{msgs.Session15CreationDate}" />
 						</f:facet>
 						<h:outputText value="#{testSession.creationDateTime}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Data ultima modifica" />
+							<h:outputText value="#{msgs.Session16LastUpdateDate}" />
 						</f:facet>
 						<h:outputText value="#{testSession.lastUpdateDateTime}" />
 					</h:column>

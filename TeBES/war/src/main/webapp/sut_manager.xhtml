@@ -11,12 +11,12 @@
 
 <ui:composition template="layout/layout.xhtml">
 	<ui:define name="content">
-		<f:view>
+		<f:view locale="#{LocalizationController.locale}">
 			<a4j:form ajaxSubmit="true" reRender="utentiList,scrollValidationDown,scroll_1_div">
 
 				<h3>SUT Manager</h3>
-				<h4 style="display: inline-block;">Miei SUT</h4>
-				<h:commandLink styleClass="btn btn-success pull-right" value="Crea SUT" action="#{SUTManagerController.openCreateSUTView}" />
+				<h4 style="display: inline-block;"><h:outputText value="#{msgs.SUT1Title}" /></h4>
+				<h:commandLink styleClass="btn btn-success pull-right" value="#{msgs.SUT6Create}" action="#{SUTManagerController.openCreateSUTView}" />
 
 				<t:dataTable id="sutList" var="sut" styleClass="table table-striped"
 					value="#{SUTManagerController.dataModel}" preserveDataModel="false"
@@ -24,28 +24,28 @@
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Nome" />
+							<h:outputText value="#{msgs.SUT2Name}" />
 						</f:facet>
 						<h:outputText value="#{sut.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Descrizione" />
+							<h:outputText value="#{msgs.SUT3Description}" />
 						</f:facet>
 						<h:outputText value="#{sut.description}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Tipo" />
+							<h:outputText value="#{msgs.SUT4Type}" />
 						</f:facet>
 						<h:outputText value="#{sut.type}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Interazione" />
+							<h:outputText value="#{msgs.SUT5Interaction}" />
 						</f:facet>
 						<h:outputText value="#{sut.interaction.type}" />
 					</h:column>
