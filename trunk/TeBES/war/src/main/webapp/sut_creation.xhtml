@@ -11,24 +11,24 @@
 
 <ui:composition template="layout/layout.xhtml">
 	<ui:define name="content">
-		<f:view>
+		<f:view locale="#{LocalizationController.locale}">
 			<h:form styleClass="form-horizontal">
 				<div class="span6">
-					<h3>Crea SUT</h3>
+					<h3><h:outputText value="#{msgs.SUT6Create}" /></h3>
 					<div class="control-group">
-    					<label class="control-label" for="input_name">Nome</label>
+    					<label class="control-label" for="input_name"><h:outputText value="#{msgs.SUT2Name}" /></label>
 						<div class="controls">
 							<h:inputText id="input_name" value="#{SUTManagerController.sut.name}" />
 						</div>
   					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_description">Descrizione</label>
+    					<label class="control-label" for="input_description"><h:outputText value="#{msgs.SUT3Description}" /></label>
 						<div class="controls">
 							<h:inputText id="input_description" value="#{SUTManagerController.sut.description}" />
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="menu_type" class="control-label">Tipo</label>
+						<label for="menu_type" class="control-label"><h:outputText value="#{msgs.SUT4Type}" /></label>
 						<div class="controls">
 							<h:selectOneMenu id="menu_type" value="#{SUTManagerController.selectedType}">
 								<f:selectItems value="#{SUTManagerController.typeSelection}" />
@@ -38,7 +38,7 @@
 					</div>
 					<div class="control-group">
 						<a4j:outputPanel ajaxRendered="true" id="interactionPanel">
-							<h:outputText for="menu_interaction" styleClass="control-label" rendered="#{SUTManagerController.showInteractionMenu}" value="Interazione" style="font-size:14px;"/>
+							<h:outputText for="menu_interaction" styleClass="control-label" rendered="#{SUTManagerController.showInteractionMenu}" value="#{msgs.SUT5Interaction}" style="font-size:14px;"/>
 							<div class="controls">
 								<h:selectOneMenu id="menu_interaction" value="#{SUTManagerController.selectedInteraction}" rendered="#{SUTManagerController.showInteractionMenu}">
 									<f:selectItems value="#{SUTManagerController.interactionSelection}" />
@@ -60,8 +60,8 @@
 	  				<div class="control-group">
 						
 						<div class="controls">
-							<h:commandLink styleClass="btn btn-primary" value="Crea" action="#{SUTManagerController.createNewSUT}" />
-	      					<h:commandLink styleClass="btn" value="Annulla" action="#{SUTManagerController.cancel}" style="margin-left: 10px;"/>
+							<h:commandLink styleClass="btn btn-primary" value="#{msgs.Common1Create}" action="#{SUTManagerController.createNewSUT}" />
+	      					<h:commandLink styleClass="btn" value="#{msgs.Common2Cancel}" action="#{SUTManagerController.cancel}" style="margin-left: 10px;"/>
 						</div>
 					</div>
 					
