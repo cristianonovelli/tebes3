@@ -6,7 +6,10 @@ import javax.faces.context.FacesContext;
 
 public class LocalizationController {
 
-	private static String locale = "en";
+	public static final String ENG_LOCALIZATION = "en";
+	public static final String ITA_LOCALIZATION = "it";
+	
+	private static String locale = ENG_LOCALIZATION;
 
 	public void setLocale(String newLocale) {
 		LocalizationController.locale = newLocale;
@@ -19,14 +22,14 @@ public class LocalizationController {
 	public synchronized String italianLocalization() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getViewRoot().setLocale(Locale.ITALIAN);
-		this.setLocale("it");
+		this.setLocale(ITA_LOCALIZATION);
 		return "changed";
 	}
 
 	public synchronized String englishLocalization() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getViewRoot().setLocale(Locale.ENGLISH);
-		this.setLocale("en");
+		this.setLocale(ENG_LOCALIZATION);
 		return "changed";
 	}
 

@@ -3,13 +3,14 @@ package it.enea.xlab.tebes.controllers.sut;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.SUTConstants;
 import it.enea.xlab.tebes.controllers.common.WebController;
+import it.enea.xlab.tebes.controllers.localization.LocalizationController;
 import it.enea.xlab.tebes.dao.NestedCriterion;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
-import it.enea.xlab.tebes.utils.Messages;
+import it.enea.xlab.tebes.utils.FormMessages;
 
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
@@ -29,8 +30,10 @@ public class SUTManagerController extends WebController<SUT> {
 
 	public static final String CONTROLLER_NAME = "SUTManagerController";
 	
-	public static final String SELECT_TYPE_DEFAULT = "Seleziona il tipo";
-	public static final String SELECT_INTERACTION_DEFAULT = "Seleziona l'interazione";
+	public static final String SELECT_TYPE_DEFAULT = "Select";
+	public static final String SELECT_INTERACTION_DEFAULT = "Select";
+	
+	LocalizationController lc = new LocalizationController();
 	
 	private SUTManagerRemote sutManagerBean;
 	private UserManagerRemote userManagerBean;
@@ -45,6 +48,13 @@ public class SUTManagerController extends WebController<SUT> {
 	private String endpoint;
 	private boolean showEndpointInput = false;
 	private boolean showInteractionMenu = false;
+	
+	private boolean newItemFormMessageRendered = false;
+	private Long itemToDelete;
+	private String newItemFormMessage;
+	private boolean isSUTEditMode = false;
+	
+	private SUT selectedSUT;
 	
 	public SUTManagerController() throws NamingException {
 		sutManagerBean = JNDIServices.getSUTManagerService();
@@ -126,13 +136,15 @@ public class SUTManagerController extends WebController<SUT> {
 				return "";
 
 		} else {
-			this.sutFormMessage = Messages.FORM_ERROR_SUT_CREATION;
+			this.sutFormMessage = FormMessages.getErrorSutCreation();
 			this.showSutFormMessage = true;
 			return "";
 		}
 	}
 	
+	
 	public String cancel() {
+		
 		this.resetFields();
 		this.updateDataModel();
 		return "back";
@@ -177,15 +189,18 @@ public class SUTManagerController extends WebController<SUT> {
 			if(!this.selectedInteraction.equals(SUTConstants.INTERACTION_WEBSITE)) {
 				if(this.endpoint == null || this.endpoint.equals("")) {
 					
-					this.sutFormMessage = Messages.FORM_ERROR_USER_NOT_COMPILED;
+					this.sutFormMessage = FormMessages.getErrorUserNotCompiled();
+
 					this.showSutFormMessage = true;
 					return false;
 				}
 			}
 			
 			return true;
+			
 		} else {
-			this.sutFormMessage = Messages.FORM_ERROR_USER_NOT_COMPILED;
+			
+			this.sutFormMessage = FormMessages.getErrorUserNotCompiled();
 			this.showSutFormMessage = true;
 			return false;
 		}
@@ -282,4 +297,57 @@ public class SUTManagerController extends WebController<SUT> {
 		return sutManagerBean.getSUTTypeList();
 	}
 
+	
+	
+	public String viewItemDetails() {
+		this.selectedSUT = (SUT) dataModel.getRowData();
+		this.isSUTEditMode = true;
+		this.sutFormMessage = "";
+		this.showSutFormMessage = false;
+		return "toItemDetails";
+	}
+	
+	public boolean getIsSUTEditMode() {
+		return isSUTEditMode;
+	}
+	
+	
+	public Long getItemToDelete() {
+		return itemToDelete;
+	}
+	
+	public void setItemToDelete(Long itemToDelete) {
+		this.itemToDelete = itemToDelete;
+	}
+	
+	public String deleteItem() {
+		
+		try {
+			
+			sutManagerBean.deleteSUT(this.getItemToDelete());
+		
+		} catch (Exception e) {
+
+			setNewItemFormMessage(FormMessages.getErrorDeleteSUT());						
+			setNewItemFormMessageRendered(true);
+		}
+		updateDataModel();
+		return "item_deleted";
+	}
+	
+	public boolean isNewItemFormMessageRendered() {
+		return newItemFormMessageRendered;
+	}
+
+	public void setNewItemFormMessageRendered(boolean newItemFormMessageRendered) {
+		this.newItemFormMessageRendered = newItemFormMessageRendered;
+	}
+	
+	public String getNewItemFormMessage() {
+		return newItemFormMessage;
+	}
+
+	public void setNewItemFormMessage(String newItemFormMessage) {
+		this.newItemFormMessage = newItemFormMessage;
+	}
 }

@@ -1,12 +1,17 @@
 package it.enea.xlab.tebes.controllers.users;
 
 import it.enea.xlab.tebes.common.JNDIServices;
+import it.enea.xlab.tebes.common.SUTConstants;
 import it.enea.xlab.tebes.controllers.common.WebController;
+import it.enea.xlab.tebes.controllers.localization.LocalizationController;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
+import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
-import it.enea.xlab.tebes.utils.Messages;
+import it.enea.xlab.tebes.utils.FormMessages;
 import it.enea.xlab.tebes.utils.UserUtils;
 
 import java.rmi.NotBoundException;
@@ -26,7 +31,10 @@ public class UserAdminController extends WebController<User> {
     	//private static Logger logger = Logger.getLogger(UserAdminController.class);
         
         private UserManagerRemote userManagerService;
-
+        private SUTManagerRemote sutManagerService;
+        
+        LocalizationController lc = new LocalizationController();
+        
     	private Long itemToDelete;
     	private User selectedUser;
     	
@@ -46,10 +54,12 @@ public class UserAdminController extends WebController<User> {
     	
 		public UserAdminController() throws NamingException {
         	userManagerService = JNDIServices.getUserManagerService();
+        	sutManagerService = JNDIServices.getSUTManagerService();
         }
 
         public void initContext() throws NotBoundException, NamingException {
-                userManagerService = JNDIServices.getUserManagerService();                 
+                userManagerService = JNDIServices.getUserManagerService();        
+                sutManagerService = JNDIServices.getSUTManagerService();
         }
         
         
@@ -70,6 +80,12 @@ public class UserAdminController extends WebController<User> {
                 if (userId > 0) {
                         user = this.readUser(userId);
                         userManagerService.setUserRole(user, role);
+                        
+        				// Create default SUT
+        				SUTInteraction interactionWebSite = new SUTInteraction(SUTConstants.INTERACTION_WEBSITE);
+        				SUT defaultSUT = new SUT("DefaultSUT", SUTConstants.SUT_TYPE1_DOCUMENT, interactionWebSite, "Default SUT Document-WebSite for User " + user.getSurname());				
+        				user = this.userManagerService.readUser(userId);					
+        				sutManagerService.createSUT(defaultSUT, user);
                 }
                 return userId;
         }       
@@ -191,10 +207,14 @@ public class UserAdminController extends WebController<User> {
 		}
 		
 		public String deleteItem() {
+			
 			try {
-			userManagerService.deleteUser(this.getItemToDelete());
+				
+				userManagerService.deleteUser(this.getItemToDelete());
+			
 			} catch (Exception e) {
-				setNewItemFormMessage(Messages.FORM_ERROR_DELETE_USER);
+
+				setNewItemFormMessage(FormMessages.getErrorDeleteUser());						
 				setNewItemFormMessageRendered(true);
 			}
 			updateDataModel();
@@ -248,14 +268,25 @@ public class UserAdminController extends WebController<User> {
 					if(group != null)
 						user.setGroup(group);
 				}
-
+				
+				// Create User
 				Long result = this.userManagerService.createUser(user);
-				if(result == -1) {
-					this.userFormMessage = Messages.FORM_ERROR_USER_ALREADY_EXISTING;
+				
+				if (result > 0) {
+				
+					// Create default SUT
+					SUTInteraction interactionWebSite = new SUTInteraction(SUTConstants.INTERACTION_WEBSITE);
+					SUT defaultSUT = new SUT("DefaultSUT", SUTConstants.SUT_TYPE1_DOCUMENT, interactionWebSite, "Default SUT Document-WebSite for User " + user.getSurname());				
+					user = this.userManagerService.readUser(result);					
+					sutManagerService.createSUT(defaultSUT, user);
+					
+				}
+				else if(result == -1) {
+					this.userFormMessage = FormMessages.getErrorUserAlreadyExisting();
 					this.showUserFormMessage = true;
 					return "";
 				} else if(result == -2) {
-					this.userFormMessage = Messages.FORM_ERROR_USER_CREATION;
+					this.userFormMessage = FormMessages.getErrorUserCreation();
 					this.showUserFormMessage = true;
 					return "";
 				}
@@ -279,7 +310,7 @@ public class UserAdminController extends WebController<User> {
 				User user = this.userManagerService.readUser(this.selectedUser.getId());
 				
 				if(user == null) {
-					this.userFormMessage = Messages.FORM_USER_NOT_EXISTING;
+					this.userFormMessage = FormMessages.getUserNotExisting();
 					this.showUserFormMessage = true;
 					return "";
 				}
@@ -302,7 +333,7 @@ public class UserAdminController extends WebController<User> {
 				}
 
 				if(!this.userManagerService.updateUser(user)) {
-					this.userFormMessage = Messages.FORM_ERROR_USER_UPDATE;
+					this.userFormMessage = FormMessages.getErrorUserUpdate();
 					this.showUserFormMessage = true;
 					return "";
 				}

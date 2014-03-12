@@ -38,6 +38,20 @@
 						</f:facet>
 						<h:outputText value="#{TestPlanManagerController.tempDescription}" />
 					</h:column>
+					
+					<t:column styleClass="tdVerticalAligned">
+						<f:facet name="header">
+							<h:outputText styleClass="headerText" value="#{msgs.TestPlan9Action}" />
+						</f:facet>
+						<a4j:commandLink id="createSessionlink" style="margin-left: 10px;"
+							action="#{MyTestPlanManagerController.openCreateSessionViewFromTestPlan}"> 
+							<i class="icon-play-circle icon-2x"></i>
+							<a4j:actionparam name="selectedTestPlanName" value="#{testPlan.id}"
+								assignTo="#{SessionManagerController.selectedTestPlan}" />
+						</a4j:commandLink>
+						<rich:toolTip for="createSessionlink" value="#{msgs.TestPlan10CreateSession}" />
+					</t:column>
+					
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="#{msgs.TestPlan5CreationDate}" />
@@ -63,21 +77,10 @@
 						<f:facet name="header">
 							<h:outputText value="#{msgs.TestPlan8Location}" />
 						</f:facet>
-						<h:outputText value="#{testPlan.publication}" />
+						<a href="#{testPlan.publication}" target="_blank"><h:outputText value="#{msgs.TestPlan82xml}" /></a>
+						
+						
 					</h:column>
-
-					<t:column styleClass="tdVerticalAligned">
-						<f:facet name="header">
-							<h:outputText styleClass="headerText" value="#{msgs.TestPlan9Action}" />
-						</f:facet>
-						<a4j:commandLink id="createSessionlink" style="margin-left: 10px;"
-							action="#{MyTestPlanManagerController.openCreateSessionViewFromTestPlan}"> 
-							<i class="icon-play-circle icon-2x"></i>
-							<a4j:actionparam name="selectedTestPlanName" value="#{testPlan.id}"
-								assignTo="#{SessionManagerController.selectedTestPlan}" />
-						</a4j:commandLink>
-						<rich:toolTip for="createSessionlink" value="#{msgs.TestPlan10CreateSession}" />
-					</t:column>
 
 				</t:dataTable>
 				
@@ -98,6 +101,20 @@
 						</f:facet>
 						<h:outputText value="Description TODO" />
 					</h:column>
+					
+					<t:column styleClass="tdVerticalAligned">
+						<f:facet name="header">
+							<h:outputText styleClass="headerText" value="#{msgs.TestPlan9Action}" />
+						</f:facet>
+						<a4j:commandLink id="importlink"
+							action="#{MyTestPlanManagerController.importTestPlan}">
+							<i class="icon-upload icon-2x"></i>
+							<a4j:actionparam name="selectedItem" value="#{testPlan.id}"
+								assignTo="#{MyTestPlanManagerController.selectedTestPlanId}" />
+						</a4j:commandLink>
+						<rich:toolTip for="importlink" value="#{msgs.Common3Import}" />
+					</t:column>
+					
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="#{msgs.TestPlan5CreationDate}" />
@@ -123,21 +140,8 @@
 						<f:facet name="header">
 							<h:outputText value="#{msgs.TestPlan8Location}" />
 						</f:facet>
-						<h:outputText value="#{testPlan.publication}" />
+						<a href="#{testPlan.publication}" target="_blank"><h:outputText value="#{msgs.TestPlan82xml}" /></a>
 					</h:column>
-
-					<t:column styleClass="tdVerticalAligned">
-						<f:facet name="header">
-							<h:outputText styleClass="headerText" value="#{msgs.TestPlan9Action}" />
-						</f:facet>
-						<a4j:commandLink id="importlink"
-							action="#{MyTestPlanManagerController.importTestPlan}">
-							<i class="icon-upload icon-2x"></i>
-							<a4j:actionparam name="selectedItem" value="#{testPlan.id}"
-								assignTo="#{MyTestPlanManagerController.selectedTestPlanId}" />
-						</a4j:commandLink>
-						<rich:toolTip for="importlink" value="#{msgs.Common3Import}" />
-					</t:column>
 
 				</t:dataTable>
 

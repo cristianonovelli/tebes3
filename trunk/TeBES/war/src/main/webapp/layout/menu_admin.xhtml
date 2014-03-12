@@ -1,6 +1,13 @@
-<div class="well sidebar-nav">
-	<ul class="nav nav-list">
-		<li class="nav-header">TEBES</li>
-		<li><a href="admin_manage_users.jsf">Gestione Utenti</a></li>
-	</ul>
-</div>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+	<f:view>
+		<div class="well sidebar-nav">
+			<ul class="nav nav-list">
+				<li class="nav-header">TEBES</li>
+				<li><a href="admin_manage_users.jsf"><h:outputText value="#{msgs.Admin1Title}"/></a></li>
+			</ul>
+		</div>
+	</f:view>
+</ui:composition>

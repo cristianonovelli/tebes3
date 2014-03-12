@@ -303,7 +303,7 @@ CREATE TABLE `sutinteraction` (
   `sut_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK62ED4880C8782BD1` (`sut_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -312,7 +312,7 @@ CREATE TABLE `sutinteraction` (
 
 LOCK TABLES `sutinteraction` WRITE;
 /*!40000 ALTER TABLE `sutinteraction` DISABLE KEYS */;
-INSERT INTO `sutinteraction` VALUES (1,'website',NULL,1),(2,'email',NULL,2),(3,'webservice-client',NULL,3),(4,'webservice-server',NULL,4),(5,'email',NULL,5),(6,'webservice-client',NULL,6),(7,'webservice-server',NULL,7),(8,'website',NULL,8),(9,'email',NULL,9),(10,'webservice-client',NULL,10),(11,'webservice-server',NULL,11),(13,'website',NULL,13);
+INSERT INTO `sutinteraction` VALUES (1,'website',NULL,1),(2,'email',NULL,2),(3,'webservice-client',NULL,3),(4,'webservice-server',NULL,4),(5,'email',NULL,5),(6,'webservice-client',NULL,6),(7,'webservice-server',NULL,7),(8,'website',NULL,8),(9,'email',NULL,9),(10,'webservice-client',NULL,10),(11,'webservice-server',NULL,11);
 /*!40000 ALTER TABLE `sutinteraction` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -18,7 +18,7 @@
 			<a4j:form ajaxSubmit="true"
 				reRender="utentiList,scrollValidationDown,scroll_1_div">
 
-				<h3 style="display:inline-block;">Gestione Utenti</h3>
+				<h3 style="display:inline-block;"><h:outputText value="#{msgs.Admin1Title}"/></h3>
 				<h:commandLink styleClass="btn btn-success pull-right" value="Crea Utente" action="#{UserAdminController.createItem}" />
 
 				<t:dataTable id="utentiList" var="utente" styleClass="table table-striped"
@@ -27,53 +27,53 @@
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Nome" />
+							<h:outputText value="#{msgs.Common23Name}" />
 						</f:facet>
 						<h:outputText value="#{utente.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Cognome" />
+							<h:outputText value="#{msgs.Common24Surname}" />
 						</f:facet>
 						<h:outputText value="#{utente.surname}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="E-mail" />
+							<h:outputText value="e-mail" />
 						</f:facet>
 						<h:outputText value="#{utente.eMail}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Ruolo" />
+							<h:outputText value="#{msgs.Admin3Role}" />
 						</f:facet>
 						<h:outputText value="#{utente.role.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="Gruppo" />
+							<h:outputText value="#{msgs.Admin4Group}" />
 						</f:facet>
 						<h:outputText value="#{utente.group.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText styleClass="headerText" value="Azioni" />
+							<h:outputText styleClass="headerText" value="#{msgs.Admin5Actions}" />
 						</f:facet>
-						<a4j:commandLink ajaxSingle="true" id="trashlink" oncomplete="#{rich:component('deletePanel')}.show()">
-							<i class="icon-trash icon-2x"></i>
-							<a4j:actionparam name="idItemToDelete" value="#{utente.id}" assignTo="#{UserAdminController.itemToDelete}" />
-						</a4j:commandLink>
-						<rich:toolTip for="trashlink" value="Cancella" />
 						<a4j:commandLink ajaxSingle="true" id="viewlink" style="margin-left: 10px;"
 							action="#{UserAdminController.viewItemDetails}">
 							<i class="icon-folder-open icon-2x"></i>
 						</a4j:commandLink>
-						<rich:toolTip for="viewlink" value="Visualizza dettagli" />
+						<rich:toolTip for="viewlink" value="#{msgs.Admin6ActionDetails}" />
+						<a4j:commandLink ajaxSingle="true" id="trashlink" oncomplete="#{rich:component('deletePanel')}.show()">
+							<i class="icon-trash icon-2x"></i>
+							<a4j:actionparam name="idItemToDelete" value="#{utente.id}" assignTo="#{UserAdminController.itemToDelete}" />
+						</a4j:commandLink>
+						<rich:toolTip for="trashlink" value="#{msgs.Common2Cancel}" />
 					</h:column>
 
 				</t:dataTable>
@@ -106,7 +106,7 @@
 
 				<rich:modalPanel id="deletePanel" autosized="true" width="250">
 					<f:facet name="header">
-						<h:outputText value="Eliminare questo elemento?" />
+						<h:outputText value="#{msgs.Admin7DeleteQuestion}" />
 					</f:facet>
 					<br />
 					<table width="100%">
@@ -116,13 +116,13 @@
 									<i class="icon-warning-sign icon-3x red"></i>
 								</td>
 								<td align="center" width="40%">
-									<a4j:commandLink value="Elimina" styleClass="inputBtn inputBtn-blue"
+									<a4j:commandLink value="#{msgs.Admin71Delete}" styleClass="inputBtn inputBtn-blue"
 										oncomplete="#{rich:component('deletePanel')}.hide();return true;"
 										action="#{UserAdminController.deleteItem}" />
 								</td>
 								<td align="center" width="40%">
 									<a4j:commandLink
-										value="Annulla" styleClass="inputBtn inputBtn-grey"
+										value="#{msgs.Admin72Cancel}" styleClass="inputBtn inputBtn-grey"
 										onclick="#{rich:component('deletePanel')}.hide();return false;" />
 								</td>
 							</tr>

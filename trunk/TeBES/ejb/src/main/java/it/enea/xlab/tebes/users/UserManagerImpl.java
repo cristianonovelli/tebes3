@@ -65,7 +65,10 @@ public class UserManagerImpl implements UserManagerRemote {
 				if (userId.intValue() > 0) {
 					
 					logger.info("Created User with id: " + userId);
+					
+					// CREATE User File System
 					userId = this.createUserFileSystem(userId);
+					
 				}
 				return userId;
 			}

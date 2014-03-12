@@ -17,7 +17,7 @@ import it.enea.xlab.tebes.file.FileManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
-import it.enea.xlab.tebes.utils.Messages;
+import it.enea.xlab.tebes.utils.FormMessages;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -157,8 +157,6 @@ public class SessionManagerController extends WebController<Session> {
 		Long sessionId = createSession(getCurrentUser().getId(), selectedSUT, selectedTestPlan);
 		
 		
-		
-		
 		if (sessionId.intValue() > 0) {
 			this.updateDataModel();
 			return "session_creation_success";
@@ -181,10 +179,10 @@ public class SessionManagerController extends WebController<Session> {
 			 */
 			this.showSessionFormMessage = true;
 			
-			if (sessionId.intValue() == -2)
-				this.sessionFormMessage = "There isn't match between TestPlan and SUT. Specify a different TestPlan-SUT combination OR define a new TestPlan or SUT before to create a new Sesion Test.";
+			if (sessionId.intValue() == -2) 
+				this.sessionFormMessage = FormMessages.getErrorNomatch();				
 			else
-				this.sessionFormMessage = Messages.FORM_SESSION_CREATION_FAIL;
+				this.sessionFormMessage = FormMessages.getSessionCreationFail();
 			
 			return "session_creation_fail";
 		}

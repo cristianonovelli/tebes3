@@ -50,6 +50,28 @@
 						<h:outputText value="#{sut.interaction.type}" />
 					</h:column>
 
+					<h:column>
+						<f:facet name="header">
+							<h:outputText styleClass="headerText" value="#{msgs.SUT8Edit}" />
+						</f:facet>
+						<a4j:commandLink ajaxSingle="true" id="viewlink" style="margin-left: 10px;"
+							action="#{SUTController.viewItemDetails}">
+							<i class="icon-folder-open icon-2x"></i>
+						</a4j:commandLink>
+						<rich:toolTip for="viewlink" value="#{msgs.SUT9EditDetails}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="#{msgs.SUT7Delete}" />
+						</f:facet>
+						<a4j:commandLink ajaxSingle="true" id="trashlink" oncomplete="#{rich:component('deletePanel')}.show()">
+							<i class="icon-trash icon-2x"></i>
+							<a4j:actionparam name="idItemToDelete" value="#{sut.id}" assignTo="#{SUTController.itemToDelete}" />
+						</a4j:commandLink>
+						<rich:toolTip for="trashlink" value="#{msgs.Common2Cancel}" />
+					</h:column>
+
 				</t:dataTable>
 
 				<t:div id="scroll_1_div">
