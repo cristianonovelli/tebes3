@@ -17,39 +17,39 @@
 		<f:view locale="#{LocalizationController.locale}">
 			<h:form class="form-horizontal" styleClass="form-horizontal">
 				<div class="span4">
-					<h3>Dettaglio Utente</h3>
+					<h3><h:outputText value="#{msgs.Admin8Detail}"/></h3>
 					<div class="control-group" style="margin-top:20px;">
-    					<label class="control-label" for="input_username">Nome *</label>
+    					<label class="control-label" for="input_username"><h:outputText value="#{msgs.Common23Name}"/> *</label>
 						<div class="controls">
 							<h:inputText id="input_username" value="#{UserAdminController.selectedUser.name}" />
 						</div>
   					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_surname">Cognome *</label>
+    					<label class="control-label" for="input_surname"><h:outputText value="#{msgs.Common24Surname}"/> *</label>
 						<div class="controls">
 							<h:inputText id="input_surname" value="#{UserAdminController.selectedUser.surname}" />
 						</div>
 					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_email">E-mail *</label>
+    					<label class="control-label" for="input_email"><h:outputText value="#{msgs.Common25email}"/> *</label>
 						<div class="controls">
 							<h:inputText id="input_email" value="#{UserAdminController.selectedUser.eMail}" />
 						</div>
 					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_password">Password *</label>
+    					<label class="control-label" for="input_password"><h:outputText value="#{msgs.Common26Password}"/> *</label>
 						<div class="controls">
 							<h:inputSecret id="input_password" redisplay="true" value="#{UserAdminController.selectedUser.password}" />
 						</div>
 					</div>
 					<div class="control-group">
-    					<label class="control-label" for="input_password_confirm">Conferma password *</label>
+    					<label class="control-label" for="input_password_confirm"><h:outputText value="#{msgs.Common27ConfirmPassword}"/> *</label>
 						<div class="controls">
 							<h:inputSecret id="input_password_confirm" redisplay="true" value="#{UserAdminController.currentPasswordConfirm}" />
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="menu_role" class="control-label">Ruolo *</label>
+						<label for="menu_role" class="control-label"><h:outputText value="#{msgs.Common28Role}"/> *</label>
 						<div class="controls">
 							<h:selectOneMenu id="menu_role" value="#{UserAdminController.selectedRole}">
 								<f:selectItems value="#{UserAdminController.roleSelect}" />
@@ -57,7 +57,7 @@
 						</div>
 					</div>
 					<div class="control-group">
-						<label for="menu_group" class="control-label">Gruppo *</label>
+						<label for="menu_group" class="control-label"><h:outputText value="#{msgs.Common29Group}"/> *</label>
 						<div class="controls">
 							<h:selectOneMenu id="menu_group" value="#{UserAdminController.selectedGroup}">
 								<f:selectItems value="#{UserAdminController.groupSelect}" />
@@ -68,17 +68,17 @@
 					<div class="control-group">
 						
 						<div class="controls">
-							<h:commandLink rendered="#{UserAdminController.isUserEditMode}" styleClass="btn btn-primary" value="Salva"
+							<h:commandLink rendered="#{UserAdminController.isUserEditMode}" styleClass="btn btn-primary" value="#{msgs.Common4Save}"
       						action="#{UserAdminController.updateUser}"/>
-	      					<h:commandLink rendered="#{!UserAdminController.isUserEditMode}" styleClass="btn btn-primary" value="Crea"
+	      					<h:commandLink rendered="#{!UserAdminController.isUserEditMode}" styleClass="btn btn-primary" value="#{msgs.Common1Create}"
 	      						action="#{UserAdminController.createNewUser}" />
-	      					<h:commandLink styleClass="btn" value="Annulla" action="#{UserAdminController.cancel}" style="margin-left: 10px;"/>
+	      					<h:commandLink styleClass="btn" value="#{msgs.Common2Cancel}" action="#{UserAdminController.cancel}" style="margin-left: 10px;"/>
 						</div>
 					</div>
 					
 					<div class="control-group">
 						
-						<div class="controls" style="width: 230px;">
+						<div class="controls" style="width: 240px;">
 							<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true" rendered="#{UserAdminController.showUserFormMessage}">
 		      					<div class="alert alert-error">
 									<h:outputText value="#{UserAdminController.userFormMessage}" rendered="#{UserAdminController.showUserFormMessage}" />		

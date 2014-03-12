@@ -1,4 +1,4 @@
-package it.enea.xlab.tebes.users;
+/*package it.enea.xlab.tebes.users;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class UserProfileController {
 	}
 
 	
-	/**
+	*//**
 	 * Sign Up (CREATE) User
 	 * When a user signes up, the system assign him the standard role with level 1
 	 * 
@@ -45,7 +45,7 @@ public class UserProfileController {
 	 * 			-1 if already a User with that email exists
 	 * 			-2 if an exception occurs
 	 * 			-3 if the Role isn't standard
-	 */
+	 *//*
 	public Long registration(User user, Role role) {
 		
 		Long userId;
@@ -104,3 +104,4 @@ public class UserProfileController {
 }
 
 
+*/

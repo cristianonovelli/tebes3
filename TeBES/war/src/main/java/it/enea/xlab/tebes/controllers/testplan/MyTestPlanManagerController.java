@@ -10,7 +10,7 @@ import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
-import it.enea.xlab.tebes.utils.Messages;
+import it.enea.xlab.tebes.utils.FormMessages;
 
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
@@ -216,11 +216,11 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 		if(selectedTestPlan != null && currentUser != null) {
 			this.cloneTestPlan(selectedTestPlan, currentUser.getId());
 			this.updateDataModel();
-			this.testPlanFormMessage = Messages.FORM_TEST_PLAN_IMPORT_SUCCESS;
+			this.testPlanFormMessage = FormMessages.getTestPlanImportSuccess();					
 			this.showTestPlanFormMessage = true;
 			
 		} else {
-			this.testPlanFormMessage = Messages.FORM_TEST_PLAN_IMPORT_FAIL;
+			this.testPlanFormMessage = FormMessages.getTestPlanImportFail();
 			this.showTestPlanFormMessage = true;
 		}
 		return "";

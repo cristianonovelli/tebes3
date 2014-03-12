@@ -14,15 +14,13 @@
 
 			<div class="" id="loginModal">
 				<div class="modal-header">
-					<h3>Hai un account?</h3>
+					<h3><h:outputText value="#{msgs.Login1Title}"/></h3>
 				</div>
 				<div class="well">
 
-
-
 					<ul class="nav nav-tabs" id="loginTab">
 						<li class="active"><a href="#login" data-toggle="tab">Login</a></li>
-						<li><a href="#create" data-toggle="tab">Crea un account</a></li>
+						<li><a href="#create" data-toggle="tab"><h:outputText value="#{msgs.Login2tab}"/></a></li>
 					</ul>
 					<div id="myTabContent" class="tab-content">
 						<div class="tab-pane active in" id="login">
@@ -71,21 +69,21 @@
 								</a4j:outputPanel>
 								<div class="control-group">
 
-									<label class="control-label" for="input_username">Nome</label>
+									<label class="control-label" for="input_username"><h:outputText value="#{msgs.Login3Name}"/></label>
 									<div class="controls">
 										<h:inputText id="input_username"
 											value="#{UserManagerController.user.name}" />
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="input_surname">Cognome</label>
+									<label class="control-label" for="input_surname"><h:outputText value="#{msgs.Login4Surname}"/></label>
 									<div class="controls">
 										<h:inputText id="input_surname"
 											value="#{UserManagerController.user.surname}" />
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="input_email">E-mail</label>
+									<label class="control-label" for="input_email">e-mail</label>
 									<div class="controls">
 										<h:inputText id="input_email"
 											value="#{UserManagerController.user.eMail}" />
@@ -99,15 +97,14 @@
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="input_password_confirm">Conferma
-										password</label>
+									<label class="control-label" for="input_password_confirm"><h:outputText value="#{msgs.Login5Confirm}"/></label>
 									<div class="controls">
 										<h:inputSecret id="input_password_confirm" redisplay="true"
 											value="#{UserManagerController.confirmPassword}" />
 									</div>
 								</div>
 								<div>
-									<h:commandLink styleClass="btn btn-success" value="Registrati"
+									<h:commandLink styleClass="btn btn-success" value="#{msgs.Login6CreaButton}"
 										action="#{UserManagerController.createUser}" />
 								</div>
 							</h:form>

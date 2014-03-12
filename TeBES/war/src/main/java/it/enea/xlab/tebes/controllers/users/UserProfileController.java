@@ -2,10 +2,13 @@ package it.enea.xlab.tebes.controllers.users;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
-import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.common.SUTConstants;
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.entity.Role;
+import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import java.rmi.NotBoundException;
@@ -15,11 +18,13 @@ import javax.naming.NamingException;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
-import org.xlab.file.XLabFileManager;
 
 public class UserProfileController extends WebController<User> {
 
-	private UserManagerRemote userManagerBean;
+	private static final long serialVersionUID = 1L;
+	
+	private UserManagerRemote userManagerService;
+	private SUTManagerRemote sutManagerService;
 	
 	public static final String CONTROLLER_NAME = "UserProfileController";
 
@@ -32,7 +37,8 @@ public class UserProfileController extends WebController<User> {
 	public void initContext() throws NotBoundException, NamingException {
 		
 		// GET SERVICE
-		userManagerBean = JNDIServices.getUserManagerService(); 		
+		userManagerService = JNDIServices.getUserManagerService(); 		
+		sutManagerService = JNDIServices.getSUTManagerService();
 	}
 	
 	
@@ -52,7 +58,7 @@ public class UserProfileController extends WebController<User> {
 		
 		if (role.getLevel() == Constants.STANDARD_ROLE_LEVEL) {
 		
-			userId = userManagerBean.createUser(user);
+			userId = userManagerService.createUser(user);
 		
 			if (userId > 0) {
 
@@ -60,8 +66,12 @@ public class UserProfileController extends WebController<User> {
 					
 					user = this.login(user.geteMail(), user.getPassword());
 
-					userManagerBean.setUserRole(user, role);
+					userManagerService.setUserRole(user, role);
 					
+    				// Create default SUT
+    				SUTInteraction interactionWebSite = new SUTInteraction(SUTConstants.INTERACTION_WEBSITE);
+    				SUT defaultSUT = new SUT("DefaultSUT", SUTConstants.SUT_TYPE1_DOCUMENT, interactionWebSite, "Default SUT Document-WebSite for User " + user.getSurname());									
+    				sutManagerService.createSUT(defaultSUT, user);
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -83,7 +93,7 @@ public class UserProfileController extends WebController<User> {
 	// LOGIN
 	public User login(String email, String password) {
 
-		return userManagerBean.readUserbyEmailAndPassword(email, password);
+		return userManagerService.readUserbyEmailAndPassword(email, password);
 	}
 	
 	
@@ -92,7 +102,7 @@ public class UserProfileController extends WebController<User> {
 
 		// Eventuali Controlli
 		
-		return userManagerBean.updateUser(user);
+		return userManagerService.updateUser(user);
 	}
 
 

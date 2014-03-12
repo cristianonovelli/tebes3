@@ -2,11 +2,15 @@ package it.enea.xlab.tebes.controllers.users;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
+import it.enea.xlab.tebes.common.SUTConstants;
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.entity.Role;
+import it.enea.xlab.tebes.entity.SUT;
+import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
-import it.enea.xlab.tebes.utils.Messages;
+import it.enea.xlab.tebes.utils.FormMessages;
 import it.enea.xlab.tebes.utils.UserUtils;
 
 import java.rmi.NotBoundException;
@@ -23,6 +27,7 @@ public class UserManagerController extends WebController<User> {
 	public static final String CONTROLLER_NAME = "UserManagerController";
 	
 	private UserManagerRemote userManagerService;
+	private SUTManagerRemote sutManagerService;
 	
 	private User user;
 	private String confirmPassword;
@@ -31,11 +36,13 @@ public class UserManagerController extends WebController<User> {
 	
 	public UserManagerController() throws NamingException {
 		userManagerService = JNDIServices.getUserManagerService(); 
+		sutManagerService = JNDIServices.getSUTManagerService();
 	}
 
 	public void initContext() throws NotBoundException, NamingException {
 		// GET SERVICE
 		userManagerService = JNDIServices.getUserManagerService(); 		
+		sutManagerService = JNDIServices.getSUTManagerService();
 	}
 	
 	// LOGIN
@@ -93,17 +100,25 @@ public class UserManagerController extends WebController<User> {
 				newUser.setRole(role);
 
 			Long result = this.userManagerService.createUser(newUser);
-			if(result == -1) {
-				this.userFormMessage = Messages.FORM_ERROR_USER_ALREADY_EXISTING;
+			if (result > 0) {
+				
+				// Create default SUT
+				SUTInteraction interactionWebSite = new SUTInteraction(SUTConstants.INTERACTION_WEBSITE);
+				SUT defaultSUT = new SUT("DefaultSUT", SUTConstants.SUT_TYPE1_DOCUMENT, interactionWebSite, "Default SUT Document-WebSite for User " + user.getSurname());				
+				user = this.userManagerService.readUser(result);					
+				sutManagerService.createSUT(defaultSUT, user);
+				
+			} else if(result == -1) {
+				this.userFormMessage = FormMessages.getErrorUserAlreadyExisting();						
 				this.showUserFormMessage = true;
 				return "creation_fail";
 			} else if(result == -2) {
-				this.userFormMessage = Messages.FORM_ERROR_USER_CREATION;
+				this.userFormMessage = FormMessages.getErrorUserCreation();
 				this.showUserFormMessage = true;
 				return "creation_fail";
 			}
 			this.resetFields();
-			this.userFormMessage = Messages.FORM_USER_CREATION_SUCCESS;
+			this.userFormMessage = FormMessages.getUserCreationSuccess();
 			this.showUserFormMessage = true;
 			return "creation_success";
 			
