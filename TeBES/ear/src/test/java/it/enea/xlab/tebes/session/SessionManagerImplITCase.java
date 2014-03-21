@@ -694,6 +694,13 @@ public class SessionManagerImplITCase {
 		List<Long> sessionIdList = sessionController.getSessionIdList(currentUser);
 		Assert.assertTrue(sessionIdList.size() == 1);	
 		
+		boolean deletingSession = sessionController.deleteSession(sessionIdList.get(0)); 
+		Assert.assertTrue(deletingSession);
+		
+		
+		
+		
+		
 		// Get Role List
 		List<Long> roleIdList = userAdminController.getRoleIdList();
 		Assert.assertTrue(roleIdList.size() == 4);

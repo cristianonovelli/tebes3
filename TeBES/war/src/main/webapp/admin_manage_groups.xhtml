@@ -16,48 +16,27 @@
 	<ui:define name="content">
 		<f:view locale="#{LocalizationController.locale}">
 			<a4j:form ajaxSubmit="true"
-				reRender="utentiList,scrollValidationDown,scroll_1_div">
+				reRender="groupList,scrollValidationDown,scroll_1_div">
 
 				<h3 style="display:inline-block;"><h:outputText value="#{msgs.Admin20Title}"/></h3>
-				<h:commandLink styleClass="btn btn-success pull-right" value="#{msgs.Admin2CreateUser}" action="#{UserAdminController.createItem}" />
+				<h:commandLink styleClass="btn btn-success pull-right" value="#{msgs.Admin21CreateGroup}" action="#{GroupAdminController.createGroup}" />
 
-				<t:dataTable id="utentiList" var="utente" styleClass="table table-striped"
-					value="#{UserAdminController.dataModel}" preserveDataModel="false"
-					rows="#{UserAdminController.rowsPerPage}" style="margin-top:20px;">
+				<t:dataTable id="groupList" var="group" styleClass="table table-striped"
+					value="#{GroupAdminController.dataModel}" preserveDataModel="false"
+					rows="#{GroupAdminController.rowsPerPage}" style="margin-top:20px;">
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="#{msgs.Common23Name}" />
 						</f:facet>
-						<h:outputText value="#{utente.name}" />
+						<h:outputText value="#{group.name}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
-							<h:outputText value="#{msgs.Common24Surname}" />
+							<h:outputText value="#{msgs.Common31Description}" />
 						</f:facet>
-						<h:outputText value="#{utente.surname}" />
-					</h:column>
-
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="e-mail" />
-						</f:facet>
-						<h:outputText value="#{utente.eMail}" />
-					</h:column>
-
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="#{msgs.Admin3Role}" />
-						</f:facet>
-						<h:outputText value="#{utente.role.name}" />
-					</h:column>
-
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="#{msgs.Admin4Group}" />
-						</f:facet>
-						<h:outputText value="#{utente.group.name}" />
+						<h:outputText value="#{group.description}" />
 					</h:column>
 
 					<h:column>
@@ -65,21 +44,21 @@
 							<h:outputText styleClass="headerText" value="#{msgs.Admin5Actions}" />
 						</f:facet>
 						<a4j:commandLink ajaxSingle="true" id="viewlink" style="margin-left: 10px;"
-							action="#{UserAdminController.viewItemDetails}">
+							action="#{GroupAdminController.viewGroupDetails}">
 							<i class="icon-folder-open icon-2x"></i>
 						</a4j:commandLink>
 						<rich:toolTip for="viewlink" value="#{msgs.Admin6ActionDetails}" />
-						<a4j:commandLink ajaxSingle="true" id="trashlink" oncomplete="#{rich:component('deletePanel')}.show()">
+						<a4j:commandLink ajaxSingle="true" id="trashlink5" oncomplete="#{rich:component('deletePanel')}.show()">
 							<i class="icon-trash icon-2x"></i>
-							<a4j:actionparam name="idItemToDelete" value="#{utente.id}" assignTo="#{UserAdminController.itemToDelete}" />
+							<a4j:actionparam name="idGroupToDelete" value="#{group.id}" assignTo="#{GroupAdminController.groupToDelete}" />
 						</a4j:commandLink>
-						<rich:toolTip for="trashlink" value="#{msgs.Common2Cancel}" />
+						<rich:toolTip for="trashlink5" value="#{msgs.Common2Cancel}" />
 					</h:column>
 
 				</t:dataTable>
 
 				<t:div id="scroll_1_div">
-					<t:dataScroller id="scrollValidationDown" for="utentiList"
+					<t:dataScroller id="scrollValidationDown" for="groupList"
 						fastStep="10" pageCountVar="pageCount" pageIndexVar="scrollerPage"
 						paginator="true" paginatorMaxPages="9" immediate="true"
 						rendered="#{UserAdminController.dataSize gt 10}">
@@ -106,7 +85,7 @@
 
 				<rich:modalPanel id="deletePanel" autosized="true" width="250">
 					<f:facet name="header">
-						<h:outputText value="#{msgs.Admin7DeleteQuestion}" />
+						<h:outputText value="#{msgs.Admin27DeleteQuestion}" />
 					</f:facet>
 					<br />
 					<table width="100%">
@@ -118,7 +97,7 @@
 								<td align="center" width="40%">
 									<a4j:commandLink value="#{msgs.Admin71Delete}" styleClass="inputBtn inputBtn-blue"
 										oncomplete="#{rich:component('deletePanel')}.hide();return true;"
-										action="#{UserAdminController.deleteItem}" />
+										action="#{GroupAdminController.deleteGroup}" />
 								</td>
 								<td align="center" width="40%">
 									<a4j:commandLink

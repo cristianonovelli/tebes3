@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:t="http://myfaces.apache.org/tomahawk">
+
+<ui:composition template="layout/layout.xhtml">
+	<ui:define name="menu">
+		<ui:include src="layout/menu_admin.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+		<f:view locale="#{LocalizationController.locale}">
+			<h:form class="form-horizontal" styleClass="form-horizontal">
+				<div class="span4">
+					<h3><h:outputText value="#{msgs.Admin28Detail}"/></h3>
+					<div class="control-group" style="margin-top:20px;">
+    					<label class="control-label" for="input_groupname"><h:outputText value="#{msgs.Common23Name}"/> *</label>
+						<div class="controls">
+							<h:inputText id="input_groupname" value="#{GroupAdminController.selectedGroup.name}" />
+						</div>
+  					</div>
+					<div class="control-group">
+    					<label class="control-label" for="input_description"><h:outputText value="#{msgs.Common31Description}"/> *</label>
+						<div class="controls">
+							<h:inputText id="input_description" value="#{GroupAdminController.selectedGroup.description}" />
+						</div>
+					</div>
+										
+					<div class="control-group">
+						
+						<div class="controls">
+							<h:commandLink rendered="#{GroupAdminController.isGroupEditMode}" styleClass="btn btn-primary" value="#{msgs.Common4Save}"
+      						action="#{GroupAdminController.updateGroup}"/>
+	      					<h:commandLink rendered="#{!GroupAdminController.isGroupEditMode}" styleClass="btn btn-primary" value="#{msgs.Common1Create}"
+	      						action="#{GroupAdminController.createNewGroup}" />
+	      					<h:commandLink styleClass="btn" value="#{msgs.Common2Cancel}" action="#{GroupAdminController.cancel}" style="margin-left: 10px;"/>
+						</div>
+					</div>
+					
+					<div class="control-group">
+						
+						<div class="controls" style="width: 240px;">
+							<a4j:outputPanel styleClass="formErrorMessage" ajaxRendered="true" rendered="#{GroupAdminController.showGroupFormMessage}">
+		      					<div class="alert alert-error">
+									<h:outputText value="#{GroupAdminController.groupFormMessage}" rendered="#{GroupAdminController.showGroupFormMessage}" />		
+								</div>	
+							</a4j:outputPanel>	
+						</div>
+					</div>
+	
+  				</div>
+  				<div class="span5"> </div>
+			</h:form>
+		</f:view>
+	</ui:define>
+</ui:composition>
+</html>

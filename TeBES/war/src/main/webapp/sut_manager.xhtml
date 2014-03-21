@@ -54,22 +54,22 @@
 						<f:facet name="header">
 							<h:outputText styleClass="headerText" value="#{msgs.SUT8Edit}" />
 						</f:facet>
-						<a4j:commandLink ajaxSingle="true" id="viewlink" style="margin-left: 10px;"
-							action="#{SUTController.viewItemDetails}">
+						<a4j:commandLink ajaxSingle="true" id="viewlink2" style="margin-left: 10px;"
+							action="#{SUTManagerController.viewSutDetails}">
 							<i class="icon-folder-open icon-2x"></i>
 						</a4j:commandLink>
-						<rich:toolTip for="viewlink" value="#{msgs.SUT9EditDetails}" />
+						<rich:toolTip for="viewlink2" value="#{msgs.SUT9EditDetails}" />
 					</h:column>
 
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="#{msgs.SUT7Delete}" />
 						</f:facet>
-						<a4j:commandLink ajaxSingle="true" id="trashlink" oncomplete="#{rich:component('deletePanel')}.show()">
+						<a4j:commandLink ajaxSingle="true" id="trashlink2" oncomplete="#{rich:component('deletePanel')}.show()">
 							<i class="icon-trash icon-2x"></i>
-							<a4j:actionparam name="idItemToDelete" value="#{sut.id}" assignTo="#{SUTController.itemToDelete}" />
+							<a4j:actionparam name="idSutToDelete" value="#{sut.id}" assignTo="#{SUTManagerController.sutToDelete}" />
 						</a4j:commandLink>
-						<rich:toolTip for="trashlink" value="#{msgs.Common2Cancel}" />
+						<rich:toolTip for="trashlink2" value="#{msgs.Common2Cancel}" />
 					</h:column>
 
 				</t:dataTable>
@@ -99,6 +99,34 @@
 
 					</t:dataScroller>
 				</t:div>
+				
+				<rich:modalPanel id="deletePanel" autosized="true" width="250">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.SUT7DeleteQuestion}" />
+					</f:facet>
+					<br />
+					<table width="100%">
+						<tbody>
+							<tr>
+								<td align="center" width="20%">
+									<i class="icon-warning-sign icon-3x red"></i>
+								</td>
+								<td align="center" width="40%">
+									<a4j:commandLink value="#{msgs.SUT7Delete}" styleClass="inputBtn inputBtn-blue"
+										oncomplete="#{rich:component('deletePanel')}.hide();return true;"
+										action="#{SUTManagerController.deleteSut}" />
+								</td>
+								<td align="center" width="40%">
+									<a4j:commandLink
+										value="#{msgs.Common2Cancel}" styleClass="inputBtn inputBtn-grey"
+										onclick="#{rich:component('deletePanel')}.hide();return false;" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</rich:modalPanel>
+				
+				
 			</a4j:form>
 		</f:view>
 	</ui:define>

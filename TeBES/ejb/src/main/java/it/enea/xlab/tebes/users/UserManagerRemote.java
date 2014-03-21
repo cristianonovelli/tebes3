@@ -48,6 +48,7 @@ public interface UserManagerRemote {
 	public Long setUserGroup(User user, Group group);
 	public Boolean deleteGroup(Long id);
 	public Group readGroup(String groupName);
+	public Boolean updateGroup(Group group);
 
 	public List<Long> getActionIdList();
 

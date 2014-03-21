@@ -78,9 +78,18 @@
 							<h:outputText value="#{msgs.TestPlan8Location}" />
 						</f:facet>
 						<a href="#{testPlan.publication}" target="_blank"><h:outputText value="#{msgs.TestPlan82xml}" /></a>
-						
-						
 					</h:column>
+					
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="#{msgs.Common12Delete}" />
+						</f:facet>
+						<a4j:commandLink ajaxSingle="true" id="trashlink3" oncomplete="#{rich:component('deletePanel')}.show()">
+							<i class="icon-trash icon-2x"></i>
+							<a4j:actionparam name="idTestPlanToDelete" value="#{testPlan.id}" assignTo="#{MyTestPlanManagerController.testPlanToDelete}" />
+						</a4j:commandLink>
+						<rich:toolTip for="trashlink3" value="#{msgs.Common2Cancel}" />
+					</h:column>				
 
 				</t:dataTable>
 				
@@ -145,7 +154,32 @@
 
 				</t:dataTable>
 
-				
+				<rich:modalPanel id="deletePanel" autosized="true" width="250">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.TestPlan11DeleteQuestion}" />
+					</f:facet>
+					<br />
+					<table width="100%">
+						<tbody>
+							<tr>
+								<td align="center" width="20%">
+									<i class="icon-warning-sign icon-3x red"></i>
+								</td>
+								<td align="center" width="40%">
+									<a4j:commandLink value="#{msgs.Common12Delete}" styleClass="inputBtn inputBtn-blue"
+										oncomplete="#{rich:component('deletePanel')}.hide();return true;"
+										action="#{MyTestPlanManagerController.deleteTestPlan}" />
+								</td>
+								<td align="center" width="40%">
+									<a4j:commandLink
+										value="#{msgs.Common2Cancel}" styleClass="inputBtn inputBtn-grey"
+										onclick="#{rich:component('deletePanel')}.hide();return false;" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</rich:modalPanel>
+								
 			</a4j:form>
 		</f:view>
 	</ui:define>

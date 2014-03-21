@@ -37,6 +37,12 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 	private List<TestPlan> userTestPlanList;
 
 	private Long selectedTestPlanId;
+	private Long testPlanToDelete;
+	
+	private boolean newItemFormMessageRendered = false;
+	private String newItemFormMessage;	
+	
+	
 	
 	// CONTROLLER Constructor
 	public MyTestPlanManagerController() throws NamingException {
@@ -66,9 +72,24 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 		return testPlanManagerService.createTestPlan(testPlan, userId);
 	}
 
-	public Boolean deleteTestPlan() {
+	/*public Boolean deleteTestPlan() {
 		
 		return testPlanManagerService.deleteTestPlan(selectedTestPlanId);
+	}*/
+
+	public String deleteTestPlan() {
+		
+		try {
+			
+			testPlanManagerService.deleteTestPlan(this.getTestPlanToDelete());
+		
+		} catch (Exception e) {
+
+			setNewItemFormMessage(FormMessages.getErrorDeleteTestPlan());						
+			setNewItemFormMessageRendered(true);
+		}
+		updateDataModel();
+		return "testplan_deleted";
 	}
 	
 	public List<TestPlan> readTestPlanByUserIdAndDatetime(String datetime, Long userId) {
@@ -189,6 +210,11 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 	}
 
 	@Override
+	public void updateDataModel() {
+		super.updateDataModel();
+	}
+	
+	@Override
 	public void resetSearchParameters() {
 		// TODO Auto-generated method stub
 		
@@ -271,4 +297,28 @@ public class MyTestPlanManagerController extends WebController<TestPlan> {
 		this.userTestPlanList = userTestPlanList;
 	}
 
+
+	public Long getTestPlanToDelete() {
+		return testPlanToDelete;
+	}
+
+	public void setTestPlanToDelete(Long testPlanToDelete) {
+		this.testPlanToDelete = testPlanToDelete;
+	}
+
+	public boolean isNewItemFormMessageRendered() {
+		return newItemFormMessageRendered;
+	}
+
+	public void setNewItemFormMessageRendered(boolean newItemFormMessageRendered) {
+		this.newItemFormMessageRendered = newItemFormMessageRendered;
+	}
+	
+	public String getNewItemFormMessage() {
+		return newItemFormMessage;
+	}
+
+	public void setNewItemFormMessage(String newItemFormMessage) {
+		this.newItemFormMessage = newItemFormMessage;
+	}
 }
