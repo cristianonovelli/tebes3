@@ -5,16 +5,18 @@ import it.enea.xlab.tebes.common.SUTConstants;
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.controllers.localization.LocalizationController;
 import it.enea.xlab.tebes.dao.NestedCriterion;
+import it.enea.xlab.tebes.entity.Group;
+import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.User;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
 import it.enea.xlab.tebes.utils.FormMessages;
+import it.enea.xlab.tebes.utils.UserUtils;
 
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -27,6 +29,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 public class SUTManagerController extends WebController<SUT> {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String CONTROLLER_NAME = "SUTManagerController";
 	
@@ -50,7 +54,7 @@ public class SUTManagerController extends WebController<SUT> {
 	private boolean showInteractionMenu = false;
 	
 	private boolean newItemFormMessageRendered = false;
-	private Long itemToDelete;
+	private Long sutToDelete;
 	private String newItemFormMessage;
 	private boolean isSUTEditMode = false;
 	
@@ -142,6 +146,41 @@ public class SUTManagerController extends WebController<SUT> {
 		}
 	}
 	
+	public String updateSUT() {
+		
+		String message = UserUtils.checkSUTFields();
+		
+		if(message == null) {
+			
+			SUT sut = this.sutManagerBean.readSUT(this.selectedSUT.getId());
+			
+			if(sut == null) {
+				this.sutFormMessage = FormMessages.getUserNotExisting();
+				this.showSutFormMessage = true;
+				return "";
+			}			
+			
+			sut.setName(selectedSUT.getName());
+			sut.setDescription(selectedSUT.getDescription());
+			sut.setType(selectedSUT.getType());
+			
+			// MANCA UPDATE DELL'INTERACTION
+
+			if(!this.sutManagerBean.updateSUT(sut)) {
+				this.sutFormMessage = FormMessages.getErrorUserUpdate();
+				this.showSutFormMessage = true;
+				return "";
+			}
+			
+			this.updateDataModel();
+			return "update_success";
+			
+		} else {
+			this.sutFormMessage = message;
+			this.showSutFormMessage = true;
+			return "";
+		}
+	}
 	
 	public String cancel() {
 		
@@ -299,32 +338,31 @@ public class SUTManagerController extends WebController<SUT> {
 
 	
 	
-	public String viewItemDetails() {
+	public String viewSutDetails() {
 		this.selectedSUT = (SUT) dataModel.getRowData();
 		this.isSUTEditMode = true;
 		this.sutFormMessage = "";
 		this.showSutFormMessage = false;
-		return "toItemDetails";
+		return "toSutDetails";
 	}
 	
 	public boolean getIsSUTEditMode() {
 		return isSUTEditMode;
 	}
 	
-	
-	public Long getItemToDelete() {
-		return itemToDelete;
+	public Long getSutToDelete() {
+		return sutToDelete;
+	}
+
+	public void setSutToDelete(Long sutToDelete) {
+		this.sutToDelete = sutToDelete;
 	}
 	
-	public void setItemToDelete(Long itemToDelete) {
-		this.itemToDelete = itemToDelete;
-	}
-	
-	public String deleteItem() {
+	public String deleteSut() {
 		
 		try {
 			
-			sutManagerBean.deleteSUT(this.getItemToDelete());
+			sutManagerBean.deleteSUT(this.getSutToDelete());
 		
 		} catch (Exception e) {
 
@@ -332,7 +370,7 @@ public class SUTManagerController extends WebController<SUT> {
 			setNewItemFormMessageRendered(true);
 		}
 		updateDataModel();
-		return "item_deleted";
+		return "sut_deleted";
 	}
 	
 	public boolean isNewItemFormMessageRendered() {
@@ -350,4 +388,5 @@ public class SUTManagerController extends WebController<SUT> {
 	public void setNewItemFormMessage(String newItemFormMessage) {
 		this.newItemFormMessage = newItemFormMessage;
 	}
+
 }

@@ -28,6 +28,12 @@
 	</managed-bean>
 
 	<managed-bean>
+		<managed-bean-name>GroupAdminController</managed-bean-name>
+		<managed-bean-class>it.enea.xlab.tebes.controllers.users.GroupAdminController</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
 		<managed-bean-name>UserManagerController</managed-bean-name>
 		<managed-bean-class>it.enea.xlab.tebes.controllers.users.UserManagerController</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
@@ -96,7 +102,26 @@
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
-	
+
+	<!-- admin_manage_groups -->
+	<navigation-rule>
+		<from-view-id>/admin_manage_groups.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>group_deleted</from-outcome>
+			<to-view-id>/admin_manage_groups.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>toGroupDetails</from-outcome>
+			<to-view-id>/view_edit_group.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>toGroupCreation</from-outcome>
+			<to-view-id>/view_edit_group.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+		
 	<!-- view_edit_user -->
 	<navigation-rule>
 		<from-view-id>/view_edit_user.xhtml</from-view-id>
@@ -117,6 +142,26 @@
 		</navigation-case>
 	</navigation-rule>
 	
+	<!-- view_edit_group -->
+	<navigation-rule>
+		<from-view-id>/view_edit_group.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>back</from-outcome>
+			<to-view-id>/admin_manage_groups.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>creationgroup_success</from-outcome>
+			<to-view-id>/admin_manage_groups.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>updategroup_success</from-outcome>
+			<to-view-id>/admin_manage_groups.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
 	<!-- test_plan_manager -->
 	<navigation-rule>
 		<from-view-id>/test_plan_manager.xhtml</from-view-id>
@@ -125,6 +170,10 @@
 			<to-view-id>/session_creation.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
+		<navigation-case>
+			<from-outcome>testplan_deleted</from-outcome>
+			<to-view-id>/test_plan_manager.xhtml</to-view-id>
+		</navigation-case>
 	</navigation-rule>
 	
 	<!-- sut_manager -->
@@ -132,14 +181,23 @@
 		<from-view-id>/sut_manager.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>create_sut</from-outcome>
-			<to-view-id>/sut_creation.xhtml</to-view-id>
+			<to-view-id>/view_edit_sut.xhtml</to-view-id>
 			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>toSutDetails</from-outcome>
+			<to-view-id>/view_edit_sut.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>sut_deleted</from-outcome>
+			<to-view-id>/sut_manager.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	
 	<!-- sut_creation -->
 	<navigation-rule>
-		<from-view-id>/sut_creation.xhtml</from-view-id>
+		<from-view-id>/view_edit_sut.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>back</from-outcome>
 			<to-view-id>/sut_manager.xhtml</to-view-id>
@@ -164,6 +222,10 @@
 			<from-outcome>view_session</from-outcome>
 			<to-view-id>/session_info.xhtml</to-view-id>
 			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>session_deleted</from-outcome>
+			<to-view-id>/session_manager.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	

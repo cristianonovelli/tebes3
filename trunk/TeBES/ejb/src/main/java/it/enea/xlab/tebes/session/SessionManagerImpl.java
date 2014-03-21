@@ -255,16 +255,25 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	 */
 	public Boolean deleteSession(Long sessionID) {
 
+		
+		System.out.println("SessionManagerImpl:" + sessionID.toString());
 		Session session = this.readSession(sessionID);
 		
 		if (session == null)
 			return false;
 		
 		try {
+			System.out.println("SessionManagerImpl:" + session.getCreationDateTime());
+			
+			session.getUser().getSessions().remove(session);
+			
 			eM.remove(session);
+			System.out.println("SessionManagerImpl: post remove");
 		} catch (IllegalArgumentException e) {
 			return false;
 		} catch (Exception e2) {
+			System.out.println("SessionManagerImpl: Exc e2");
+			e2.printStackTrace();
 			return null;
 		}
 		

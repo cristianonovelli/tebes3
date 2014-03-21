@@ -153,6 +153,32 @@ public class UserManagerImpl implements UserManagerRemote {
 	
 	
 	/**
+	 * UPDATE Group
+	 */
+	public Boolean updateGroup(Group group) {
+		
+		Boolean result = false;
+		
+		 try {
+			 if ( (group != null) && (group.getId() != null) ) {
+				 group = eM.merge(group);
+				 //eM.persist(user);
+				 
+				 if (group != null)
+					 result = true;
+			 }
+			 
+		} catch (IllegalArgumentException e) {
+			result = false;
+		} catch (Exception e2) {
+			result = null;
+		}
+		 
+		 return result;
+	}
+	
+	
+	/**
 	 * DELETE User
 	 */
 	public Boolean deleteUser(Long id) {
@@ -666,7 +692,7 @@ public class UserManagerImpl implements UserManagerRemote {
 
 	public Group readGroup(String groupName) {
 
-		return (Group) eM.createQuery("SELECT group FROM UserGroup group WHERE group.name =:groupName").setParameter("groupName", groupName).getSingleResult();
+		return (Group) eM.createQuery("SELECT g FROM usergroup g WHERE g.name =:groupName").setParameter("groupName", groupName).getSingleResult();
 	}
 
 	

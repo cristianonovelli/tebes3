@@ -90,6 +90,11 @@ public class SessionManagerController extends WebController<Session> {
 	private boolean canBeRestarted = false;
 	private boolean isBackEnabled = false;
 
+	private Long sessionToDelete;
+	
+	private boolean newItemFormMessageRendered = false;
+	private String newItemFormMessage;	
+	
 	// FILE UPLOAD
     private Map<String, File> uploadedFiles = new LinkedHashMap<String, File>();
     private int uploadsAvailable = 1;
@@ -203,6 +208,25 @@ public class SessionManagerController extends WebController<Session> {
 	public Boolean deleteSession(Long id) {
 		
 		return sessionManagerService.deleteSession(id);
+	}
+	
+	public String deleteSession() {
+		
+		System.out.println("ENTER in delete Session");
+		
+		try {
+			
+			if (sessionManagerService.deleteSession(this.getSessionToDelete()))
+				System.out.println("OK delete Session");
+			else
+				System.out.println("NO delete Session");
+		} catch (Exception e) {
+
+			setNewItemFormMessage(FormMessages.getErrorDeleteSession());						
+			setNewItemFormMessageRendered(true);
+		}
+		updateDataModel();
+		return "session_deleted";
 	}
 
 	public Session readSession(Long id) {
@@ -740,6 +764,30 @@ public class SessionManagerController extends WebController<Session> {
 
 	public void setShowMessageBox(boolean showMessageBox) {
 		this.showMessageBox = showMessageBox;
+	}
+
+	public Long getSessionToDelete() {
+		return sessionToDelete;
+	}
+
+	public void setSessionToDelete(Long sessionToDelete) {
+		this.sessionToDelete = sessionToDelete;
+	}
+	
+	public boolean isNewItemFormMessageRendered() {
+		return newItemFormMessageRendered;
+	}
+
+	public void setNewItemFormMessageRendered(boolean newItemFormMessageRendered) {
+		this.newItemFormMessageRendered = newItemFormMessageRendered;
+	}
+	
+	public String getNewItemFormMessage() {
+		return newItemFormMessage;
+	}
+
+	public void setNewItemFormMessage(String newItemFormMessage) {
+		this.newItemFormMessage = newItemFormMessage;
 	}
 }
 

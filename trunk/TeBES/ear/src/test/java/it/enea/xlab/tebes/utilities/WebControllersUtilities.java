@@ -6,6 +6,7 @@ import it.enea.xlab.tebes.controllers.session.SessionManagerController;
 
 import it.enea.xlab.tebes.controllers.sut.SUTManagerController;
 import it.enea.xlab.tebes.controllers.testplan.TestPlanManagerController;
+import it.enea.xlab.tebes.controllers.users.GroupAdminController;
 import it.enea.xlab.tebes.controllers.users.UserAdminController;
 import it.enea.xlab.tebes.controllers.users.UserProfileController;
 
@@ -22,7 +23,10 @@ public static WebController getManager(String nome) throws NamingException  {
 		
 		if (nome.equals(UserAdminController.CONTROLLER_NAME))
 			controller = new UserAdminController();	
-
+		
+		if (nome.equals(GroupAdminController.CONTROLLER_NAME))
+			controller = new GroupAdminController();	
+		
 		if (nome.equals(UserProfileController.CONTROLLER_NAME))
 			controller = new UserProfileController();	
 		
@@ -37,6 +41,7 @@ public static WebController getManager(String nome) throws NamingException  {
 
 		if (nome.equals(FileManagerController.CONTROLLER_NAME))
 			controller = new FileManagerController();
+
 		
 		/*if (nome.equals(ValidationController.CONTROLLER_NAME)) 
 			controller = new ValidationController();	*/

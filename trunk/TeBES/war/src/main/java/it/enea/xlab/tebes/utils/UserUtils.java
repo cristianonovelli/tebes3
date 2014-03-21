@@ -31,4 +31,17 @@ public class UserUtils {
 		return null;
 	}
 	
+	public static String checkSUTFields() {
+		
+		return null;
+	}
+
+	public static String checkGroupFields(String name, String description) {
+		
+		if (name == null || name.equals("") || description == null || description.equals("") )
+			return FormMessages.getErrorGroupNotCompiled();	
+		
+		return null;
+	}
+	
 }

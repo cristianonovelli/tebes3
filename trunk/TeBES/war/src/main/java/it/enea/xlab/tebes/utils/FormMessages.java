@@ -22,7 +22,11 @@ public class FormMessages {
 	private static final String TEST_PLAN_IMPORT_FAIL_EN = "Attention: Test Plan importing error!";
 	private static final String SESSION_CREATION_FAIL_EN = "Attention: Session creation error!";	
 	private static final String ERROR_DELETE_SUT_EN = "Attention: SUT deleting error!";
-	
+	private static final String ERROR_DELETE_TESTPLAN_EN = "Attention: Test Plan deleting error!";
+	private static final String ERROR_DELETE_SESSION_EN = "Attention: Test Session deleting error!";
+	private static final String ERROR_DELETE_GROUP_EN = "Attention: Group deleting error!";
+	private static final String ERROR_GROUP_NOTCOMPILED_EN = "Attention: fill every field!";
+	private static final String ERROR_GROUP_NOTEXISTING_EN = "Attention: the group doesn't exist!";	
 	
 	// Messaggi per Form in ITALIANO
 	private static final String ERROR_NOMATCH_IT = "Non c'è match tra i TestPlan e SUT selezionati perché i rispettivi tipi di interazioni sono diversi. Specificare quindi una differente combinazione TestPlan-SUT OPPURE definire un nuovo TestPlan o un nuovo SUT prima di creare la Sessione di Test.";	
@@ -40,6 +44,11 @@ public class FormMessages {
 	private static final String TEST_PLAN_IMPORT_FAIL_IT = "Attenzione: errore nell'importazione del Test Plan!";
 	private static final String SESSION_CREATION_FAIL_IT = "Attenzione: errore nella creazione della sessione!";	
 	private static final String ERROR_DELETE_SUT_IT = "Errore nella rimozione del SUT!";
+	private static final String ERROR_DELETE_TESTPLAN_IT = "Errore nella rimozione del Test Plan!";
+	private static final String ERROR_DELETE_SESSION_IT = "Errore nella rimozione della Sessione di Test!";
+	private static final String ERROR_DELETE_GROUP_IT = "Errore nella rimozione del Gruppo!";
+	private static final String ERROR_GROUP_NOTCOMPILED_IT =  "Attenzione: riempire tutti i campi!";
+	private static final String ERROR_GROUP_NOTEXISTING_IT = "Attenzione: il gruppo non esiste!";
 
 
 
@@ -162,5 +171,48 @@ public class FormMessages {
 		else
 			return SESSION_CREATION_FAIL_IT;
 	}
+
+	public static String getErrorDeleteTestPlan() {
+		
+		if (lc.getLocale().equals(LocalizationController.ENG_LOCALIZATION))
+			return ERROR_DELETE_TESTPLAN_EN;	
+		else
+			return ERROR_DELETE_TESTPLAN_IT;
+	}
+
+	public static String getErrorDeleteSession() {
+		
+		if (lc.getLocale().equals(LocalizationController.ENG_LOCALIZATION))
+			return ERROR_DELETE_SESSION_EN;	
+		else
+			return ERROR_DELETE_SESSION_IT;
+	}
+
+	public static String getErrorDeleteGroup() {
+		
+		if (lc.getLocale().equals(LocalizationController.ENG_LOCALIZATION))
+			return ERROR_DELETE_GROUP_EN;	
+		else
+			return ERROR_DELETE_GROUP_IT;
+	}
+
+	public static String getErrorGroupNotCompiled() {
+		
+		if (lc.getLocale().equals(LocalizationController.ENG_LOCALIZATION))
+			return ERROR_GROUP_NOTCOMPILED_EN;	
+		else
+			return ERROR_GROUP_NOTCOMPILED_IT;
+	}
+
+	public static String getGroupNotExisting() {
+
+		if (lc.getLocale().equals(LocalizationController.ENG_LOCALIZATION))
+			return ERROR_GROUP_NOTEXISTING_EN;	
+		else
+			return ERROR_GROUP_NOTEXISTING_IT;
+	}
 	
 }
+
+
+
