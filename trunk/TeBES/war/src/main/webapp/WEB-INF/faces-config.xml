@@ -208,6 +208,11 @@
 			<to-view-id>/sut_manager.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
+		<navigation-case>
+			<from-outcome>sut_updating_success</from-outcome>
+			<to-view-id>/sut_manager.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
 	</navigation-rule>
 	
 	<!-- session_manager -->

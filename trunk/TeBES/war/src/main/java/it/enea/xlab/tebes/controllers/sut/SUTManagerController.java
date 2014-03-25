@@ -1,12 +1,11 @@
 package it.enea.xlab.tebes.controllers.sut;
 
+import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.SUTConstants;
 import it.enea.xlab.tebes.controllers.common.WebController;
 import it.enea.xlab.tebes.controllers.localization.LocalizationController;
 import it.enea.xlab.tebes.dao.NestedCriterion;
-import it.enea.xlab.tebes.entity.Group;
-import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.User;
@@ -43,10 +42,11 @@ public class SUTManagerController extends WebController<SUT> {
 	private UserManagerRemote userManagerBean;
 	
 	private SUT sut;
+	//private SUT selectedSUT;
 	private String sutFormMessage;
 	private boolean showSutFormMessage;
 	private List<SelectItem> typeSelection; 
-	private List<SelectItem> interactionSelection;
+	private List<SelectItem> interactionList;
 	private String selectedType;
 	private String selectedInteraction;
 	private String endpoint;
@@ -58,7 +58,7 @@ public class SUTManagerController extends WebController<SUT> {
 	private String newItemFormMessage;
 	private boolean isSUTEditMode = false;
 	
-	private SUT selectedSUT;
+
 	
 	public SUTManagerController() throws NamingException {
 		sutManagerBean = JNDIServices.getSUTManagerService();
@@ -124,14 +124,20 @@ public class SUTManagerController extends WebController<SUT> {
 
 		User currentUser = userManagerBean.readUsersByEmail(FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName()).get(0);
 
-		if(currentUser != null && sut != null) {
+		//this.setSUTEditMode(false);
+		
+		if(currentUser != null && this.sut != null) {
 
 			if(checkSUTFields()) {
 				SUTInteraction interaction = new SUTInteraction();
 				interaction.setType(this.selectedInteraction);
-				sut.setType(this.selectedType);
-				sut.setInteraction(interaction);
-				this.createSUT(sut, currentUser);
+				
+				if ( (this.endpoint != null) && !this.endpoint.equals("") )
+					interaction.setEndpoint(this.endpoint);
+				
+				this.sut.setType(this.selectedType);
+				this.sut.setInteraction(interaction);
+				this.createSUT(this.sut, currentUser);
 
 				this.resetFields();
 				this.updateDataModel();
@@ -148,32 +154,40 @@ public class SUTManagerController extends WebController<SUT> {
 	
 	public String updateSUT() {
 		
-		String message = UserUtils.checkSUTFields();
+		String message = UserUtils.checkSUTFields(this.sut.getName(), this.sut.getDescription(), this.selectedType, this.selectedInteraction, this.endpoint);
 		
 		if(message == null) {
 			
-			SUT sut = this.sutManagerBean.readSUT(this.selectedSUT.getId());
-			
-			if(sut == null) {
-				this.sutFormMessage = FormMessages.getUserNotExisting();
+			if(sut.getId() == null) {
+				this.sutFormMessage = FormMessages.getSutNotExisting();
 				this.showSutFormMessage = true;
 				return "";
 			}			
 			
-			sut.setName(selectedSUT.getName());
-			sut.setDescription(selectedSUT.getDescription());
-			sut.setType(selectedSUT.getType());
+			SUT sutToUpdate = this.sutManagerBean.readSUT(this.sut.getId());
 			
-			// MANCA UPDATE DELL'INTERACTION
+			sutToUpdate.setName(sut.getName());
+			sutToUpdate.setDescription(sut.getDescription());
+			sutToUpdate.setType(this.selectedType);
+			
+			SUTInteraction tempInteraction = sutToUpdate.getInteraction();
+			tempInteraction.setType(this.selectedInteraction);
+					//new SUTInteraction(this.selectedInteraction);
+			if (this.endpoint != null)
+				tempInteraction.setEndpoint(endpoint);
+			
+			sutToUpdate.setInteraction(tempInteraction);
 
-			if(!this.sutManagerBean.updateSUT(sut)) {
-				this.sutFormMessage = FormMessages.getErrorUserUpdate();
+			if(!this.sutManagerBean.updateSUT(sutToUpdate)) {
+				this.sutFormMessage = FormMessages.getErrorSutUpdate();
 				this.showSutFormMessage = true;
+				
 				return "";
 			}
 			
 			this.updateDataModel();
-			return "update_success";
+			this.sutFormMessage = FormMessages.getSutUpdate();
+			return "sut_updating_success";
 			
 		} else {
 			this.sutFormMessage = message;
@@ -195,7 +209,7 @@ public class SUTManagerController extends WebController<SUT> {
 		this.showEndpointInput = false;
 		this.showInteractionMenu = false;
 		this.endpoint = "";
-		sut = new SUT();
+		this.sut = new SUT();
 	}
 	
 	private void updateTypes() {
@@ -210,18 +224,18 @@ public class SUTManagerController extends WebController<SUT> {
 	}
 	
 	private void updateInteractions() {
-		interactionSelection = new ArrayList<SelectItem>();
+		this.interactionList = new ArrayList<SelectItem>();
 		List<SUTInteraction> interactions = getSUTInteractionList(this.selectedType);
-		interactionSelection.add(new SelectItem(SELECT_INTERACTION_DEFAULT));
+		this.interactionList.add(new SelectItem(SELECT_INTERACTION_DEFAULT));
 		for (SUTInteraction sutInteraction : interactions) {
-			interactionSelection.add(new SelectItem(sutInteraction.getType()));
+			this.interactionList.add(new SelectItem(sutInteraction.getType()));
 		}
 	}
 	
 	private boolean checkSUTFields() {
 
-		if(this.sut.getName() != null && !this.getSut().getName().equals("") && this.getSut().getDescription() != null && 
-				!this.getSut().getDescription().equals("") &&
+		if(this.sut.getName() != null && !this.sut.getName().equals("") && this.sut.getDescription() != null && 
+				!this.sut.getDescription().equals("") &&
 				this.selectedInteraction != null && !this.selectedInteraction.equals(SELECT_INTERACTION_DEFAULT) &&
 				this.selectedInteraction != null && !this.selectedInteraction.equals(SELECT_TYPE_DEFAULT)) {
 			
@@ -245,7 +259,21 @@ public class SUTManagerController extends WebController<SUT> {
 		}
 	}
 	
+	public String onSelectedTypeValue() {
+		this.showInteractionMenu = true;
+		
+		if ((this.endpoint == null) || (this.endpoint.equals(""))) 
+			this.showEndpointInput = false;
+		else
+			this.showEndpointInput = true;
+		
+		//this.endpoint = "";
+		return "";
+	}	
+	
 	public String onSelectedInteractionValue() {
+		
+		
 		if(!this.selectedInteraction.equals(SUTConstants.INTERACTION_WEBSITE))
 			this.showEndpointInput = true;
 		else
@@ -253,29 +281,16 @@ public class SUTManagerController extends WebController<SUT> {
 		return "";
 	}
 	
-	public String onSelectedTypeValue() {
-		this.showInteractionMenu = true;
-		this.showEndpointInput = false;
-		this.endpoint = "";
-		return "";
-	}
+
 	
 	public String openCreateSUTView() {
+		this.setSUTEditMode(false);
 		this.sutFormMessage = "";
 		this.showSutFormMessage = false;
 		this.resetFields();
 		return "create_sut";
 	}
-	
-	public SUT getSut() {
-		if(sut == null)
-			sut = new SUT();
-		return sut;
-	}
 
-	public void setSut(SUT sut) {
-		this.sut = sut;
-	}
 
 	public String getSutFormMessage() {
 		return sutFormMessage;
@@ -291,13 +306,16 @@ public class SUTManagerController extends WebController<SUT> {
 		return typeSelection;
 	}
 
-	public List<SelectItem> getInteractionSelection() {
+/*	public List<SelectItem> getInteractionSelection() {
 		this.updateInteractions();
-		return interactionSelection;
-	}
+		return interactionLit;
+	}*/
 
 	public String getSelectedType() {
-		return selectedType;
+		
+		if(this.getSut() != null && this.sut.getType() != null)
+			this.selectedType = this.getSut().getType();
+		return this.selectedType;
 	}
 
 	public void setSelectedType(String selectedType) {
@@ -305,7 +323,12 @@ public class SUTManagerController extends WebController<SUT> {
 	}
 
 	public String getSelectedInteraction() {
-		return selectedInteraction;
+		
+		if ( (this.selectedInteraction == null) || this.selectedInteraction.equals("") )  
+			if(this.getSut() != null && this.getSut().getInteraction() != null)
+				this.selectedInteraction = this.getSut().getInteraction().getType();
+		
+		return this.selectedInteraction;
 	}
 
 	public void setSelectedInteraction(String selectedInteraction) {
@@ -313,7 +336,12 @@ public class SUTManagerController extends WebController<SUT> {
 	}
 
 	public String getEndpoint() {
-		return endpoint;
+		
+		if ( (this.endpoint == null) || this.endpoint.equals("") )  
+			if(this.getSut() != null && this.sut.getInteraction() != null)
+				this.endpoint = this.getSut().getInteraction().getEndpoint();
+		
+		return this.endpoint;
 	}
 
 	public void setEndpoint(String endpoint) {
@@ -321,7 +349,14 @@ public class SUTManagerController extends WebController<SUT> {
 	}
 
 	public boolean getShowEndpointInput() {
-		return showEndpointInput;
+		
+		if (this.isSUTEditMode)
+			if (this.sut != null)
+				if (this.sut.getInteraction() != null)
+					if (!this.sut.getInteraction().getType().equals(SUTConstants.INTERACTION_WEBSITE))
+			this.showEndpointInput = true;
+		
+		return this.showEndpointInput;
 	}
 
 	public List<SUTInteraction> getSUTInteractionList(String type) {
@@ -329,7 +364,11 @@ public class SUTManagerController extends WebController<SUT> {
 	}
 
 	public boolean getShowInteractionMenu() {
-		return showInteractionMenu;
+		
+		if (this.isSUTEditMode)
+			this.showInteractionMenu = true;
+		
+		return this.showInteractionMenu;
 	}
 
 	public Vector<String> getSUTTypeList() {
@@ -339,7 +378,9 @@ public class SUTManagerController extends WebController<SUT> {
 	
 	
 	public String viewSutDetails() {
-		this.selectedSUT = (SUT) dataModel.getRowData();
+		
+		this.resetFields();
+		this.sut = (SUT) dataModel.getRowData();
 		this.isSUTEditMode = true;
 		this.sutFormMessage = "";
 		this.showSutFormMessage = false;
@@ -387,6 +428,37 @@ public class SUTManagerController extends WebController<SUT> {
 
 	public void setNewItemFormMessage(String newItemFormMessage) {
 		this.newItemFormMessage = newItemFormMessage;
+	}
+
+	public SUT getSut() {
+		
+		if(this.sut == null)
+			this.sut = new SUT();
+		
+		return this.sut;
+	}
+
+	public void setSut(SUT sut) {
+		this.sut = sut;
+	}
+
+	public void setSUTEditMode(boolean isSUTEditMode) {
+		this.isSUTEditMode = isSUTEditMode;
+	}
+
+	public List<SelectItem> getInteractionList() {
+		
+		if(this.interactionList == null || this.typeSelection.size() == 0)
+			this.updateInteractions();
+		
+		//if (!this.isSUTEditMode)
+		//	this.updateInteractions();
+		
+		return interactionList;
+	}
+
+	public void setInteractionList(List<SelectItem> interactionList) {
+		this.interactionList = interactionList;
 	}
 
 }

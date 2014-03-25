@@ -179,11 +179,20 @@ public class SUTManagerImpl implements SUTManagerRemote {
 		Boolean result = false;
 		
 		 try {
-			 if ( (sut != null) && (sut.getId() != null) ) {
+			 if ( (sut != null) && (sut.getId() != null) ) {				 
+				 
+				 
+				// SUTInteraction sutIn = sut.getInteraction();
+				 //sutIn = eM.merge(sutIn);
+				 
+				 //if (sutIn != null) {
+				 
 				 sut = eM.merge(sut);
 				 
 				 if (sut != null)
 					 result = true;
+			 
+				 //}
 			 }
 			 
 		} catch (IllegalArgumentException e) {
