@@ -27,6 +27,11 @@ public class FormMessages {
 	private static final String ERROR_DELETE_GROUP_EN = "Attention: Group deleting error!";
 	private static final String ERROR_GROUP_NOTCOMPILED_EN = "Attention: fill every field!";
 	private static final String ERROR_GROUP_NOTEXISTING_EN = "Attention: the group doesn't exist!";	
+	private static final String ERROR_SUT_NOTCOMPILED_EN = "Attention: fill every field!";
+	private static final String ERROR_ENDPOINT_NOTCOMPILED_EN = "Attention: endpoint is required for an interaction different from website!";
+	private static final String ERROR_SUT_NOTEXISTING_EN = "Attention: the SUT doesn't exist!";	
+	private static final String ERROR_SUT_UPDATE_OK_EN = "SUT updating successful!";
+	private static final String ERROR_SUT_UPDATE_FAIL_EN = "Attention: SUT updating error!";
 	
 	// Messaggi per Form in ITALIANO
 	private static final String ERROR_NOMATCH_IT = "Non c'è match tra i TestPlan e SUT selezionati perché i rispettivi tipi di interazioni sono diversi. Specificare quindi una differente combinazione TestPlan-SUT OPPURE definire un nuovo TestPlan o un nuovo SUT prima di creare la Sessione di Test.";	
@@ -49,7 +54,11 @@ public class FormMessages {
 	private static final String ERROR_DELETE_GROUP_IT = "Errore nella rimozione del Gruppo!";
 	private static final String ERROR_GROUP_NOTCOMPILED_IT =  "Attenzione: riempire tutti i campi!";
 	private static final String ERROR_GROUP_NOTEXISTING_IT = "Attenzione: il gruppo non esiste!";
-
+	private static final String ERROR_SUT_NOTCOMPILED_IT = "Attenzione: riempire tutti i campi!";
+	private static final String ERROR_ENDPOINT_NOTCOMPILED_IT = "Attenzione: il campo endpoint è richiesto per qualsiasi interazione differente da website";
+	private static final String ERROR_SUT_NOTEXISTING_IT = "Attenzione: il SUT non esiste!";
+	private static final String ERROR_SUT_UPDATE_FAIL_IT = "Attenzione: errore nell'aggiornamento del SUT!";
+	private static final String ERROR_SUT_UPDATE_OK_IT = " Aggiornamento del SUT avvenuto con successo!";
 
 
 	public static String getErrorNomatch() {
@@ -210,6 +219,46 @@ public class FormMessages {
 			return ERROR_GROUP_NOTEXISTING_EN;	
 		else
 			return ERROR_GROUP_NOTEXISTING_IT;
+	}
+
+	public static String getErrorSutNotCompiled() {
+		
+		if (lc.getLocale().equals(LocalizationController.ENG_LOCALIZATION))
+			return ERROR_SUT_NOTCOMPILED_EN;	
+		else
+			return ERROR_SUT_NOTCOMPILED_IT;
+	}
+
+	public static String getErrorEndpointNotCompiled() {
+
+		if (lc.getLocale().equals(LocalizationController.ENG_LOCALIZATION))
+			return ERROR_ENDPOINT_NOTCOMPILED_EN;	
+		else
+			return ERROR_ENDPOINT_NOTCOMPILED_IT;
+	}
+
+	public static String getSutNotExisting() {
+
+		if (lc.getLocale().equals(LocalizationController.ENG_LOCALIZATION))
+			return ERROR_SUT_NOTEXISTING_EN;	
+		else
+			return ERROR_SUT_NOTEXISTING_IT;
+	}
+
+	public static String getErrorSutUpdate() {
+
+		if (lc.getLocale().equals(LocalizationController.ENG_LOCALIZATION))
+			return ERROR_SUT_UPDATE_FAIL_EN;
+		else
+		return ERROR_SUT_UPDATE_FAIL_IT;
+	}
+
+	public static String getSutUpdate() {
+
+		if (lc.getLocale().equals(LocalizationController.ENG_LOCALIZATION))
+			return ERROR_SUT_UPDATE_OK_EN;
+		else
+		return ERROR_SUT_UPDATE_OK_IT;
 	}
 	
 }

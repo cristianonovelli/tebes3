@@ -1,6 +1,8 @@
 package it.enea.xlab.tebes.utils;
 
+import it.enea.xlab.tebes.common.SUTConstants;
 import it.enea.xlab.tebes.controllers.localization.LocalizationController;
+import it.enea.xlab.tebes.entity.SUTInteraction;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +33,14 @@ public class UserUtils {
 		return null;
 	}
 	
-	public static String checkSUTFields() {
+	public static String checkSUTFields(String name, String description, String selectedType, String selectedInteraction, String endpoint) {
+		
+		if (name == null || name.equals("") || description == null || description.equals("") || 
+				selectedType == null || selectedType.equals("") || selectedInteraction == null || selectedInteraction.equals("") ) 
+			return FormMessages.getErrorSutNotCompiled();
+			
+		if (!selectedInteraction.equals(SUTConstants.INTERACTION_WEBSITE) && ( (endpoint == null) || endpoint.equals("") ) )
+			return FormMessages.getErrorEndpointNotCompiled();
 		
 		return null;
 	}
