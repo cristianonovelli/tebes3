@@ -422,7 +422,11 @@ public class ReportDOM extends JXLabDOM {
 		this.setNodeValue(actionNode, "tebes:ActionName", name);
 	}
 
+	public NodeList getInputNodeList(Element actionElement) {
 
+		return actionElement.getElementsByTagName("tebes:Input");	 
+	}
+	
 	/*public void setActionDescription(Node actionNode, String description) {
 
 		this.setNodeValue(actionNode, "tebes:ActionDescription", description);
@@ -525,8 +529,18 @@ public class ReportDOM extends JXLabDOM {
 		this.setNodeAttribute(prerequisiteResultNode, "id", id.toString());
 		this.setNodeAttribute(prerequisiteResultNode, "name", name);
 		this.setNodeAttribute(prerequisiteResultNode, "result", result);
-		this.setNodeAttribute(prerequisiteResultNode, "line", new Integer(line).toString());
-		this.setNodeAttribute(prerequisiteResultNode, "message", message);
+		//this.setNodeAttribute(prerequisiteResultNode, "line", new Integer(line).toString());
+		//this.setNodeAttribute(prerequisiteResultNode, "message", message);
+		
+		Element prerequisite = (Element) prerequisiteResultNode;
+		Node single = prerequisite.getElementsByTagName("tebes:SinglePrerequisiteResult").item(0);
+		
+		//this.setNodeAttribute(single, "id", id.toString());
+		this.setNodeAttribute(single, "name", name);
+		this.setNodeAttribute(single, "result", result);
+		this.setNodeAttribute(single, "line", new Integer(line).toString());
+		this.setNodeAttribute(single, "message", message);
+		
 	}
 
 
@@ -542,6 +556,18 @@ public class ReportDOM extends JXLabDOM {
 	public void removePrerequisitesNode(Node prerequisitesNode) {
 		
 		prerequisitesNode.getParentNode().removeChild(prerequisitesNode);		
+	}
+
+
+	public void setInputSUTSource(String source, Node inputNode) {
+		
+		this.setNodeAttribute(this.getSUTNode(inputNode), "fileSource", source);
+	}
+
+
+	private Node getSUTNode(Node inputNode) {
+		
+		return ((Element) inputNode).getElementsByTagName("tebes:SUT").item(0);
 	}
 
 	

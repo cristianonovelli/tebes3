@@ -22,6 +22,9 @@ import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.naming.NamingException;
 
+import org.xlab.net.XURL;
+import org.xlab.utilities.XLabUtilities;
+
  
 
 
@@ -60,6 +63,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		
 		
 		try {
+			
 			fileManager = JNDIServices.getFileManagerService();
 			
 			Input input = taf.getInputs().get(0);
@@ -83,15 +87,20 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				report.addToFullDescription("\n-START validation XMLSCHEMA");
 
 						
-				//String fileRelPath = file.getFileName();
-				//String fileRelPath = xmlString;
+				String schema = testRule.getValue();
+				
+				// TODO bisogna passargli non il path assoluto ma l'URL della cache di TeBES
+				/*if ( !XURL.isURLExistent(schema) ) {
+					
+					schema = PropertiesUtil.getCacheDirPath().concat(XLabUtilities.getFileNameFromAbsFileName(schema));			
+				}*/
 				
 				String fileRelPath = userDocsAbsDir.concat(file.getFileName());
 				
 				report.addToFullDescription("\n-executeTestRule: xml: " + fileRelPath);
 				report.addToFullDescription("\n-executeTestRule: xsd: " + testRule.getValue());
 				
-				report = xmlSchemaValidation( fileRelPath, testRule.getValue(), report );
+				report = xmlSchemaValidation( fileRelPath, schema, report );
 				
 				report.addToFullDescription("\n-END XMLSCHEMA Validation");
 			}			
@@ -102,7 +111,16 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				
 				report.addToFullDescription("\n-START SCHEMATRON Validation");
 				
-				report = schematronValidation(xmlString, testRule.getValue(), report);
+				String schematron = testRule.getValue();
+				
+				// TODO bisogna passargli non il path assoluto ma l'URL della cache di TeBES
+				/*if ( !XURL.isURLExistent(schematron) ) {
+					
+					schematron = PropertiesUtil.getCacheDirPath().concat(XLabUtilities.getFileNameFromAbsFileName(schematron));			
+				}*/
+					
+				
+				report = schematronValidation(xmlString, schematron, report);
 				
 				report.addToFullDescription("\n-END SCHEMATRON Validation");
 			}
@@ -201,11 +219,6 @@ public class RuleManagerImpl implements RuleManagerRemote {
 	
 	public Report schematronValidation(String xmlString, String xmlSchematron, Report report) {
 
-		System.out.println("schematronValidation! azx 1");
-		
-		System.out.println("schematronValidation! azx: " + xmlString);
-		System.out.println("schematronValidation! azx: " + xmlSchematron);
-		
 		
 		// TODO
 		// verifica sia uno schematron valido

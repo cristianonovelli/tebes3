@@ -407,6 +407,19 @@ public class PropertiesUtil {
 		return getConfiguration().getString("logs.dir");
 	}
 	
-
+	public static String getCacheDirProperty() {
+		
+		return getConfiguration().getString("cache.dir");
+	}
+	
+	
+	public static String getCacheDirPath() {
+		
+		String result = PropertiesUtil.getArtifactsDirPath().concat(getCacheDirProperty());
+		
+		result = checkFinalSlash(result);
+		
+		return result;
+	}
 }
 

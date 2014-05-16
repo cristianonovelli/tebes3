@@ -6,7 +6,7 @@
     Project:                    Tecnopolo (X-Lab, Cross-TEC, ENEA)
 -->
 
-<tebes:Report 
+<tebes:Report lg="en" 
 	xmlns:tebes="http://www.ubl-italia.org/TeBES"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	
@@ -73,6 +73,24 @@
 					type="TestAssertion"
 	                skipPrerequisites="true"
 	                location="http://www.empty.it">EMPTY</tebes:Test>
+                
+                <tebes:Inputs>
+	                <tebes:Input>
+					
+					    <tebes:Id>EMPTY</tebes:Id>
+					    <tebes:Name>EMPTY</tebes:Name>
+					    
+						<tebes:SUT 
+						    interaction="EMPTY"
+							type="EMPTY" 
+							lg="EMPTY"
+							fileIdRef="EMPTY"
+							fileSource="EMPTY">		    
+						</tebes:SUT>
+
+					</tebes:Input>
+				</tebes:Inputs>
+				
                 <tebes:TestResults result="EMPTY" message="EMPTY">                	
                     <tebes:SingleResult
                     		id="0"
@@ -85,9 +103,13 @@
                     <tebes:PrerequisiteResult
                     		id="0"
                     		name="EMPTY"
-                    		result="EMPTY"
-                    		line="0"
-                            message="EMPTY" />
+                    		result="EMPTY">
+		                    <tebes:SinglePrerequisiteResult
+		                    		name="EMPTY"
+		                    		result="EMPTY"
+		                    		line="0"
+		                            message="EMPTY" />
+                    </tebes:PrerequisiteResult>
                 </tebes:Prerequisites>
             </tebes:TestAction>
             
