@@ -19,6 +19,8 @@ and set security module (see at the end of this file)
 6. Check build-package-deployment through the maven statement:
 mvn clean install -DskipTests
 
+N.B. per installare lib in maven vedere il file install-mvn-libs in ejb/lib/
+
 7. Check JUnit Tests through one of following maven statements:
 mvn clean install
 mvn clean install -Pdev-create -DskipTests

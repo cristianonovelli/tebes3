@@ -5,11 +5,13 @@ import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionDescription;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
+import it.enea.xlab.tebes.entity.FileStore;
 import it.enea.xlab.tebes.entity.GUIDescription;
 import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.InputDescription;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
+import it.enea.xlab.tebes.file.FileManagerRemote;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.report.ReportDOM;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
@@ -28,7 +30,9 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xlab.utilities.XLabDates;
 
 
@@ -47,6 +51,9 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	
 	@EJB
 	private ReportManagerRemote reportManager; 
+	
+	//@EJB
+	//private FileManagerRemote fileManager; 
 	
 	//////////////////////
 	/// ACTION METHODS ///
@@ -554,6 +561,22 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				reportDOM.setTestLgAttribute(testNode, action.getTestLanguage());
 				reportDOM.setTestLocationAttribute(testNode, action.getTestLocation());
 				reportDOM.setTestTypeAttribute(testNode, action.getTestType());
+				
+				
+				/*List<Input> inputList = action.getInputs();
+				NodeList inputs = reportDOM.getInputNodeList((Element) actionTRNode);
+				
+				Input inpuTemp = null;
+				Node inputNode = null;
+				for (int in=0; in<inputList.size(); in++) {
+					
+					inpuTemp = inputList.get(in);
+					inputNode = inputs.item(0);
+					
+					
+					FileStore file = fileManager.readFilebyIdRef(inpuTemp.getFileIdRef());
+					reportDOM.setInputSUTSource(file.getSource(), inputNode);
+				}*/
 				
 				// Adjust Last Update Datetime
 				reportDOM.setSessionLastUpdateDateTime(XLabDates.getCurrentUTC());

@@ -35,10 +35,10 @@ public class Constants {
 	public static final String USER1_SURNAME = "Frascella";
 	
 	// User2
-	public static final String USER2_EMAIL1 = "piero.desabbata@enea.it";
-	public static final String USER2_EMAIL2 = "piero2@enea.it";	
-	public static final String USER2_PASSWORD1 = "xpiero";	
-	public static final String USER2_PASSWORD2 = "piero2";	
+	public static final String USER2_EMAIL = "piero.desabbata@enea.it";
+	//public static final String USER2_EMAIL2 = "piero2@enea.it";	
+	public static final String USER2_PASSWORD = "xpiero";	
+	//public static final String USER2_PASSWORD2 = "piero2";	
 	public static final String USER2_NAME = "Piero";
 	public static final String USER2_SURNAME = "Desabbata";
 

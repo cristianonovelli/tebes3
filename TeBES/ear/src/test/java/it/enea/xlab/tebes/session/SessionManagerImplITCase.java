@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
@@ -35,6 +36,8 @@ import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.xlab.file.FileUtil;
+import org.xlab.net.XURL;
 
 
 public class SessionManagerImplITCase {
@@ -51,24 +54,20 @@ public class SessionManagerImplITCase {
 	static FileManagerController fileController;
 	
 	
+	private static String TESTPLAN_91 = "TP-91";
+	private static String TESTPLAN_1 = "TP-1";
+	private static String TESTPLAN_2 = "TP-2";
+	
+	
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
-	static User superUser, currentUser;
+	static User superUser, currentUser1, currentUser2;
+	
+	static boolean beforeOK = false;
 	 
 
 	
-	@BeforeClass
-	public static void before_testPlanManager() throws Exception {
-		
-		logger.info("*******************************************");
-		logger.info("*** TEST SessionManagerImplITCase START ***");
-		logger.info("*******************************************");
-		logger.info("");
-		
-
-		
-		logger.info("************ TEST @BeforeClass ************");				
-		logger.info("1) CONTROLLERS creating...");
+	public static void create_controllers() throws Exception {
 		
 		sessionController = (SessionManagerController) WebControllersUtilities.getManager(SessionManagerController.CONTROLLER_NAME);
 		Assert.assertNotNull(sessionController);
@@ -78,15 +77,30 @@ public class SessionManagerImplITCase {
 		
 		userAdminController = (UserAdminController) WebControllersUtilities.getManager(UserAdminController.CONTROLLER_NAME);
 		Assert.assertNotNull(userAdminController);
-
+	
 		userProfileController = (UserProfileController) WebControllersUtilities.getManager(UserProfileController.CONTROLLER_NAME);
 		Assert.assertNotNull(userProfileController);		
-
+	
 		sutController = (SUTManagerController) WebControllersUtilities.getManager(SUTManagerController.CONTROLLER_NAME);
 		Assert.assertNotNull(sutController);
-
+	
 		fileController = (FileManagerController) WebControllersUtilities.getManager(FileManagerController.CONTROLLER_NAME);
-		Assert.assertNotNull(fileController);		
+		Assert.assertNotNull(fileController);	
+		
+	}
+	
+	@BeforeClass
+	public static void before_testPlanManager() throws Exception {
+		
+		LogPrinter.before_print1();
+		
+
+		
+		logger.info("************ TEST @BeforeClass ************");				
+		logger.info("1) CONTROLLERS creating...");
+		
+		create_controllers();
+		
 		logger.info("OK! CONTROLLERS created!");
 
 		
@@ -189,9 +203,9 @@ public class SessionManagerImplITCase {
 		Long idTempUser1 = userProfileController.registration(currentUser, role1_standard);
 		Assert.assertNotNull(currentUser);
 		Assert.assertTrue(idTempUser1.intValue()>0);
-		User otherUser = new User(Constants.USER2_NAME, Constants.USER2_SURNAME, Constants.USER2_EMAIL1, Constants.USER2_EMAIL1);
+		User otherUser = new User(Constants.USER2_NAME, Constants.USER2_SURNAME, Constants.USER2_EMAIL, Constants.USER2_PASSWORD);
 		Long idTempUser2 = userProfileController.registration(otherUser, role1_standard);
-		Assert.assertNotNull(currentUser);
+		Assert.assertNotNull(otherUser);
 		Assert.assertTrue(idTempUser2.intValue()>0);
 		logger.info("OK! Two STANDARD USERS for " + currentUser.getName() + " and " + otherUser.getName() + " created!");
 		
@@ -225,141 +239,344 @@ public class SessionManagerImplITCase {
 		else
 			logger.info("NO. VALIDATION service is disabled or doesn't work");
 		
+
+		logger.info("9) URL existing CHECKING..."); 
+		beforeOK = checkTestSuites();		
+		if (beforeOK) 
+			logger.info("OK! URLs checking SUCCESSFUL!");	
+		else
+			logger.info("NO. @BEFORE Test has identified inconsistent URL in the Test Suites. See checkTestSuites() method in SessionManagerImpl.");
 		
+		logger.info("");
 		logger.info("*******************************************");
 		logger.info("");
+		
+
+		
 	}
 	
-
 	
+	private static boolean checkTestSuites() {
+		
+		boolean result;
+		
+		// TODO verificare ogni URL di ogni Test Suite
+		String url = "http://winter.bologna.enea.it/peppol_schema_rep/schematron/sdi/SDI-UBL-T10.sch";
+		//String url = "https://dl.dropboxusercontent.com/u/7198633/TS-001_UBL.xml";
+		try {
+			result = XURL.isURLExistent(url);
+		} catch (Exception e) {
+			result = false;
+			
+		}
+		
+		return result;
+	}
+
 	
 	
 	@Test
 	public void test_session() {
 
+		if (beforeOK) {
 		
-		logger.info("**************** TEST @Test ****************");			
-		logger.info("********** Part 1: Configuration ***********");	
-		
-		// USER 
-		logger.info("1) LOGIN USER");
-		currentUser = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
-		Long currentUserId = currentUser.getId();
-		Assert.assertTrue(currentUser != null);
-		Assert.assertTrue(currentUser.getId().intValue() > 0);
-		logger.info("OK! Login of user " + currentUser.getName() + " " + currentUser.getSurname() + " with id: " + currentUserId);
-		
-		
-		// TESTPLAN
-		// Lista dei TestPlan disponibili nel sistema	
-		logger.info("2) GET system TEST PLANS");
-		List<TestPlan> systemTestPlanList = testPlanController.getSystemTestPlanList();
-		Assert.assertTrue(systemTestPlanList.size()>0);
-		
-		TestPlan testPlan = null;
-		Long testPlanId;
-		String tpString = "";
-		
-		// Per ogni TestPlan del sistema... lo verifico
-		for (int i=0; i<systemTestPlanList.size();i++) {
-
-			testPlan = systemTestPlanList.get(i);
-			Assert.assertNotNull(testPlan);
-			logger.info("TestPlan name: " + testPlan.getName()); 
-						
-			tpString.concat(testPlan.getName() + " ");
+			logger.info("**************** TEST @Test ****************");			
+			logger.info("********** Part 1: Configuration ***********");	
 			
-			Assert.assertNotNull(testPlan.getWorkflow());
-			Assert.assertNotNull(testPlan.getWorkflow().getActions());
-			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));	
+			// USERS 
+			logger.info("1) LOGIN USERS");
+			currentUser1 = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
+			currentUser2 = userProfileController.login(Constants.USER2_EMAIL, Constants.USER2_PASSWORD);
+			Assert.assertTrue(currentUser1 != null);
+			Assert.assertTrue(currentUser2 != null);
 			
-			testPlanId = testPlan.getId();
-			Assert.assertTrue(testPlanId.intValue()>0);	
+			Long currentUserId = currentUser1.getId();
+			Long currentUser2Id = currentUser2.getId();
+			Assert.assertTrue(currentUser1.getId().intValue() > 0);
+			Assert.assertTrue(currentUser2.getId().intValue() > 0);
+			logger.info("OK! Login of user " + currentUser1.getName() + " " + currentUser1.getSurname() + " with id: " + currentUserId);
+			logger.info("OK! Login of user " + currentUser2.getName() + " " + currentUser2.getSurname() + " with id: " + currentUser2Id);
 			
-			// Check it
-			testPlan = testPlanController.readTestPlan(testPlanId);
-			Assert.assertNotNull(testPlan.getWorkflow());
-			Assert.assertNotNull(testPlan.getWorkflow().getActions());
-			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));
-			//logger.info(testPlan.getWorkflow().getActions().get(0).getActionSummaryString());
 			
-			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0).getInputs());
-			Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0).getInputs().get(0));		
-		}	
-		logger.info("OK! System TEST PLANS: " + tpString);
-		
-		
-		
-		// Selezione di un TestPlan generico per l'utente (currentUser)
-		logger.info("3) SELECT and IMPORT TEST PLAN");
-		TestPlan selectedTestPlan = systemTestPlanList.get(0);
-		Assert.assertNotNull(selectedTestPlan);
-
-		// Copia e importazione del TestPlan scelto per l'utente (currentUser)
-		testPlanId = testPlanController.cloneTestPlan(selectedTestPlan, currentUserId);
-		Assert.assertTrue(testPlanId.intValue()>0);	
-		
-		// Il testPlan selezionato diventa quello clonato per lo User
-		selectedTestPlan = testPlanController.readTestPlan(testPlanId);
-		Assert.assertNotNull(selectedTestPlan.getWorkflow());
-		Assert.assertNotNull(selectedTestPlan.getWorkflow().getActions());
-		Assert.assertNotNull(selectedTestPlan.getWorkflow().getActions().get(0));
-		
-		Assert.assertNotNull(selectedTestPlan.getWorkflow().getActions().get(0).getInputs());
-		Assert.assertNotNull(selectedTestPlan.getWorkflow().getActions().get(0).getInputs().get(0));		
-
-		logger.info("OK! IMPORTED selected TestPlan " + selectedTestPlan.getName() + " for user " + currentUser.getName() + " " + currentUser.getSurname());
-		
-		
-		//  SUT
-		logger.info("4) Select SUT TYPE/INTERACTION and Create SUT for User");
-		
-		// 1. Recupero lista dei SUT Type direttamente dall'oggetto SUT
-		Vector<String> systemSUTTypeList = sutController.getSUTTypeList();
-		
-		// 2. L'utente seleziona un SUT type
-		String defaultSUTType = systemSUTTypeList.get(0);
-		Assert.assertTrue(defaultSUTType.equals(SUTConstants.SUT_TYPE1_DOCUMENT));
-
-		// 3. richiamo servizio che dato il tipo mi restituisce una lista di possibili interazioni
-		// Get supported Interaction for the default SUT Type
-		List<SUTInteraction> sutInteractionList = sutController.getSUTInteractionList(defaultSUTType);
-		Assert.assertTrue(sutInteractionList.size() == 4);		
-		
-		// 4. l'utente sceglie un'interazione tra quelle disponibili, deve avvenire un cast
-		SUTInteraction defaultInteraction = (SUTInteraction) sutInteractionList.get(0);
-		Assert.assertTrue(defaultInteraction.getType().equals(SUTConstants.INTERACTION_WEBSITE));
-
-		// 5. creo l'interazione utente con il tipo scelto
-		SUTInteraction interaction4User= new SUTInteraction(defaultInteraction.getType());
-		interaction4User.setEndpoint(null);
+			// TESTPLAN
+			// Lista dei TestPlan disponibili nel sistema	
+			logger.info("2) GET system TEST PLANS");
+			List<TestPlan> systemTestPlanList = testPlanController.getSystemTestPlanList();
+			Assert.assertTrue(systemTestPlanList.size()>0);
 			
-		// 6. inserisce una descrizione
-		String sutDescription = "XML document1 uploaded by email";
-
-		// 7. Creo SUT e lo persisto per l'utente corrente
-		SUT sut = new SUT("SystemSUT1-1", defaultSUTType, interaction4User, sutDescription);
-		Long sutId = sutController.createSUT(sut, currentUser);
-		Assert.assertNotNull(sutId);				
-		Assert.assertTrue(sutId.intValue()>0);	
-		logger.info("OK! CREATED SUT " + sut.getName() + " with type: " + sut.getType() + " and interaction: " + sut.getInteraction().getType());
+			TestPlan testPlan = null;
+			Long testPlan91Id, testPlan1Id;
+			String tpString = "";
+			
+			Hashtable<String, TestPlan> tpTable = new Hashtable<String, TestPlan>();
+			
+			// Per ogni TestPlan del sistema... 
+			// lo inserisco in una hashtable e lo verifico
+			for (int i=0; i<systemTestPlanList.size();i++) {
+	
+				testPlan = systemTestPlanList.get(i);
+				Assert.assertNotNull(testPlan);
+				logger.info("TestPlan name: " + testPlan.getName()); 
+							
+				tpTable.put(testPlan.getName(), testPlan);
+				
+				tpString.concat(testPlan.getName() + " ");
+				
+				Assert.assertNotNull(testPlan.getWorkflow());
+				Assert.assertNotNull(testPlan.getWorkflow().getActions());
+				Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));	
+				
+				testPlan91Id = testPlan.getId();
+				Assert.assertTrue(testPlan91Id.intValue()>0);	
+				
+				// Check it
+				testPlan = testPlanController.readTestPlan(testPlan91Id);
+				Assert.assertNotNull(testPlan.getWorkflow());
+				Assert.assertNotNull(testPlan.getWorkflow().getActions());
+				Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));
+				//logger.info(testPlan.getWorkflow().getActions().get(0).getActionSummaryString());
+				
+				Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0).getInputs());
+				Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0).getInputs().get(0));		
+			}	
+			logger.info("OK! System TEST PLANS: " + tpString);
+			
+			
+			
+			// Selezione di un TestPlan generico per l'utente (currentUser)
+			logger.info("3) SELECT and IMPORT TESTPLANS");
+			TestPlan testPlan91 = tpTable.get(TESTPLAN_91);
+			TestPlan testPlan1 = tpTable.get(TESTPLAN_1);
+					//systemTestPlanList.get(SELECTED_TESTPLAN);
+			Assert.assertNotNull(testPlan91);
+			Assert.assertNotNull(testPlan1);
+	
+			// Copia e importazione del TestPlan scelto per l'utente (currentUser)
+			testPlan91Id = testPlanController.cloneTestPlan(testPlan91, currentUserId);
+			testPlan1Id = testPlanController.cloneTestPlan(testPlan1, currentUser2Id);
+			Assert.assertTrue(testPlan91Id.intValue()>0);
+			Assert.assertTrue(testPlan1Id.intValue()>0);
+			
+			// Il testPlan selezionato diventa quello clonato per lo User
+			testPlan91 = testPlanController.readTestPlan(testPlan91Id);
+			testPlan1 = testPlanController.readTestPlan(testPlan1Id);
+			Assert.assertNotNull(testPlan91.getWorkflow());
+			Assert.assertNotNull(testPlan91.getWorkflow().getActions());
+			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0));
+			
+			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0).getInputs());
+			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0).getInputs().get(0));		
+	
+			logger.info("OK! IMPORTED selected TestPlans " + testPlan91.getName() + " and " + testPlan1.getName() +
+					" for users " + currentUser1.getName() + " and " + currentUser2.getName());
+			
+			
+			//  SUT
+			logger.info("4) Select SUT TYPE/INTERACTION and Create SUT for User");
+			
+			// 1. Recupero lista dei SUT Type direttamente dall'oggetto SUT
+			Vector<String> systemSUTTypeList = sutController.getSUTTypeList();
+			
+			// 2. L'utente seleziona un SUT type
+			String defaultSUTType = systemSUTTypeList.get(0);
+			Assert.assertTrue(defaultSUTType.equals(SUTConstants.SUT_TYPE1_DOCUMENT));
+	
+			// 3. richiamo servizio che dato il tipo mi restituisce una lista di possibili interazioni
+			// Get supported Interaction for the default SUT Type
+			List<SUTInteraction> sutInteractionList = sutController.getSUTInteractionList(defaultSUTType);
+			Assert.assertTrue(sutInteractionList.size() == 4);		
+			
+			// 4. l'utente sceglie un'interazione tra quelle disponibili, deve avvenire un cast
+			SUTInteraction defaultInteraction = (SUTInteraction) sutInteractionList.get(0);
+			Assert.assertTrue(defaultInteraction.getType().equals(SUTConstants.INTERACTION_WEBSITE));
+	
+			// 5. creo l'interazione utente con il tipo scelto
+			SUTInteraction interaction4User= new SUTInteraction(defaultInteraction.getType());
+			interaction4User.setEndpoint(null);
+			SUTInteraction interaction4User2= new SUTInteraction(defaultInteraction.getType());
+			interaction4User2.setEndpoint(null);
+			
+			// 6. inserisce una descrizione
+			String sutDescription = "XML document1 uploaded by email";
+	
+			// 7. Creo SUT e lo persisto per l'utente corrente
+			SUT sut = new SUT("SystemSUT1-1", defaultSUTType, interaction4User, sutDescription);
+			SUT sut2 = new SUT("SystemSUT2-2", defaultSUTType, interaction4User2, sutDescription);
+			Long sutId = sutController.createSUT(sut, currentUser1);
+			Long sut2Id = sutController.createSUT(sut2, currentUser2);
+			Assert.assertNotNull(sutId);				
+			Assert.assertTrue(sutId.intValue()>0);	
+			logger.info("OK! CREATED SUT1 " + sut.getName() + " with type: " + sut.getType() + " and interaction: " + sut.getInteraction().getType());
+			logger.info("OK! CREATED SUT2 " + sut2.getName() + " with type: " + sut2.getType() + " and interaction: " + sut2.getInteraction().getType());
+	
+			
+			// Nel momento in cui l'utente avvia il test
+			// il sistema, nel controller, effettua prima una verifica di consistenza ( check() )
+			// verificando che Test Plan selezionato e SUT di default siano compatibili
+			// 1. tra loro
+			// 2. con quanto supportato dal sistema
+			// SE questa funzione ha successo si passa alla createSession()
+			// ALTRIMENTI è necessario specificare/creare un altro SUT da abbinare gli input "inconsistenti"
+			logger.info("5) CREATING SESSION...");
+			
+			Long sessionId = sessionController.createSession(currentUserId, sutId, testPlan91Id);
+			Assert.assertNotNull(sessionId);
+			System.out.println("sessionId:" + sessionId);
+			Assert.assertTrue(sessionId.intValue()>0);		
+			logger.info("OK! CREATE SESSION with id " + sessionId);
+	
+			Long session2Id = sessionController.createSession(currentUser2Id, sut2Id, testPlan1Id);
+			Assert.assertNotNull(session2Id);
+			System.out.println("sessionId:" + session2Id);
+			Assert.assertTrue(session2Id.intValue()>0);		
+			logger.info("OK! CREATE SESSION2 with id " + session2Id);
+	
+					
+			
+			
+			
+			
+			// SESSION EXECUTION
+			execution(sessionId);
+			
+			execution(session2Id);
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+		
+		
+		
+		}
 
 		
-		// Nel momento in cui l'utente avvia il test
-		// il sistema, nel controller, effettua prima una verifica di consistenza ( check() )
-		// verificando che Test Plan selezionato e SUT di default siano compatibili
-		// 1. tra loro
-		// 2. con quanto supportato dal sistema
-		// SE questa funzione ha successo si passa alla createSession()
-		// ALTRIMENTI è necessario specificare/creare un altro SUT da abbinare gli input "inconsistenti"
-		logger.info("5) CREATING SESSION...");
+	}
 		
-		Long sessionId = sessionController.createSession(currentUserId, sutId, testPlanId);
-		Assert.assertNotNull(sessionId);
-		System.out.println("sessionId:" + sessionId);
-		Assert.assertTrue(sessionId.intValue()>0);		
-		logger.info("OK! CREATE SESSION with id " + sessionId);
+	
 
+	
+	
+	
+	@AfterClass
+	public static void after_testPlanManager() throws Exception {
+
+		if (beforeOK) {
+		
+			Boolean deleting;
+	
+			// TODO N.B.
+			// è necessario cancellare i workflow prima di cancellare Role > User > TestPlan
+			// sarebbe più logico che le cancellazioni fossero a cascata (ovvero, cancello una di queste entity e vengono cancellate quelle successive)
+			// Role > User > TestPlan > workflow > actions
+			List<Long> sessionIdList = sessionController.getSessionIdList(currentUser1);
+			Assert.assertTrue(sessionIdList.size() == 1);	
+			
+			boolean deletingSession = sessionController.deleteSession(sessionIdList.get(0)); 
+			Assert.assertTrue(deletingSession);
+			
+			
+			
+			
+			
+			// Get Role List
+			List<Long> roleIdList = userAdminController.getRoleIdList();
+			Assert.assertTrue(roleIdList.size() == 4);
+			
+			//Role tempRole;
+			//Long tempRoleId;
+			
+			
+			
+			
+			// Cancello ogni ruolo
+	/*		for (int u=0;u<roleIdList.size();u++) {
+				
+				tempRoleId = (Long) roleIdList.get(u);
+				Assert.assertTrue(tempRoleId.intValue() > 0);
+	
+				tempRole = userAdminController.readRole(tempRoleId);			
+				Assert.assertNotNull(tempRole);
+							
+				// DELETE Role
+				deleting = userAdminController.deleteRole(tempRole.getId());
+				Assert.assertTrue(deleting);			
+			}		*/
+			
+			List<Long> userIdList = userAdminController.getUserIdList(superUser);
+			
+			User tempUser;
+			Long tempUserId;
+			for (int u=0;u<userIdList.size();u++) {
+				
+				tempUserId = (Long) userIdList.get(u);
+				Assert.assertTrue(tempUserId.intValue() > 0);
+	
+				tempUser = userAdminController.readUser(tempUserId);			
+				Assert.assertNotNull(tempUser);
+							
+				// DELETE User
+				if (tempUser.getRole().getLevel() != role4_superuser.getLevel() ) {			
+					deleting = userAdminController.deleteUser(tempUser.getId());
+					logger.info("Deleting User with ID: " + tempUser.getId());
+					Assert.assertTrue(deleting);			
+				}
+			}
+	
+			
+			// Get Role List
+			//roleIdList = userAdminController.getRoleIdList();
+			//Assert.assertTrue(roleIdList.size() == 0);
+			
+			// Last Check
+			// Sono stati eliminati tutti gli utenti (a cascata)?
+			userIdList = userAdminController.getUserIdList(superUser);
+			Assert.assertTrue(userIdList.size() == 1);
+			
+			
+			// Get Session List
+			sessionIdList = sessionController.getSessionIdList(currentUser1);
+			Assert.assertTrue(sessionIdList.size() == 0);
+			
+	
+			List<FileStore> documentList = fileController.getFileListByType("document");
+			Assert.assertTrue(documentList.size() == 0);
+			
+			// Cancello ogni ruolo
+			/*for (int s=0;s<sessionIdList.size();s++) {
+	
+							
+				// DELETE Role
+				deleting = sessionController.deleteSession(sessionIdList.get(s));
+				Assert.assertTrue(deleting);			
+			}	*/	
+			
+		}
+	}
+	
+	// TODO da inserire nelle xlab-common
+	public byte[] convertInputStreamToByteArray(InputStream is) throws IOException { 
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+		
+		int reads = is.read(); 
+		while(reads != -1){ 
+			baos.write(reads); 
+			reads = is.read(); 
+		} 
+		
+		return baos.toByteArray(); 
+		
+	}
+	
+	
+	
+	private void execution(Long sessionId) {
 		
 		
 		logger.info("********************************************");
@@ -384,10 +601,12 @@ public class SessionManagerImplITCase {
 		logger.info("Session ID: " + currentSession.getId().intValue());
 		logger.info("User ID: " + currentSession.getUser().getId().intValue());
 		
-		selectedTestPlan = currentSession.getTestPlan();
-		Assert.assertNotNull(selectedTestPlan);
-		Assert.assertTrue(selectedTestPlan.getId().intValue() > 0);
-		logger.info("TestPlan ID: " + selectedTestPlan.getId().intValue());
+		TestPlan testPlan = currentSession.getTestPlan();
+		Assert.assertNotNull(testPlan);
+		Assert.assertTrue(testPlan.getId().intValue() > 0);
+		logger.info("TestPlan ID: " + testPlan.getId().intValue());
+		
+		SUT sut = currentSession.getSut();
 		
 		// Check, provo a prendere un valore dall'oggetto sut contenuto in session
 		Assert.assertTrue(currentSession.getSut().getInteraction().getType().equals(SUTConstants.INTERACTION_WEBSITE));
@@ -399,6 +618,7 @@ public class SessionManagerImplITCase {
 		logger.info("OK! SESSION Retrieved!");
 		
 		
+		List<FileStore> documentList = new Vector<FileStore>();
 		
 		
 		// GET Workflow
@@ -433,13 +653,13 @@ public class SessionManagerImplITCase {
 		// 2. l'utente non decide di sospendere la sessione di test
 		// 3. l'utente non decide di annullare la sessione di test
 		// 4. non raggiungo il numero massimo di fallimenti per la stessa action
-		boolean running = true;
+		
 		List<Input> inputList;
 		String fileIdRef;
 		
 		String absSuperUserDocFilePath = PropertiesUtil.getSuperUserDocsDirPath();
 		
-		List<FileStore> documentList = new Vector<FileStore>();
+		
 		
 		// Definisco un contatore per evitare che la stessa Action si ripeta all'infinito
 		int failuresForAction = 0;
@@ -448,7 +668,9 @@ public class SessionManagerImplITCase {
 		Action currentAction;
 		
 		
-	
+		boolean running = true;
+		
+		
 		// La variabile di controllo "running" diventa false in uno di questi 5 casi:
 		// 		report.getState().equals(Report.getFinalState()) ||
 		//		currentSession.getState().equals(Session.getSuspendedState()) ||
@@ -472,7 +694,7 @@ public class SessionManagerImplITCase {
 			currentSession = sessionController.runWorkflow(workflow, currentSession);
 
 			// REFRESH workflow, actionMark and report
-			workflow = testPlanController.readTestPlan(testPlanId).getWorkflow();		
+			workflow = testPlanController.readTestPlan(testPlan.getId()).getWorkflow();		
 			actionMark = workflow.getActionMark();		
 			report = currentSession.getReport();
 			
@@ -511,6 +733,7 @@ public class SessionManagerImplITCase {
 				logger.info("Required Inputs: " + inputList.size());	
 				
 				Input inputTemp = null;
+				// PER OGNI INPUT
 				for (int i=0; i<inputList.size(); i++) {
 				
 					logger.info("Input i: " + i);
@@ -529,10 +752,10 @@ public class SessionManagerImplITCase {
 						// 1. UPLOAD
 						// a livello di Test passo il file al FileController 
 						// questo file viene copiato dalla cartella TeBES_Artifacts/users/0/docs/
-						if (i==0)
-							fileName = "ubl-invoice_withError.xml";
-						else
+						if ( !currentAction.getActionName().equals("Wrong XMLSchema-UBL-T10") )
 							fileName = "ubl-invoice.xml";
+						else
+							fileName = "ubl-invoice_withError.xml";
 						
 						
 						// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
@@ -544,6 +767,8 @@ public class SessionManagerImplITCase {
 							fileInputStream = new FileInputStream(absSuperUserDocFilePath.concat(fileName));
 							fileByteArray = this.convertInputStreamToByteArray(fileInputStream);
 
+							logger.info("File to UPLOAD: " + absSuperUserDocFilePath.concat(fileName));
+							
 							currentSession = fileController.upload(inputTemp, fileName, sut.getType(), fileByteArray, currentSession);
 							logger.info("OK Input by UPLOAD");
 
@@ -643,9 +868,6 @@ public class SessionManagerImplITCase {
 		// oppure se l'interazione è automatica
 		// in ogni caso un controllo di questo tipo per evitare loop infiniti dovrebbe esserci
 		
-		
-		
-		
 		// TODO quando si chiude la sessione di test?
 		// TODO closeSession
 		// TODO session.setEndDateTime(endDateTime);
@@ -654,7 +876,7 @@ public class SessionManagerImplITCase {
 			
 		// TODO manca il filtro per utente, per ora così agisco su i file di TUTTI
 		documentList = fileController.getFileListByType(sut.getType());
-		Assert.assertTrue(documentList.size() == 2);
+		//Assert.assertTrue(documentList.size() == 2);
 		logger.info("Documenti caricati: " + documentList.size());
 		
 
@@ -674,121 +896,6 @@ public class SessionManagerImplITCase {
 		else
 			logger.info("Report NULL!");
 		logger.info("***************");
-		
 	}
-		
-	
-
-	
-	
-	
-	@AfterClass
-	public static void after_testPlanManager() throws Exception {
-
-		Boolean deleting;
-
-		// TODO N.B.
-		// è necessario cancellare i workflow prima di cancellare Role > User > TestPlan
-		// sarebbe più logico che le cancellazioni fossero a cascata (ovvero, cancello una di queste entity e vengono cancellate quelle successive)
-		// Role > User > TestPlan > workflow > actions
-		List<Long> sessionIdList = sessionController.getSessionIdList(currentUser);
-		Assert.assertTrue(sessionIdList.size() == 1);	
-		
-		boolean deletingSession = sessionController.deleteSession(sessionIdList.get(0)); 
-		Assert.assertTrue(deletingSession);
-		
-		
-		
-		
-		
-		// Get Role List
-		List<Long> roleIdList = userAdminController.getRoleIdList();
-		Assert.assertTrue(roleIdList.size() == 4);
-		
-		//Role tempRole;
-		//Long tempRoleId;
-		
-		
-		
-		
-		// Cancello ogni ruolo
-/*		for (int u=0;u<roleIdList.size();u++) {
-			
-			tempRoleId = (Long) roleIdList.get(u);
-			Assert.assertTrue(tempRoleId.intValue() > 0);
-
-			tempRole = userAdminController.readRole(tempRoleId);			
-			Assert.assertNotNull(tempRole);
-						
-			// DELETE Role
-			deleting = userAdminController.deleteRole(tempRole.getId());
-			Assert.assertTrue(deleting);			
-		}		*/
-		
-		List<Long> userIdList = userAdminController.getUserIdList(superUser);
-		
-		User tempUser;
-		Long tempUserId;
-		for (int u=0;u<userIdList.size();u++) {
-			
-			tempUserId = (Long) userIdList.get(u);
-			Assert.assertTrue(tempUserId.intValue() > 0);
-
-			tempUser = userAdminController.readUser(tempUserId);			
-			Assert.assertNotNull(tempUser);
-						
-			// DELETE User
-			if (tempUser.getRole().getLevel() != role4_superuser.getLevel() ) {			
-				deleting = userAdminController.deleteUser(tempUser.getId());
-				logger.info("Deleting User with ID: " + tempUser.getId());
-				Assert.assertTrue(deleting);			
-			}
-		}
-
-		
-		// Get Role List
-		//roleIdList = userAdminController.getRoleIdList();
-		//Assert.assertTrue(roleIdList.size() == 0);
-		
-		// Last Check
-		// Sono stati eliminati tutti gli utenti (a cascata)?
-		userIdList = userAdminController.getUserIdList(superUser);
-		Assert.assertTrue(userIdList.size() == 1);
-		
-		
-		// Get Session List
-		sessionIdList = sessionController.getSessionIdList(currentUser);
-		Assert.assertTrue(sessionIdList.size() == 0);
-		
-
-		List<FileStore> documentList = fileController.getFileListByType("document");
-		Assert.assertTrue(documentList.size() == 0);
-		
-		// Cancello ogni ruolo
-		/*for (int s=0;s<sessionIdList.size();s++) {
-
-						
-			// DELETE Role
-			deleting = sessionController.deleteSession(sessionIdList.get(s));
-			Assert.assertTrue(deleting);			
-		}	*/	
-	}
-	
-	// TODO da inserire nelle xlab-common
-	public byte[] convertInputStreamToByteArray(InputStream is) throws IOException { 
-		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
-		
-		int reads = is.read(); 
-		while(reads != -1){ 
-			baos.write(reads); 
-			reads = is.read(); 
-		} 
-		
-		return baos.toByteArray(); 
-		
-	}
-	
-	
 }
 
