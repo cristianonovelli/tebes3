@@ -523,12 +523,19 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
-	public void setPrerequisiteResult(Node prerequisiteResultNode, Long id,
-			String name, String result, int line, String message) {
+	public void setPrerequisiteResult(
+			Node prerequisiteResultNode, 
+			Long id,
+			String name, 
+			String note,
+			String result, 
+			int line, 
+			String message) {
 		
 		this.setNodeAttribute(prerequisiteResultNode, "id", id.toString());
 		this.setNodeAttribute(prerequisiteResultNode, "name", name);
 		this.setNodeAttribute(prerequisiteResultNode, "result", result);
+		this.setNodeAttribute(prerequisiteResultNode, "description", note);
 		//this.setNodeAttribute(prerequisiteResultNode, "line", new Integer(line).toString());
 		//this.setNodeAttribute(prerequisiteResultNode, "message", message);
 		
@@ -559,15 +566,76 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
-	public void setInputSUTSource(String source, Node inputNode) {
+
+
+	public void duplicateInputTemplateNode(Element actionElement) {
 		
-		this.setNodeAttribute(this.getSUTNode(inputNode), "fileSource", source);
+		Node inputNodeTemplate = this.getFirstInputNode(actionElement);
+		
+		Node inputNodeTemplateClone = inputNodeTemplate.cloneNode(true);
+		inputNodeTemplateClone = this.doc.importNode(inputNodeTemplateClone, true); 
+		this.insertInputNode(inputNodeTemplateClone, actionElement);
 	}
 
 
-	private Node getSUTNode(Node inputNode) {
+	private Node getFirstInputNode(Element actionElement) {
+
+		return this.getInputNodeList(actionElement).item(0);
+	}
+
+	
+	public void insertInputNode(Node inputNode, Element actionElement) {
+
+		Node inputsNode = this.getInputsNode(actionElement);
+		inputsNode.insertBefore(inputNode, null);
+	}
+
+
+	private Node getInputsNode(Element actionElement) {
+		
+		return actionElement.getElementsByTagName("tebes:Inputs").item(0);
+	}
+
+
+	public void setInputName(String name, Node inputNode) {
+		
+		this.setNodeValue(inputNode, "tebes:Name", name);
+	}
+	
+
+
+
+	public Node getSUTNode(Node inputNode) {
 		
 		return ((Element) inputNode).getElementsByTagName("tebes:SUT").item(0);
+	}
+
+	public void setInputSUTSource(String source, Node sutNode) {
+		
+		this.setNodeAttribute(sutNode, "fileSource", source);
+	}
+	
+	public void setInputSUTInteraction(String interaction, Node sutNode) {
+		
+		this.setNodeAttribute(sutNode, "interaction", interaction);
+	}
+
+
+	public void setInputSUTType(String type, Node sutNode) {
+		
+		this.setNodeAttribute(sutNode, "type", type);
+	}
+
+
+	public void setInputSUTLg(String lg, Node sutNode) {
+		
+		this.setNodeAttribute(sutNode, "lg", lg);
+	}
+
+
+	public void setInputSUTIdRef(String fileIdRef, Node sutNode) {
+		
+		this.setNodeAttribute(sutNode, "fileIdRef", fileIdRef);
 	}
 
 	

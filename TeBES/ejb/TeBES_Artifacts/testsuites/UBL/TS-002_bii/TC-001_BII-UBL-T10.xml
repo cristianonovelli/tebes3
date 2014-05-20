@@ -73,9 +73,7 @@
         name="BIIPROFILES-UBL-T10" 
         tebes:isNotePresent="false">
         
-        <taml:description>
-            BIIPROFILES UBL Invoice Schematron Validation.
-        </taml:description>
+        <taml:description>BIIPROFILES UBL Invoice Schematron Validation.</taml:description>
         
         <taml:normativeSource>
             <taml:comment></taml:comment>
@@ -112,9 +110,7 @@
         name="BIIRULES-UBL-T10" 
         tebes:isNotePresent="false">
         
-        <taml:description>
-            BIIRULES UBL Invoice Schematron Validation.
-        </taml:description>
+        <taml:description>BIIRULES UBL Invoice Schematron Validation.</taml:description>
         
         <taml:normativeSource>
             <taml:comment></taml:comment>

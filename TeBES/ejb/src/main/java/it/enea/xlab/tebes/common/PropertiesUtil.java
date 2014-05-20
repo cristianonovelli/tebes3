@@ -100,10 +100,14 @@ public class PropertiesUtil {
 		return getConfiguration().getString("reports.dir");
 	}
 	
+	public static String getFileManagerProperty() {
+		
+		return getConfiguration().getString("file.manager");
+	}
 	
 	
 	/**
-	 * Get TeBES home final URL
+	 * Get TeBES home final URL 
 	 */
 	public static String getTeBESURL() {
 		
@@ -113,6 +117,19 @@ public class PropertiesUtil {
 		return tebesURL;
 	}
 	
+	
+	/**
+	 * Get TeBES home final URL
+	 */
+	public static String getTeBESFileURL(String fileIdRef, String userId) {
+		
+		String tebesURL = getTeBESURL();
+		tebesURL = checkFinalSlash(tebesURL);
+		
+		tebesURL = tebesURL.concat(getFileManagerProperty()).concat("?userId=" + userId + "fileIdRef=").concat(fileIdRef);
+
+		return tebesURL;
+	}
 	
 	
 	/**

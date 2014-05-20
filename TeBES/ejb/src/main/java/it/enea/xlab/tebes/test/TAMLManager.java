@@ -267,6 +267,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			predicate.setLogicConnectorIsPresent(false);
 
 			String comment = "Generated from Action: ".concat(action.getActionName());
+			comment = tamlDOM.getDescriptionValue(testAssertionNode);
 			
 			///// Creazione della TAF ///// 			
 			taf = new TAF(action.getActionName(), action.isPrerequisite(), target, predicate, prerequisites, action.isSkipTurnedON(), prescription, reportHashtable, action.getInputs(), comment);

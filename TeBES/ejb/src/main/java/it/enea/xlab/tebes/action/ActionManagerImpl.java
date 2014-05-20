@@ -2,6 +2,7 @@ package it.enea.xlab.tebes.action;
 
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
+import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionDescription;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
@@ -53,7 +54,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	private ReportManagerRemote reportManager; 
 	
 	//@EJB
-	//private FileManagerRemote fileManager; 
+	//private FileManagerRemote fileManager = null; 
 	
 	//////////////////////
 	/// ACTION METHODS ///
@@ -562,21 +563,34 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				reportDOM.setTestLocationAttribute(testNode, action.getTestLocation());
 				reportDOM.setTestTypeAttribute(testNode, action.getTestType());
 				
-				
-				/*List<Input> inputList = action.getInputs();
+				// Set Input nel Report
+				List<Input> inputList = action.getInputs();
 				NodeList inputs = reportDOM.getInputNodeList((Element) actionTRNode);
 				
+				if ( inputList.size() > inputs.getLength() ) 			
+					for (int inn=1; inn<inputList.size(); inn++) 					
+						reportDOM.duplicateInputTemplateNode((Element) actionTRNode);
+								
 				Input inpuTemp = null;
-				Node inputNode = null;
+				Node inputNode = null, sutNode = null;
+				
 				for (int in=0; in<inputList.size(); in++) {
 					
 					inpuTemp = inputList.get(in);
-					inputNode = inputs.item(0);
-					
-					
-					FileStore file = fileManager.readFilebyIdRef(inpuTemp.getFileIdRef());
-					reportDOM.setInputSUTSource(file.getSource(), inputNode);
-				}*/
+					inputNode = inputs.item(in);
+										
+					// Inpute Name
+					reportDOM.setInputName(inpuTemp.getName(), inputNode);
+					// Input SUT
+					sutNode = reportDOM.getSUTNode(inputNode);
+					reportDOM.setInputSUTInteraction(inpuTemp.getInteraction(), sutNode);
+					reportDOM.setInputSUTType(inpuTemp.getType(), sutNode);
+					reportDOM.setInputSUTLg(inpuTemp.getLg(), sutNode);
+					reportDOM.setInputSUTIdRef(inpuTemp.getFileIdRef(), sutNode);
+					String inputSource = PropertiesUtil.getTeBESFileURL(inpuTemp.getFileIdRef(), session.getUser().getId().toString());
+					reportDOM.setInputSUTSource(inputSource, sutNode);
+					//FileStore file = fileManager.readFilebyIdRef(inpuTemp.getFileIdRef());
+				}
 				
 				// Adjust Last Update Datetime
 				reportDOM.setSessionLastUpdateDateTime(XLabDates.getCurrentUTC());
