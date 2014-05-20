@@ -76,10 +76,7 @@
                 
                 <tebes:Inputs>
 	                <tebes:Input>
-					
-					    <tebes:Id>EMPTY</tebes:Id>
-					    <tebes:Name>EMPTY</tebes:Name>
-					    
+					    <tebes:Name>EMPTY</tebes:Name>					    
 						<tebes:SUT 
 						    interaction="EMPTY"
 							type="EMPTY" 
@@ -87,7 +84,6 @@
 							fileIdRef="EMPTY"
 							fileSource="EMPTY">		    
 						</tebes:SUT>
-
 					</tebes:Input>
 				</tebes:Inputs>
 				
@@ -103,6 +99,7 @@
                     <tebes:PrerequisiteResult
                     		id="0"
                     		name="EMPTY"
+                    		description="EMPTY"
                     		result="EMPTY">
 		                    <tebes:SinglePrerequisiteResult
 		                    		name="EMPTY"

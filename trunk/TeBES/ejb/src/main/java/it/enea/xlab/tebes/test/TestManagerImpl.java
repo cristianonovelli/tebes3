@@ -221,11 +221,11 @@ public class TestManagerImpl implements TestManagerRemote {
 										report.addToFullDescription("\nTAF Execution: " + report.getTempResult().getGlobalResult());
 										report.addToFullDescription("\nisPrerequisite: " + tafRicorsiva.isPrerequisite());
 										
-										reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), tafRicorsiva.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
+										reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), tafRicorsiva.getName(), tafRicorsiva.getNote(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
 
 									}
 									else {
-										reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), tafRicorsiva.getName(), "syserror", 0, "Validation System Error: check Validation Project from TestManagerImpl.executeTAF method.");
+										reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), tafRicorsiva.getName(), tafRicorsiva.getNote(), "syserror", 0, "Validation System Error: check Validation Project from TestManagerImpl.executeTAF method.");
 										
 										report.addToFullDescription("\nTAF Execution: tempResult NULL");
 									}

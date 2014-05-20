@@ -38,7 +38,6 @@
 			<tebes:Inputs>
 				<tebes:Input>
 					
-				    <tebes:Id>IN-1_TA-1_TP-2</tebes:Id>
 				    <tebes:Name>IN-1_TA-1_TP-2</tebes:Name>
 				    
 					<tebes:InputDescription lg="en">Send UBL Invoice.</tebes:InputDescription>
@@ -141,7 +140,6 @@
 			<tebes:Inputs>
 				<tebes:Input>
 					
-				    <tebes:Id>IN-1_TA-2_TP-1</tebes:Id>
 				    <tebes:Name>IN-1_TA-2_TP-1</tebes:Name>
 				    
 					<tebes:InputDescription lg="en">Send UBL Invoice.</tebes:InputDescription>
