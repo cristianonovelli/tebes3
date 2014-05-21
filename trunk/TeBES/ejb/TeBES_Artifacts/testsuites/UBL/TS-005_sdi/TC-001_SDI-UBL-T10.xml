@@ -37,9 +37,7 @@
         name="SDI-UBL" 
         tebes:isNotePresent="false">
 
-        <taml:description>
-            Italian INTERCENT-ER UBL Invoice Schematron Validation.
-        </taml:description>
+        <taml:description>Italian INTERCENT-ER UBL Invoice Schematron Validation.</taml:description>
         
         <taml:normativeSource>
             <taml:comment></taml:comment>

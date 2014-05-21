@@ -290,12 +290,12 @@ public class SessionManagerImplITCase {
 			Assert.assertTrue(currentUser1 != null);
 			Assert.assertTrue(currentUser2 != null);
 			
-			Long currentUserId = currentUser1.getId();
-			Long currentUser2Id = currentUser2.getId();
+			Long currentUser91Id = currentUser1.getId();
+			Long currentUser1Id = currentUser2.getId();
 			Assert.assertTrue(currentUser1.getId().intValue() > 0);
 			Assert.assertTrue(currentUser2.getId().intValue() > 0);
-			logger.info("OK! Login of user " + currentUser1.getName() + " " + currentUser1.getSurname() + " with id: " + currentUserId);
-			logger.info("OK! Login of user " + currentUser2.getName() + " " + currentUser2.getSurname() + " with id: " + currentUser2Id);
+			logger.info("OK! Login of user " + currentUser1.getName() + " " + currentUser1.getSurname() + " with id: " + currentUser91Id);
+			logger.info("OK! Login of user " + currentUser2.getName() + " " + currentUser2.getSurname() + " with id: " + currentUser1Id);
 			
 			
 			// TESTPLAN
@@ -316,7 +316,7 @@ public class SessionManagerImplITCase {
 	
 				testPlan = systemTestPlanList.get(i);
 				Assert.assertNotNull(testPlan);
-				logger.info("TestPlan name: " + testPlan.getName()); 
+				logger.info("TestPlan name: " + testPlan.getName() + " saved in the Hashtable."); 
 							
 				tpTable.put(testPlan.getName(), testPlan);
 				
@@ -332,14 +332,29 @@ public class SessionManagerImplITCase {
 				// Check it
 				testPlan = testPlanController.readTestPlan(testPlan91Id);
 				Assert.assertNotNull(testPlan.getWorkflow());
-				Assert.assertNotNull(testPlan.getWorkflow().getActions());
-				Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));
-				//logger.info(testPlan.getWorkflow().getActions().get(0).getActionSummaryString());
 				
-				Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0).getInputs());
-				Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0).getInputs().get(0));		
+				
+				List<Action> tempActionList = testPlan.getWorkflow().getActions(); 
+				Assert.assertNotNull(tempActionList);
+				Action tempAction;
+				Input tempInput;
+				for (int ii=0; ii<tempActionList.size();ii++) {
+					tempAction = tempActionList.get(ii);
+					Assert.assertNotNull(tempAction);
+					logger.info("Action Id: " + tempAction.getActionId()); 
+				
+					List<Input> tempInputList = tempAction.getInputs(); 
+					Assert.assertNotNull(tempInputList);
+					for (int iii=0; iii<tempInputList.size();iii++) {
+						tempInput = tempInputList.get(iii);
+						Assert.assertNotNull(tempInput);
+						logger.info("Input name: " + tempInput.getName()); 				
+					}
+				}
+					
+				
 			}	
-			logger.info("OK! System TEST PLANS: " + tpString);
+			logger.info("OK! GOT TEST PLANS.");
 			
 			
 			
@@ -352,8 +367,8 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(testPlan1);
 	
 			// Copia e importazione del TestPlan scelto per l'utente (currentUser)
-			testPlan91Id = testPlanController.cloneTestPlan(testPlan91, currentUserId);
-			testPlan1Id = testPlanController.cloneTestPlan(testPlan1, currentUser2Id);
+			testPlan91Id = testPlanController.cloneTestPlan(testPlan91, currentUser91Id);
+			testPlan1Id = testPlanController.cloneTestPlan(testPlan1, currentUser1Id);
 			Assert.assertTrue(testPlan91Id.intValue()>0);
 			Assert.assertTrue(testPlan1Id.intValue()>0);
 			
@@ -419,27 +434,36 @@ public class SessionManagerImplITCase {
 			// ALTRIMENTI è necessario specificare/creare un altro SUT da abbinare gli input "inconsistenti"
 			logger.info("5) CREATING SESSION...");
 			
-			Long sessionId = sessionController.createSession(currentUserId, sutId, testPlan91Id);
-			Assert.assertNotNull(sessionId);
-			System.out.println("sessionId:" + sessionId);
-			Assert.assertTrue(sessionId.intValue()>0);		
-			logger.info("OK! CREATE SESSION with id " + sessionId);
+			Long session91Id = sessionController.createSession(currentUser91Id, sutId, testPlan91Id);
+			Assert.assertNotNull(session91Id);
+			System.out.println("sessionId:" + session91Id);
+			Assert.assertTrue(session91Id.intValue()>0);		
+			logger.info("OK! CREATE SESSION with id " + session91Id);
 	
-			Long session2Id = sessionController.createSession(currentUser2Id, sut2Id, testPlan1Id);
-			Assert.assertNotNull(session2Id);
-			System.out.println("sessionId:" + session2Id);
-			Assert.assertTrue(session2Id.intValue()>0);		
-			logger.info("OK! CREATE SESSION2 with id " + session2Id);
+			Long session1Id = sessionController.createSession(currentUser1Id, sut2Id, testPlan1Id);
+			Assert.assertNotNull(session1Id);
+			System.out.println("sessionId:" + session1Id);
+			Assert.assertTrue(session1Id.intValue()>0);		
+			logger.info("OK! CREATE SESSION2 with id " + session1Id);
 	
 					
 			
+			// Preparo una lista di file per ogni sessione di test
+			String[] fileList91 = {"ubl-invoice.xml", "ubl-invoice_withError.xml"};
 			
+			// il terzo non sarebbe necessario, non dovrebbe venire richiesto, essendo l'idRef lo stesso
+			String[] fileList1 = {"ubl-invoice.xml", "ubl-invoice_withError.xml", "ubl-invoice.xml"};
+			
+			
+			String[] fileList2 = {"ubl-invoice.xml"};
 			
 			
 			// SESSION EXECUTION
-			execution(sessionId);
+			execution(session91Id, fileList91);
 			
-			execution(session2Id);
+			execution(session1Id, fileList1);
+			
+			
 			
 			
 			
@@ -576,7 +600,7 @@ public class SessionManagerImplITCase {
 	
 	
 	
-	private void execution(Long sessionId) {
+	private void execution(Long sessionId, String[] fileList) {
 		
 		
 		logger.info("********************************************");
@@ -679,6 +703,7 @@ public class SessionManagerImplITCase {
 		//		(failuresForAction == Constants.COUNTER_MAX)		
 		// TODO quello del report si potrà togliere poiché ridondante nella sessione	
 		Boolean updating;
+		int inputCounter = 0;
 		while (running) {
 
 			
@@ -752,11 +777,13 @@ public class SessionManagerImplITCase {
 						// 1. UPLOAD
 						// a livello di Test passo il file al FileController 
 						// questo file viene copiato dalla cartella TeBES_Artifacts/users/0/docs/
-						if ( !currentAction.getActionName().equals("Wrong XMLSchema-UBL-T10") )
+						/*if ( !currentAction.getActionName().equals("Wrong XMLSchema-UBL-T10") )
 							fileName = "ubl-invoice.xml";
 						else
-							fileName = "ubl-invoice_withError.xml";
+							fileName = "ubl-invoice_withError.xml";*/
 						
+						fileName = fileList[inputCounter];
+						inputCounter++;
 						
 						// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
 						// per ora assumo che venga estratto l'array di byte e gli venga passata quello

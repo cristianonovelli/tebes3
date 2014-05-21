@@ -54,7 +54,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	private ReportManagerRemote reportManager; 
 	
 	//@EJB
-	//private FileManagerRemote fileManager = null; 
+	//private FileManagerRemote fileManager; 
 	
 	//////////////////////
 	/// ACTION METHODS ///

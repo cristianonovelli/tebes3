@@ -45,7 +45,6 @@ public class RuleManagerImpl implements RuleManagerRemote {
 	 */
 	public Report executeTestRule(TAF taf, Session session) { 
 		
-		System.out.println("\n executeTestRule: START");
 		
 		Report report = session.getReport();
 		
@@ -161,8 +160,8 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		// TODO
 		// verifica sia uno schematron valido
 
-		System.out.println("xmlSchemaValidation A:" + xmlString);
-		System.out.println("xmlSchemaValidation B:" + xsdString);
+		report.addToFullDescription("XML Schema Validation - XML: " + xmlString);
+		report.addToFullDescription("XML Schema Validation - XSD: " + xsdString);
 		
 
 		//String xmlRelPathFileName = "TeBES_Artifacts/users/0/docs/ubl-invoice.xml";
@@ -226,7 +225,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		XErrorMessage emList[] = null;
 
 		try {
-			System.out.println("schematronValidation! azx2");
+
 			validationManager = JNDIServices.getValidationManagerService();
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
@@ -234,9 +233,9 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		}
 		TestResult result;
 		try {
-			System.out.println("schematronValidation! azx3");
+
 			emList = validationManager.validation(xmlString, xmlSchematron);
-			System.out.println("schematronValidation! azx4");
+
 			
 			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
 			

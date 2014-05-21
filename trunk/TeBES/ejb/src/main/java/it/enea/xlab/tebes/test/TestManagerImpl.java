@@ -298,7 +298,7 @@ public class TestManagerImpl implements TestManagerRemote {
 			
 			report.addToFullDescription("\n- Prerequisite OK... EXE Predicate");
 			
-			// TODO Execution of Predicate
+			// TODO EXECUTE of Predicate
 			report = testRuleManager.executeTestRule(taf, session);
 			//report.setPartialResultSuccessfully(okPredicate);
 			report.addToFullDescription("\n-POST executeTAF call (okPrerequisites)\n");
