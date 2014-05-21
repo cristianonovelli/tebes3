@@ -757,6 +757,9 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				Input input = new Input(inputName, inputDescription, inputType, inputLanguage,
 						inputInteraction, inputFileIdRef, inputGuiReaction, inputGuiMessage, false);
 				
+				
+				// TODO (forse non qui perché il filestore non è richiamato) if fileIdRef è già presente, allora setto come inputSolved  
+				
 				input.setInputDescriptions(inputDescriptionTable);
 				input.setGuiDescriptions(guiDescriptionTable);
 				

@@ -36,7 +36,7 @@
         name="ITNAT-UBL-T10" 
         tebes:isNotePresent="false">
 
-        <taml:description> Italian PEPPOL UBL Invoice Schematron Validation.</taml:description>
+        <taml:description>Italian PEPPOL UBL Invoice Schematron Validation.</taml:description>
         
         <taml:normativeSource>
             <taml:comment></taml:comment>

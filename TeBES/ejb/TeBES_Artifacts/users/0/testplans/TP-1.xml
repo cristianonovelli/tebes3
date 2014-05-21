@@ -29,7 +29,7 @@
 		<tebes:TestAction id="TA-1_TP-1" number="1">
 			
 			<tebes:ActionName>XMLSchema-UBL-T10</tebes:ActionName>
-			<tebes:ActionDescription lg="en">UBL Invoice XML Schema Validation.</tebes:ActionDescription>
+			<tebes:ActionDescription lg="en">UBL 2.0 Invoice XML Schema Validation.</tebes:ActionDescription>
 			<tebes:ActionDescription lg="it">Validazione UBL con XML Schema.</tebes:ActionDescription>
 			<tebes:Test 
 				lg="taml" 

@@ -57,24 +57,6 @@
 						<tebes:GUIDescription lg="it">Upload della Fattura UBL CORRETTA.</tebes:GUIDescription>				    				    
 					</tebes:GUI>
 				</tebes:Input>
-				<tebes:Input>		
-				    <tebes:Name>IN-1_TA-1_TP-91</tebes:Name>
-				    
-					<tebes:InputDescription lg="en">Sending of CORRECT UBL Invoice.</tebes:InputDescription>
-					<tebes:InputDescription lg="it">Invio della Fattura UBL CORRETTA.</tebes:InputDescription>	
-					
-					<tebes:SUT 
-					    interaction="website"
-						type="document" 
-						lg="xml"
-						fileIdRef="FI-1_document-xml-website-IN-2_TA-1_TP-91">		    
-					</tebes:SUT>
-					
-					<tebes:GUI reaction="upload">
-						<tebes:GUIDescription lg="en">Upload of CORRECT UBL Invoice.</tebes:GUIDescription>				
-						<tebes:GUIDescription lg="it">Upload della Fattura UBL CORRETTA.</tebes:GUIDescription>				    				    
-					</tebes:GUI>
-				</tebes:Input>
 			</tebes:Inputs>			
 
 		</tebes:TestAction>
