@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -30,6 +32,10 @@ public class TestResult implements Serializable {
 	private int line;
 	private String message;
 
+	@ManyToOne
+	@JoinColumn(name="report_id")
+	private Report report;
+	
 	public TestResult() {
 
 	}
@@ -66,6 +72,14 @@ public class TestResult implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Report getReport() {
+		return report;
+	}
+
+	public void setReport(Report report) {
+		this.report = report;
 	}
 	
 	

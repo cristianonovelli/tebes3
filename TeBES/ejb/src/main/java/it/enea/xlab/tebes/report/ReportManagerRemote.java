@@ -16,4 +16,5 @@ public interface ReportManagerRemote {
 	
 	Report createReportForNewSession(Session session) throws Exception;
 	
+	//Long createTestResult(TestResult tr, Long reportId);
 }

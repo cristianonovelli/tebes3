@@ -19,6 +19,7 @@ import javax.interceptor.Interceptors;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 
@@ -180,7 +181,7 @@ public class TestManagerImpl implements TestManagerRemote {
 									report.addToFullDescription("\nactionId: " + actionId);
 									report.addToFullDescription("\nisPrerequisite > new Node");
 									
-									Node prerequisitesNode = reportDOM.getPrerequisitesElement(actionNode);		
+									Node prerequisitesNode = reportDOM.getPrerequisitesNode((Element) actionNode);		
 									
 									// "1" sta ad indicare il primo nodo figlio, ovvero dopo il nodo testo del nodo corrente
 									Node prerequisiteResultNode = prerequisitesNode.getChildNodes().item(1);
@@ -270,7 +271,7 @@ public class TestManagerImpl implements TestManagerRemote {
 			if (!taf.isPrerequisite()) {
 				
 				Node actionNode = reportDOM.getTestAction(actionId);				
-				Node prerequisitesNode = reportDOM.getPrerequisitesElement(actionNode);		
+				Node prerequisitesNode = reportDOM.getPrerequisitesNode((Element) actionNode);		
 				reportDOM.removePrerequisitesNode(prerequisitesNode);
 			}
 			
@@ -278,12 +279,6 @@ public class TestManagerImpl implements TestManagerRemote {
 
 		
 
-		
-		
-		
-		
-		
-		
 		
 		
 			okPrerequisites = sumPrerequisites;
@@ -298,10 +293,15 @@ public class TestManagerImpl implements TestManagerRemote {
 			
 			report.addToFullDescription("\n- Prerequisite OK... EXE Predicate");
 			
+			
+			
 			// TODO EXECUTE of Predicate
 			report = testRuleManager.executeTestRule(taf, session);
 			//report.setPartialResultSuccessfully(okPredicate);
 			report.addToFullDescription("\n-POST executeTAF call (okPrerequisites)\n");
+			
+			
+			
 			
 			if (report.getTempResult() != null) {
 				report.addToFullDescription("\nTest Rule Output: " + report.getTempResult().getGlobalResult());

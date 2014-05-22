@@ -14,9 +14,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 @Entity
 @Table(name = "report")
 public class Report implements Serializable {
@@ -62,6 +59,9 @@ public class Report implements Serializable {
 	
 	@OneToOne(cascade=CascadeType.ALL)
 	private TestResult tempResult;
+
+	@OneToMany(mappedBy="report")
+	private List<TestResult> tempResultList;
 	
 	@Column(length=99999) 
 	private String fullDescription;
@@ -260,6 +260,16 @@ public class Report implements Serializable {
 	
 	public void setLogLocation(String logLocation) {
 		this.logLocation = logLocation;
+	}
+
+
+	public List<TestResult> getTempResultList() {
+		return tempResultList;
+	}
+
+
+	public void setTempResultList(List<TestResult> tempResultList) {
+		this.tempResultList = tempResultList;
 	}
 
 

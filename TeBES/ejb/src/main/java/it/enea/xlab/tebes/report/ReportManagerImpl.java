@@ -12,6 +12,7 @@ import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.TestPlanDescription;
+import it.enea.xlab.tebes.entity.TestResult;
 import it.enea.xlab.tebes.entity.User;
 
 import javax.ejb.Stateless;
@@ -321,6 +322,40 @@ public class ReportManagerImpl implements ReportManagerRemote {
 	}
 
 	
+/*	public Long createTestResult(TestResult tr, Long reportId) {
+		
+		try {
+			eM.persist(tr);
+							
+			this.addTestResultToReport(tr.getId(), reportId);
+							
+			return tr.getId();
+		}
+		catch(Exception e) {
+			
+			e.printStackTrace();
+			return new Long(-1);
+		}
+	}
+
+	
+	
+	private void addTestResultToReport(Long testResultId, Long reportId) {
+		
+		TestResult tr = this.readTestResult(testResultId);
+		Report r = this.readReport(reportId);
+		
+		tr.setReport(r);
+		
+		eM.persist(r);
+		
+		return;
+	}
+
+	private TestResult readTestResult(Long testResultId) {
+		
+		return eM.find(TestResult.class, testResultId);
+	}*/
 	
 }
 

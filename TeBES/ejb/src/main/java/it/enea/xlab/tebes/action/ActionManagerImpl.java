@@ -12,6 +12,7 @@ import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.InputDescription;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
+import it.enea.xlab.tebes.entity.TestResult;
 import it.enea.xlab.tebes.file.FileManagerRemote;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.report.ReportDOM;
@@ -646,9 +647,17 @@ public class ActionManagerImpl implements ActionManagerRemote {
 
 						
 						
+						// PERSISTENZA DELLA TEMP-RESULTLIST
+						/*List<TestResult> testResultList = report.getTempResultList();
+						for (int tr=0; tr<testResultList.size(); tr++) {
+							
+							reportManager.createTestResult(testResultList.get(tr), report.getId());
+							
+						}*/
+						
 						
 						// 5.2 Gestisco risultato in ritorno e lo metto dentro SingleResult
-						Node testResultsNode = reportDOM.getTestResultsElement(actionTRNode);	
+						Node testResultsNode = reportDOM.getTestResultsNode(actionTRNode);	
 						
 						// 5.2.1 Setto attributi testResultsNode
 						if (report.getTempResult().getGlobalResult().equals("pass")) {
@@ -671,23 +680,128 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						}
 						
 						
-						// "1" sta ad indicare il primo nodo figlio, ovvero dopo il nodo testo del nodo corrente
-						Node firstSingleResultNode = testResultsNode.getChildNodes().item(1);
+						// TODO CREARE TANTI NODI SINGLE RESULT QUANTI I RISULTATI DA INSERIRE
+						// CICLARE SU OGNI RESULT
 						
-						// Set Single Result
-						if (report.getTempResult() != null) {
-							reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
-							System.out.println("TAF Execution: " + report.getTempResult().getGlobalResult());
-							report.addToFullDescription("\nTAF Execution: " + report.getTempResult().getGlobalResult());
-							report.addToFullDescription("\nisPrerequisite: " + taf.isPrerequisite());
+						
+						// "1" sta ad indicare il primo nodo figlio, ovvero dopo il nodo testo del nodo corrente
+						Node singleResultNodeTemplate = testResultsNode.getChildNodes().item(1);
+						
+	
+						//------------------
+
+						// Se il numero di SingleRsult è maggiore di 1, allora CLONO!
+						//String resultValue = reportDOM.getAttribute("result", singleResultNodeTemplate);
+						//report.addToFullDescription("\nresultValue: " + resultValue);
+						TestResult testResultTemp;
+						
+						
+						if ( report.getTempResultList() == null) {
 							
+							reportDOM.setSingleResult(
+									singleResultNodeTemplate, 
+									action.getActionId().concat("_").concat(new Long(0).toString()),
+									taf.getName(), 
+									"syserror", 
+									0, 
+									"Validation Failure: check Validation Project.");
+							
+							report.addToFullDescription("\nTAF Execution: ResultList is NULL");
 						}
 						else {
+						
+						
+							if ( report.getTempResultList().size() > 1 ) {
 							
-							reportDOM.setSingleResult(firstSingleResultNode, action.getId(), taf.getName(), "syserror", 0, "Validation Failure: check Validation Project.");
-							System.out.println("runAction - tempResult NULL: error");
-							report.addToFullDescription("\nTAF Execution: tempResult NULL");
+								report.addToFullDescription("TestResults express as " + report.getTempResultList().size() + " SingleResult.");
+								
+								
+								// CLONO N-1 volte
+								
+								for(int tr=1; tr<report.getTempResultList().size(); tr++) {
+								
+							
+									Node cloneSingleResultNode = singleResultNodeTemplate.cloneNode(true);
+									cloneSingleResultNode = reportDOM.doc.importNode(cloneSingleResultNode, true); 
+									cloneSingleResultNode = reportDOM.insertSingleResultNode(cloneSingleResultNode, singleResultNodeTemplate, actionTRNode);
+									report.addToFullDescription("\nSingleResult Node Clone.");		
+									
+									testResultTemp = report.getTempResultList().get(tr);
+									
+									/*report.addToFullDescription("\nSingleResult " + tr + " to insert:" 
+									+ " " + testResultTemp.getGlobalResult() 
+									+ " " + testResultTemp.getLine() 
+									+ " " + testResultTemp.getMessage());
+									
+									reportDOM.setSingleResult(
+											cloneSingleResultNode, 
+											action.getActionId().concat("_").concat(new Long(tr).toString()), 
+											taf.getName(), 
+											testResultTemp.getGlobalResult(), 
+											testResultTemp.getLine(), 
+											testResultTemp.getMessage());*/
+									
+								}
+							}	
+							else {
+								report.addToFullDescription("\nTestResults express as ONLY 1 SingleResult.");
+							}
+							
+							
+							
+							NodeList singleResultNodeList = reportDOM.getSingleResultNodeList((Element) actionTRNode);
+							
+							Node srNode;
+							for(int sr=0; sr<singleResultNodeList.getLength(); sr++) {
+								
+								srNode = singleResultNodeList.item(sr);
+								testResultTemp = report.getTempResultList().get(sr);
+	
+								reportDOM.setSingleResult(
+										srNode, 
+										action.getActionId().concat("_").concat(new Long(sr).toString()), 
+										taf.getName(), 
+										testResultTemp.getGlobalResult(), 
+										testResultTemp.getLine(), 
+										testResultTemp.getMessage());	
+							}
+						
 						}
+
+						 /*{
+							testResultTemp = report.getTempResultList().get(0);
+							
+							report.addToFullDescription("\nSingleResult 0 to insert:" 
+							+ " " + testResultTemp.getGlobalResult() 
+							+ " " + testResultTemp.getLine() 
+							+ " " + testResultTemp.getMessage());
+							
+							reportDOM.setSingleResult(
+									singleResultNodeTemplate, 
+									action.getActionId().concat("_").concat(new Long(0).toString()),
+									taf.getName(), 
+									testResultTemp.getGlobalResult(), 
+									testResultTemp.getLine(), 
+									testResultTemp.getMessage());
+							report.addToFullDescription("\nTAF Execution: " + testResultTemp.getGlobalResult());
+							report.addToFullDescription("\nisPrerequisite: " + taf.isPrerequisite());
+							
+						}*/
+
+	
+						
+
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+
 
 						// 5.3 Gestione Action che esegue più Test
 						// 	TODO com'è ora, se ci fosse una lista di TAF ne farebbe uno solo
@@ -702,7 +816,8 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						report.setXml(reportDOM.getXMLString());	
 						// Poi azzero tempResult per la prossima esecuzione					
 						report.setTempResult(null);
-
+						report.setTempResultList(null);
+						
 						report.addToFullDescription("\nResult: " + report.isPartialResultSuccessfully());
 						
 						i++;
@@ -722,6 +837,9 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				//}
 				// TODO non manca il caso di false?
 				
+					
+					
+					
 
 				// 6.4 Update Report
 				//report.setState(Report.getFinalState());

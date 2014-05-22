@@ -1,6 +1,9 @@
 package it.enea.xlab.tebes.report;
 
+import it.enea.xlab.tebes.entity.TestResult;
+
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -487,26 +490,29 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
-	public void setSingleResult(Node singleResultNode, Long id, String name, String result, int line, String message) {
+	public void setSingleResult(Node singleResultNode, String id, String name, String result, int line, String message) {
 		
-		this.setNodeAttribute(singleResultNode, "id", id.toString());
-		this.setNodeAttribute(singleResultNode, "name", name);
-		this.setNodeAttribute(singleResultNode, "result", result);
-		this.setNodeAttribute(singleResultNode, "line", new Integer(line).toString());
-		this.setNodeAttribute(singleResultNode, "message", message);
+		//for(int i=0; i<testResulList.size(); i++) {
+		
+			this.setNodeAttribute(singleResultNode, "id", id);
+			this.setNodeAttribute(singleResultNode, "name", name);
+			this.setNodeAttribute(singleResultNode, "result", result);
+			this.setNodeAttribute(singleResultNode, "line", new Integer(line).toString());
+			this.setNodeAttribute(singleResultNode, "message", message);
+		//}
 	}
 
 
-	public Node getTestResultsElement(Node actionNode) {
+	public Node getTestResultsNode(Node actionNode) {
 		
 		return ((Element) actionNode).getElementsByTagName("tebes:TestResults").item(0);
 	}
 
 
-	public Node getPrerequisitesElement(Node actionNode) {
+	/*public Node getPrerequisitesElement(Node actionNode) {
 		
 		return ((Element) actionNode).getElementsByTagName("tebes:Prerequisites").item(0);
-	}
+	}*/
 
 
 	public void insertPrerequisiteResultNode(Node clonePrerequisiteResultNode, Node prerequisiteResultNode, Node actionContext) {
@@ -517,7 +523,7 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
-	private Node getPrerequisitesNode(Element actionNode) {
+	public Node getPrerequisitesNode(Element actionNode) {
 		
 		return actionNode.getElementsByTagName("tebes:Prerequisites").item(0);
 	}
@@ -636,6 +642,20 @@ public class ReportDOM extends JXLabDOM {
 	public void setInputSUTIdRef(String fileIdRef, Node sutNode) {
 		
 		this.setNodeAttribute(sutNode, "fileIdRef", fileIdRef);
+	}
+
+
+	public Node insertSingleResultNode(Node cloneSingleResultNode,
+			Node singleResultNodeTemplate, Node actionContext) {
+
+		Node testResultsNode = this.getTestResultsNode((Element) actionContext);
+		return testResultsNode.insertBefore(cloneSingleResultNode, singleResultNodeTemplate);
+	}
+
+
+	public NodeList getSingleResultNodeList(Element actionElement) {
+		
+		return actionElement.getElementsByTagName("tebes:SingleResult");
 	}
 
 	
