@@ -1,5 +1,8 @@
 package it.enea.xlab.tebes.test.rule;
 
+import java.util.List;
+import java.util.Vector;
+
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.Profile;
@@ -181,6 +184,8 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		try {
 			emList = validationManager.validation(xmlString, xsdString);
 			
+			Vector<TestResult> testResultList = new Vector<TestResult>(); 
+			
 			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
 			
 			if (emList.length > 0) {
@@ -193,10 +198,24 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				
 				result = new TestResult(errorType, emList[0].getLineNumber(), emList[0].getDescription());
 				report.setPartialResultSuccessfully(false);
+				
+				// NEW
+				
+				for (int i=0; i<emList.length; i++) {
+					
+					testResultList.add(new TestResult(errorType, emList[i].getLineNumber(), emList[i].getDescription()));
+					report.addToFullDescription("Add TestResult " + i + ": "  
+					+ errorType + " " + emList[i].getLineNumber() + " " + emList[i].getDescription() );
+				}
+				report.setTempResultList(testResultList);
+				
 			}
 			else {
 				result = new TestResult(TestResult.PASS_RESULT, 0, "Success: Empty Error Message List");
 				report.setPartialResultSuccessfully(true);
+				
+				testResultList.add(result);
+				report.setTempResultList(testResultList);
 			}
 		
 			report.setTempResult(result);
@@ -236,14 +255,11 @@ public class RuleManagerImpl implements RuleManagerRemote {
 
 			emList = validationManager.validation(xmlString, xmlSchematron);
 
+			Vector<TestResult> testResultList = new Vector<TestResult>(); 
 			
 			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
 			
 			if (emList.length > 0) {
-				result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
-				report.setPartialResultSuccessfully(false);
-			}
-			else {
 				
 				String errorType;
 				if (emList[0].getErrorType().equals("ERROR"))
@@ -251,8 +267,33 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				else
 					errorType = TestResult.ERROR_RESULT;
 				
-				result = new TestResult(errorType, 0, "Success: Empty Error Message List");
+				result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
+				report.setPartialResultSuccessfully(false);
+				
+				// NEW
+				
+				for (int i=0; i<emList.length; i++) {
+					
+					testResultList.add(new TestResult(errorType, emList[i].getLineNumber(), emList[i].getDescription()));
+					
+					report.addToFullDescription("\nAdd TestResult " + i + ": "  
+							+ errorType + " " + emList[i].getLineNumber() + " " + emList[i].getDescription() );
+				}
+				report.setTempResultList(testResultList);
+			}
+			else {
+				
+				/*String errorType;
+				if (emList[0].getErrorType().equals("ERROR"))
+					errorType = TestResult.FAILURE_RESULT;
+				else
+					errorType = TestResult.ERROR_RESULT;*/
+				
+				result = new TestResult(TestResult.PASS_RESULT, 0, "Success: Empty Error Message List");
 				report.setPartialResultSuccessfully(true);
+				
+				testResultList.add(result);
+				report.setTempResultList(testResultList);
 			}
 			
 			report.setTempResult(result);
