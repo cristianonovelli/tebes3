@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../../xsl/TeBES_TestPlan.xsl" ?>
 <!-- 
     Document Description:		Test Plan created for the TeBES Platform 
     Author:              		Cristiano Novelli (X-Lab, Cross-TEC, ENEA)
@@ -75,7 +76,7 @@
 			
 			<tebes:Inputs>			
 				<tebes:Input>		
-				    <tebes:Name>IN-1_TA-1_TP-91</tebes:Name>
+				    <tebes:Name>IN-1_TA-2_TP-91</tebes:Name>
 				    
 					<tebes:InputDescription lg="en">Sending of WRONG UBL Invoice.</tebes:InputDescription>
 					<tebes:InputDescription lg="it">Invio della Fattura UBL SCORRETTA.</tebes:InputDescription>	

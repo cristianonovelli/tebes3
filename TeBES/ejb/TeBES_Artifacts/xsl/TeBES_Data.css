@@ -1,0 +1,138 @@
+/* ==========================================================================
+ $ Global colors
+ ==========================================================================
+ * 
+ * 1)  texts 									#777777
+ *     highlighted texts 1						
+ *     highlighted texts 2						#black
+ * 2)  titoli									#0040A0
+ * 3)  link										#0040A0, evidenced ccccff
+ * 4)  link hover (tutti):						red, evidenced cc0000
+ * 5)  font-size di default						11px
+ * 6)  background color			 				#ffffff
+ * 7)  background color for evidenced table		#f6f6f6
+ * 8)  border color								#ececec
+ */
+
+/* ==========================================================================
+ $ Normalization and basic styling
+========================================================================== */
+
+
+
+html,
+table,
+button, 
+input, 
+select, 
+textarea,
+body {
+ 	font-family: Verdana,Arial,Helvetica,sans;
+	font-size:11px;
+	color:#777777;
+}
+
+body {
+    /* bgcolor="#FFFACD" text="#27408B" link="#0000CC" vlink="#0000CC" alink="#0000CC"*/
+	
+	background-color: #FFFFFF;
+	}
+
+table {
+	background-color: #f6f6f6;
+	width:		100%;
+	padding:	1px;
+	padding-left:10px;
+	padding-right:10px;
+	border:		3px solid #ececec;
+	}
+.table_evidenced {
+	width=100%;
+	color: ffffff;
+	border: 0px;
+	background-color: #017ccc;
+	}
+.table_transparent {
+	background-color: white;
+	width:		100%;
+	padding:	1px;
+	padding-left:10px;
+	padding-right:10px;
+	border:		0px; 
+	}	
+td {
+	padding-left:10px;
+	padding-right:10px;
+	
+	}	
+A
+{
+TEXT-DECORATION: none;
+color:#0040A0;
+}
+A:hover
+{
+	COLOR: red; /* colore mouseover testo link, secondo e terzo livello */
+}	
+
+A.link_generico_evidenced:hover
+{
+TEXT-DECORATION: none;
+color:#cc0000;
+}
+A.link_generico_evidenced
+{
+TEXT-DECORATION: none;
+color:#ccccff;
+}
+
+H1, H2, H3
+{
+
+}
+
+.lightbg
+{
+background-color:#FFFFFF;
+}
+.highlight1
+{
+color:#0040A0;
+}
+.highlight2
+{
+color:black;
+}
+
+HR
+{
+border: 2px solid #cccccc; //#f6f6f6;
+}
+
+
+//********************* TEST PLAN SPECIFIC ****************/
+
+
+.TP_tableleft{
+width:20%;
+text-align:right;
+}
+
+.TP_tableright{
+border:1px solid black;
+width:80%;
+}
+
+
+.indented{
+display:none;
+margin-left:2%;
+width:98%
+}
+
+
+.TP_infoDescription{
+height:50px;
+text-align:center;
+border:1px solid black;
+}
