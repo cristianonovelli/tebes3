@@ -357,9 +357,10 @@ public class SessionManagerImpl implements SessionManagerRemote {
 
 			
 			int actionMark = workflow.getActionMark(); 
-
+			logger.info("START runWorkflow - actionMark: " + actionMark);
+			
 			Action currentAction = (Action) actionList.get(actionMark-1);
-				
+			logger.info("START runWorkflow - actionList.get: " + currentAction.getActionId());
 			
 			// Se l'action è nello stato NEW
 			Boolean isReady = false;

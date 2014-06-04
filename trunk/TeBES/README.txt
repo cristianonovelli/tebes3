@@ -36,7 +36,9 @@ mvn clean install -Pprod -Dit.test=SessionManagerImplITCase verify
 mysql -u root -proot7 -h localhost tebes < tebes_2users_importV2.sql
 (export: mysqldump -u root -proot7 tebes > tebes_2users_importV2.sql)
 
-9. URL APPLICAZIONE WEB
+9. Config JAAS (si veda sotto)
+
+10. URL APPLICAZIONE WEB
 http://localhost:8080/TeBES-war/index.jsf
 
 

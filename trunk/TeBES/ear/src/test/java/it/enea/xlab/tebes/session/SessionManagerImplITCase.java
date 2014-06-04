@@ -446,7 +446,11 @@ public class SessionManagerImplITCase {
 			Assert.assertTrue(session1Id.intValue()>0);		
 			logger.info("OK! CREATE SESSION2 with id " + session1Id);
 	
-					
+
+			
+			// TODO PREPARARE UNA HASHTABLE CHE ASSOCIA AI REFID I NOMI DEI FILE
+			
+			
 			
 			// Preparo una lista di file per ogni sessione di test
 			String[] fileList91 = {"ubl-invoice.xml", "ubl-invoice_withError.xml"};
@@ -501,8 +505,8 @@ public class SessionManagerImplITCase {
 			List<Long> sessionIdList = sessionController.getSessionIdList(currentUser1);
 			Assert.assertTrue(sessionIdList.size() == 1);	
 			
-			boolean deletingSession = sessionController.deleteSession(sessionIdList.get(0)); 
-			Assert.assertTrue(deletingSession);
+			//boolean deletingSession = sessionController.deleteSession(sessionIdList.get(0)); 
+			//Assert.assertTrue(deletingSession);
 			
 			
 			
@@ -546,9 +550,9 @@ public class SessionManagerImplITCase {
 							
 				// DELETE User
 				if (tempUser.getRole().getLevel() != role4_superuser.getLevel() ) {			
-					deleting = userAdminController.deleteUser(tempUser.getId());
-					logger.info("Deleting User with ID: " + tempUser.getId());
-					Assert.assertTrue(deleting);			
+					//deleting = userAdminController.deleteUser(tempUser.getId());
+					logger.info("NO Deleting User with ID: " + tempUser.getId());
+					//Assert.assertTrue(deleting);			
 				}
 			}
 	
@@ -560,16 +564,16 @@ public class SessionManagerImplITCase {
 			// Last Check
 			// Sono stati eliminati tutti gli utenti (a cascata)?
 			userIdList = userAdminController.getUserIdList(superUser);
-			Assert.assertTrue(userIdList.size() == 1);
+			//Assert.assertTrue(userIdList.size() == 1);
 			
 			
 			// Get Session List
 			sessionIdList = sessionController.getSessionIdList(currentUser1);
-			Assert.assertTrue(sessionIdList.size() == 0);
+			//Assert.assertTrue(sessionIdList.size() == 0);
 			
 	
 			List<FileStore> documentList = fileController.getFileListByType("document");
-			Assert.assertTrue(documentList.size() == 0);
+			//Assert.assertTrue(documentList.size() == 0);
 			
 			// Cancello ogni ruolo
 			/*for (int s=0;s<sessionIdList.size();s++) {

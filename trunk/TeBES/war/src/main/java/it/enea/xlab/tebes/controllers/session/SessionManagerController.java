@@ -578,6 +578,9 @@ public class SessionManagerController extends WebController<Session> {
 			this.isPollerRunning = true;
 			
 			//this.resetBoxFlags();
+			System.out.println("execute() method");
+			System.out.println("execute() method: " + this.viewCurrentSession.getTestPlan().getName());
+			
 			this.viewCurrentSession = this.runWorkflow(this.viewCurrentSession.getTestPlan().getWorkflow(), this.viewCurrentSession);
 			this.currentAction = this.viewCurrentSession.getTestPlan().getWorkflow().getCurrentAction();
 			
