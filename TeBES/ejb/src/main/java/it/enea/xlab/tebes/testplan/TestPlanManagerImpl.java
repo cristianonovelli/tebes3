@@ -4,6 +4,7 @@ import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.common.SQLQuery;
 import it.enea.xlab.tebes.dao.TeBESDAO;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionDescription;
@@ -440,7 +441,10 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 		List<TestPlan> testPlanListResult = new Vector<TestPlan>();
 
-        List<TestPlan> testPlanList = (List<TestPlan>) eM.createQuery("SELECT t FROM TestPlan t").getResultList(); 
+		//String param1 = "1";
+        //String queryString = SQLQuery.SELECT_SUT.concat(SQLQuery.WHERE_NAME).concat(param1);
+        
+        List<TestPlan> testPlanList = (List<TestPlan>) eM.createQuery(SQLQuery.SELECT_TESTPLANS).getResultList(); 
 
         Iterator<TestPlan> i = testPlanList.iterator();
         TestPlan tpTemp;

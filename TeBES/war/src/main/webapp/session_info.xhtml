@@ -79,6 +79,7 @@
 									rendered="#{!SessionManagerController.canBeRestarted}"
 									style="margin-left: 10px;" />
 							</a4j:outputPanel>
+							
 						</div>
 					</div>
 
@@ -179,7 +180,7 @@
 				</div>
 				<div class="row sessionConsole">
 					<a4j:outputPanel id="consolePanel" ajaxRendered="true">
-						<h:outputText value="#{SessionManagerController.logMessage}" />
+						<h:outputText value="#{SessionManagerController.logMessage}" escape="false" />
 					</a4j:outputPanel>
 				</div>
 

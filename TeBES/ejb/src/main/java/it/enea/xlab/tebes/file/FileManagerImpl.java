@@ -3,11 +3,9 @@ package it.enea.xlab.tebes.file;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.common.SQLQuery;
 import it.enea.xlab.tebes.entity.FileStore;
-import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.Session;
-import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 
 import java.io.IOException;
@@ -109,10 +107,11 @@ public class FileManagerImpl implements FileManagerRemote {
 	
 	public FileStore readFilebyIdRef(String fileIdRef) {
 		
-        String queryString = "SELECT f FROM FileStore AS f WHERE f.fileRefId = ?1";
+		String param1 = "1";
+        String queryString = SQLQuery.SELECT_FILES.concat(SQLQuery.WHERE_REFID).concat(param1);
         
         Query query = eM.createQuery(queryString);
-        query.setParameter(1, fileIdRef);
+        query.setParameter(param1, fileIdRef);
 
         @SuppressWarnings("unchecked")
 		List<FileStore> resultList = query.getResultList();
@@ -142,10 +141,11 @@ public class FileManagerImpl implements FileManagerRemote {
 	}
 
 	
-	// TODO manca il filtro per utente, così agisco su i file di TUTTI
-	private Boolean isFilePresent(String source) {
+	// TODO manca il filtro per utente, così agisco sui file di TUTTI
+	/*private Boolean isFilePresent(String source) {
 		
-        String queryString = "SELECT f FROM FileStore AS f WHERE f.source = ?1";
+		String param1 = "1";
+        String queryString = SQLQuery.SELECT_FILES_BYSOURCE.concat(param1);
         
         Query query = eM.createQuery(queryString);
         query.setParameter(1, source);
@@ -155,7 +155,7 @@ public class FileManagerImpl implements FileManagerRemote {
         	return true;
         else
         	return false;
-	}
+	}*/
 	
 	public Boolean deleteFile(Long fileId) {
 
@@ -170,10 +170,11 @@ public class FileManagerImpl implements FileManagerRemote {
 
 	public boolean isFileIdPresent(String fileIdRef) {
 
-        String queryString = "SELECT f FROM FileStore AS f WHERE f.fileRefId = ?1";
+		String param1 = "1";
+        String queryString = SQLQuery.SELECT_FILES.concat(SQLQuery.WHERE_REFID).concat(param1);
         
         Query query = eM.createQuery(queryString);
-        query.setParameter(1, fileIdRef);
+        query.setParameter(param1, fileIdRef);
         @SuppressWarnings("unchecked")
 		List<FileStore> resultList = query.getResultList();
         if ((resultList != null) && (resultList.size() > 0))
@@ -185,10 +186,11 @@ public class FileManagerImpl implements FileManagerRemote {
 	// TODO dovrei ottenere solo i file di una certa sessione e di un certo tipo per uno specifico utente
 	public List<FileStore> readFileListByType(String type) {
 
-        String queryString = "SELECT f FROM FileStore AS f WHERE f.type = ?1";
+		String param1 = "1";
+        String queryString = SQLQuery.SELECT_FILES.concat(SQLQuery.WHERE_TYPE).concat(param1);
         
         Query query = eM.createQuery(queryString);
-        query.setParameter(1, type);
+        query.setParameter(param1, type);
         @SuppressWarnings("unchecked")
 		List<FileStore> resultList = query.getResultList();
 
@@ -197,7 +199,7 @@ public class FileManagerImpl implements FileManagerRemote {
 
 	public List<FileStore> readFileList() {
 
-        String queryString = "SELECT f FROM FileStore AS f";
+        String queryString = SQLQuery.SELECT_FILES;
         
         Query query = eM.createQuery(queryString);
 
