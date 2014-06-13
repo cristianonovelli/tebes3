@@ -3,6 +3,7 @@ package it.enea.xlab.tebes.users;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.common.SQLQuery;
 import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
@@ -245,7 +246,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		// To Get user Id List you have to be adminnuser or superuser
 		if (user.getRole().getLevel() > 2) {
 			
-	        String queryString = "SELECT u.id FROM User AS u";   
+	        String queryString = SQLQuery.SELECT_USERIDS;   
 	        Query query = eM.createQuery(queryString);
 	        
 	        @SuppressWarnings("unchecked")
@@ -413,11 +414,12 @@ public class UserManagerImpl implements UserManagerRemote {
 	 * @return null, if the role is not present 
 	 */
 	public Role readRoleByLevel(int customLevel) {
-		
-        String queryString = "SELECT r FROM Role AS r WHERE r.level = ?1";
+
+		String param1 = "1";
+        String queryString = SQLQuery.SELECT_ROLES.concat(SQLQuery.WHERE_LEVEL).concat(param1);
         
         Query query = eM.createQuery(queryString);
-        query.setParameter(1, customLevel);
+        query.setParameter(param1, customLevel);
         @SuppressWarnings("unchecked")
 		List<Role> resultList = query.getResultList();
         if ((resultList != null) && (resultList.size() > 0))
@@ -431,7 +433,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	 */	
 	public List<Long> getRoleIdList() {
 		
-        String queryString = "SELECT r.id FROM Role AS r";
+        String queryString = SQLQuery.SELECT_ROLEID;
         
         Query query = eM.createQuery(queryString);
         List<Long> roleIdList = query.getResultList();
@@ -488,7 +490,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	 */
 	public List<Long> getGroupIdList() {
 
-        String queryString = "SELECT g.id FROM usergroup AS g";
+        String queryString = SQLQuery.SELECT_GROUPID;
         
         Query query = eM.createQuery(queryString);
         List<Long> groupIdList = query.getResultList();
@@ -498,7 +500,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	
 	public List<Group> getGroupList() {
 
-        String queryString = "SELECT g FROM usergroup AS g";
+        String queryString = SQLQuery.SELECT_GROUPS;
         
         Query query = eM.createQuery(queryString);
         List<Group> groupList = query.getResultList();
@@ -520,7 +522,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	 * @return the first SUT with that name, if the SUT is present 
 	 * @return null, if the SUT is not present 
 	 */	
-	private SUT findSUTByName(String name) {
+	/*private SUT findSUTByName(String name) {
 		
         String queryString = "SELECT s FROM SUT AS s WHERE s.name = ?1";
         
@@ -532,9 +534,9 @@ public class UserManagerImpl implements UserManagerRemote {
         	return (SUT) resultList.get(0);
         else
         	return null;
-	}
+	}*/
 
-	private Group findGroupByName(String name) {
+	/*private Group findGroupByName(String name) {
 
         String queryString = "SELECT g FROM Group AS g WHERE g.name = ?1";
         
@@ -547,7 +549,7 @@ public class UserManagerImpl implements UserManagerRemote {
         	return (Group) resultList.get(0);
         else
         	return null;
-	}
+	}*/
 	
 	
 	/**
@@ -555,12 +557,12 @@ public class UserManagerImpl implements UserManagerRemote {
 	 */	
 	@SuppressWarnings("unchecked")
 	public List<User> readUsersByEmail(String parEmail) {
-		
-        String queryString = "SELECT u FROM User AS u WHERE u.eMail = ?1";
+		String param1 = "1";
+        String queryString = SQLQuery.SELECT_USERS.concat(SQLQuery.WHERE_EMAIL).concat(param1);
         
-           Query query = eM.createQuery(queryString);
-           query.setParameter(1, parEmail);
-           return query.getResultList();
+        Query query = eM.createQuery(queryString);
+        query.setParameter(param1, parEmail);
+        return query.getResultList();
 	}
 
 
@@ -662,7 +664,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	
 	public List<Long> getActionIdList() {
 		
-        String queryString = "SELECT a.id FROM Action AS a";   
+        String queryString = SQLQuery.SELECT_ACTIONID;   
         Query query = eM.createQuery(queryString);
         
         @SuppressWarnings("unchecked")
@@ -673,7 +675,7 @@ public class UserManagerImpl implements UserManagerRemote {
 
 	public Role readRole(User user) {
 		
-		return (Role) eM.createQuery("SELECT role FROM User user WHERE user.id =:userId").setParameter("userId", user.getId()).getSingleResult();
+		return (Role) eM.createQuery(SQLQuery.SELECT_ROLE_BYUSERID).setParameter("userId", user.getId()).getSingleResult();
 	}
 
 	public List<Role> readAllRoles() {
@@ -683,12 +685,12 @@ public class UserManagerImpl implements UserManagerRemote {
 
 	public Role readRole(String roleName) {
 		
-		return (Role) eM.createQuery("SELECT role FROM Role role WHERE role.name =:roleName").setParameter("roleName", roleName).getSingleResult();
+		return (Role) eM.createQuery(SQLQuery.SELECT_ROLE_BYNAME).setParameter("roleName", roleName).getSingleResult();
 	}
 
 	public Group readGroup(String groupName) {
 
-		return (Group) eM.createQuery("SELECT g FROM usergroup g WHERE g.name =:groupName").setParameter("groupName", groupName).getSingleResult();
+		return (Group) eM.createQuery(SQLQuery.SELECT_GROUP_BYNAME).setParameter("groupName", groupName).getSingleResult();
 	}
 
 	

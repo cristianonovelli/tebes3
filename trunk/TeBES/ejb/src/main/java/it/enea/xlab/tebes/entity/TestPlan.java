@@ -2,7 +2,6 @@ package it.enea.xlab.tebes.entity;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

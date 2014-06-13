@@ -3,6 +3,7 @@ package it.enea.xlab.tebes.sut;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.common.SQLQuery;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.User;
@@ -139,11 +140,12 @@ public class SUTManagerImpl implements SUTManagerRemote {
 	
 
 	public SUT readSUTByName(String sutName) {
-		
-        String queryString = "SELECT s FROM SUT AS s WHERE s.name = ?1";
+
+		String param1 = "1";
+        String queryString = SQLQuery.SELECT_SUTS.concat(SQLQuery.WHERE_NAME).concat(param1);
         
         Query query = eM.createQuery(queryString);
-        query.setParameter(1, sutName);
+        query.setParameter(param1, sutName);
         @SuppressWarnings("unchecked")
 		List<SUT> resultList = query.getResultList();
         if ((resultList != null) && (resultList.size() > 0))

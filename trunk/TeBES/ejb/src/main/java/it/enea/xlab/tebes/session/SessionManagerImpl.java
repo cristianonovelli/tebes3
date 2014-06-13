@@ -4,6 +4,7 @@ import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.common.SQLQuery;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Input;
@@ -241,10 +242,11 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	@SuppressWarnings("unchecked")
 	public List<Session> readSessionListbyUserId(Long userId) {
 		
-        String queryString = "SELECT s FROM Session AS s WHERE s.userId = ?1";
-        
+        String param1 = "1";
+        String queryString = SQLQuery.SELECT_SESSIONS.concat(SQLQuery.WHERE_USERID).concat(param1);
+        		
         Query query = eM.createQuery(queryString);
-        query.setParameter(1, userId);
+        query.setParameter(param1, userId);
 
         return query.getResultList();
 	}
@@ -296,9 +298,11 @@ public class SessionManagerImpl implements SessionManagerRemote {
 
 	public List<Long> getSessionIdList(User user) {
 
-        String queryString = "SELECT s.id FROM Session AS s WHERE s.user = ?1";   
+        String param1 = "1";
+        String queryString = SQLQuery.SELECT_SESSIONID.concat(SQLQuery.WHERE_USER).concat(param1);
+          
         Query query = eM.createQuery(queryString);
-        query.setParameter(1, user);
+        query.setParameter(param1, user);
         
         @SuppressWarnings("unchecked")
 		List<Long> sessionIdList = query.getResultList();

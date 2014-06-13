@@ -43,6 +43,8 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.richfaces.event.UploadEvent;
 import org.richfaces.model.UploadItem;
+import org.xlab.file.XLabFileManager;
+import org.xlab.utilities.XLabUtilities;
 
 public class SessionManagerController extends WebController<Session> {
 
@@ -375,8 +377,11 @@ public class SessionManagerController extends WebController<Session> {
 
 	public String getLogMessage() {
 		if(logMessage == null)
-			logMessage = "console: ";
-		return this.logMessage + this.viewCurrentSession.getReport().getFullDescription();
+			logMessage = "";
+		
+		String fullDescription = this.viewCurrentSession.getReport().getFullDescription();
+		fullDescription = XLabUtilities.replace(fullDescription, "\n", "<BR />");
+		return this.logMessage + fullDescription;
 	}
 
 //	public boolean getIsRunning() {
