@@ -43,7 +43,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.richfaces.event.UploadEvent;
 import org.richfaces.model.UploadItem;
-import org.xlab.file.XLabFileManager;
 import org.xlab.utilities.XLabUtilities;
 
 public class SessionManagerController extends WebController<Session> {
@@ -163,6 +162,11 @@ public class SessionManagerController extends WebController<Session> {
 		
 		Long sessionId = createSession(getCurrentUser().getId(), selectedSUT, selectedTestPlan);
 		
+		// My
+		if ( (this.sessionState == null) || (this.sessionState.equals(Session.getNewState())) ) {
+			this.resetBoxFlags();
+			this.resetSearch();
+		}
 		
 		if (sessionId.intValue() > 0) {
 			this.updateDataModel();
@@ -320,6 +324,9 @@ public class SessionManagerController extends WebController<Session> {
 	public String viewSession() {
 		if(selectedSession != null)
 			this.viewCurrentSession = this.sessionManagerService.readSession(selectedSession);
+		
+		
+		
 		
 		return "view_session";
 	}
@@ -486,6 +493,22 @@ public class SessionManagerController extends WebController<Session> {
 	public String getSessionState() {
 		this.viewCurrentSession = this.sessionManagerService.readSession(selectedSession);
 		this.sessionState = this.viewCurrentSession.getState();
+		
+		if (this.sessionState.equals(Session.getNewState())) {
+			this.resetBoxFlags();
+			this.resetSearch();
+			
+			canBeExecuted = true;
+			canBeStopped = false;
+			canBeRestarted = false;
+			
+		}	
+		
+		if (this.sessionState.equals(Session.getDoneState())) {
+			this.resetBoxFlags();
+			this.resetSearch();
+		}
+		
 		return sessionState;
 	}
 
@@ -644,7 +667,11 @@ public class SessionManagerController extends WebController<Session> {
 					this.canBeRestarted = false;
 					
 					this.guiMessage = "Tutti gli input richiesti dalla Action "+this.currentAction.getActionName()+" sono stati forniti. Premi ESEGUI per eseguire la Action.";
-					this.showMessageBox = true;
+					
+					if (this.getSessionState().equals(Session.getDoneState()))
+						this.showMessageBox = false;
+					else
+						this.showMessageBox = true;
 					
 				}
 				
@@ -660,12 +687,15 @@ public class SessionManagerController extends WebController<Session> {
 		return isSessionWaiting;
 	}
 	
+	
 	private void resetBoxFlags() {
+		
 		this.showUploadFileBox = false;
 		this.showInputTextBox = false;
 		this.showMessageOkBox = false;
 		this.showMessageBox = false;
 	} 
+	
 	
 	private byte[] convertInputStreamToByteArray(InputStream is) throws IOException { 
 		
@@ -681,6 +711,7 @@ public class SessionManagerController extends WebController<Session> {
 		
 	}
 
+	
 	public String upload() throws IOException{
 		try {
 			InputStream stream = new FileInputStream(this.uploadedFiles.get(this.currentFileName));
@@ -697,6 +728,7 @@ public class SessionManagerController extends WebController<Session> {
 		}
 		return "";
 	}
+	
 	
 	private Session uploadFile(Input input, String fileName, String type, byte[] fileContent, Session session) throws Exception {
 

@@ -39,6 +39,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xlab.file.XLabFileManager;
 import org.xlab.utilities.XLabDates;
+import org.xlab.utilities.XLabUtilities;
+import org.xlab.xml.XLabDOM;
 import org.xml.sax.SAXException;
 
 @Stateless
@@ -257,14 +259,18 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			wfClone.getActions().add(this.cloneAction(actionList.get(i)));		
 		}
 
-		TestPlanXML tpXMLClone = this.cloneTestPlanXML(testPlan.getTestplanxml());
+		User user = userManager.readUser(userId);		
+		String postfix = new Long(user.getTestPlans().size()+1).toString();
+		String newName = testPlan.getName().concat(Constants.UNDERSCORE).concat(postfix);
 		
-		String newLocation = PropertiesUtil.getTestPlansDirPath(userId).concat(testPlan.getName()).concat(Constants.XML_EXTENSION);
+		//String newXML = XLabUtilities.replace(testPlan.getTestplanxml().getXml(), testPlan.getName(), newName);
+		TestPlanXML tpXMLClone = this.cloneTestPlanXML(testPlan.getTestplanxml());
+		//tpXMLClone.setXml(newXML);
+		
+		String newLocation = PropertiesUtil.getTestPlansDirPath(userId).concat(newName).concat(Constants.XML_EXTENSION);
 		String newPublication = TeBESDAO.location2publication(newLocation);
 		
-		
-		
-		testPlanClone = new TestPlan(testPlan.getName(), datetime, datetime, Constants.STATE_DRAFT, newLocation, newPublication, wfClone, tpXMLClone);
+		testPlanClone = new TestPlan(newName, datetime, datetime, Constants.STATE_DRAFT, newLocation, newPublication, wfClone, tpXMLClone);
 		
 		List<TestPlanDescription> table = testPlan.getTestPlanDescriptions();
 		List<TestPlanDescription> tableClone = new Vector<TestPlanDescription>();
@@ -287,16 +293,22 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			try {
 				
 				logger.info("Copying TestPlan: " + testPlanClone.getName() + " for UserId: " + userId + "...");
+				
+				/*XLabDOM myXML = new XLabDOM();
+				myXML.setContent(newXML);
+				myXML.saveAs(newLocation);*/
 				copying = XLabFileManager.copy(new File(src), new File(newLocation));
+				
+				
 				if (copying)
 					logger.info("Copied TestPlan: " + newLocation);
 				
-			} catch (IOException e) {
+			} catch (Exception e) {
 				copying = false;
 				logger.error(e.getMessage());
 				logger.error("EXCEPTION: see the stacktrace.");
 				e.printStackTrace();
-			}			
+			} 			
 		}
 		
 		if (copying) {
@@ -436,16 +448,21 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	
 	
 	
-	@SuppressWarnings("unchecked")
+
 	public List<TestPlan> readUserTestPlanList(User user) {
 
+		System.out.println("readUserTestPlanList 1");
+		
 		List<TestPlan> testPlanListResult = new Vector<TestPlan>();
 
 		//String param1 = "1";
         //String queryString = SQLQuery.SELECT_SUT.concat(SQLQuery.WHERE_NAME).concat(param1);
         
-        List<TestPlan> testPlanList = (List<TestPlan>) eM.createQuery(SQLQuery.SELECT_TESTPLANS).getResultList(); 
+        @SuppressWarnings("unchecked")
+		List<TestPlan> testPlanList = (List<TestPlan>) eM.createQuery(SQLQuery.SELECT_TESTPLANS).getResultList(); 
 
+        System.out.println("readUserTestPlanList 2");
+        
         Iterator<TestPlan> i = testPlanList.iterator();
         TestPlan tpTemp;
         while (i.hasNext()) {
@@ -457,6 +474,13 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
             }
         }
         
+        System.out.println("readUserTestPlanList 3");
+        
+        if (testPlanList != null)
+        	System.out.println("readUserTestPlanList:" + testPlanList.size() );
+        else
+        	System.out.println("readUserTestPlanList NULL");
+        	
         return testPlanListResult;
 	}
 

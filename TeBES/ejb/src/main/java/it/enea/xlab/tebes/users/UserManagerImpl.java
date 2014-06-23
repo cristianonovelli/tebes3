@@ -81,7 +81,7 @@ public class UserManagerImpl implements UserManagerRemote {
 	
 	public Long createUserFileSystem(Long userId) {
 		
-		System.out.println("createUserFileSystem for user: " + userId);
+
 		
 		// CREO IL SUO FILE FILESYSTEM
 		// se la directory con quello user id esiste, c'� un problema di sistema
@@ -110,6 +110,8 @@ public class UserManagerImpl implements UserManagerRemote {
 				
 			
 		}
+		else
+			System.out.println("The File System already exists!");
 		
 		return userId;
 	}

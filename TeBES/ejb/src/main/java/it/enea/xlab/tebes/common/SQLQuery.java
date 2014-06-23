@@ -21,8 +21,7 @@ public class SQLQuery {
 	public static final String SELECT_GROUPID = "SELECT g.id FROM usergroup AS g";
 	public static final String SELECT_GROUP_BYNAME = "SELECT g FROM usergroup g WHERE g.name =:groupName";
 	
-	// TESTPLAN
-	public static final String SELECT_TESTPLANS = "SELECT t FROM TestPlan t";
+	public static final String SELECT_TESTPLANS = "SELECT t FROM TestPlan AS t";
 	
 	// ACTION
 	public static final String SELECT_ACTIONID = "SELECT a.id FROM Action AS a";
