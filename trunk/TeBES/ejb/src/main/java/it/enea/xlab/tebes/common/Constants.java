@@ -42,6 +42,12 @@ public class Constants {
 	public static final String USER2_NAME = "Piero";
 	public static final String USER2_SURNAME = "Desabbata";
 
+	// User3
+	public static final String USER3_EMAIL = "cristiano.novelli@enea.it";
+	public static final String USER3_PASSWORD = "xcristiano";
+	public static final String USER3_NAME = "Cristiano ENEA";
+	public static final String USER3_SURNAME = "Novelli";	
+	
 	// SUT description
 	public static final String SUT_DESCRIPTION = "Static SUT description";
 	public static final String SUT_DATETIME2013 = "2013-06-13T18:43:00Z";

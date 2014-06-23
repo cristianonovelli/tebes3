@@ -198,7 +198,7 @@ public class SessionManagerImplITCase {
 		
 		
 		// Create two generic Users
-		logger.info("5) Two STANDARD USERS creating...");
+		logger.info("5) Three STANDARD USERS creating...");
 		User currentUser = new User(Constants.USER1_NAME, Constants.USER1_SURNAME, Constants.USER1_EMAIL, Constants.USER1_PASSWORD);	
 		Long idTempUser1 = userProfileController.registration(currentUser, role1_standard);
 		Assert.assertNotNull(currentUser);
@@ -208,7 +208,10 @@ public class SessionManagerImplITCase {
 		Assert.assertNotNull(otherUser);
 		Assert.assertTrue(idTempUser2.intValue()>0);
 		logger.info("OK! Two STANDARD USERS for " + currentUser.getName() + " and " + otherUser.getName() + " created!");
-		
+		User user3 = new User(Constants.USER3_NAME, Constants.USER3_SURNAME, Constants.USER3_EMAIL, Constants.USER3_PASSWORD);	
+		Long idTempUser3 = userProfileController.registration(user3, role1_standard);
+		Assert.assertNotNull(user3);
+		Assert.assertTrue(idTempUser3.intValue()>0);		
 		
 		
 		// Login SuperUser
