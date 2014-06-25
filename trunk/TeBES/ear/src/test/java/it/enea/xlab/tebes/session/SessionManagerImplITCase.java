@@ -26,9 +26,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 
 import junit.framework.Assert;
 
@@ -162,7 +162,7 @@ public class SessionManagerImplITCase {
 		SUTInteraction interactionWSClient = new SUTInteraction(SUTConstants.INTERACTION_WS_CLIENT);
 		SUTInteraction interactionWSServer = new SUTInteraction(SUTConstants.INTERACTION_WS_SERVER);
 			
-		Vector<SUT> sutList = new Vector<SUT>();
+		ArrayList<SUT> sutList = new ArrayList<SUT>();
 		
 		// SUT supportati per il tipo "document"
 		//sutList.add( new SUT("SystemSUT1", SUTConstants.SUT_TYPE1_DOCUMENT, interactionWebSite, "System SUT 1: Document - WebSite") );
@@ -186,7 +186,7 @@ public class SessionManagerImplITCase {
 		//SUT sutTemp;
 		for (int i=0; i<sutList.size();i++) {
 		
-			sutId = sutController.createSUT(sutList.elementAt(i), superUser);
+			sutId = sutController.createSUT(sutList.get(i), superUser);
 			Assert.assertNotNull(sutId);	
 			Assert.assertTrue(sutId.intValue()>0);	
 			
@@ -393,7 +393,7 @@ public class SessionManagerImplITCase {
 			logger.info("4) Select SUT TYPE/INTERACTION and Create SUT for User");
 			
 			// 1. Recupero lista dei SUT Type direttamente dall'oggetto SUT
-			Vector<String> systemSUTTypeList = sutController.getSUTTypeList();
+			ArrayList<String> systemSUTTypeList = sutController.getSUTTypeList();
 			
 			// 2. L'utente seleziona un SUT type
 			String defaultSUTType = systemSUTTypeList.get(0);
@@ -649,7 +649,7 @@ public class SessionManagerImplITCase {
 		logger.info("OK! SESSION Retrieved!");
 		
 		
-		List<FileStore> documentList = new Vector<FileStore>();
+		List<FileStore> documentList = new ArrayList<FileStore>();
 		
 		
 		// GET Workflow
@@ -660,7 +660,7 @@ public class SessionManagerImplITCase {
 		
 		// Definisco due actionMark:
 		// actionMark aggiornato
-		int actionMark = workflow.getActionMark();
+		int actionMark = currentSession.getActionMark();
 		logger.info("Action Mark: " + actionMark);
 		// actionMarkPreRun continua a conservare lo stato prima dell'esecuzione della action
 		// questo ci serve per capire se è variato o meno (varia se l'action è stata eseguita)
@@ -727,7 +727,7 @@ public class SessionManagerImplITCase {
 
 			// REFRESH workflow, actionMark and report
 			workflow = testPlanController.readTestPlan(testPlan.getId()).getWorkflow();		
-			actionMark = workflow.getActionMark();		
+			actionMark = currentSession.getActionMark();		
 			report = currentSession.getReport();
 			
 			logger.info("Post-Running Workflow...SESSION STATE: " + currentSession.getState());
@@ -749,7 +749,7 @@ public class SessionManagerImplITCase {
 			// 	  se SESSION WORKING, incremento il marker
 
 			// Prendo l'action da eseguire e stampo il summary dell'action nel file di log
-			currentAction = workflow.getCurrentAction();
+			currentAction = workflow.getCurrentAction(actionMark);
 			Assert.assertNotNull(currentAction);
 			
 			logger.info("ACTION " + actionMark + " OF " + actionsNumber + " ***********************");	
@@ -834,7 +834,7 @@ public class SessionManagerImplITCase {
 				
 				// REFRESH Workflow, actionMark and current Action
 				workflow = currentSession.getTestPlan().getWorkflow();		
-				actionMark = workflow.getActionMark();		
+				actionMark = currentSession.getActionMark();		
 				report = currentSession.getReport();
 				
 				logger.info("After runWorkflow - Session State: " + currentSession.getState());
@@ -889,7 +889,7 @@ public class SessionManagerImplITCase {
 				running = false;
 			}
 			else
-				currentAction = workflow.getCurrentAction();
+				currentAction = workflow.getCurrentAction(actionMark);
 			
 			System.out.println();
 			

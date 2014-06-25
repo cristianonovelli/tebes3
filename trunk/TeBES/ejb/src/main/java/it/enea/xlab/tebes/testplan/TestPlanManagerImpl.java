@@ -20,6 +20,7 @@ import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -100,17 +101,17 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				ActionWorkflow wf = testPlan.getWorkflow();
 				ActionWorkflow wf2 = new ActionWorkflow();	
 				wf2.setComment(wf.getComment());
-				wf2.setActionMark(1);
+				//wf2.setActionMark(1);
 				Long wf2Id = actionManager.createWorkflow(wf2);
 				wf2 = actionManager.readWorkflow(wf2Id);
 				
 
 				
-				Vector<Action> actionList = (Vector<Action>) wf.getActions(); 
-				Vector<Input> inputList;
-				Vector<ActionDescription> actionDescriptionList;
-				Vector<InputDescription> inputDescriptionList;
-				Vector<GUIDescription> guiDescriptionList;
+				ArrayList<Action> actionList = (ArrayList<Action>) wf.getActions(); 
+				ArrayList<Input> inputList;
+				ArrayList<ActionDescription> actionDescriptionList;
+				ArrayList<InputDescription> inputDescriptionList;
+				ArrayList<GUIDescription> guiDescriptionList;
 				Long actionId, inputId;
 				Action actionTemp;
 				Input inputTemp;
@@ -122,7 +123,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 					
 					// prendo lista actionDescriptions					
-					actionDescriptionList = (Vector<ActionDescription>) actionTemp.getActionDescriptions();					
+					actionDescriptionList = (ArrayList<ActionDescription>) actionTemp.getActionDescriptions();					
 
 					for (int ad=0; ad<actionDescriptionList.size(); ad++) {	
 						
@@ -131,7 +132,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 					
 					
 					// prendo lista input					
-					inputList = (Vector<Input>) actionTemp.getInputs();					
+					inputList = (ArrayList<Input>) actionTemp.getInputs();					
 					// creo input
 					for (int j=0; j<inputList.size(); j++) {	
 						
@@ -139,14 +140,14 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 						
 						inputId = actionManager.createInput(inputTemp, actionId);
 						
-						inputDescriptionList = (Vector<InputDescription>) inputTemp.getInputDescriptions();
+						inputDescriptionList = (ArrayList<InputDescription>) inputTemp.getInputDescriptions();
 						for (int in=0; in<inputDescriptionList.size(); in++) {	
 							
 							actionManager.createInputDescription(inputDescriptionList.get(in), inputId);
 						}	
 						
 						
-						guiDescriptionList = (Vector<GUIDescription>) inputTemp.getGuiDescriptions();
+						guiDescriptionList = (ArrayList<GUIDescription>) inputTemp.getGuiDescriptions();
 						for (int gu=0; gu<guiDescriptionList.size(); gu++) {	
 							
 							actionManager.createGUIDescription(guiDescriptionList.get(gu), inputId);
@@ -169,7 +170,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				
 				// ADD TestPlanDescriptions to TestPlan
 				List<TestPlanDescription> table1 = testPlan.getTestPlanDescriptions();
-				Vector<TestPlanDescription> table2 = new Vector<TestPlanDescription>();
+				ArrayList<TestPlanDescription> table2 = new ArrayList<TestPlanDescription>();
 				TestPlanDescription singleDescription, singleDescription2;
 				for (int i=0; i<table1.size(); i++) {
 					
@@ -249,7 +250,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		String datetime = XLabDates.getCurrentUTC();
 		
-		ActionWorkflow wfClone = new ActionWorkflow(new Vector<Action>());
+		ActionWorkflow wfClone = new ActionWorkflow(new ArrayList<Action>());
 		wfClone.setComment("clone");	
 		
 		List<Action> actionList = testPlan.getWorkflow().getActions();
@@ -273,7 +274,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		testPlanClone = new TestPlan(newName, datetime, datetime, Constants.STATE_DRAFT, newLocation, newPublication, wfClone, tpXMLClone);
 		
 		List<TestPlanDescription> table = testPlan.getTestPlanDescriptions();
-		List<TestPlanDescription> tableClone = new Vector<TestPlanDescription>();
+		List<TestPlanDescription> tableClone = new ArrayList<TestPlanDescription>();
 		for (int i=0; i<table.size(); i++) {				
 			
 			tableClone.add(new TestPlanDescription(table.get(i).getLanguage(), table.get(i).getValue()));
@@ -371,7 +372,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 		
 		List<ActionDescription> descriptionList1 = action1.getActionDescriptions();
-		Vector<ActionDescription> descriptionList2 = new Vector<ActionDescription>();
+		ArrayList<ActionDescription> descriptionList2 = new ArrayList<ActionDescription>();
 		for (int i=0; i<descriptionList1.size(); i++) {				
 			
 			descriptionList2.add(new ActionDescription(descriptionList1.get(i).getLanguage(), descriptionList1.get(i).getValue()));		
@@ -381,7 +382,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		
 		List<Input> inputList1 = action1.getInputs();
-		Vector<Input> inputList2 = new Vector<Input>();
+		ArrayList<Input> inputList2 = new ArrayList<Input>();
 		for (int i=0; i<inputList1.size(); i++) {				
 			
 			inputList2.add(this.cloneInput(inputList1.get(i)));		
@@ -409,7 +410,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		
 		// Clone Input Descriptions
 		List<InputDescription> inputDescriptionList1 = input1.getInputDescriptions();
-		Vector<InputDescription> inputDescriptionList2 = new Vector<InputDescription>();
+		ArrayList<InputDescription> inputDescriptionList2 = new ArrayList<InputDescription>();
 		for (int inDe=0; inDe<inputDescriptionList1.size(); inDe++) {				
 			
 			inputDescriptionList2.add(this.cloneInputDescription(inputDescriptionList1.get(inDe)));		
@@ -418,7 +419,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 		// Clone Input/GUI Descriptions
 		List<GUIDescription> guiDescriptionList1 = input1.getGuiDescriptions();
-		Vector<GUIDescription> guiDescriptionList2 = new Vector<GUIDescription>();
+		ArrayList<GUIDescription> guiDescriptionList2 = new ArrayList<GUIDescription>();
 		for (int inGui=0; inGui<guiDescriptionList1.size(); inGui++) {				
 			
 			guiDescriptionList2.add(this.cloneGUIDescription(guiDescriptionList1.get(inGui)));		
@@ -453,7 +454,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 		System.out.println("readUserTestPlanList 1");
 		
-		List<TestPlan> testPlanListResult = new Vector<TestPlan>();
+		List<TestPlan> testPlanListResult = new ArrayList<TestPlan>();
 
 		//String param1 = "1";
         //String queryString = SQLQuery.SELECT_SUT.concat(SQLQuery.WHERE_NAME).concat(param1);
@@ -602,7 +603,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				
 				NodeList descriptionsNodeList = testPlanDOM.getTPDescriptionList();
 				
-				Vector<TestPlanDescription> table = new Vector<TestPlanDescription>();
+				ArrayList<TestPlanDescription> table = new ArrayList<TestPlanDescription>();
 				TestPlanDescription singleDescription;
 				Node descriptionNode;
 				String language, value;
@@ -630,9 +631,9 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 
 
-	private Vector<Action> getActionsFromXML(TestPlanDOM testPlanDOM) throws SAXException, ParserConfigurationException, IOException {
+	private ArrayList<Action> getActionsFromXML(TestPlanDOM testPlanDOM) throws SAXException, ParserConfigurationException, IOException {
 		
-		Vector<Action> actionsList = new Vector<Action>();
+		ArrayList<Action> actionsList = new ArrayList<Action>();
 		
 		// Ottengo lista actions
 		NodeList actionNodes = testPlanDOM.getTestActionNodeList();
@@ -657,7 +658,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			actionDescriptionsNodeList = testPlanDOM.getActDescriptionList(actionElement);
 			
 			
-			Vector<ActionDescription> actionDescriptionTable = new Vector<ActionDescription>();
+			ArrayList<ActionDescription> actionDescriptionTable = new ArrayList<ActionDescription>();
 			ActionDescription singleDescription;
 			Node actionDescriptionNode;
 			String language, description;
@@ -698,13 +699,13 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			Node inputNode, sutNode, guiNode;
 			String inputName, inputDescription, inputType, inputLanguage; 
 			String inputInteraction, inputFileIdRef, inputGuiReaction, inputGuiMessage;
-			Vector<Input> inputList = new Vector<Input>();
+			ArrayList<Input> inputList = new ArrayList<Input>();
 			NodeList inputDescriptionsNodeList, guiDescriptionsNodeList;
 			Node inputDescriptionNode, guiDescriptionNode;
 			InputDescription singleInputDescription;
 			GUIDescription singleGuiDescription;
-			Vector<InputDescription> inputDescriptionTable = new Vector<InputDescription>();
-			Vector<GUIDescription> guiDescriptionTable = new Vector<GUIDescription>();
+			ArrayList<InputDescription> inputDescriptionTable = new ArrayList<InputDescription>();
+			ArrayList<GUIDescription> guiDescriptionTable = new ArrayList<GUIDescription>();
 			for (int j = 0; j < inputNodeList.getLength(); j++) {
 			
 				// Get Input Node
@@ -844,9 +845,10 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 	}
 
 
-	private Vector<String> getSystemTestPlanFileList() {
 
-		Vector<String> result = null;
+	private ArrayList<String> getSystemTestPlanFileList() {
+
+		ArrayList<String> result = new ArrayList<String>();
 		
 		// L'utente deve scegliere il TestPlan da importare: 
 		// Get TeBES testPlan1 absolute PathName from .properties file
@@ -855,10 +857,14 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 		try {		
 			systemTestPlanAbsDirName = PropertiesUtil.getSuperUserTestPlansDirPath();			
 			
-			if (XLabFileManager.isFileOrDirectoryPresent(systemTestPlanAbsDirName) ) 
+			if (XLabFileManager.isFileOrDirectoryPresent(systemTestPlanAbsDirName) ) {
 
-			result = XLabFileManager.getFileList(systemTestPlanAbsDirName);
+				Vector<String> tempResult = XLabFileManager.getFileList(systemTestPlanAbsDirName);
 
+				for (int i=0 ;i<tempResult.size();i++) 
+					result.add(tempResult.get(i));
+			}
+			
 		} catch (Exception e) {
 			
 			result = null;		
@@ -921,7 +927,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				this.deleteTestPlan(testPlanList.get(tp).getId());
 
 			// Recuperare lista dei file
-			Vector<String> systemTestPlanFileList = this.getSystemTestPlanFileList();
+			ArrayList<String> systemTestPlanFileList = this.getSystemTestPlanFileList();
 
 			// System Dir
 			String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlansDirPath();
@@ -934,7 +940,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			for (int i=0; i<systemTestPlanFileList.size();i++) {
 						
 				// GET TestPlan structure from XML
-				testPlanAbsPathName = superUserTestPlanDir.concat(systemTestPlanFileList.elementAt(i));
+				testPlanAbsPathName = superUserTestPlanDir.concat(systemTestPlanFileList.get(i));
 				
 				// Create
 				testPlan = this.getTestPlanFromXML(testPlanAbsPathName);			

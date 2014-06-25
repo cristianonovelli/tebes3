@@ -610,7 +610,7 @@ public class SessionManagerController extends WebController<Session> {
 			System.out.println("execute() method: " + this.viewCurrentSession.getTestPlan().getName());
 			
 			this.viewCurrentSession = this.runWorkflow(this.viewCurrentSession.getTestPlan().getWorkflow(), this.viewCurrentSession);
-			this.currentAction = this.viewCurrentSession.getTestPlan().getWorkflow().getCurrentAction();
+			this.currentAction = this.viewCurrentSession.getTestPlan().getWorkflow().getCurrentAction(this.viewCurrentSession.getActionMark());
 			
 		}
 
@@ -624,7 +624,7 @@ public class SessionManagerController extends WebController<Session> {
 				//this.isPollerRunning = false;
 				this.isSessionWaiting = true;
 				
-				this.currentAction = this.viewCurrentSession.getTestPlan().getWorkflow().getCurrentAction();
+				this.currentAction = this.viewCurrentSession.getTestPlan().getWorkflow().getCurrentAction(this.viewCurrentSession.getActionMark());
 				System.out.println("TEBES DEBUG - CURRENT ACTION: "+currentAction.getActionName()+", STATE: "+currentAction.getState()+ ", TOTAL INPUTS: "+currentAction.getInputs().size());
 				boolean found = false;
 				
