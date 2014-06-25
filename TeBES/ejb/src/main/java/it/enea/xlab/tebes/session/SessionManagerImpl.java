@@ -360,7 +360,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			int actionListSize = workflow.getActions().size();
 
 			
-			int actionMark = workflow.getActionMark(); 
+			int actionMark = session.getActionMark(); 
 			logger.info("START runWorkflow - actionMark: " + actionMark);
 			
 			Action currentAction = (Action) actionList.get(actionMark-1);
@@ -419,7 +419,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				}
 				*/
 				actionMark++;				
-				workflow.setActionMark(actionMark);
+				session.setActionMark(actionMark);
 				
 				// Se questa era l'ultima azione il Report è concluso
 				// e la sessione di Test termina con state DONE

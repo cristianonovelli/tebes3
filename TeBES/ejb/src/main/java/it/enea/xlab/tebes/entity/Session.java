@@ -78,7 +78,7 @@ public class Session implements Serializable {
 	@LazyCollection(LazyCollectionOption.TRUE)
 	private List<FileStore> files;
 
-
+	private int actionMark;
 	
 
 	// Empty Constructor
@@ -97,6 +97,9 @@ public class Session implements Serializable {
 		
 		// Set state to "new"
 		this.setStateToNew();
+		
+		// Set action mark to 1
+		this.setActionMark(1);
 		
 		this.setLocalization(localization);
 	}
@@ -292,6 +295,14 @@ public class Session implements Serializable {
 	
 	public void setLocalization(String localization) {
 		this.localization = localization;
+	}
+
+	public int getActionMark() {
+		return actionMark;
+	}
+	
+	public void setActionMark(int actionMark) {
+		this.actionMark = actionMark;
 	}
 
 }

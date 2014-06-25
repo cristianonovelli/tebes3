@@ -371,7 +371,7 @@ public class SUTManagerController extends WebController<SUT> {
 		return this.showInteractionMenu;
 	}
 
-	public Vector<String> getSUTTypeList() {
+	public ArrayList<String> getSUTTypeList() {
 		return sutManagerBean.getSUTTypeList();
 	}
 

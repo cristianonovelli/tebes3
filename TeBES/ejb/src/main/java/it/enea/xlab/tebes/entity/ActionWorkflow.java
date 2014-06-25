@@ -39,7 +39,7 @@ public class ActionWorkflow implements Serializable {
 	private List<Action> actions;
 
 	// Indica l'azione da eseguire con un numero che va da 1 a actions.size()
-	private int actionMark;	
+	//private int actionMark;	
 	
 	
 	
@@ -50,7 +50,6 @@ public class ActionWorkflow implements Serializable {
 	public ActionWorkflow(List<Action> actions) {
 
 		this.setActions(actions);
-		this.setActionMark(1);
 	}
 
 	public Long getId() {
@@ -79,17 +78,12 @@ public class ActionWorkflow implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-	public int getActionMark() {
-		return actionMark;
-	}
-
-	public Action getCurrentAction() {
+	
+	public Action getCurrentAction(int actionMark) {
 		
 		Action currentAction = null;
-		
-		int actionMark = this.getActionMark();
-		List<Action> actions = this.getActions();
+
+		List<Action> actions = this.getActions(); 
 				
 		if ((actions.size() > 0) && (actionMark <= actions.size())) 
 			currentAction = actions.get(actionMark - 1);
@@ -98,12 +92,7 @@ public class ActionWorkflow implements Serializable {
 		
 		return currentAction;
 	}
-	
-	public void setActionMark(int actionMark) {
-		this.actionMark = actionMark;
-	}
 
-	
 }
 
 
