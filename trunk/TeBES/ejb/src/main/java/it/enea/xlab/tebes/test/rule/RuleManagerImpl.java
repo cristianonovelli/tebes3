@@ -1,8 +1,5 @@
 package it.enea.xlab.tebes.test.rule;
 
-import java.util.List;
-import java.util.Vector;
-
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.Profile;
@@ -18,15 +15,12 @@ import it.enea.xlab.tebes.model.TestRule;
 import it.enea.xlab.validation.ValidationManagerRemote;
 import it.enea.xlab.validation.XErrorMessage;
 
-//import it.enea.xlab.tebes.validation.XErrorMessage;
+import java.util.ArrayList;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.naming.NamingException;
-
-import org.xlab.net.XURL;
-import org.xlab.utilities.XLabUtilities;
 
  
 
@@ -184,7 +178,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		try {
 			emList = validationManager.validation(xmlString, xsdString);
 			
-			Vector<TestResult> testResultList = new Vector<TestResult>(); 
+			ArrayList<TestResult> testResultList = new ArrayList<TestResult>(); 
 			
 			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
 			
@@ -255,7 +249,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 
 			emList = validationManager.validation(xmlString, xmlSchematron);
 
-			Vector<TestResult> testResultList = new Vector<TestResult>(); 
+			ArrayList<TestResult> testResultList = new ArrayList<TestResult>(); 
 			
 			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
 			

@@ -3,9 +3,9 @@ package it.enea.xlab.tebes.model;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.Input;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 
 public class TAF {
 
@@ -15,7 +15,7 @@ public class TAF {
 	private boolean prerequisite;
 	private Target target;
 	private TestRule predicate;
-	private Vector<Action> tests;
+	private ArrayList<Action> tests;
 	private boolean skipTurnedON;
 	private String prescription;
 	
@@ -29,7 +29,7 @@ public class TAF {
 	}
 
 
-	public TAF(String name, boolean prerequisite, Target target, TestRule predicate, Vector<Action> prerequisites,
+	public TAF(String name, boolean prerequisite, Target target, TestRule predicate, ArrayList<Action> prerequisites,
 			boolean skipTurnedON, String prescription,
 			Hashtable<String, ReportFragment> reportFragments, List<Input> inputs, String note) {
 
@@ -88,11 +88,11 @@ public class TAF {
 		this.predicate = predicate;
 	}
 
-	public Vector<Action> getTests() {
+	public ArrayList<Action> getTests() {
 		return tests;
 	}
 
-	public void setTests(Vector<Action> tests) {
+	public void setTests(ArrayList<Action> tests) {
 		this.tests = tests;
 	}
 

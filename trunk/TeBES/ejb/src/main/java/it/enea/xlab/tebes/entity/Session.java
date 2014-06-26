@@ -1,8 +1,8 @@
 package it.enea.xlab.tebes.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -93,7 +93,7 @@ public class Session implements Serializable {
 		this.testPlan = testPlan;
 		this.sut = sut;
 		
-		files = new Vector<FileStore>();
+		files = new ArrayList<FileStore>();
 		
 		// Set state to "new"
 		this.setStateToNew();
