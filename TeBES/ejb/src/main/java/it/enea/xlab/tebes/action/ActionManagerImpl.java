@@ -6,21 +6,19 @@ import it.enea.xlab.tebes.common.PropertiesUtil;
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionDescription;
 import it.enea.xlab.tebes.entity.ActionWorkflow;
-import it.enea.xlab.tebes.entity.FileStore;
 import it.enea.xlab.tebes.entity.GUIDescription;
 import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.InputDescription;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestResult;
-import it.enea.xlab.tebes.file.FileManagerRemote;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.report.ReportDOM;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.test.TestManagerImpl;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -617,7 +615,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				
 				// 4.2 BUILD Lista di TAF Building from Action
 				// (in questa lista non ci sono prerequisiti!)
-				Vector<TAF> tafList = testManager.buildTAF(action);
+				ArrayList<TAF> tafList = testManager.buildTAF(action);
 				report.addToFullDescription("\nBuilt TAF List of " + tafList.size() + " TAF.");
 				
 				

@@ -12,7 +12,7 @@ import it.enea.xlab.tebes.test.rule.RuleManagerImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -41,9 +41,10 @@ public class TestManagerImpl implements TestManagerRemote {
 	 * (p.es. se non sono stati definiti nello stesso Package di TestManager)
 	 * @return
 	 */
-	public Vector<TAF> buildTAF(Action action) {
+	@SuppressWarnings({ "unused", "rawtypes", "unchecked" })
+	public ArrayList<TAF> buildTAF(Action action) {
 		
-		Vector<TAF> tafListResult = new Vector<TAF>();
+		ArrayList<TAF> tafListResult = new ArrayList<TAF>();
 		TAF tafResult = null;
 
 		try {
@@ -51,7 +52,7 @@ public class TestManagerImpl implements TestManagerRemote {
 			String thisPackage = this.getClass().getPackage().getName();
 			Class extendedManager = Class.forName(thisPackage.concat(".").concat(action.getTestLanguage().toUpperCase().concat(TESTMANAGER_POSTFIX)));
 			Method xMethod = extendedManager.getMethod(BUILDTAF_METHOD, Action.class);
-			tafListResult = (Vector<TAF>) xMethod.invoke(extendedManager.newInstance(), action);
+			tafListResult = (ArrayList<TAF>) xMethod.invoke(extendedManager.newInstance(), action);
 
 			//tafListResult.add(tafResult);
 			
@@ -132,9 +133,9 @@ public class TestManagerImpl implements TestManagerRemote {
 		// 3. setto il risultato
 		
 		// 1di3 PREREQUISITI
-		Vector<Action> prerequisites = taf.getTests();
+		ArrayList<Action> prerequisites = taf.getTests();
 		TAF tafRicorsiva = null;
-		Node resultNode;
+		//Node resultNode;
 		boolean sumPrerequisites = true;
 		if ( (prerequisites != null) && !taf.isSkipTurnedON() ) {
 
@@ -145,14 +146,14 @@ public class TestManagerImpl implements TestManagerRemote {
 			while (i<prerequisites.size() && sumPrerequisites) {
 				
 				// GET Action Prerequisite 
-				Action prerequisiteAction = prerequisites.elementAt(i);
+				Action prerequisiteAction = prerequisites.get(i);
 				
 				report.addToFullDescription("\nPrerequisite: " + prerequisiteAction.getActionName());
 				report.addToFullDescription("\nBuilding TAF from: " + prerequisiteAction.getActionName());
 
 				
 				// BUILD TAF from Action
-				Vector<TAF> tafList = this.buildTAF(prerequisiteAction);
+				ArrayList<TAF> tafList = this.buildTAF(prerequisiteAction);
 				report.addToFullDescription("\nTAF list size: " + tafList.size());
 				
 				

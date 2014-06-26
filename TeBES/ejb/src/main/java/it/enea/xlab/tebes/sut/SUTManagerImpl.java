@@ -11,7 +11,6 @@ import it.enea.xlab.tebes.users.UserManagerRemote;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -248,7 +247,7 @@ public class SUTManagerImpl implements SUTManagerRemote {
 
 	public List<SUTInteraction> getSystemSUTInteractionListByType(String sutType) {
 		
-		Vector<SUTInteraction> result = new Vector<SUTInteraction>();
+		ArrayList<SUTInteraction> result = new ArrayList<SUTInteraction>();
 		
 		List<SUT> systemSUTList = getSystemSUTSupported();
 		

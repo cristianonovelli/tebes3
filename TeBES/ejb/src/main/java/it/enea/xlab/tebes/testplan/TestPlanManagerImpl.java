@@ -665,6 +665,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			for (int a=0; a<actionDescriptionsNodeList.getLength(); a++) {
 				
 				actionDescriptionNode = actionDescriptionsNodeList.item(a);
+				System.out.println("getActionsFromXML - actionDescriptionNode:" + actionDescriptionNode.getNodeName());
 				language = testPlanDOM.getAttribute("lg", actionDescriptionNode);
 				description = actionDescriptionNode.getFirstChild().getNodeValue();
 				
@@ -861,12 +862,15 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 				Vector<String> tempResult = XLabFileManager.getFileList(systemTestPlanAbsDirName);
 
+				System.out.println("getSystemTestPlanFileList:" + tempResult.size());
+				
 				for (int i=0 ;i<tempResult.size();i++) 
-					result.add(tempResult.get(i));
+					result.add(tempResult.elementAt(i));
 			}
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result = null;		
 		}	
 		
@@ -929,6 +933,8 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			// Recuperare lista dei file
 			ArrayList<String> systemTestPlanFileList = this.getSystemTestPlanFileList();
 
+			System.out.println("importSystemTestPlanFiles:" + systemTestPlanFileList.size());
+			
 			// System Dir
 			String superUserTestPlanDir = PropertiesUtil.getSuperUserTestPlansDirPath();
 			
@@ -949,13 +955,16 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 
 				
 				// Se solo un'importazione non va a buon fine il risultato è false
-				if (testPlanId.intValue() < 0 )
+				if (testPlanId.intValue() < 0 ) {
 					result = false;
+					System.out.println("importSystemTestPlanFiles - testPlanId.intValue():" + testPlanId.intValue());
+				}
 			}	
 		}
-		else
+		else {
 			result = false;
-
+			System.out.println("importSystemTestPlanFiles: else");
+		}
 		
 		return result;
 	}

@@ -14,10 +14,11 @@ import it.enea.xlab.tebes.test.taml.TAML2Java;
 import it.enea.xlab.tebes.test.taml.TAMLDOM;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
+
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -48,9 +49,9 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	/**
 	 * Nel TAML Manager la builTAF gestisce l'action di tipo TAML
 	 */
-	public Vector<TAF> buildTAF(Action action) {
+	public ArrayList<TAF> buildTAF(Action action) {
 
-		Vector<TAF> tafListResult = new Vector<TAF>();
+		ArrayList<TAF> tafListResult = new ArrayList<TAF>();
 		
 		TAF taf = null;
 		
@@ -81,7 +82,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 
 
 	
-	private Vector<TAF> buildTestSuiteTAF(Action action) {
+	private ArrayList<TAF> buildTestSuiteTAF(Action action) {
 		
 		return null;
 	}
@@ -95,9 +96,9 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	 * @param action
 	 * @return TAF
 	 */	
-	private Vector<TAF> buildTestCaseTAF(Action action) {
+	private ArrayList<TAF> buildTestCaseTAF(Action action) {
 
-		Vector<TAF> tafListResult = new Vector<TAF>();
+		ArrayList<TAF> tafListResult = new ArrayList<TAF>();
 		
 		// TAF 
 		TAF taf = null;
@@ -127,7 +128,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			taHashtable = t2j.getTestAssertionHashtable(tamlDOM, action.getInputs());	
 			
 			Enumeration<Action> actionsEnumeration = taHashtable.elements();
-			Vector<Action> actionsVector = new Vector<Action>();
+			ArrayList<Action> actionsVector = new ArrayList<Action>();
 			
 			while (actionsEnumeration.hasMoreElements()) {
 				
@@ -136,7 +137,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 				tafListResult.add(this.buildTestAssertionTAF(actionsEnumeration.nextElement()));				
 			}
 			
-			System.out.println("actionsVector.size: " + actionsVector.size());
+			System.out.println("actionsArrayList.size: " + actionsVector.size());
 
 			
 			
@@ -186,7 +187,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 		TestRule predicate = null, prerequisite = null;
 		String prescription;
 		Hashtable<String, Action> taHashtable = null, taRefHashtable = null;
-		Vector<Action> prerequisites = null;
+		ArrayList<Action> prerequisites = null;
 		
 		try {
 
@@ -232,7 +233,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 					// TODO SE PRESENTI CONNETTORI LOGICI AND O OR AL MOMENTO RITORNA NULL
 					
 					// altrimenti ritorna un vettore con il solo prerequisite passato.
-					 Vector<TestRule> testRuleList = this.andSplitTestRule(prerequisite);				
+					ArrayList<TestRule> testRuleList = this.andSplitTestRule(prerequisite);				
 			
 					// Get TestAssertionRef Hashtable from TAML
 					taRefHashtable = t2j.getTestAssertionRefHashtable(tamlDOM, action.getInputs());			
@@ -245,13 +246,13 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			}
 
 			
-			 Vector<TestRule> testRuleList2 = new Vector<TestRule>();
+			ArrayList<TestRule> testRuleList2 = new ArrayList<TestRule>();
 			 testRuleList2.add(predicate);
 			 
 			// Normalize Predicate
 			// Se il predicato TAML rispetta il profilo TAML4TeBES
 			// allora il predicato è sicuramente un'espressione XPath o Schematron
-			Vector<Action> predicates = this.normalize(false, testRuleList2, variableHashtable, taHashtable, taRefHashtable, commonNamespacesHashtable, action.isSkipTurnedON());
+			 ArrayList<Action> predicates = this.normalize(false, testRuleList2, variableHashtable, taHashtable, taRefHashtable, commonNamespacesHashtable, action.isSkipTurnedON());
 			
 			// Get Report Hashtable from TAML
 			Hashtable<String, ReportFragment> reportHashtable = t2j.getReportHashtable(tamlDOM, testAssertionNode);			
@@ -259,7 +260,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 
 			// Adjust Predicate Test Rule
 			// TODO Si assume che il predicato sia 1 ed 1 soltanto
-			Action predicateAction = (Action) predicates.firstElement();
+			Action predicateAction = (Action) predicates.get(0);
 
 			
 			predicate.setLanguage(predicateAction.getTestLanguage());
@@ -313,22 +314,22 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	 * @param skip
 	 * @return
 	 */
-	private Vector<Action> normalize(boolean prerequisite, Vector<TestRule> testRuleList, 
+	private ArrayList<Action> normalize(boolean prerequisite, ArrayList<TestRule> testRuleList, 
 			Hashtable<String, Variable> variableHashtable, Hashtable<String, Action> taHashtable, Hashtable<String, Action> taRefHashtable, Hashtable<String, String> namespacesHashtable, boolean skip) {
 		
 		
 		
-		Vector<Action> result = null;
+		ArrayList<Action> result = null;
 		
 		// Se tempPrerequisites probabilmente lo split ha incontrato un errore a causa di presenza di connettori logici
 		if (testRuleList != null) {
 
-			result = new Vector<Action>();
+			result = new ArrayList<Action>();
 			
 			int i=0;
 			while (i<testRuleList.size()) {
 				
-				TestRule singleTestRule = (TestRule) testRuleList.elementAt(i);
+				TestRule singleTestRule = (TestRule) testRuleList.get(i);
 				
 				// se il linguaggio è uguale a "variabile"
 				if (singleTestRule.getLanguage().equals(TAML2Java.VARIABLE_LG)) {
@@ -443,9 +444,9 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	// e come mantenerle una volta convertiti i componenti in singole Test Action?
 	// probabilmente la soluzione è la stessa che si userà nel Test Plan 
 	// per getire l'elemento Choreography.
-	private Vector<TestRule> andSplitTestRule(TestRule prerequisite) {
+	private ArrayList<TestRule> andSplitTestRule(TestRule prerequisite) {
 		
-		Vector<TestRule> result = new Vector<TestRule>();
+		ArrayList<TestRule> result = new ArrayList<TestRule>();
 
 		if (prerequisite.isLogicConnectorPresent()) {
 			

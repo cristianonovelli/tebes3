@@ -5,8 +5,8 @@ package it.enea.xlab.tebes.entity;
 import it.enea.xlab.tebes.common.Constants;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -91,8 +91,8 @@ public class Action implements Serializable {
 		this.setSkipTurnedON(skipTurnedON); 
 		//this.setDescription(description);
 		
-		this.setActionDescriptions(new Vector<ActionDescription>());
-		this.setInputs(new Vector<Input>());
+		this.setActionDescriptions(new ArrayList<ActionDescription>());
+		this.setInputs(new ArrayList<Input>());
 	}
 
 	
