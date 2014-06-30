@@ -6,6 +6,7 @@
 	<packaging>ejb</packaging>
 	<name>TeBES-ejb</name>
 
+  	
 	<parent>
 		<groupId>it.enea.xlab</groupId>
 		<artifactId>TeBES</artifactId>
