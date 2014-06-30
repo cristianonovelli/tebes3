@@ -8,7 +8,6 @@ import it.enea.xlab.tebes.entity.Group;
 import it.enea.xlab.tebes.entity.Role;
 import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.testplan.TestPlanManagerImpl;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ import org.xlab.file.XLabFileManager;
 public class UserManagerImpl implements UserManagerRemote {
 
 	// Logger
-	private static Logger logger = Logger.getLogger(TestPlanManagerImpl.class);
+	private static Logger logger = Logger.getLogger(UserManagerImpl.class);
 	
 	
 	@PersistenceContext(unitName=Constants.PERSISTENCE_CONTEXT)
@@ -76,7 +75,7 @@ public class UserManagerImpl implements UserManagerRemote {
 		catch(Exception e) {
 			return new Long(-2);
 		}	
-	}
+	} 
 	
 	
 	public Long createUserFileSystem(Long userId) {
@@ -89,26 +88,26 @@ public class UserManagerImpl implements UserManagerRemote {
 		// altrimenti la creo, e poi creo le cartelle docs e report
 		String absGenericUserFilePath = PropertiesUtil.getUserDirPath(userId);
 		
-		System.out.println("createUserFileSystem - preif: " + absGenericUserFilePath);
+		System.out.println("Metodo createUserFileSystem - File System: " + absGenericUserFilePath);
 		if ( !XLabFileManager.isFileOrDirectoryPresent(absGenericUserFilePath) ) {
-		
-			System.out.println("createUserFileSystem - precreatedir");
+			
+			System.out.println("Metodo createUserFileSystem - Root creation...");
 			
 			// CREO
 			boolean dirCreation = XLabFileManager.createDir(absGenericUserFilePath);
 			if (dirCreation) {
 				
-				System.out.println("dirCreation true");
+				System.out.println("Metodo createUserFileSystem - File System creation...");
 				
 				XLabFileManager.createDir(absGenericUserFilePath.concat(PropertiesUtil.getDocsDirProperty()));						
 				XLabFileManager.createDir(absGenericUserFilePath.concat(PropertiesUtil.getReportsDirProperty()));
 				XLabFileManager.createDir(absGenericUserFilePath.concat(PropertiesUtil.getTestPlansDirProperty()));
 				XLabFileManager.createDir(absGenericUserFilePath.concat(PropertiesUtil.getLogsDirProperty()));
-				
-				logger.info("created dirs");
+
+				System.out.println("Metodo createUserFileSystem - OK File System CREATED!");
 			}
-				
-			
+			else
+				System.out.println("Metodo createUserFileSystem - Root creation ERROR!");
 		}
 		else
 			System.out.println("The File System already exists!");
@@ -438,7 +437,8 @@ public class UserManagerImpl implements UserManagerRemote {
         String queryString = SQLQuery.SELECT_ROLEID;
         
         Query query = eM.createQuery(queryString);
-        List<Long> roleIdList = query.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Long> roleIdList = query.getResultList();
 
         return roleIdList;
 	}
@@ -495,7 +495,8 @@ public class UserManagerImpl implements UserManagerRemote {
         String queryString = SQLQuery.SELECT_GROUPID;
         
         Query query = eM.createQuery(queryString);
-        List<Long> groupIdList = query.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Long> groupIdList = query.getResultList();
 
         return groupIdList;
 	}
@@ -505,7 +506,8 @@ public class UserManagerImpl implements UserManagerRemote {
         String queryString = SQLQuery.SELECT_GROUPS;
         
         Query query = eM.createQuery(queryString);
-        List<Group> groupList = query.getResultList();
+        @SuppressWarnings("unchecked")
+		List<Group> groupList = query.getResultList();
 
         return groupList;
 	}
@@ -680,6 +682,8 @@ public class UserManagerImpl implements UserManagerRemote {
 		return (Role) eM.createQuery(SQLQuery.SELECT_ROLE_BYUSERID).setParameter("userId", user.getId()).getSingleResult();
 	}
 
+	
+	@SuppressWarnings("unchecked")
 	public List<Role> readAllRoles() {
 
 		return eM.createQuery("FROM Role").getResultList();

@@ -33,8 +33,8 @@ mvn clean install -Pprod -Dit.test=SessionManagerImplITCase verify
 (check if the folder TeBES_Artifacts is created in the location specified in the tebes.properties)
 
 8. To prepare database, import in MySQL the file ejb\config\tebes_import.sql:
-mysql -u root -proot7 -h localhost tebes < tebes_2014-4users_importV2.sql
-(export: mysqldump -u root -proot7 tebes > tebes_2users_importV2.sql)
+mysql -u root -proot7 -h localhost tebes < tebes_2014-4users_importV3.sql
+(export: mysqldump -u root -proot7 tebes > tebes_2014-4users_importV3.sql)
 
 9. Config JAAS (si veda sotto)
 
