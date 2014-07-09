@@ -8,9 +8,9 @@
 <!-- ===================================================================== -->
 
 
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="true">
 
-	<appender name="FILE" class="org.apache.log4j.FileAppender">
+	<appender name="LOGFILE" class="org.apache.log4j.FileAppender">
 		<param name="File" value="C:/Java/jboss-4.2.3.GA/server/default/TeBES_Artifacts/log/tebes.log"/>
 		<param name="Threshold" value="DEBUG"/>
 		<param name="Append" value="true"/>
@@ -28,12 +28,21 @@
 	</appender>
 
 	<logger name="org.apache" additivity="false">
+	    
+	    
+	<root>
+     <level value="INFO"/>
+     <appender-ref ref="LOGFILE"/>
+	</root>
+	    
+	    
 		<level value="WARN"/>
 		<appender-ref ref="CONSOLE"/>
 	</logger>
 
 	<logger name="it.enea.xlab">
-		<appender-ref ref="FILE"/>
+	     <level value="INFO"/>
+	     <appender-ref ref="LOGFILE"/>
 	</logger>
 
 </log4j:configuration>
