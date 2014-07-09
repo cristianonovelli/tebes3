@@ -12,7 +12,7 @@
 <ui:composition template="layout/layout.xhtml">
 	<ui:define name="content">
 		<f:view locale="#{LocalizationController.locale}">
-			<a4j:form ajaxSubmit="true" reRender="utentiList,scrollValidationDown,scroll_1_div">
+			<h:form ajaxSubmit="true" reRender="utentiList,scrollValidationDown,scroll_1_div">
 			
 				<h3>Test Session Manager</h3>
 				<h4 style="display: inline-block;"><h:outputText value="#{msgs.Session2List}"/></h4>
@@ -119,7 +119,7 @@
 					</table>
 				</rich:modalPanel>
 				
-			</a4j:form>
+			</h:form>
 		</f:view>
 	</ui:define>
 </ui:composition>
