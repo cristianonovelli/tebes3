@@ -53,6 +53,17 @@
 					<jboss>
 						<version>4</version>
 					</jboss>
+
+					<modules>
+                         <webModule>
+                         	<groupId>it.enea.xlab</groupId>
+							<artifactId>TeBES-war</artifactId>                   
+							<contextRoot>/tebes</contextRoot>
+                         </webModule>
+                    </modules>
+					
+					
+					
 				</configuration>
 
 			</plugin>
@@ -84,7 +95,7 @@
 								<groupId>${project.groupId}</groupId>
 								<artifactId>${project.artifactId}</artifactId>
 								<type>ear</type>
-								<pingURL>http://localhost:8080/TeBES-war/index.jsf</pingURL>
+								<pingURL>http://localhost:8080/tebes/index.jsf</pingURL>
 								<pingTimeout>30000</pingTimeout>
 							</deployable>
 						</deployables>
