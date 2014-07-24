@@ -185,7 +185,7 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				// ADD TestPlan to User
 				this.addTestPlanToUser(testPlan2.getId(), userId);
 
-				logger.debug("CREATED TestPlan with ID " + testPlan2.getId() + ": " + testPlan2.getName());
+				logger.info("CREATED TestPlan with ID " + testPlan2.getId() + ": " + testPlan2.getName());
 				
 				return testPlan2.getId();
 			}

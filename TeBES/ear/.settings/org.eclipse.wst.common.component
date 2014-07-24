@@ -3,6 +3,9 @@
     <wb-module deploy-name="TeBES-ear">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/ear-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/application" tag="defaultRootSource"/>
+        <dependent-module archiveName="TeBES-war-1.0-SNAPSHOT.war" deploy-path="/" handle="module:/resource/TeBES-war/TeBES-war">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="TeBES-ejb-1.0-SNAPSHOT.jar" deploy-path="/" handle="module:/resource/TeBES-ejb/TeBES-ejb">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -52,9 +55,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="commons-logging-1.1.1.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="TeBES-war-1.0-SNAPSHOT.war" deploy-path="/" handle="module:/resource/TeBES-war/TeBES-war">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="commons-beanutils-1.8.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/commons-beanutils/commons-beanutils/1.8.0/commons-beanutils-1.8.0.jar">

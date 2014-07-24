@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../../xsl/TeBES_TestSuite.xsl" ?>
+<!-- 
+	Created by Cristiano Novelli 
+	ENEA, Bologna, 2014-21-07   
+	Version=0.2
+-->
+
+<taml:testAssertionSet 
+    xmlns:taml="http://docs.oasis-open.org/ns/tag/taml-201002/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://docs.oasis-open.org/ns/tag/taml-201002/ http://docs.oasis-open.org/tag/taml/v1.0/cs02/xsd/testAssertionMarkupLanguage.xsd"
+	xmlns:tebes="http://www.ubl-italia.org/tebes"
+    setid="TC-002_TS-007"
+    setname="Test Case for MODA-ML Garment Stock Offer Status XML Schema validation."
+	tebes:version="0.2">
+
+    <taml:common>
+        <taml:namespaces 
+            xmlns:ml="http://www.moda-ml.org/moda-ml/repository/schema/v2013-1/GARStockStat.xsd" />
+    </taml:common>
+    
+    
+    <taml:testAssertion 
+        id="TA-001_TC-002_TS-007" 
+        name="GARStockStat-MML" 
+        tebes:isNotePresent="false">
+
+        <taml:description>MODA-ML Garment Stock Offer Status XML Schema validation.</taml:description>
+        
+        <taml:normativeSource>
+            <taml:comment>Reference page of the MODA-ML document with Guide and Schema.</taml:comment>
+            <taml:refSourceItem>http://www.moda-ml.org/moda-ml/imple/moda-ml-2013-1.asp?lingua=en&pag=3&modo=hd&nomenu=1&msg=80</taml:refSourceItem>
+            <taml:textSourceItem>http://www.moda-ml.org/moda-ml/imple/moda-ml-2013-1.asp?lingua=en&pag=3&modo=hd&nomenu=1&msg=80</taml:textSourceItem>
+        </taml:normativeSource>
+
+        <taml:var vname="GARStockStat-MML" vtype="http://www.w3.org/TR/xpath20/">count(//ml:GARStockStat) ge 1</taml:var>
+        
+        <taml:target type="document" lg="xml">document</taml:target>
+        
+        <!-- 
+            The XPath expression executes the XML Schema validation 
+            on the XML root Invoice, calling the XML Schema specified by soap: namespace defined in taml:common.
+            The "ge" XPath means "greater than or equal to". 
+        -->
+        <taml:predicate>GARStockStat-MML</taml:predicate>
+        
+        <taml:prescription level="mandatory" />
+        
+        <taml:report 
+            label="pass" 
+            message="OK validation document Garment Stock Offer Status against MODA-ML XML Schema.">OK validation document Garment Stock Offer Status against MODA-ML XML Schema.</taml:report>
+        <taml:report 
+            label="fail" 
+            when="count(//ml:GARStockStat) ge 0"
+            message="The document is NOT valid against MODA-ML XML Schema.">The document is NOT valid against MODA-ML XML Schema.</taml:report>
+
+    </taml:testAssertion>
+	
+</taml:testAssertionSet>
