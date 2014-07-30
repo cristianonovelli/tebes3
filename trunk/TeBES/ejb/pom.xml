@@ -166,6 +166,38 @@
 			<scope>compile</scope>
 		</dependency>
 
+		<dependency>
+        	<groupId>it.enea.xlab</groupId>
+        	<artifactId>jolie-jar</artifactId>
+			<version>1.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+        	<groupId>it.enea.xlab</groupId>
+        	<artifactId>libjolie</artifactId>
+			<version>1.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+        	<groupId>it.enea.xlab</groupId>
+        	<artifactId>sodep</artifactId>
+			<version>1.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+        	<groupId>it.enea.xlab</groupId>
+        	<artifactId>jolie-java</artifactId>
+			<version>1.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+								
 		<!-- dependency>
         	<groupId>it.enea.xlab.tebes.validation</groupId>
         	<artifactId>Validation</artifactId>
