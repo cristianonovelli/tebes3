@@ -16,12 +16,18 @@ log4j.xml
 (i.e. JBOSS_HOME=C:\Java\jboss-4.2.3.GA)
 and set security module (see at the end of this file)
 
-6. Check build-package-deployment through the maven statement:
+6. Install libriaries in Maven repositories
+p.es.
+mvn install:install-file -Dfile=jolie-java.jar -DgroupId=it.enea.xlab -DartifactId=jolie-java -Dversion=1.0 -Dpackaging=jar
+mvn install:install-file -Dfile=jolie.jar -DgroupId=it.enea.xlab -DartifactId=jolie-jar -Dversion=1.0 -Dpackaging=jar
+mvn install:install-file -Dfile=validation.jar -DgroupId=it.enea.xlab -DartifactId=validation -Dversion=1.0 -Dpackaging=jar
+
+7. Check build-package-deployment through the maven statement:
 mvn clean install -DskipTests
 
 N.B. per installare lib in maven vedere il file install-mvn-libs in ejb/lib/
 
-7. Check JUnit Tests through one of following maven statements:
+8. Check JUnit Tests through one of following maven statements:
 mvn clean install
 mvn clean install -Pdev-create -DskipTests
 mvn clean install -Pdev-update -DskipTests
@@ -32,13 +38,13 @@ mvn clean install -Pprod
 mvn clean install -Pprod -Dit.test=SessionManagerImplITCase verify
 (check if the folder TeBES_Artifacts is created in the location specified in the tebes.properties)
 
-8. To prepare database, import in MySQL the file ejb\config\tebes_import.sql:
+9. To prepare database, import in MySQL the file ejb\config\tebes_import.sql:
 mysql -u root -proot7 -h localhost tebes < tebes_2014-4users_importV3.sql
 (export: mysqldump -u root -proot7 tebes > tebes_2014-4users_importV3.sql)
 
-9. Config JAAS (si veda sotto)
+10. Config JAAS (si veda sotto)
 
-10. URL APPLICAZIONE WEB
+11. URL APPLICAZIONE WEB
 http://localhost:8080/TeBES-war/index.jsf
 
 

@@ -27,6 +27,18 @@
         <dependent-module archiveName="Validation-1.1.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/validation/Validation/1.1/Validation-1.1.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="jolie-jar-1.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/jolie-jar/1.0/jolie-jar-1.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="libjolie-1.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/libjolie/1.0/libjolie-1.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="sodep-1.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/sodep/1.0/sodep-1.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="jolie-java-1.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/jolie-java/1.0/jolie-java-1.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="validation-1.0.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/validation/1.0/validation-1.0.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>

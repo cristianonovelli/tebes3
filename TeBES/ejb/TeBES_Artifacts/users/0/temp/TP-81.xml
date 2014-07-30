@@ -25,28 +25,28 @@
 	
 		<tebes:TestAction id="TA-1_TP-81" number="1">
 			
-			<tebes:ActionName>Stock Flow Web Service Client</tebes:ActionName>
-			<tebes:ActionDescription lg="en">Stock Flow Web Service Client.</tebes:ActionDescription>
-			<tebes:ActionDescription lg="it">Stock Flow Web Service Client.</tebes:ActionDescription>
+			<tebes:ActionName>Web Service Client</tebes:ActionName>
+			<tebes:ActionDescription lg="en">Web Service Client.</tebes:ActionDescription>
+			<tebes:ActionDescription lg="it">Web Service Client.</tebes:ActionDescription>
 				
 			<tebes:Test 
 				lg="taml" 
 				type="TestAssertion" 
 				skipPrerequisites="true"
-				location="http://www.ubl-italia.org/TeBES/testsuites/WS/TS-006_StockFlow/TC-001_StockFlow-WS.xml">TA-001_TC-001_TS-006</tebes:Test>
+				location="http://www.ubl-italia.org/TeBES/testsuites/WS/TS-006_WS/TC-001_SOAPEnvelope-WS.xml">TA-001_TC-001_TS-006</tebes:Test>
 			
 			<tebes:Inputs>
 				<tebes:Input>		
 				    <tebes:Name>IN-1_TA-1_TP-81</tebes:Name>
 				    
-					<tebes:InputDescription lg="en">Sending of CORRECT UBL Invoice.</tebes:InputDescription>
-					<tebes:InputDescription lg="it">Invio della Fattura UBL CORRETTA.</tebes:InputDescription>	
+					<tebes:InputDescription lg="en">Web Service Sending.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Invio tramite Web Service.</tebes:InputDescription>	
 					
 					<tebes:SUT 
-					    interaction="website"
-						type="document" 
+					    interaction="webservice-client"
+						type="message" 
 						lg="xml"
-						fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-91">		    
+						fileIdRef="FI-1_message-xml-webservice-client-IN-1_TA-1_TP-81">		    
 					</tebes:SUT>
 					
 					<tebes:GUI reaction="upload">
