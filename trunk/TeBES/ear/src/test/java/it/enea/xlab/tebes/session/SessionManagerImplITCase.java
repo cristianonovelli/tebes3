@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.xlab.file.XLabFileManager;
 import org.xlab.net.XURL;
 
 
@@ -56,11 +57,11 @@ public class SessionManagerImplITCase {
 	private static String TESTPLAN_91 = "TP-91";
 	private static String TESTPLAN_1 = "TP-1";
 	private static String TESTPLAN_2 = "TP-2";
-	
+	private static String TESTPLAN_81 = "TP-81";
 	
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
-	static User superUser, currentUser1, currentUser2;
+	static User superUser, user1, user2, user3;
 	
 	static boolean beforeOK = false;
 	 
@@ -198,20 +199,19 @@ public class SessionManagerImplITCase {
 		
 		// Create two generic Users
 		logger.info("5) Three STANDARD USERS creating...");
-		User currentUser = new User(Constants.USER1_NAME, Constants.USER1_SURNAME, Constants.USER1_EMAIL, Constants.USER1_PASSWORD);	
-		Long idTempUser1 = userProfileController.registration(currentUser, role1_standard);
-		Assert.assertNotNull(currentUser);
-		Assert.assertTrue(idTempUser1.intValue()>0);
-		User otherUser = new User(Constants.USER2_NAME, Constants.USER2_SURNAME, Constants.USER2_EMAIL, Constants.USER2_PASSWORD);
-		Long idTempUser2 = userProfileController.registration(otherUser, role1_standard);
-		Assert.assertNotNull(otherUser);
-		Assert.assertTrue(idTempUser2.intValue()>0);
-		logger.info("OK! Two STANDARD USERS for " + currentUser.getName() + " and " + otherUser.getName() + " created!");
-		User user3 = new User(Constants.USER3_NAME, Constants.USER3_SURNAME, Constants.USER3_EMAIL, Constants.USER3_PASSWORD);	
-		Long idTempUser3 = userProfileController.registration(user3, role1_standard);
+		user1 = new User(Constants.USER1_NAME, Constants.USER1_SURNAME, Constants.USER1_EMAIL, Constants.USER1_PASSWORD);	
+		Long idUser1 = userProfileController.registration(user1, role1_standard);
+		Assert.assertNotNull(user1);
+		Assert.assertTrue(idUser1.intValue()>0);
+		user2 = new User(Constants.USER2_NAME, Constants.USER2_SURNAME, Constants.USER2_EMAIL, Constants.USER2_PASSWORD);
+		Long idUser2 = userProfileController.registration(user2, role1_standard);
+		Assert.assertNotNull(user2);
+		Assert.assertTrue(idUser2.intValue()>0);
+		user3 = new User(Constants.USER3_NAME, Constants.USER3_SURNAME, Constants.USER3_EMAIL, Constants.USER3_PASSWORD);	
+		Long idUser3 = userProfileController.registration(user3, role1_standard);
 		Assert.assertNotNull(user3);
-		Assert.assertTrue(idTempUser3.intValue()>0);		
-		
+		Assert.assertTrue(idUser3.intValue()>0);		
+		logger.info("OK! 3 STANDARD USERS for " + user1.getName() + " , " + user2.getName() + " and " + user3.getName()  + " created!");
 		
 		// Login SuperUser
 		logger.info("6) SUPERUSER LOGIN");
@@ -278,7 +278,7 @@ public class SessionManagerImplITCase {
 	
 	
 	@Test
-	public void test_session() {
+	public void test_session() throws Exception {
 
 		if (beforeOK) {
 		
@@ -287,17 +287,23 @@ public class SessionManagerImplITCase {
 			
 			// USERS 
 			logger.info("1) LOGIN USERS");
-			currentUser1 = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
-			currentUser2 = userProfileController.login(Constants.USER2_EMAIL, Constants.USER2_PASSWORD);
-			Assert.assertTrue(currentUser1 != null);
-			Assert.assertTrue(currentUser2 != null);
+			user1 = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
+			user2 = userProfileController.login(Constants.USER2_EMAIL, Constants.USER2_PASSWORD);
+			user3 = userProfileController.login(Constants.USER3_EMAIL, Constants.USER3_PASSWORD);
 			
-			Long currentUser91Id = currentUser1.getId();
-			Long currentUser1Id = currentUser2.getId();
-			Assert.assertTrue(currentUser1.getId().intValue() > 0);
-			Assert.assertTrue(currentUser2.getId().intValue() > 0);
-			logger.info("OK! Login of user " + currentUser1.getName() + " " + currentUser1.getSurname() + " with id: " + currentUser91Id);
-			logger.info("OK! Login of user " + currentUser2.getName() + " " + currentUser2.getSurname() + " with id: " + currentUser1Id);
+			Assert.assertTrue(user1 != null);
+			Assert.assertTrue(user2 != null);
+			Assert.assertTrue(user3 != null);
+			
+			Long user1Id = user1.getId();
+			Long user2Id = user2.getId();
+			Long user3Id = user3.getId();
+			Assert.assertTrue(user1.getId().intValue() > 0);
+			Assert.assertTrue(user2.getId().intValue() > 0);
+			Assert.assertTrue(user3.getId().intValue() > 0);
+			logger.info("OK! Login of user " + user1.getName() + " " + user1.getSurname() + " with id: " + user1Id);
+			logger.info("OK! Login of user " + user2.getName() + " " + user2.getSurname() + " with id: " + user2Id);
+			logger.info("OK! Login of user " + user3.getName() + " " + user3.getSurname() + " with id: " + user3Id);
 			
 			
 			// TESTPLAN
@@ -307,7 +313,7 @@ public class SessionManagerImplITCase {
 			Assert.assertTrue(systemTestPlanList.size()>0);
 			
 			TestPlan testPlan = null;
-			Long testPlan91Id, testPlan1Id;
+			Long testPlan91Id, testPlan1Id, testPlan81Id, testPlanIdTemp;
 			String tpString = "";
 			
 			Hashtable<String, TestPlan> tpTable = new Hashtable<String, TestPlan>();
@@ -328,11 +334,11 @@ public class SessionManagerImplITCase {
 				Assert.assertNotNull(testPlan.getWorkflow().getActions());
 				Assert.assertNotNull(testPlan.getWorkflow().getActions().get(0));	
 				
-				testPlan91Id = testPlan.getId();
-				Assert.assertTrue(testPlan91Id.intValue()>0);	
+				testPlanIdTemp = testPlan.getId();
+				Assert.assertTrue(testPlanIdTemp.intValue()>0);	
 				
 				// Check it
-				testPlan = testPlanController.readTestPlan(testPlan91Id);
+				testPlan = testPlanController.readTestPlan(testPlanIdTemp);
 				Assert.assertNotNull(testPlan.getWorkflow());
 				
 				
@@ -368,15 +374,21 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(testPlan91);
 			Assert.assertNotNull(testPlan1);
 	
+			TestPlan testPlan81 = tpTable.get(TESTPLAN_81);
+			Assert.assertNotNull(testPlan81);
+			
 			// Copia e importazione del TestPlan scelto per l'utente (currentUser)
-			testPlan91Id = testPlanController.cloneTestPlan(testPlan91, currentUser91Id);
-			testPlan1Id = testPlanController.cloneTestPlan(testPlan1, currentUser1Id);
+			testPlan91Id = testPlanController.cloneTestPlan(testPlan91, user1Id);
+			testPlan1Id = testPlanController.cloneTestPlan(testPlan1, user2Id);
+			testPlan81Id = testPlanController.cloneTestPlan(testPlan81, user3Id);
 			Assert.assertTrue(testPlan91Id.intValue()>0);
 			Assert.assertTrue(testPlan1Id.intValue()>0);
+			Assert.assertTrue(testPlan81Id.intValue()>0);
 			
 			// Il testPlan selezionato diventa quello clonato per lo User
 			testPlan91 = testPlanController.readTestPlan(testPlan91Id);
 			testPlan1 = testPlanController.readTestPlan(testPlan1Id);
+			testPlan81 = testPlanController.readTestPlan(testPlan81Id);
 			Assert.assertNotNull(testPlan91.getWorkflow());
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions());
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0));
@@ -384,8 +396,9 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0).getInputs());
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0).getInputs().get(0));		
 	
-			logger.info("OK! IMPORTED selected TestPlans " + testPlan91.getName() + " and " + testPlan1.getName() +
-					" for users " + currentUser1.getName() + " and " + currentUser2.getName());
+			logger.info("OK! IMPORTED selected TestPlans " + 
+					testPlan91.getName() + ", " + testPlan1.getName() + " and " + testPlan81.getName() +
+					" for users " + user1.getName() + ", " + user2.getName() + " and " + user3.getName());
 			
 			
 			//  SUT
@@ -412,20 +425,47 @@ public class SessionManagerImplITCase {
 			interaction4User.setEndpoint(null);
 			SUTInteraction interaction4User2= new SUTInteraction(defaultInteraction.getType());
 			interaction4User2.setEndpoint(null);
+			SUTInteraction interaction4User3= new SUTInteraction(defaultInteraction.getType());
+			interaction4User3.setEndpoint(null);
 			
 			// 6. inserisce una descrizione
-			String sutDescription = "XML document1 uploaded by email";
+			String sutDescription = "XML document uploaded by email";
 	
 			// 7. Creo SUT e lo persisto per l'utente corrente
-			SUT sut = new SUT("SystemSUT1-1", defaultSUTType, interaction4User, sutDescription);
-			SUT sut2 = new SUT("SystemSUT2-2", defaultSUTType, interaction4User2, sutDescription);
-			Long sutId = sutController.createSUT(sut, currentUser1);
-			Long sut2Id = sutController.createSUT(sut2, currentUser2);
+			SUT sut = new SUT("SystemSUT1", defaultSUTType, interaction4User, sutDescription);
+			SUT sut2 = new SUT("SystemSUT2", defaultSUTType, interaction4User2, sutDescription);
+			SUT sut3 = new SUT("SystemSUT3", defaultSUTType, interaction4User3, sutDescription);
+			Long sutId = sutController.createSUT(sut, user1);
+			Long sut2Id = sutController.createSUT(sut2, user2);
+			Long sut3Id = sutController.createSUT(sut3, user3);
 			Assert.assertNotNull(sutId);				
 			Assert.assertTrue(sutId.intValue()>0);	
 			logger.info("OK! CREATED SUT1 " + sut.getName() + " with type: " + sut.getType() + " and interaction: " + sut.getInteraction().getType());
 			logger.info("OK! CREATED SUT2 " + sut2.getName() + " with type: " + sut2.getType() + " and interaction: " + sut2.getInteraction().getType());
+			logger.info("OK! CREATED SUT3 " + sut3.getName() + " with type: " + sut3.getType() + " and interaction: " + sut3.getInteraction().getType());
 	
+	
+			// --- DEFINISCO SUT WS-CLIENT ---
+			// Transport
+			String transportSUTType = systemSUTTypeList.get(1);
+			logger.info("transportSUTType:" + transportSUTType);
+			Assert.assertTrue(transportSUTType.equals(SUTConstants.SUT_TYPE2_TRANSPORT));			
+
+			// interazioni per transoport
+			sutInteractionList = sutController.getSUTInteractionList(transportSUTType);
+			Assert.assertTrue(sutInteractionList.size() == 3);	
+			
+			SUTInteraction wsClientInteraction = (SUTInteraction) sutInteractionList.get(1);
+			Assert.assertTrue(wsClientInteraction.getType().equals(SUTConstants.INTERACTION_WS_CLIENT));
+			
+			SUTInteraction interaction4User3WS= new SUTInteraction(wsClientInteraction.getType());
+			interaction4User3WS.setEndpoint("http://endpoint/totest/wsclient/");
+			
+			SUT sut4 = new SUT("WS-SUT4", transportSUTType, interaction4User3WS, "sut ws-client test");
+			Long sut4Id = sutController.createSUT(sut4, user3);
+			// --- fine DEFINE SUT WS-CLIENT ---
+			
+			
 			
 			// Nel momento in cui l'utente avvia il test
 			// il sistema, nel controller, effettua prima una verifica di consistenza ( check() )
@@ -436,21 +476,24 @@ public class SessionManagerImplITCase {
 			// ALTRIMENTI è necessario specificare/creare un altro SUT da abbinare gli input "inconsistenti"
 			logger.info("5) CREATING SESSION...");
 			
-			Long session91Id = sessionController.createSession(currentUser91Id, sutId, testPlan91Id);
+			Long session91Id = sessionController.createSession(user1Id, sutId, testPlan91Id);
 			Assert.assertNotNull(session91Id);
-			System.out.println("sessionId:" + session91Id);
+			logger.info("sessionId:" + session91Id);
 			Assert.assertTrue(session91Id.intValue()>0);		
 			logger.info("OK! CREATE SESSION with id " + session91Id);
 	
-			Long session1Id = sessionController.createSession(currentUser1Id, sut2Id, testPlan1Id);
+			Long session1Id = sessionController.createSession(user2Id, sut2Id, testPlan1Id);
 			Assert.assertNotNull(session1Id);
-			System.out.println("sessionId:" + session1Id);
+			logger.info("sessionId:" + session1Id);
 			Assert.assertTrue(session1Id.intValue()>0);		
-			logger.info("OK! CREATE SESSION2 with id " + session1Id);
-	
+			logger.info("OK! CREATE SESSION2 with id " + session1Id);		
 
+			Long session81Id = sessionController.createSession(user3Id, sut4Id, testPlan81Id);
+			Assert.assertNotNull(session81Id);
+			logger.info("sessionId:" + session81Id);
+			Assert.assertTrue(session81Id.intValue()>0);		
+			logger.info("OK! CREATE SESSION3 with id " + session81Id);	
 			
-			// TODO PREPARARE UNA HASHTABLE CHE ASSOCIA AI REFID I NOMI DEI FILE
 			
 			
 			
@@ -461,31 +504,25 @@ public class SessionManagerImplITCase {
 			String[] fileList1 = {"ubl-invoice.xml", "ubl-invoice_withError.xml", "ubl-invoice.xml"};
 			
 			
-			String[] fileList2 = {"ubl-invoice.xml"};
+			//String[] fileList2 = {"ubl-invoice.xml"};
+			
+			
+			// web service
+			String[] fileList81 = {"response.xml"};
 			
 			
 			// SESSION EXECUTION
 			execution(session91Id, fileList91);
 			
 			execution(session1Id, fileList1);
+					
+			//execution(session1Id, fileList81);
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-		
-		
 		
 		
 		}
-
-		
 	}
 		
 	
@@ -504,7 +541,7 @@ public class SessionManagerImplITCase {
 			// è necessario cancellare i workflow prima di cancellare Role > User > TestPlan
 			// sarebbe più logico che le cancellazioni fossero a cascata (ovvero, cancello una di queste entity e vengono cancellate quelle successive)
 			// Role > User > TestPlan > workflow > actions
-			List<Long> sessionIdList = sessionController.getSessionIdList(currentUser1);
+			List<Long> sessionIdList = sessionController.getSessionIdList(user1);
 			Assert.assertTrue(sessionIdList.size() == 1);	
 			
 			//boolean deletingSession = sessionController.deleteSession(sessionIdList.get(0)); 
@@ -570,7 +607,7 @@ public class SessionManagerImplITCase {
 			
 			
 			// Get Session List
-			sessionIdList = sessionController.getSessionIdList(currentUser1);
+			sessionIdList = sessionController.getSessionIdList(user1);
 			//Assert.assertTrue(sessionIdList.size() == 0);
 			
 	
@@ -606,7 +643,7 @@ public class SessionManagerImplITCase {
 	
 	
 	
-	private void execution(Long sessionId, String[] fileList) {
+	private void execution(Long sessionId, String[] fileList) throws Exception {
 		
 		
 		logger.info("********************************************");
@@ -752,7 +789,8 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(currentAction);
 			
 			logger.info("ACTION " + actionMark + " OF " + actionsNumber + " ***********************");	
-			logger.info(currentAction.getActionSummaryString());
+			
+
 						
 			// se l'action corrente è NEW, Session diventa WAITING, risolvo gli input, poi avvio il workflow
 			if ( currentAction.isStateNew() ) {
@@ -831,13 +869,18 @@ public class SessionManagerImplITCase {
 				
 				currentSession = sessionController.runWorkflow(workflow, currentSession);
 				
-				// REFRESH Workflow, actionMark and current Action
-				workflow = currentSession.getTestPlan().getWorkflow();		
-				actionMark = currentSession.getActionMark();		
-				report = currentSession.getReport();
-				
-				logger.info("After runWorkflow - Session State: " + currentSession.getState());
-				
+				if ( currentSession != null ) {
+					// REFRESH Workflow, actionMark and current Action
+					workflow = currentSession.getTestPlan().getWorkflow();		
+					actionMark = currentSession.getActionMark();		
+					report = currentSession.getReport();
+					
+					logger.info("After runWorkflow - Session State: " + currentSession.getState());
+				}
+				else {
+					logger.error("Session NULL!");
+					return;
+				}
 			}	// End if NEW_STATE
 			
 			logger.info("After if NEW_STATE - Session State: " + currentSession.getState());
@@ -890,8 +933,6 @@ public class SessionManagerImplITCase {
 			else
 				currentAction = workflow.getCurrentAction(actionMark);
 			
-			System.out.println();
-			
 		} // End while (running)
 		
 		logger.info("After while(running) - Session State: " + currentSession.getState());
@@ -922,13 +963,22 @@ public class SessionManagerImplITCase {
 		
 		logger.info("Report URL: " + reportURL);
 		
-		logger.info("***************");
+		
+		
+		try {
+			XLabFileManager.append(report.getFullDescription(), report.getLogLocation());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/*logger.info("***************");
 		logger.info("Report Full Description: ");
 		if (report != null)
 			logger.info(report.getFullDescription());
 		else
 			logger.info("Report NULL!");
-		logger.info("***************");
+		logger.info("***************");*/
 	}
 }
 

@@ -1,5 +1,7 @@
 package it.enea.xlab.tebes.action;
 
+import java.io.IOException;
+
 import it.enea.xlab.tebes.entity.Action;
 import it.enea.xlab.tebes.entity.ActionDescription;
 import it.enea.xlab.tebes.entity.ActionWorkflow;

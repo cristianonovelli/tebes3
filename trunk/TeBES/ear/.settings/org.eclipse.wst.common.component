@@ -21,7 +21,7 @@
         <dependent-module archiveName="xml-apis-1.4.01.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="xlab-common-1.5.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/xlab-common/1.5/xlab-common-1.5.jar">
+        <dependent-module archiveName="xlab-common-1.6.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/xlab-common/1.6/xlab-common-1.6.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="Validation-1.1.jar" deploy-path="/" handle="module:/classpath/var/M2_REPO/it/enea/xlab/validation/Validation/1.1/Validation-1.1.jar">

@@ -4,6 +4,7 @@ import it.enea.xlab.tebes.entity.ActionWorkflow;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.User;
 
+import java.io.IOException;
 import java.util.List;
 import javax.ejb.Remote;
 

@@ -155,7 +155,6 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		String absLogUserFilePath = logsUserDirPath.concat(logUserName);
 		report.setLogLocation(absLogUserFilePath);		
 		fullDescription = fullDescription.concat("\nThis Log File Location: " + report.getLogLocation());
-		
 		// CREATE Report and Log Files		
 		try {
 			XLabFileManager.create(report.getLocation(), "");
