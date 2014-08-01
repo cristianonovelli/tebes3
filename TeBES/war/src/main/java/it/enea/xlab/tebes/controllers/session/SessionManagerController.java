@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.rmi.NotBoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -568,9 +569,15 @@ public class SessionManagerController extends WebController<Session> {
 		return sessionManagerService.updateSession(session);
 	}
 	
-	public Session runWorkflow(ActionWorkflow workflow, Session session) {
+	public Session runWorkflow(ActionWorkflow workflow, Session session) throws Exception {
 		
-		return sessionManagerService.runWorkflow(workflow, session);
+		try {
+			return sessionManagerService.runWorkflow(workflow, session);
+		} catch (UndeclaredThrowableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public Session suspendSession(Session session) {
@@ -600,7 +607,7 @@ public class SessionManagerController extends WebController<Session> {
 		return "";
 	}
 	
-	public String execute() {
+	public String execute() throws Exception {
 		
 		if(this.viewCurrentSession != null) {
 			this.isPollerRunning = true;

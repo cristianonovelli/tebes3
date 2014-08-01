@@ -119,11 +119,6 @@ public class Report implements Serializable {
 	}
 
 
-	public String getTestResult() {
-		return fullDescription;
-	}
-
-
 	public String getFullDescription() {
 		return fullDescription;
 	}

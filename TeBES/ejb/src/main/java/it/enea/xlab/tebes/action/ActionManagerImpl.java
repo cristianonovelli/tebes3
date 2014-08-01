@@ -17,6 +17,7 @@ import it.enea.xlab.tebes.report.ReportDOM;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.test.TestManagerImpl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xlab.file.XLabFileManager;
 import org.xlab.utilities.XLabDates;
 
 
@@ -467,6 +469,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 	 * 
 	 * @return 	true if type is equal to one of the three permitted values: "TestSuite", "TestCase", "TestAssertion"
 	 * 			false otherwise
+	 * @throws IOException 
 	 */
 	public Report runAction(Action action, Session session) {
 	
@@ -862,6 +865,23 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			e.printStackTrace();
 		} 
 
+		// TODO STAMPA ACTION SUMMARY
+		//logger.info(currentAction.getActionSummaryString());
+
+		/*try {
+			
+			System.out.println("report.getLogLocation():" + report.getLogLocation());
+			if ( XLabFileManager.append("FINE", report.getLogLocation()) )
+				System.out.println("append ok");
+			else
+				System.out.println("append no");
+			
+		} catch (Exception e) {
+			logger.error("Exception in XLabFileManager.append() method!");
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}*/
+		
 		return report;
 	}
 
