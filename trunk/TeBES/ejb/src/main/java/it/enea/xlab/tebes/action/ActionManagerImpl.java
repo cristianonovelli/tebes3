@@ -868,7 +868,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		// TODO STAMPA ACTION SUMMARY
 		//logger.info(currentAction.getActionSummaryString());
 
-		/*try {
+		try {
 			
 			System.out.println("report.getLogLocation():" + report.getLogLocation());
 			if ( XLabFileManager.append("FINE", report.getLogLocation()) )
@@ -880,7 +880,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			logger.error("Exception in XLabFileManager.append() method!");
 			logger.error(e.getMessage());
 			e.printStackTrace();
-		}*/
+		}
 		
 		return report;
 	}
