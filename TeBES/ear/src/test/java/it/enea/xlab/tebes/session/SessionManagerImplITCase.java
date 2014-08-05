@@ -965,12 +965,12 @@ public class SessionManagerImplITCase {
 		
 		
 		
-		try {
+		/*try {
 			XLabFileManager.append(report.getFullDescription(), report.getLogLocation());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		/*logger.info("***************");
 		logger.info("Report Full Description: ");
