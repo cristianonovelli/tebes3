@@ -38,9 +38,6 @@ public class Report implements Serializable {
 	private static final String FAILURE_RESULT = "failure";
 	private static final String ERROR_RESULT = "error";
 	
-	private static final String REPORTNAME_PREFIX = "TR-";
-	private static final String LOGNAME_PREFIX = "LG-";
-	
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -189,14 +186,6 @@ public class Report implements Serializable {
 
 	public void setXml(String xml) {
 		this.xml = xml;
-	}
-
-	public static String getLognamePrefix() {
-		return LOGNAME_PREFIX;
-	}
-	
-	public static String getReportnamePrefix() {
-		return REPORTNAME_PREFIX;
 	}
 
 	public static String getUndefinedResult() {

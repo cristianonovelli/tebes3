@@ -48,6 +48,7 @@ public class PropertiesUtil {
 	public static String getArtifactsLocationProperty() {
 
 		return getConfiguration().getString("artifacts.location");
+		// artifacts.location=C:/Java/jboss-4.2.3.GA/server/default/
 	}
 	
 	public static String getSuperUserNameProperty() {
@@ -117,6 +118,21 @@ public class PropertiesUtil {
 		return tebesURL;
 	}
 	
+	public static String getTeBESArtifactsURL() {
+		
+		String tebesURL = getConfiguration().getString("artifacts.url");	
+		tebesURL = checkFinalSlash(tebesURL);
+
+		return tebesURL;
+	}
+
+	public static String getGJSURL() {
+		
+		String tebesURL = getConfiguration().getString("gjs.url");	
+		tebesURL = checkFinalSlash(tebesURL);
+
+		return tebesURL;
+	}
 	
 	/**
 	 * Get TeBES home final URL

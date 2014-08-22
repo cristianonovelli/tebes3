@@ -19,6 +19,9 @@ public class TeBESDAO {
 	
 	public static String url2localLocation(String urlLocation) throws FileNotFoundException {
 		
+		System.out.println("TeBESDAO.url2localLocation");
+		System.out.println("urlLocation: " + urlLocation);
+		
 		String localLocation = null;
 		String relativeLocation = null;
 
@@ -30,18 +33,19 @@ public class TeBESDAO {
 			
 			// Add file system local path
 			localLocation = PropertiesUtil.getArtifactsDirPath().concat(relativeLocation);
-			
-			// Verificare che il file o la directory esista
-			if( !XLabFileManager.isFileOrDirectoryPresent(localLocation) ) 
-				throw new FileNotFoundException("Conversion from URL to Local path failed: maybe Test Plan specifies a file not present in TeBES.");
-				
+			System.out.println("localLocation: " + localLocation);
 			
 		}
-		else
+		else 
 			localLocation = urlLocation;
 		
+		// Verificare che il file o la directory esista
+		if( !XLabFileManager.isFileOrDirectoryPresent(localLocation) ) 
+			throw new FileNotFoundException("Conversion from URL to Local path failed: maybe Test Plan specifies a file not present in TeBES.");
+			
 		return localLocation;
 	}
+	
 	
 	public static String location2publication(String location) {
 	

@@ -76,6 +76,8 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	 */
 	public Long check(Long userId, Long sutId, Long testPlanId) {
 		
+		logger.info("Check TestPlan - SUT compability...");
+		
 		User user = userManager.readUser(userId);
 		SUT sut = sutManager.readSUT(sutId);
 		TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);
@@ -86,9 +88,10 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			// Check match testplan-sut of user
 			boolean matching1 = this.matchTestPlanSUT(testPlan, sut);
 			
-			if (!matching1)
+			if (!matching1) {
+				logger.error("Check returns -2: no matching");
 				return new Long(-2);
-			
+			}
 			// Check match testplan-sut of system
 			// Ciclo per ogni SUT del system alla ricerca di almeno uno compatibile
 			List<SUT> systemSUTSupported = sutManager.getSystemSUTSupported();
@@ -100,14 +103,19 @@ public class SessionManagerImpl implements SessionManagerRemote {
 					matching2 = true;
 			}
 			
-			if (!matching2)
+			if (!matching2) {
+				logger.error("Check returns -3: no matching");
 				return new Long(-3);
+			}
 			
+			logger.info("OK matching: checking returns 1!");
 			return new Long(1);
 		}
-		else
+		else {
+			logger.error("Check returns -1: one or more ID isn't a valid identifier!");
 			// @return -1 one or more ID isn't a valid identifier
 			return new Long(-1);
+		}
 	}
 	
 	/**
@@ -191,7 +199,14 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			
 				input = inputList.get(j);
 				
-				if ( 	( !input.getType().equals(sut.getType() ) ) ||
+				System.out.println("-- matchTestPlanSUT --");
+				System.out.println("input.getType(): " + input.getType());
+				System.out.println("sut.getType(): " + sut.getType());
+				System.out.println("input.getInteraction(): " + input.getInteraction());
+				System.out.println("sut.getInteraction().getType(): " + sut.getInteraction().getType());
+				System.out.println("----------------------");
+				
+				if ( 	( !input.getType().equals(sut.getType()) ) ||
 						( !input.getInteraction().equals(sut.getInteraction().getType() ) )  ) {
 							
 						match = false;
@@ -438,8 +453,8 @@ public class SessionManagerImpl implements SessionManagerRemote {
 						session.setReport(report);
 										
 						// Log
-						String log = "*** LOG FILE FOR SESSION: " + session.getId() + " ***\n";
-						XLabFileManager.create(report.getLogLocation(), log.concat(report.getFullDescription()));
+						//String log = "*** LOG FILE FOR SESSION: " + session.getId() + " ***\n";
+						//XLabFileManager.create(report.getLogLocation(), log.concat(report.getFullDescription()));
 						
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -454,6 +469,9 @@ public class SessionManagerImpl implements SessionManagerRemote {
 						logger.info("Session State changed to DONE");					
 					else
 						logger.error("ERROR in the Session State updating to DONE");
+					
+					// String name = new Object(){}.getClass().getEnclosingMethod().getName();
+					reportManager.saveLog(report, "runWorkflow");
 					
 				}
 				
@@ -471,6 +489,8 @@ public class SessionManagerImpl implements SessionManagerRemote {
 			return session;
 		}
 
+		
+		
 		
 		// Suspend Session
 		public Session suspendSession(Session session) {
@@ -495,6 +515,9 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				// Refresh Session
 				session = readSession(session.getId());
 			}
+
+			// Save Log File
+			reportManager.saveLog(session.getReport(), "suspendSession");
 			
 			return session;
 		}
@@ -520,9 +543,9 @@ public class SessionManagerImpl implements SessionManagerRemote {
 					report.setXml(reportDOM.getXMLString());
 					session.setReport(report);
 					
-					// Log
-					XLabFileManager.create(report.getLogLocation(), report.getFullDescription());
-					
+
+					// Save Log File
+					reportManager.saveLog(report, "annulSession");
 					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -541,7 +564,17 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				
 				// Refresh Session
 				session = readSession(session.getId());
+				
+				try {
+					XLabFileManager.create(report.getLogLocation(), report.getFullDescription());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			
+
+			
 			return session;
 		}
 

@@ -8,7 +8,7 @@ import it.enea.xlab.tebes.entity.FileStore;
 import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
-import it.enea.xlab.tebes.file.FileManagerRemote;
+import it.enea.xlab.tebes.input.FileManagerRemote;
 
 import java.rmi.NotBoundException;
 import java.util.List;
@@ -51,12 +51,28 @@ public class FileManagerController extends WebController<Report> {
 		if (checking)
 			action.setStateToReady();
 		
-		Session result = fileManagerService.upload(input.getFileIdRef(), fileName, type, fileContent, session);
+		Session result = fileManagerService.fileUpload(input.getFileIdRef(), fileName, type, fileContent, session);
 
 		return result;
 	}
 
 
+	public Session textUpload(Input input, String textValue, Session session) {
+		
+		// Aggiorno l'input
+		input.setInputSolved(true);
+		actionManagerService.updateInput(input);
+		
+		Action action = input.getAction();
+		boolean checking = actionManagerService.checkActionReady(action);
+		
+		if (checking)
+			action.setStateToReady();		
+
+		return fileManagerService.textUpload(input, textValue, session);
+	}
+	
+	
 	@Override
 	public void resetSearchParameters() {
 		// TODO Auto-generated method stub
@@ -86,8 +102,11 @@ public class FileManagerController extends WebController<Report> {
 
 	public List<FileStore> getFileListByType(String type) {
 		
-		return fileManagerService. readFileListByType(type); 
+		return fileManagerService.readFileListByType(type); 
 	}
+
+
+
 	
 	
 

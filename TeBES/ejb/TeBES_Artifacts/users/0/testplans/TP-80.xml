@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../../xsl/TeBES_TestPlan.xsl" ?>
+<!-- 
+    Document Description:		Test Plan created for the TeBES Platform 
+    Author:              		Cristiano Novelli (X-Lab, Cross-TEC, ENEA)
+    Project:                    Tecnopolo
+-->
+
+<tebes:TestPlan lg="en" 
+	xmlns:tebes="http://www.ubl-italia.org/tebes"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<tebes:TestPlanHeader>
+	    <tebes:Id>80</tebes:Id>
+	    <tebes:Name>TP-80</tebes:Name>
+	    <tebes:State>draft</tebes:State>
+	    <tebes:Description lg="en">TP-80 Test Plan is used to test a Web Service Client for the Global Weather Web Service case.</tebes:Description>
+	    <tebes:Description lg="it">Il Test Plan TP-80 è usato per il test del trasporto Web Service Client per il caso Global Weather Web Service.</tebes:Description>
+	    <tebes:UserId>0</tebes:UserId>
+	    <tebes:CreationDatetime>2014-08-21T16:43:00Z</tebes:CreationDatetime>
+	    <tebes:LastUpdateDatetime>2014-08-21T16:43:00Z</tebes:LastUpdateDatetime>
+	</tebes:TestPlanHeader>
+    
+	<tebes:TestActionList>
+	
+		<tebes:TestAction id="TA-1_TP-80" number="1">
+			
+			<tebes:ActionName>Web Service Client</tebes:ActionName>
+			<tebes:ActionDescription lg="en">Test of Client for the Global Weather Web Service.</tebes:ActionDescription>
+			<tebes:ActionDescription lg="it">Test Client per il Web Service Global Weather.</tebes:ActionDescription>
+				
+			<tebes:Test 
+				lg="taml" 
+				type="TestAssertion" 
+				skipPrerequisites="true"
+				location="http://www.ubl-italia.org/TeBES/testsuites/WS/TS-006_WS/TC-001_SOAPEnvelope-WS.xml">TA-001_TC-001_TS-006</tebes:Test>
+			
+			<tebes:Inputs>
+			    
+			    <tebes:Input>		
+				    <tebes:Name>CityName</tebes:Name>
+				    
+					<tebes:InputDescription lg="en">Text field 2 of 2: City.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Campo Testuale 2 di 2: Città.</tebes:InputDescription>	
+					
+					<tebes:SUT 
+					    interaction="webservice-server"
+						type="transport" 
+						lg="soap"
+						fileIdRef="TI-1_transport-soap-webservice-server-IN-1_TA-1_TP-80">		    
+					</tebes:SUT>
+					
+					<tebes:GUI reaction="text">
+						<tebes:GUIDescription lg="en">Insert City (i.g. Bologna) for the WS Request to the TeBES WS Global Weather.</tebes:GUIDescription>				
+						<tebes:GUIDescription lg="it">Inserire Città (p.es. Bologna) per la Richiesta al TeBES WS Global Weather.</tebes:GUIDescription>				    				    
+					</tebes:GUI>
+				</tebes:Input>
+				
+				<tebes:Input>		
+				    <tebes:Name>CountryName</tebes:Name>
+				    
+					<tebes:InputDescription lg="en">Text field 1 of 2: Contry.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Campo Testuale 1 di 2: Nazione.</tebes:InputDescription>	
+					
+					<tebes:SUT 
+					    interaction="webservice-server"
+						type="transport" 
+						lg="soap"
+						fileIdRef="TI-2_transport-soap-webservice-server-IN-2_TA-1_TP-80">		    
+					</tebes:SUT>
+					
+					<tebes:GUI reaction="text">
+						<tebes:GUIDescription lg="en">Insert Country (i.g. Italy) for the WS Request to the TeBES WS Global Weather.</tebes:GUIDescription>				
+						<tebes:GUIDescription lg="it">Inserire Nazione (p.es. Italy) per la Richiesta al TeBES WS Global Weather.</tebes:GUIDescription>				    				    
+					</tebes:GUI>
+				</tebes:Input>
+				
+
+				
+			</tebes:Inputs>			
+
+		</tebes:TestAction>
+		
+	</tebes:TestActionList>
+
+	<!-- 
+		The "tebes:Choreography" element specifies a choreography among the defined test actions. 
+		If this element is empty, the N actions MUST be executed from number 1 to N, sequentially.
+		
+		The choreography XML element is work in progress:
+		a solution to express choreography may be an ebBP-like XML syntax. 
+	-->	
+	<tebes:Choreography />
+	
+</tebes:TestPlan>
+
