@@ -22,6 +22,10 @@ public class Input implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	public static final String REACTION_UPLOAD = "upload";
+	public static final String REACTION_TEXT = "text";
+	//private static final String REACTION_MESSAGE = "message";
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;

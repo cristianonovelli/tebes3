@@ -39,12 +39,12 @@
 				<tebes:Input>		
 				    <tebes:Name>IN-1_TA-1_TP-81</tebes:Name>
 				    
-					<tebes:InputDescription lg="en">Web Service Sending.</tebes:InputDescription>
-					<tebes:InputDescription lg="it">Invio tramite Web Service.</tebes:InputDescription>	
+					<tebes:InputDescription lg="en">Upload of the Response (e.g. XML document) that you aspected from TeBES Web Service.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Upload della Risposta (p.es. un documento XML) che vi aspettate di ricevere in risposta dal Web Service di TeBES.</tebes:InputDescription>	
 					
 					<tebes:SUT 
 					    interaction="webservice-client"
-						type="message" 
+						type="transport" 
 						lg="xml"
 						fileIdRef="FI-1_message-xml-webservice-client-IN-1_TA-1_TP-81">		    
 					</tebes:SUT>

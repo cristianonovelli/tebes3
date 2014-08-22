@@ -9,9 +9,10 @@ import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestResult;
-import it.enea.xlab.tebes.file.FileManagerRemote;
+import it.enea.xlab.tebes.input.FileManagerRemote;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.TestRule;
+import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.validation.ValidationManagerRemote;
 import it.enea.xlab.validation.XErrorMessage;
 
@@ -35,7 +36,8 @@ public class RuleManagerImpl implements RuleManagerRemote {
 	@EJB
 	private FileManagerRemote fileManager; 
 	
-	
+	@EJB
+	private ReportManagerRemote reportManager; 
 	
 	/**
 	 * Execute Test Rule
@@ -48,17 +50,35 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		TestRule testRule = taf.getPredicate();
 
 		
-		
+		report.addToFullDescription("\n");
+		report.addToFullDescription("---- TEST RULE ----");
 		report.addToFullDescription("\n- Language: " + testRule.getLanguage());
 		report.addToFullDescription("\n- Value: " + testRule.getValue());
-
-		report.addToFullDescription("\n-executeTestRule: taf.getName(): " + taf.getName());
-		report.addToFullDescription("\n-executeTestRule: taf.getInputs().size(): " + taf.getInputs().size());
-		report.addToFullDescription("\n-executeTestRule: testRule.getLanguage(): " + testRule.getLanguage());
-		report.addToFullDescription("\n-executeTestRule: testRule.getValue(): " + testRule.getValue());
+		report.addToFullDescription("\nInput List Size: " + taf.getInputs().size());
+		
+		
+		
+		
+		// CASE: WEB SERVICE TRANSPORT
+		// Se testRule.getValue() == http://schemas.xmlsoap.org/soap/envelope/envelope.xml
+		
 		
 		
 		try {
+			
+			
+			// GESTIONE DELLE TEST RULE
+			// CASO 1 - DOCUMENT
+			// IDENTIFICATO DA ...
+			
+			// CASO 2 - TRANSPORT
+			// IDENTIFICATO DA ...
+			
+			
+			
+			
+			
+			
 			
 			fileManager = JNDIServices.getFileManagerService();
 			
@@ -142,7 +162,15 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			
 			// TODO Adjust Report
 			e.printStackTrace();
+			
+		} catch (IndexOutOfBoundsException e) {
+			
+			System.out.println("executeTestRule: IndexOutOfBoundsException");
+			reportManager.saveLog(report, "executeTestRule");
+
+			e.printStackTrace();
 		}		
+		
 		
 		
 		

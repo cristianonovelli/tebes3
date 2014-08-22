@@ -78,6 +78,10 @@ public class Session implements Serializable {
 	@LazyCollection(LazyCollectionOption.TRUE)
 	private List<FileStore> files;
 
+	@OneToMany(mappedBy="session",cascade = {CascadeType.ALL})
+	@LazyCollection(LazyCollectionOption.TRUE)
+	private List<Text> texts;
+	
 	private int actionMark;
 	
 
@@ -303,6 +307,14 @@ public class Session implements Serializable {
 	
 	public void setActionMark(int actionMark) {
 		this.actionMark = actionMark;
+	}
+
+	public List<Text> getTexts() {
+		return texts;
+	}
+
+	public void setTexts(List<Text> texts) {
+		this.texts = texts;
 	}
 
 }

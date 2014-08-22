@@ -2,7 +2,7 @@ package it.enea.xlab.tebes.common;
 
 import it.enea.xlab.tebes.action.ActionManagerRemote;
 import it.enea.xlab.tebes.authentication.AuthenticationManager;
-import it.enea.xlab.tebes.file.FileManagerRemote;
+import it.enea.xlab.tebes.input.FileManagerRemote;
 import it.enea.xlab.tebes.paging.PagingManager;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.sut.SUTManagerRemote;

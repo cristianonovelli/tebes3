@@ -17,6 +17,8 @@ import it.enea.xlab.tebes.report.ReportDOM;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.tebes.test.TestManagerImpl;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -592,6 +594,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 					String inputSource = PropertiesUtil.getTeBESFileURL(inpuTemp.getFileIdRef(), session.getUser().getId().toString());
 					reportDOM.setInputSUTSource(inputSource, sutNode);
 					//FileStore file = fileManager.readFilebyIdRef(inpuTemp.getFileIdRef());
+				
 				}
 				
 				// Adjust Last Update Datetime
@@ -605,22 +608,19 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				
 				// 4. BUILD TAF dalla Action
 				
-				report.addToFullDescription("\n");
-				report.addToFullDescription("\n");
-				report.addToFullDescription("\n-- Start Execution of Action: " + action.getActionName() + "--");
+				report.addToFullDescription("\n\n");
+				report.addToFullDescription("-- Start Execution of ACTION: " + action.getActionName() + " --\n");
 	
 				
 				// 4.1 Istanzio il TestManager
 				TestManagerImpl testManager = new TestManagerImpl();
 				
-				report.addToFullDescription("\nBuilding... TAF for action: " + action.getActionName());
-				
+				report.addToFullDescription("Building TAF...\n");
+				report.addToFullDescription("Test Location: " + action.getTestLocation());
 				
 				// 4.2 BUILD Lista di TAF Building from Action
-				// (in questa lista non ci sono prerequisiti!)
 				ArrayList<TAF> tafList = testManager.buildTAF(action);
 				report.addToFullDescription("\nBuilt TAF List of " + tafList.size() + " TAF.");
-				
 				
 				
 				// 5. TAF List Execution
@@ -633,12 +633,12 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						taf = tafList.get(i);
 						
 						report.addToFullDescription("\nBuilt TAF " + taf.getName() + " OK.");
-						report.addToFullDescription("\nStart execution TAF " + taf.getName());
+						report.addToFullDescription("\n\n");
+						report.addToFullDescription("--- Start execution TAF " + taf.getName());
 						
 
 						
 						// 5.1 EXECUTE TAF		
-						report.addToFullDescription("pre-executeTAF check: " + taf.getReportFragments().get("fail").getDescription());
 						report = testManager.executeTAF(taf, session, reportDOM, reportDOM.getAttribute("id", actionTRNode));
 
 						
@@ -868,7 +868,9 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		// TODO STAMPA ACTION SUMMARY
 		//logger.info(currentAction.getActionSummaryString());
 
-		try {
+		
+		
+		/*try {
 			
 			System.out.println("report.getLogLocation():" + report.getLogLocation());
 			if ( XLabFileManager.append("FINE", report.getLogLocation()) )
@@ -880,13 +882,11 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			logger.error("Exception in XLabFileManager.append() method!");
 			logger.error(e.getMessage());
 			e.printStackTrace();
-		}
+		}*/
 		
 		return report;
 	}
 
-
-	
 	
 
 	public Boolean updateWorkflow(ActionWorkflow workflow) {

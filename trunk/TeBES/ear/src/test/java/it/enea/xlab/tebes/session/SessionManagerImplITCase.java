@@ -57,7 +57,8 @@ public class SessionManagerImplITCase {
 	private static String TESTPLAN_91 = "TP-91";
 	private static String TESTPLAN_1 = "TP-1";
 	private static String TESTPLAN_2 = "TP-2";
-	private static String TESTPLAN_81 = "TP-81";
+	private static String TESTPLAN_80 = "TP-80";
+	//private static String TESTPLAN_81 = "TP-81";
 	
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
@@ -313,7 +314,7 @@ public class SessionManagerImplITCase {
 			Assert.assertTrue(systemTestPlanList.size()>0);
 			
 			TestPlan testPlan = null;
-			Long testPlan91Id, testPlan1Id, testPlan81Id, testPlanIdTemp;
+			Long testPlan91Id, testPlan1Id, testPlan80Id, testPlanIdTemp;
 			String tpString = "";
 			
 			Hashtable<String, TestPlan> tpTable = new Hashtable<String, TestPlan>();
@@ -374,21 +375,21 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(testPlan91);
 			Assert.assertNotNull(testPlan1);
 	
-			TestPlan testPlan81 = tpTable.get(TESTPLAN_81);
-			Assert.assertNotNull(testPlan81);
+			TestPlan testPlan80 = tpTable.get(TESTPLAN_80);
+			Assert.assertNotNull(testPlan80);
 			
 			// Copia e importazione del TestPlan scelto per l'utente (currentUser)
 			testPlan91Id = testPlanController.cloneTestPlan(testPlan91, user1Id);
 			testPlan1Id = testPlanController.cloneTestPlan(testPlan1, user2Id);
-			testPlan81Id = testPlanController.cloneTestPlan(testPlan81, user3Id);
+			testPlan80Id = testPlanController.cloneTestPlan(testPlan80, user3Id);
 			Assert.assertTrue(testPlan91Id.intValue()>0);
 			Assert.assertTrue(testPlan1Id.intValue()>0);
-			Assert.assertTrue(testPlan81Id.intValue()>0);
+			Assert.assertTrue(testPlan80Id.intValue()>0);
 			
 			// Il testPlan selezionato diventa quello clonato per lo User
 			testPlan91 = testPlanController.readTestPlan(testPlan91Id);
 			testPlan1 = testPlanController.readTestPlan(testPlan1Id);
-			testPlan81 = testPlanController.readTestPlan(testPlan81Id);
+			testPlan80 = testPlanController.readTestPlan(testPlan80Id);
 			Assert.assertNotNull(testPlan91.getWorkflow());
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions());
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0));
@@ -397,7 +398,7 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0).getInputs().get(0));		
 	
 			logger.info("OK! IMPORTED selected TestPlans " + 
-					testPlan91.getName() + ", " + testPlan1.getName() + " and " + testPlan81.getName() +
+					testPlan91.getName() + ", " + testPlan1.getName() + " and " + testPlan80.getName() +
 					" for users " + user1.getName() + ", " + user2.getName() + " and " + user3.getName());
 			
 			
@@ -455,17 +456,28 @@ public class SessionManagerImplITCase {
 			sutInteractionList = sutController.getSUTInteractionList(transportSUTType);
 			Assert.assertTrue(sutInteractionList.size() == 3);	
 			
-			SUTInteraction wsClientInteraction = (SUTInteraction) sutInteractionList.get(1);
+			/*SUTInteraction wsClientInteraction = (SUTInteraction) sutInteractionList.get(1);
 			Assert.assertTrue(wsClientInteraction.getType().equals(SUTConstants.INTERACTION_WS_CLIENT));
 			
 			SUTInteraction interaction4User3WS= new SUTInteraction(wsClientInteraction.getType());
 			interaction4User3WS.setEndpoint("http://endpoint/totest/wsclient/");
 			
 			SUT sut4 = new SUT("WS-SUT4", transportSUTType, interaction4User3WS, "sut ws-client test");
-			Long sut4Id = sutController.createSUT(sut4, user3);
+			Long sut4Id = sutController.createSUT(sut4, user3);*/
 			// --- fine DEFINE SUT WS-CLIENT ---
 			
+			// --- DEFINISCO SUT WS-SERVER ---
+			// interazioni per transoport
 			
+			SUTInteraction wsServerInteraction = (SUTInteraction) sutInteractionList.get(2);
+			Assert.assertTrue(wsServerInteraction.getType().equals(SUTConstants.INTERACTION_WS_SERVER));
+			
+			SUTInteraction interactionWSServer= new SUTInteraction(wsServerInteraction.getType());
+			interactionWSServer.setEndpoint("http://www.webservicex.net/globalweather.asmx?WSDL");
+			
+			SUT sutWSServer = new SUT("WS-Server", transportSUTType, interactionWSServer, "sut ws-server");
+			Long sutServerId = sutController.createSUT(sutWSServer, user3);
+			// --- fine DEFINE SUT WS-CLIENT ---		
 			
 			// Nel momento in cui l'utente avvia il test
 			// il sistema, nel controller, effettua prima una verifica di consistenza ( check() )
@@ -476,46 +488,68 @@ public class SessionManagerImplITCase {
 			// ALTRIMENTI è necessario specificare/creare un altro SUT da abbinare gli input "inconsistenti"
 			logger.info("5) CREATING SESSION...");
 			
-			Long session91Id = sessionController.createSession(user1Id, sutId, testPlan91Id);
+			
+			
+			/*
+			 * SESSION1: 2 actions for correct UBL invoice and wrong UBL invoice
+			 * Long session91Id = sessionController.createSession(user1Id, sutId, testPlan91Id);
 			Assert.assertNotNull(session91Id);
 			logger.info("sessionId:" + session91Id);
 			Assert.assertTrue(session91Id.intValue()>0);		
 			logger.info("OK! CREATE SESSION with id " + session91Id);
-	
-			Long session1Id = sessionController.createSession(user2Id, sut2Id, testPlan1Id);
-			Assert.assertNotNull(session1Id);
-			logger.info("sessionId:" + session1Id);
-			Assert.assertTrue(session1Id.intValue()>0);		
-			logger.info("OK! CREATE SESSION2 with id " + session1Id);		
-
-			Long session81Id = sessionController.createSession(user3Id, sut4Id, testPlan81Id);
-			Assert.assertNotNull(session81Id);
-			logger.info("sessionId:" + session81Id);
-			Assert.assertTrue(session81Id.intValue()>0);		
-			logger.info("OK! CREATE SESSION3 with id " + session81Id);	
-			
-			
-			
 			
 			// Preparo una lista di file per ogni sessione di test
 			String[] fileList91 = {"ubl-invoice.xml", "ubl-invoice_withError.xml"};
+			*/
+	
+			
+			
+			/*
+			 * SESSION2: 2 actions for UBL schema and schematron
+			 * Long session1Id = sessionController.createSession(user2Id, sut2Id, testPlan1Id);
+			Assert.assertNotNull(session1Id);
+			logger.info("sessionId:" + session1Id);
+			Assert.assertTrue(session1Id.intValue()>0);		
+			logger.info("OK! CREATE SESSION2 with id " + session1Id);	
 			
 			// il terzo non sarebbe necessario, non dovrebbe venire richiesto, essendo l'idRef lo stesso
 			String[] fileList1 = {"ubl-invoice.xml", "ubl-invoice_withError.xml", "ubl-invoice.xml"};
+			*/	
+
+			
+			// SESSION3: 1 actions for Global Weather Web Service (User-ServerWS and TeBES-ClientWS)
+			Long session80Id = sessionController.createSession(user3Id, sutServerId, testPlan80Id);
+			Assert.assertNotNull(session80Id);
+			logger.info("sessionId:" + session80Id);
+			Assert.assertTrue(session80Id.intValue()>0);		
+			logger.info("OK! CREATE SESSION3 with id " + session80Id);	
+			logger.info("");	
+			
+			
+			
+
+			
+
 			
 			
 			//String[] fileList2 = {"ubl-invoice.xml"};
 			
 			
-			// web service
-			String[] fileList81 = {"response.xml"};
+			// List of Input fot the Global Weather case = 0 Input required
+			String[] fileList80 = {"Bologna", "Italy"};
+			
+			//String[] fileList81 = {"response.xml"};
 			
 			
 			// SESSION EXECUTION
-			execution(session91Id, fileList91);
+			//execution(session91Id, fileList91);
 			
-			execution(session1Id, fileList1);
-					
+			//execution(session1Id, fileList1);
+			
+			// Global Weather Web Service
+			execution(session80Id, fileList80);
+			
+			// eStockFlow
 			//execution(session1Id, fileList81);
 			
 			
@@ -523,6 +557,11 @@ public class SessionManagerImplITCase {
 		
 		
 		}
+		
+		
+		logger.info("");
+		logger.info("*******************************************");
+		logger.info("");
 	}
 		
 	
@@ -533,6 +572,13 @@ public class SessionManagerImplITCase {
 	@AfterClass
 	public static void after_testPlanManager() throws Exception {
 
+		
+		logger.info("\n");
+		logger.info("**************** TEST @AfterClass ****************");			
+
+		
+		
+		
 		if (beforeOK) {
 		
 			Boolean deleting;
@@ -541,8 +587,9 @@ public class SessionManagerImplITCase {
 			// è necessario cancellare i workflow prima di cancellare Role > User > TestPlan
 			// sarebbe più logico che le cancellazioni fossero a cascata (ovvero, cancello una di queste entity e vengono cancellate quelle successive)
 			// Role > User > TestPlan > workflow > actions
-			List<Long> sessionIdList = sessionController.getSessionIdList(user1);
-			Assert.assertTrue(sessionIdList.size() == 1);	
+			List<Long> sessionIdList = sessionController.getSessionIdList(user3);
+			logger.info("sessionIdList.size(): " + sessionIdList.size());
+
 			
 			//boolean deletingSession = sessionController.deleteSession(sessionIdList.get(0)); 
 			//Assert.assertTrue(deletingSession);
@@ -589,9 +636,9 @@ public class SessionManagerImplITCase {
 							
 				// DELETE User
 				if (tempUser.getRole().getLevel() != role4_superuser.getLevel() ) {			
-					//deleting = userAdminController.deleteUser(tempUser.getId());
-					logger.info("NO Deleting User with ID: " + tempUser.getId());
-					//Assert.assertTrue(deleting);			
+					deleting = userAdminController.deleteUser(tempUser.getId());
+					Assert.assertTrue(deleting);			
+					logger.info("Deleting User with ID: " + tempUser.getId());
 				}
 			}
 	
@@ -603,12 +650,9 @@ public class SessionManagerImplITCase {
 			// Last Check
 			// Sono stati eliminati tutti gli utenti (a cascata)?
 			userIdList = userAdminController.getUserIdList(superUser);
-			//Assert.assertTrue(userIdList.size() == 1);
+			Assert.assertTrue(userIdList.size() == 1);
 			
-			
-			// Get Session List
-			sessionIdList = sessionController.getSessionIdList(user1);
-			//Assert.assertTrue(sessionIdList.size() == 0);
+		
 			
 	
 			List<FileStore> documentList = fileController.getFileListByType("document");
@@ -624,6 +668,11 @@ public class SessionManagerImplITCase {
 			}	*/	
 			
 		}
+		
+		logger.info("");
+		logger.info("*******************************************");
+		logger.info("");
+		
 	}
 	
 	// TODO da inserire nelle xlab-common
@@ -643,7 +692,7 @@ public class SessionManagerImplITCase {
 	
 	
 	
-	private void execution(Long sessionId, String[] fileList) throws Exception {
+	private void execution(Long sessionId, String[] userInputList) throws Exception {
 		
 		
 		logger.info("********************************************");
@@ -672,12 +721,13 @@ public class SessionManagerImplITCase {
 		Assert.assertNotNull(testPlan);
 		Assert.assertTrue(testPlan.getId().intValue() > 0);
 		logger.info("TestPlan ID: " + testPlan.getId().intValue());
+		logger.info("TestPlan Name: " + testPlan.getName());
+		
 		
 		SUT sut = currentSession.getSut();
-		
-		// Check, provo a prendere un valore dall'oggetto sut contenuto in session
-		Assert.assertTrue(currentSession.getSut().getInteraction().getType().equals(SUTConstants.INTERACTION_WEBSITE));
-		logger.info("SUT ID: " + currentSession.getSut().getId().intValue());		
+		logger.info("SUT ID: " + currentSession.getSut().getId().intValue());
+		logger.info("SUT Interaction: " + currentSession.getSut().getInteraction().getType());
+		logger.info("SUT Description: " + currentSession.getSut().getDescription());
 		
 		// Othe Information
 		logger.info("STATE of Session: " + currentSession.getState());
@@ -731,7 +781,7 @@ public class SessionManagerImplITCase {
 		// Definisco un contatore per evitare che la stessa Action si ripeta all'infinito
 		int failuresForAction = 0;
 		Report report = null;
-		String fileName;
+		String fileName, textValue;
 		Action currentAction;
 		
 		
@@ -772,7 +822,7 @@ public class SessionManagerImplITCase {
 
 			
 			
-			Assert.assertTrue(report.getName().contains(Report.getReportnamePrefix()));			
+			Assert.assertTrue(report.getName().contains(Constants.REPORTNAME_PREFIX));			
 			Assert.assertTrue(report.getXml().getBytes().length > 1000);
 
 			
@@ -786,142 +836,168 @@ public class SessionManagerImplITCase {
 
 			// Prendo l'action da eseguire e stampo il summary dell'action nel file di log
 			currentAction = workflow.getCurrentAction(actionMark);
-			Assert.assertNotNull(currentAction);
 			
-			logger.info("ACTION " + actionMark + " OF " + actionsNumber + " ***********************");	
+			if (currentAction != null) {
 			
-
-						
-			// se l'action corrente è NEW, Session diventa WAITING, risolvo gli input, poi avvio il workflow
-			if ( currentAction.isStateNew() ) {
+				logger.info("ACTION " + actionMark + " OF " + actionsNumber + " ***********************");	
 				
-				logger.info("Action State: NEW");	
-
-				// Risolvo gli input, poi ripasso a working
-				inputList =	currentAction.getInputs();
-				logger.info("Required Inputs: " + inputList.size());	
-				
-				Input inputTemp = null;
-				// PER OGNI INPUT
-				for (int i=0; i<inputList.size(); i++) {
-				
-					logger.info("Input i: " + i);
-					
-					inputTemp = inputList.get(i);
-					
-					fileIdRef = inputTemp.getFileIdRef();
-					
-					logger.info("Input fileIdRef: " + fileIdRef);
-					
-					
-					if (!inputTemp.isInputSolved()) {
-					
-						logger.info("Input by UPLOAD...");
-					
-						// 1. UPLOAD
-						// a livello di Test passo il file al FileController 
-						// questo file viene copiato dalla cartella TeBES_Artifacts/users/0/docs/
-						/*if ( !currentAction.getActionName().equals("Wrong XMLSchema-UBL-T10") )
-							fileName = "ubl-invoice.xml";
-						else
-							fileName = "ubl-invoice_withError.xml";*/
-						
-						fileName = fileList[inputCounter];
-						inputCounter++;
-						
-						// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
-						// per ora assumo che venga estratto l'array di byte e gli venga passata quello
-						InputStream fileInputStream = null;
-						byte[] fileByteArray = null;
-						try {
-
-							fileInputStream = new FileInputStream(absSuperUserDocFilePath.concat(fileName));
-							fileByteArray = this.convertInputStreamToByteArray(fileInputStream);
-
-							logger.info("File to UPLOAD: " + absSuperUserDocFilePath.concat(fileName));
+	
 							
-							currentSession = fileController.upload(inputTemp, fileName, sut.getType(), fileByteArray, currentSession);
-							logger.info("OK Input by UPLOAD");
-
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} 
-						
-						Assert.assertNotNull(fileInputStream);
-	
-	
-						
-					} // End if (!isInputSolved)
+				// se l'action corrente è NEW, Session diventa WAITING, risolvo gli input, poi avvio il workflow
+				if ( currentAction.isStateNew() ) {
 					
-				
-				} // End for inputList.size()
-			
-
-				
-				// Una volta che tutti gli input sono risolti
-				// Lo stato dell'Action corrente è diventato READY
-				// Lo stato della Session è tornato su WORKING
-
-				
-				logger.info("Session State: " + currentSession.getState());
-				logger.info("Inputs Loaded > runWorkflow...");
-				
-				currentSession = sessionController.runWorkflow(workflow, currentSession);
-				
-				if ( currentSession != null ) {
-					// REFRESH Workflow, actionMark and current Action
-					workflow = currentSession.getTestPlan().getWorkflow();		
-					actionMark = currentSession.getActionMark();		
-					report = currentSession.getReport();
+					logger.info("Action State: NEW");	
+	
+					// Risolvo gli input, poi ripasso a working
+					inputList =	currentAction.getInputs();
+					logger.info("Required Inputs: " + inputList.size());	
 					
-					logger.info("After runWorkflow - Session State: " + currentSession.getState());
+					Input inputTemp = null;
+					// PER OGNI INPUT
+					for (int i=0; i<inputList.size(); i++) {
+					
+						logger.info("Input i: " + i);
+						
+						inputTemp = inputList.get(i);
+						
+						fileIdRef = inputTemp.getFileIdRef();
+						
+						logger.info("Input fileIdRef: " + fileIdRef);
+						
+						
+						if (!inputTemp.isInputSolved()) {
+						
+							// 1. UPLOAD	
+							if (inputTemp.getGuiReaction().equals(Input.REACTION_UPLOAD)) {
+						
+														
+								logger.info("Input by UPLOAD...");
+								
+								fileName = userInputList[inputCounter];
+								inputCounter++;
+								
+								// TODO il controller si dovrebbe occupare di aprire il file e passarlo al metodo
+								// per ora assumo che venga estratto l'array di byte e gli venga passata quello
+								InputStream fileInputStream = null;
+								byte[] fileByteArray = null;
+								try {
+		
+									fileInputStream = new FileInputStream(absSuperUserDocFilePath.concat(fileName));
+									fileByteArray = this.convertInputStreamToByteArray(fileInputStream);
+		
+									logger.info("File to UPLOAD: " + absSuperUserDocFilePath.concat(fileName));
+									
+									currentSession = fileController.upload(inputTemp, fileName, sut.getType(), fileByteArray, currentSession);
+									logger.info("OK Input " + inputTemp.getName() + " by UPLOAD");
+		
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} 
+								
+								Assert.assertNotNull(fileInputStream);
+		
+							} // END if REACTION_UPLOAD
+							
+							// 2. TEXT	
+							if (inputTemp.getGuiReaction().equals(Input.REACTION_TEXT)) {
+								
+								logger.info("Input by TEXT...");
+								
+								textValue = userInputList[inputCounter];
+								inputCounter++;
+								
+								logger.info("Text Label: " + inputTemp.getName()); 
+								logger.info("Text Value: " + textValue);
+								
+								currentSession = fileController.textUpload(inputTemp, textValue, currentSession);
+								
+								//currentSession = fileController.upload(inputTemp, fileName, sut.getType(), fileByteArray, currentSession);
+								
+				
+								
+								logger.info("OK Input " + inputTemp.getName() + " by TEXT");
+							}
+							
+							// X. NO PREVIOUS CASE -> EXCEPTION 
+							if ( !inputTemp.getGuiReaction().equals(Input.REACTION_TEXT) && 
+									!inputTemp.getGuiReaction().equals(Input.REACTION_UPLOAD) ) {
+								
+										throw new Exception("Test Exception: Invalid GUI REACTION in Input: " + inputTemp.getName()); 
+							}
+							
+						} // End if (!isInputSolved)
+						
+					
+					} // End for inputList.size()
+				
+	
+					
+					// Una volta che tutti gli input sono risolti
+					// Lo stato dell'Action corrente è diventato READY
+					// Lo stato della Session è tornato su WORKING
+	
+					
+					logger.info("Session State: " + currentSession.getState());
+					logger.info("Inputs Loaded > runWorkflow...");
+					
+					currentSession = sessionController.runWorkflow(workflow, currentSession);
+					
+					if ( currentSession != null ) {
+						// REFRESH Workflow, actionMark and current Action
+						workflow = currentSession.getTestPlan().getWorkflow();		
+						actionMark = currentSession.getActionMark();		
+						report = currentSession.getReport();
+						
+						logger.info("After runWorkflow - Session State: " + currentSession.getState());
+					}
+					else {
+						logger.error("Session NULL!");
+						return;
+					}
+				}	// End if NEW_STATE
+				
+				logger.info("After if NEW_STATE - Session State: " + currentSession.getState());
+				
+				
+				if ( actionMark > actionMarkPreRun) {
+					logger.info("END ACTION: "  + actionMarkPreRun + " OF " + workflow.getActions().size()  + " *********************");
+					logger.info("");
+					failuresForAction=0;
 				}
+				// Se actionMark == actionMarkPreRun sono ancora sulla stessa action
 				else {
-					logger.error("Session NULL!");
-					return;
+					
+					failuresForAction++;	
+					
+					logger.warn("Action Failed or NOT Finished. Counter: " + failuresForAction);				
+					logger.warn("REQUEST INPUT TYPE TO PUT...");
+					logger.warn("");
 				}
-			}	// End if NEW_STATE
-			
-			logger.info("After if NEW_STATE - Session State: " + currentSession.getState());
-			
-			
-			if ( actionMark > actionMarkPreRun) {
-				logger.info("END ACTION: "  + actionMarkPreRun + " OF " + workflow.getActions().size()  + " *********************");
-				logger.info("");
-				failuresForAction=0;
-			}
-			// Se actionMark == actionMarkPreRun sono ancora sulla stessa action
-			else {
 				
-				failuresForAction++;	
 				
-				logger.warn("Action Failed or NOT Finished. Counter: " + failuresForAction);				
-				logger.warn("REQUEST INPUT TYPE TO PUT...");
-				logger.warn("");
-			}
-			
-
-
-			// A QUESTO PUNTO L'UTENTE: 		
-			
-			// 1. continua con le azioni da eseguire che non sono finite		
-			
-			// 2. decide di sospendere la sessione di test 
-			// 		(lo stato passa in SUSPENDED solo se NON era DONE o CANCELLED)
-			currentSession = sessionController.suspendSession(currentSession);	
-			
-			
-			// 3. decide di annullare la sessione di test 
-			// 		(lo stato passa in CANCELLED solo se NON era DONE o già in CANCELLED)
-			//currentSession = sessionController.annulSession(currentSession);		
-			
-			// 4. decidere di riprendere una sessione precedentemente sospesa
-			// 		(lo stato torna in WORKING solo se era in SUSPENDED)
-			currentSession = sessionController.resumeSession(currentSession);	
-			
-			// 5. raggiungo il numero massimo di fallimenti per la stessa action
-			// TODO da spostare nel backend
+	
+				// A QUESTO PUNTO L'UTENTE: 		
+				
+				// 1. continua con le azioni da eseguire che non sono finite		
+				
+				// 2. decide di sospendere la sessione di test 
+				// 		(lo stato passa in SUSPENDED solo se NON era DONE o CANCELLED)
+				currentSession = sessionController.suspendSession(currentSession);	
+				
+				
+				// 3. decide di annullare la sessione di test 
+				// 		(lo stato passa in CANCELLED solo se NON era DONE o già in CANCELLED)
+				//currentSession = sessionController.annulSession(currentSession);		
+				
+				// 4. decidere di riprendere una sessione precedentemente sospesa
+				// 		(lo stato torna in WORKING solo se era in SUSPENDED)
+				currentSession = sessionController.resumeSession(currentSession);	
+				
+				// 5. raggiungo il numero massimo di fallimenti per la stessa action
+				// TODO da spostare nel backend
+				
+			} // End if currentAction != null
 			
 			
 			if ( 	currentSession.isStateDone() ||

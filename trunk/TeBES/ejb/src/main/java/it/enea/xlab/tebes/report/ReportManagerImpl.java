@@ -1,7 +1,5 @@
 package it.enea.xlab.tebes.report;
 
-import java.util.List;
-
 import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
@@ -12,8 +10,10 @@ import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.TestPlanDescription;
-import it.enea.xlab.tebes.entity.TestResult;
 import it.enea.xlab.tebes.entity.User;
+
+import java.io.IOException;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -22,7 +22,6 @@ import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -137,7 +136,7 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		fullDescription = fullDescription.concat("\n\nReport ID: " + reportId);
 		
 		// Define report name as "TR-" + [reportId]
-		report.setName(Report.getReportnamePrefix().concat(reportId.toString()));
+		report.setName(Constants.REPORTNAME_PREFIX.concat(reportId.toString()));
 	
 		// Set Absolute Location and Publication
 		String reportDirPath = PropertiesUtil.getUserReportsDirPath(user.getId());
@@ -151,14 +150,14 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		
 		// Log
 		String logsUserDirPath = PropertiesUtil.getUserLogsDirPath(user.getId());
-		String logUserName = Report.getLognamePrefix().concat(reportId.toString()).concat(Constants.LOG_EXTENSION);
+		String logUserName = Constants.LOGNAME_PREFIX.concat(reportId.toString()).concat(Constants.LOG_EXTENSION);
 		String absLogUserFilePath = logsUserDirPath.concat(logUserName);
 		report.setLogLocation(absLogUserFilePath);		
 		fullDescription = fullDescription.concat("\nThis Log File Location: " + report.getLogLocation());
 		// CREATE Report and Log Files		
 		try {
 			XLabFileManager.create(report.getLocation(), "");
-			XLabFileManager.create(absLogUserFilePath, fullDescription);
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -355,6 +354,22 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		
 		return eM.find(TestResult.class, testResultId);
 	}*/
+	
+	public void saveLog(Report report, String methodName) {
+		
+		String logContent = "***** LOG FILE *****\n";
+		logContent = logContent.concat("generated from method: " + methodName + "\n\n");
+		logContent = logContent.concat(report.getFullDescription());
+		
+		try {
+			XLabFileManager.create(report.getLogLocation(), logContent);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return;
+	}
 	
 }
 

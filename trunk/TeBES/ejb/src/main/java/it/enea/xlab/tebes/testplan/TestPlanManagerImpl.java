@@ -691,6 +691,10 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 			String location = testPlanDOM.getLocationAttribute(testNode);
 
 			location = TeBESDAO.url2localLocation(location);
+			if (location == null) {
+				logger.error("ERROR: Method url2localLocation returns null!");
+				return null;
+			}
 			
 			// Input
 			NodeList inputNodeList = testPlanDOM.getInputNodeList(actionElement);

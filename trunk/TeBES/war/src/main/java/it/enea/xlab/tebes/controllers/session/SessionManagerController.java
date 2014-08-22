@@ -13,7 +13,7 @@ import it.enea.xlab.tebes.entity.SUT;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
-import it.enea.xlab.tebes.file.FileManagerRemote;
+import it.enea.xlab.tebes.input.FileManagerRemote;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 import it.enea.xlab.tebes.testplan.TestPlanManagerRemote;
 import it.enea.xlab.tebes.users.UserManagerRemote;
@@ -749,7 +749,7 @@ public class SessionManagerController extends WebController<Session> {
 		if (checking)
 			action.setStateToReady();
 		
-		Session result = fileManagerService.upload(input.getFileIdRef(), fileName, type, fileContent, session);
+		Session result = fileManagerService.fileUpload(input.getFileIdRef(), fileName, type, fileContent, session);
 		
 		/*if (action.isStateReady()) {
 			this.guiMessage = "Action "+action.getActionName()+" conclusa. Premi ESEGUI per riprendere il workflow.";

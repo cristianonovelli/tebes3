@@ -102,4 +102,7 @@ public class Constants {
 	public static final String XML_EXTENSION = ".xml";
 	public static final String LOG_EXTENSION = ".log";
 	
+	public static final String REPORTNAME_PREFIX = "TR-";
+	public static final String LOGNAME_PREFIX = "LG-";
+	
 }
