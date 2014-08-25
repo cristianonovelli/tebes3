@@ -125,8 +125,8 @@ public class Report implements Serializable {
 		this.fullDescription = fullDescription;
 	}
 
-	public void addToFullDescription(String furtherDescription) {
-		this.fullDescription = fullDescription.concat(furtherDescription);
+	public void addLineToFullDescription(String line) {
+		this.fullDescription = fullDescription.concat(line).concat("\n");
 	}
 
 	public boolean isPartialResultSuccessfully() {

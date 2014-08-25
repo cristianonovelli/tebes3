@@ -4,6 +4,7 @@ import it.enea.xlab.tebes.common.Constants;
 import it.enea.xlab.tebes.common.JNDIServices;
 import it.enea.xlab.tebes.common.Profile;
 import it.enea.xlab.tebes.common.PropertiesUtil;
+import it.enea.xlab.tebes.common.SUTConstants;
 import it.enea.xlab.tebes.entity.FileStore;
 import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
@@ -44,132 +45,189 @@ public class RuleManagerImpl implements RuleManagerRemote {
 	 */
 	public Report executeTestRule(TAF taf, Session session) { 
 		
-		
 		Report report = session.getReport();
 		
-		TestRule testRule = taf.getPredicate();
+		// TARGET TYPE INDICA LA TIPOLOGIA DEL TEST: document, transport, process
+		// PER OGNUNO DEI TRE TIPI AGIRO' DIVERSAMENTE
 
+		report.addLineToFullDescription("---executeTestRule");
+		report.addLineToFullDescription("---Target Type: " + taf.getTarget().getType());
 		
-		report.addToFullDescription("\n");
-		report.addToFullDescription("---- TEST RULE ----");
-		report.addToFullDescription("\n- Language: " + testRule.getLanguage());
-		report.addToFullDescription("\n- Value: " + testRule.getValue());
-		report.addToFullDescription("\nInput List Size: " + taf.getInputs().size());
-		
-		
-		
-		
-		// CASE: WEB SERVICE TRANSPORT
-		// Se testRule.getValue() == http://schemas.xmlsoap.org/soap/envelope/envelope.xml
+		report.addLineToFullDescription("\n");
+		report.addLineToFullDescription("---- TEST RULE ----");
+		TestRule testRule = taf.getPredicate();
+		report.addLineToFullDescription("- Language: " + testRule.getLanguage());
+		report.addLineToFullDescription("- Value: " + testRule.getValue());
+		report.addLineToFullDescription("TAF Input List Size: " + taf.getInputs().size());
 		
 		
 		
 		try {
 			
-			
-			// GESTIONE DELLE TEST RULE
-			// CASO 1 - DOCUMENT
-			// IDENTIFICATO DA ...
-			
-			// CASO 2 - TRANSPORT
-			// IDENTIFICATO DA ...
-			
-			
-			
-			
-			
-			
-			
+			// FILE and TEXT Manager
 			fileManager = JNDIServices.getFileManagerService();
 			
-			Input input = taf.getInputs().get(0);
-			
-			FileStore file = fileManager.readFilebyIdRef(input.getFileIdRef());
-			report.addToFullDescription("\n-executeTestRule: file: " + file.getFileRefId());
-			report.addToFullDescription("\n-executeTestRule: file: " + file.getFileName());
-			report.addToFullDescription("\n-executeTestRule: file: " + file.getType());
-			
-			String userDocsAbsDir = PropertiesUtil.getUserDocsDirPath(session.getUser().getId());
-	
-			String xmlString = userDocsAbsDir.concat(file.getFileName());
-			//String xmlString = "TeBES_Artifacts/users/1/docs/ubl-invoice.xml";
-			report.addToFullDescription("executeTestRule: file: " + xmlString);
-			
-			
-			
-			// XML Schema validation
-			if (testRule.getLanguage().equals(Constants.XMLSCHEMA)) { 
-				
-				report.addToFullDescription("\n-START validation XMLSCHEMA");
-
-						
-				String schema = testRule.getValue();
-				
-				// TODO bisogna passargli non il path assoluto ma l'URL della cache di TeBES
-				/*if ( !XURL.isURLExistent(schema) ) {
-					
-					schema = PropertiesUtil.getCacheDirPath().concat(XLabUtilities.getFileNameFromAbsFileName(schema));			
-				}*/
-				
-				String fileRelPath = userDocsAbsDir.concat(file.getFileName());
-				
-				report.addToFullDescription("\n-executeTestRule: xml: " + fileRelPath);
-				report.addToFullDescription("\n-executeTestRule: xsd: " + testRule.getValue());
-				
-				report = xmlSchemaValidation( fileRelPath, schema, report );
-				
-				report.addToFullDescription("\n-END XMLSCHEMA Validation");
-			}			
-				
-			
-			
-			if (testRule.getLanguage().equals(Constants.SCHEMATRON)) {
-				
-				report.addToFullDescription("\n-START SCHEMATRON Validation");
-				
-				String schematron = testRule.getValue();
-				
-				// TODO bisogna passargli non il path assoluto ma l'URL della cache di TeBES
-				/*if ( !XURL.isURLExistent(schematron) ) {
-					
-					schematron = PropertiesUtil.getCacheDirPath().concat(XLabUtilities.getFileNameFromAbsFileName(schematron));			
-				}*/
-					
-				
-				report = schematronValidation(xmlString, schematron, report);
-				
-				report.addToFullDescription("\n-END SCHEMATRON Validation");
-			}
-
-			
-
-	
-			if (testRule.getLanguage().equals(Constants.XPATH)) {
-				
-				report.addToFullDescription("\n-START XPATH Validation");	 
-				
-				report.addToFullDescription("\n-TESTRULE: " + testRule.getValue());
-	
-				report = xPathValidation(xmlString, testRule.getValue(), report);
-				
-				report.addToFullDescription("\n-END XPATH Validation");
-			}
+		} catch (NamingException e1) {
+			reportManager.saveLog(report, "executeTestRule.NamingException");
+			e1.printStackTrace();
+		}
 		
+		
+		
+		//////////////////////
+		// CASO 1: DOCUMENT //
+		//////////////////////
+		if (taf.getTarget().getType().equals(SUTConstants.SUT_TYPE1_DOCUMENT)) {
 			
-		} catch (NamingException e) {
+			report.addLineToFullDescription("---- DOCUMENT Level recognized");
 			
-			System.out.println("executeTestRule: NamingException");
-			
-			// TODO Adjust Report
-			e.printStackTrace();
-			
-		} catch (IndexOutOfBoundsException e) {
-			
-			System.out.println("executeTestRule: IndexOutOfBoundsException");
-			reportManager.saveLog(report, "executeTestRule");
+			try {
+				Input input = taf.getInputs().get(0);
+				
+				FileStore file = fileManager.readFilebyIdRef(input.getFileIdRef());
+				report.addLineToFullDescription("-executeTestRule: file: " + file.getFileRefId());
+				report.addLineToFullDescription("-executeTestRule: file: " + file.getFileName());
+				report.addLineToFullDescription("-executeTestRule: file: " + file.getType());
+				
+				String userDocsAbsDir = PropertiesUtil.getUserDocsDirPath(session.getUser().getId());
+		
+				String xmlString = userDocsAbsDir.concat(file.getFileName());
+				//String xmlString = "TeBES_Artifacts/users/1/docs/ubl-invoice.xml";
+				report.addLineToFullDescription("executeTestRule: file: " + xmlString);
+				
+				
+				
+				// CASO 1.1 Document XML SCHEMA validation
+				if (testRule.getLanguage().equals(Constants.XMLSCHEMA)) { 
+					
+					report.addLineToFullDescription("---- XMLSCHEMA validation recognized");
 
-			e.printStackTrace();
-		}		
+							
+					String schema = testRule.getValue();
+					
+					// TODO bisogna passargli non il path assoluto ma l'URL della cache di TeBES
+					/*if ( !XURL.isURLExistent(schema) ) {
+						
+						schema = PropertiesUtil.getCacheDirPath().concat(XLabUtilities.getFileNameFromAbsFileName(schema));			
+					}*/
+					
+					String fileRelPath = userDocsAbsDir.concat(file.getFileName());
+					
+					report.addLineToFullDescription("-executeTestRule: xml: " + fileRelPath);
+					report.addLineToFullDescription("-executeTestRule: xsd: " + testRule.getValue());
+					
+					report = xmlSchemaValidation( fileRelPath, schema, report );
+					
+					report.addLineToFullDescription("-END XMLSCHEMA Validation");
+				}			
+					
+				
+				
+				// CASO 1.2 Document SCHEMATRON validation
+				else if (testRule.getLanguage().equals(Constants.SCHEMATRON)) {
+					
+					report.addLineToFullDescription("---- SCHEMATRON validation recognized");
+					
+					String schematron = testRule.getValue();
+					
+					// TODO bisogna passargli non il path assoluto ma l'URL della cache di TeBES
+					/*if ( !XURL.isURLExistent(schematron) ) {
+						
+						schematron = PropertiesUtil.getCacheDirPath().concat(XLabUtilities.getFileNameFromAbsFileName(schematron));			
+					}*/
+						
+					
+					report = schematronValidation(xmlString, schematron, report);
+					
+					report.addLineToFullDescription("-END SCHEMATRON Validation");
+				}
+
+				
+
+				// CASO 1.3 Document XPATH Validation
+				else if (testRule.getLanguage().equals(Constants.XPATH)) {
+					
+					report.addLineToFullDescription("---- XPATH validation recognized");
+					
+					report.addLineToFullDescription("-TESTRULE: " + testRule.getValue());
+		
+					report = xPathValidation(xmlString, testRule.getValue(), report);
+					
+					report.addLineToFullDescription("-END XPATH Validation");
+				}
+				
+				else
+					report.addLineToFullDescription("---- ERROR: No DOCUMENT subcase recognized!");
+				
+			
+				
+			} catch (IndexOutOfBoundsException e) {
+				
+				System.out.println("executeTestRule: IndexOutOfBoundsException");
+				reportManager.saveLog(report, "executeTestRule");
+
+				e.printStackTrace();
+			}		
+			
+		}
+		
+		
+		
+		
+		///////////////////////
+		// CASO 2: TRANSPORT //
+		///////////////////////
+		if (taf.getTarget().getType().equals(SUTConstants.SUT_TYPE2_TRANSPORT)) {
+			
+			
+			report.addLineToFullDescription("---- TRANSPORT Level recognized");
+			report.addLineToFullDescription("---- Selecting of subcase depending by " + taf.getInputs().get(0).getInteraction());
+			 
+			
+			// NEL CASO TRANSPORT ABBIAMO 4 CASI, RELATIVI A 4 TIPI DI SUT DA TESTARE: 
+			// website, email, webservice-client, webservice-server
+			// C'E' SEMPRE UN INPUT (QUANDO NON C'E'?)
+			
+			// 2.4 Transport WS_SERVER Validation
+			// In questo caso l'utente espone il WS e richiama la generazione del Client
+			if (taf.getInputs().get(0).getInteraction().equals(SUTConstants.INTERACTION_WS_SERVER)) {
+				
+				report.addLineToFullDescription("---- WS_SERVER validation recognized");
+				report.addLineToFullDescription("Input Interaction: " + taf.getInputs().get(0).getInteraction());
+				
+				report.addLineToFullDescription("---- CALLING GJS WS-Generator to generate WS Client...");
+				
+				report.addLineToFullDescription("---- TODO");
+				
+				report.addLineToFullDescription("---- OK CALLED GJS WS-Generator.");
+			}
+			else
+				report.addLineToFullDescription("---- ERROR: No TRANSPORT subcase recognized!");
+			
+			
+		}
+			
+		
+		
+		
+		
+		
+		
+		// Se ha Input...
+		if (taf.getInputs().size() > 0) {
+		
+			Input inputTemp = taf.getInputs().get(0);
+			report.addLineToFullDescription("Input Interaction: " + inputTemp.getInteraction());
+		}
+		
+
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -185,8 +243,8 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		// TODO
 		// verifica sia uno schematron valido
 
-		report.addToFullDescription("XML Schema Validation - XML: " + xmlString);
-		report.addToFullDescription("XML Schema Validation - XSD: " + xsdString);
+		report.addLineToFullDescription("XML Schema Validation - XML: " + xmlString);
+		report.addLineToFullDescription("XML Schema Validation - XSD: " + xsdString);
 		
 
 		//String xmlRelPathFileName = "TeBES_Artifacts/users/0/docs/ubl-invoice.xml";
@@ -226,7 +284,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				for (int i=0; i<emList.length; i++) {
 					
 					testResultList.add(new TestResult(errorType, emList[i].getLineNumber(), emList[i].getDescription()));
-					report.addToFullDescription("Add TestResult " + i + ": "  
+					report.addLineToFullDescription("Add TestResult " + i + ": "  
 					+ errorType + " " + emList[i].getLineNumber() + " " + emList[i].getDescription() );
 				}
 				report.setTempResultList(testResultList);
@@ -298,7 +356,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 					
 					testResultList.add(new TestResult(errorType, emList[i].getLineNumber(), emList[i].getDescription()));
 					
-					report.addToFullDescription("\nAdd TestResult " + i + ": "  
+					report.addLineToFullDescription("Add TestResult " + i + ": "  
 							+ errorType + " " + emList[i].getLineNumber() + " " + emList[i].getDescription() );
 				}
 				report.setTempResultList(testResultList);

@@ -608,19 +608,19 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				
 				// 4. BUILD TAF dalla Action
 				
-				report.addToFullDescription("\n\n");
-				report.addToFullDescription("-- Start Execution of ACTION: " + action.getActionName() + " --\n");
+				report.addLineToFullDescription("\n");
+				report.addLineToFullDescription("-- Start Execution of ACTION: " + action.getActionName() + " --");
 	
 				
 				// 4.1 Istanzio il TestManager
 				TestManagerImpl testManager = new TestManagerImpl();
 				
-				report.addToFullDescription("Building TAF...\n");
-				report.addToFullDescription("Test Location: " + action.getTestLocation());
+				report.addLineToFullDescription("Building TAF...");
+				report.addLineToFullDescription("Test Location: " + action.getTestLocation());
 				
 				// 4.2 BUILD Lista di TAF Building from Action
 				ArrayList<TAF> tafList = testManager.buildTAF(action);
-				report.addToFullDescription("\nBuilt TAF List of " + tafList.size() + " TAF.");
+				report.addLineToFullDescription("Built TAF List of " + tafList.size() + " TAF.");
 				
 				
 				// 5. TAF List Execution
@@ -632,9 +632,9 @@ public class ActionManagerImpl implements ActionManagerRemote {
 					
 						taf = tafList.get(i);
 						
-						report.addToFullDescription("\nBuilt TAF " + taf.getName() + " OK.");
-						report.addToFullDescription("\n\n");
-						report.addToFullDescription("--- Start execution TAF " + taf.getName());
+						report.addLineToFullDescription("Built TAF " + taf.getName() + " OK.");
+						report.addLineToFullDescription("\n");
+						report.addLineToFullDescription("--- Start execution TAF " + taf.getName());
 						
 
 						
@@ -707,14 +707,14 @@ public class ActionManagerImpl implements ActionManagerRemote {
 									0, 
 									"Validation Failure: check Validation Project.");
 							
-							report.addToFullDescription("\nTAF Execution: ResultList is NULL");
+							report.addLineToFullDescription("TAF Execution: ResultList is NULL");
 						}
 						else {
 						
 						
 							if ( report.getTempResultList().size() > 1 ) {
 							
-								report.addToFullDescription("TestResults express as " + report.getTempResultList().size() + " SingleResult.");
+								report.addLineToFullDescription("TestResults express as " + report.getTempResultList().size() + " SingleResult.");
 								
 								
 								// CLONO N-1 volte
@@ -725,7 +725,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 									Node cloneSingleResultNode = singleResultNodeTemplate.cloneNode(true);
 									cloneSingleResultNode = reportDOM.doc.importNode(cloneSingleResultNode, true); 
 									cloneSingleResultNode = reportDOM.insertSingleResultNode(cloneSingleResultNode, singleResultNodeTemplate, actionTRNode);
-									report.addToFullDescription("\nSingleResult Node Clone.");		
+									report.addLineToFullDescription("SingleResult Node Clone.");		
 									
 									testResultTemp = report.getTempResultList().get(tr);
 									
@@ -745,7 +745,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 								}
 							}	
 							else {
-								report.addToFullDescription("\nTestResults express as ONLY 1 SingleResult.");
+								report.addLineToFullDescription("TestResults express as ONLY 1 SingleResult.");
 							}
 							
 							
@@ -819,17 +819,17 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						report.setTempResult(null);
 						report.setTempResultList(null);
 						
-						report.addToFullDescription("\nResult: " + report.isPartialResultSuccessfully());
+						report.addLineToFullDescription("Result: " + report.isPartialResultSuccessfully());
 						
 						i++;
 					}
 				}
 				else
-					report.addToFullDescription("\nBuilt TAF Failure.");
+					report.addLineToFullDescription("Built TAF Failure.");
 	
 				
 				// 6.2 Aggiorno Full Description
-				report.addToFullDescription("\n-- End Execution of Action: " + action.getActionName() + "--");
+				report.addLineToFullDescription("-- End Execution of Action: " + action.getActionName() + "--");
 				
 				// 6.3 Aggiorno Global Result
 				//if ( report.isPartialResultSuccessfully() ) {
@@ -856,7 +856,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 			}
 			// Nel caso actionNode == null
 			else {
-				report.addToFullDescription("SYSTEM ERROR: il metodo ActionManagerImpl.runAction incontra un'inconsistente (actionNode == null) dopo l'inizializzazione della Action XML.");
+				report.addLineToFullDescription("SYSTEM ERROR: il metodo ActionManagerImpl.runAction incontra un'inconsistente (actionNode == null) dopo l'inizializzazione della Action XML.");
 				logger.error("SYSTEM ERROR: il metodo ActionManagerImpl.runAction incontra un'inconsistente (actionNode == null) dopo l'inizializzazione della Action XML.");
 				report.setPartialResultSuccessfully(false);
 			}

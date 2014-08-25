@@ -314,7 +314,7 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		}
 
 		fullDescription = fullDescription.concat("\nCreated Report for new Session.");	
-		report.addToFullDescription(fullDescription);
+		report.addLineToFullDescription(fullDescription);
 		
 		return report;
 	}
