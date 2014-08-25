@@ -10,6 +10,7 @@ import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestResult;
+import it.enea.xlab.tebes.external.jolie.gjs.GJS;
 import it.enea.xlab.tebes.input.FileManagerRemote;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.TestRule;
@@ -17,6 +18,9 @@ import it.enea.xlab.tebes.report.ReportManagerRemote;
 import it.enea.xlab.validation.ValidationManagerRemote;
 import it.enea.xlab.validation.XErrorMessage;
 
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import javax.ejb.EJB;
@@ -58,7 +62,6 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		TestRule testRule = taf.getPredicate();
 		report.addLineToFullDescription("- Language: " + testRule.getLanguage());
 		report.addLineToFullDescription("- Value: " + testRule.getValue());
-		report.addLineToFullDescription("TAF Input List Size: " + taf.getInputs().size());
 		
 		
 		
@@ -181,55 +184,42 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			
 			
 			report.addLineToFullDescription("---- TRANSPORT Level recognized");
-			report.addLineToFullDescription("---- Selecting of subcase depending by " + taf.getInputs().get(0).getInteraction());
+			report.addLineToFullDescription("---- Subcase: " + taf.getInputs().get(0).getInteraction());
 			 
 			
 			// NEL CASO TRANSPORT ABBIAMO 4 CASI, RELATIVI A 4 TIPI DI SUT DA TESTARE: 
 			// website, email, webservice-client, webservice-server
 			// C'E' SEMPRE UN INPUT (QUANDO NON C'E'?)
 			
+			
 			// 2.4 Transport WS_SERVER Validation
 			// In questo caso l'utente espone il WS e richiama la generazione del Client
 			if (taf.getInputs().get(0).getInteraction().equals(SUTConstants.INTERACTION_WS_SERVER)) {
 				
-				report.addLineToFullDescription("---- WS_SERVER validation recognized");
-				report.addLineToFullDescription("Input Interaction: " + taf.getInputs().get(0).getInteraction());
 				
 				report.addLineToFullDescription("---- CALLING GJS WS-Generator to generate WS Client...");
 				
-				report.addLineToFullDescription("---- TODO");
+				
+				this.WSServerValidation(report);
 				
 				report.addLineToFullDescription("---- OK CALLED GJS WS-Generator.");
-			}
+				
+			} // END CASE 2.4
+			
+			
+			// OTHERWISE
 			else
 				report.addLineToFullDescription("---- ERROR: No TRANSPORT subcase recognized!");
 			
 			
-		}
+		} // END CASE 2 TRANSPORT
 			
 		
 		
 		
 		
 		
-		
-		// Se ha Input...
-		if (taf.getInputs().size() > 0) {
-		
-			Input inputTemp = taf.getInputs().get(0);
-			report.addLineToFullDescription("Input Interaction: " + inputTemp.getInteraction());
-		}
-		
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		report.addLineToFullDescription("-------------------");
 		
 		
 		return report;
@@ -399,6 +389,58 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		
 		report.setPartialResultSuccessfully(true);
 		return report;
+	}
+	
+	
+	
+	public Report WSServerValidation(Report report) {
+		
+
+		String[][] parameters = new String[2][2];
+		
+		parameters[0][0] = "CountryName";
+		parameters[0][1] = "Italy";
+
+		parameters[1][0] = "CityName";
+		parameters[1][1] = "Bologna";
+
+		
+			try {
+				GJS.generateClientWS("http://www.webservicex.net/globalweather.asmx?WSDL", 
+						"GetWeather", 
+						"GlobalWeatherSoap",
+						"test",
+						"./test/tmppath",
+						"report.xml",
+						"standard",
+						parameters);
+				
+				report.setPartialResultSuccessfully(true);
+				
+			} 
+			
+			
+			catch (ConnectException e) {
+				report.setPartialResultSuccessfully(false);
+				report.addLineToFullDescription(e.getMessage());
+				reportManager.saveLog(report, "WSServerValidation.ConnectException");
+				
+			} catch (IOException e) {
+				report.setPartialResultSuccessfully(false);
+				report.addLineToFullDescription(e.getMessage());
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				report.setPartialResultSuccessfully(false);
+				report.addLineToFullDescription(e.getMessage());
+				e.printStackTrace();
+			} catch (Exception e) {
+				report.setPartialResultSuccessfully(false);
+				report.addLineToFullDescription(e.getMessage());
+				e.printStackTrace();
+			} finally {			
+				return report;
+			}
+
 	}
 }
 
