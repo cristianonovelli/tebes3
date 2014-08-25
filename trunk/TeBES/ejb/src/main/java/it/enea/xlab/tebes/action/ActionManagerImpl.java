@@ -619,7 +619,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				report.addLineToFullDescription("Test Location: " + action.getTestLocation());
 				
 				// 4.2 BUILD Lista di TAF Building from Action
-				ArrayList<TAF> tafList = testManager.buildTAF(action);
+				ArrayList<TAF> tafList = testManager.buildTAF(action); 
 				report.addLineToFullDescription("Built TAF List of " + tafList.size() + " TAF.");
 				
 				
