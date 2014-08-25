@@ -36,7 +36,7 @@
 
         <taml:var vname="soap-validation" vtype="http://www.w3.org/TR/xpath20/">count(//soap:Envelope) ge 1</taml:var>
         
-        <taml:target type="message" lg="xml">message</taml:target>
+        <taml:target type="transport" lg="xml">soap-validation</taml:target>
         
         <!-- 
             The XPath expression executes the XML Schema validation 

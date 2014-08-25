@@ -120,8 +120,8 @@ public class TestManagerImpl implements TestManagerRemote {
 		boolean okPrerequisites = false;
 		
 		
-		report.addToFullDescription("\n");
-		report.addToFullDescription("--- TAF: " + taf.getName() + " ---\n");
+		report.addLineToFullDescription("\n");
+		report.addLineToFullDescription("--- TAF: " + taf.getName() + " ---");
 		
 		
 		
@@ -148,13 +148,13 @@ public class TestManagerImpl implements TestManagerRemote {
 				// GET Action Prerequisite 
 				Action prerequisiteAction = prerequisites.get(i);
 				
-				report.addToFullDescription("\nPrerequisite: " + prerequisiteAction.getActionName());
-				report.addToFullDescription("\nBuilding TAF from: " + prerequisiteAction.getActionName());
+				report.addLineToFullDescription("Prerequisite: " + prerequisiteAction.getActionName());
+				report.addLineToFullDescription("Building TAF from: " + prerequisiteAction.getActionName());
 
 				
 				// BUILD TAF from Action
 				ArrayList<TAF> tafList = this.buildTAF(prerequisiteAction);
-				report.addToFullDescription("\nTAF list size: " + tafList.size());
+				report.addLineToFullDescription("TAF list size: " + tafList.size());
 				
 				
 				int j=0;	
@@ -162,11 +162,11 @@ public class TestManagerImpl implements TestManagerRemote {
 				while ( (j < tafList.size()) && sumPrerequisites ) {
 
 					// Recursive execution
-					report.addToFullDescription("\n---> Recursive execution");
+					report.addLineToFullDescription("---> Recursive execution");
 
 					// GET TAF prerequisito
 					tafRicorsiva = tafList.get(j);
-					report.addToFullDescription("\nTAFPrerequisite with j: " + j + " and name " + tafRicorsiva.getName());
+					report.addLineToFullDescription("TAFPrerequisite with j: " + j + " and name " + tafRicorsiva.getName());
 					
 
 					
@@ -174,44 +174,44 @@ public class TestManagerImpl implements TestManagerRemote {
 					report = this.executeTAF(tafRicorsiva, session, reportDOM, actionId);
 					
 					
-					report.addToFullDescription("\nPartial Result: " + report.isPartialResultSuccessfully());
+					report.addLineToFullDescription("Partial Result: " + report.isPartialResultSuccessfully());
 					
 									// SET prerequisite RESULT
 									
 									Node actionNode = reportDOM.getTestAction(actionId);
-									report.addToFullDescription("\nactionId: " + actionId);
-									report.addToFullDescription("\nisPrerequisite > new Node");
+									report.addLineToFullDescription("actionId: " + actionId);
+									report.addLineToFullDescription("isPrerequisite > new Node");
 									
 									Node prerequisitesNode = reportDOM.getPrerequisitesNode((Element) actionNode);		
 									
 									// "1" sta ad indicare il primo nodo figlio, ovvero dopo il nodo testo del nodo corrente
 									Node prerequisiteResultNode = prerequisitesNode.getChildNodes().item(1);
-									report.addToFullDescription("\n 0.PrerequisiteResult/@result=EMPTY > " + prerequisiteResultNode.getNodeName());
+									report.addLineToFullDescription("0.PrerequisiteResult/@result=EMPTY > " + prerequisiteResultNode.getNodeName());
 									
 									// Se NON è un nodo template, lo clono
 									// Se E' il nodo template, uso quello
 									String resultValue = reportDOM.getAttribute("result", prerequisiteResultNode);
-									report.addToFullDescription("\nresultValue: " + resultValue);
+									report.addLineToFullDescription("resultValue: " + resultValue);
 									
 									
 									Node selectedPrerequisiteNode;
 									if (!resultValue.equals("EMPTY")) {
 										
-										report.addToFullDescription("\n1.PrerequisiteResult/@result=EMPTY > Clone!");
+										report.addLineToFullDescription("1.PrerequisiteResult/@result=EMPTY > Clone!");
 										Node clonePrerequisiteResultNode = prerequisiteResultNode.cloneNode(true);
-										report.addToFullDescription("\n2.PrerequisiteResult/@result=EMPTY > " + clonePrerequisiteResultNode.getNodeName());
+										report.addLineToFullDescription("2.PrerequisiteResult/@result=EMPTY > " + clonePrerequisiteResultNode.getNodeName());
 							
 										clonePrerequisiteResultNode = reportDOM.doc.importNode(clonePrerequisiteResultNode, true); 
-										report.addToFullDescription("\n3.PrerequisiteResult/@result=EMPTY taf: " + tafRicorsiva.getName());
+										report.addLineToFullDescription("3.PrerequisiteResult/@result=EMPTY taf: " + tafRicorsiva.getName());
 										reportDOM.insertPrerequisiteResultNode(clonePrerequisiteResultNode, prerequisiteResultNode, actionNode);
-										report.addToFullDescription("\n5.EndPrequisiteResult Clone!");
+										report.addLineToFullDescription("5.EndPrequisiteResult Clone!");
 										
 										// il PrerequisiteNode selezionato è quello clonato
 										selectedPrerequisiteNode = clonePrerequisiteResultNode;
 									}	
 									else {
 										// il PrerequisiteNode selezionato è quello template
-										report.addToFullDescription("\n1.PrerequisiteResult/@result=EMPTY > Template!");
+										report.addLineToFullDescription("1.PrerequisiteResult/@result=EMPTY > Template!");
 										selectedPrerequisiteNode = prerequisiteResultNode;
 									}
 				
@@ -220,8 +220,8 @@ public class TestManagerImpl implements TestManagerRemote {
 									// Set Prerequisite
 									
 									if (report.getTempResult() != null) {
-										report.addToFullDescription("\nTAF Execution: " + report.getTempResult().getGlobalResult());
-										report.addToFullDescription("\nisPrerequisite: " + tafRicorsiva.isPrerequisite());
+										report.addLineToFullDescription("TAF Execution: " + report.getTempResult().getGlobalResult());
+										report.addLineToFullDescription("isPrerequisite: " + tafRicorsiva.isPrerequisite());
 										
 										reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), tafRicorsiva.getName(), tafRicorsiva.getNote(), report.getTempResult().getGlobalResult(), report.getTempResult().getLine(), report.getTempResult().getMessage());
 
@@ -229,7 +229,7 @@ public class TestManagerImpl implements TestManagerRemote {
 									else {
 										reportDOM.setPrerequisiteResult(selectedPrerequisiteNode, new Long(j), tafRicorsiva.getName(), tafRicorsiva.getNote(), "syserror", 0, "Validation System Error: check Validation Project from TestManagerImpl.executeTAF method.");
 										
-										report.addToFullDescription("\nTAF Execution: tempResult NULL");
+										report.addLineToFullDescription("TAF Execution: tempResult NULL");
 									}
 									
 									reportDOM.setNodeAttribute(selectedPrerequisiteNode, "id", tafRicorsiva.getName() + "-" + i + "-" + j);
@@ -247,7 +247,7 @@ public class TestManagerImpl implements TestManagerRemote {
 					
 									
 									sumPrerequisites = sumPrerequisites && report.isPartialResultSuccessfully();
-									report.addToFullDescription("\nsumPrerequisites: " + sumPrerequisites);
+									report.addLineToFullDescription("sumPrerequisites: " + sumPrerequisites);
 									
 									// Se il prerequisito è andato male ed era obbligatorio... esco
 									if (!report.isPartialResultSuccessfully() && tafRicorsiva.getPrescription().equals(Constants.MANDATORY))
@@ -292,24 +292,24 @@ public class TestManagerImpl implements TestManagerRemote {
 
 			RuleManagerImpl testRuleManager = new RuleManagerImpl();
 			
-			report.addToFullDescription("\n- Prerequisite OK... EXE Predicate");
-			
+			report.addLineToFullDescription("--- Prerequisite OK... EXE Predicate");
+			report.addLineToFullDescription("--- TAF Target:" + taf.getTarget().getValue());
 			
 			
 			// TODO EXECUTE of Predicate
 			report = testRuleManager.executeTestRule(taf, session);
 			//report.setPartialResultSuccessfully(okPredicate);
-			report.addToFullDescription("\n-POST executeTAF call (okPrerequisites)\n");
+			report.addLineToFullDescription("\n-POST executeTAF call (okPrerequisites)");
 			
 			
 			
 			
 			if (report.getTempResult() != null) {
-				report.addToFullDescription("\nTest Rule Output: " + report.getTempResult().getGlobalResult());
-				report.addToFullDescription("\nPartial Result post executeTestRule: " + report.isPartialResultSuccessfully());
+				report.addLineToFullDescription("Test Rule Output: " + report.getTempResult().getGlobalResult());
+				report.addLineToFullDescription("Partial Result post executeTestRule: " + report.isPartialResultSuccessfully());
 			}
 			else
-				report.addToFullDescription("\nNo output to append. Test Rule RESULT SUCCESSFUL\n");
+				report.addLineToFullDescription("No output to append. Test Rule RESULT SUCCESSFUL");
 			
 			// TODO MI SERVE SAPERE SE SI TRATTA DI ACTION O DI PREREQUISITE
 			// SE TAF = ACTION INSERISCO IN RESULTS > TESTRESULT			
@@ -325,7 +325,7 @@ public class TestManagerImpl implements TestManagerRemote {
 		
 		}
 		else {
-			report.addToFullDescription("\nPrerequisite FAIL in the Execution of TAF: " + taf.getName());
+			report.addLineToFullDescription("Prerequisite FAIL in the Execution of TAF: " + taf.getName());
 			
 			String message = "";
 			if (tafRicorsiva != null) {
@@ -345,8 +345,8 @@ public class TestManagerImpl implements TestManagerRemote {
 			
 		}
 		
-		report.addToFullDescription("\nEND executeTAF: " + taf.getName());
-		report.addToFullDescription("\n----\n");
+		report.addLineToFullDescription("END executeTAF: " + taf.getName());
+		report.addLineToFullDescription("----\n");
 		
 // TODO QUI IL REPORT NON VIENE PERSISISTITO (POSSO RICHIAMARE DA QUESTA CLASSE L'EJB?)
 		// FORSE IN QUESTO CASO E' MEGLIO RITORNARLO COME VALORE DI RITORNO
