@@ -103,7 +103,8 @@ public class UserManagerImpl implements UserManagerRemote {
 				XLabFileManager.createDir(absGenericUserFilePath.concat(PropertiesUtil.getReportsDirProperty()));
 				XLabFileManager.createDir(absGenericUserFilePath.concat(PropertiesUtil.getTestPlansDirProperty()));
 				XLabFileManager.createDir(absGenericUserFilePath.concat(PropertiesUtil.getLogsDirProperty()));
-
+				XLabFileManager.createDir(absGenericUserFilePath.concat(PropertiesUtil.getWSDirProperty()));
+				
 				System.out.println("Metodo createUserFileSystem - OK File System CREATED!");
 			}
 			else

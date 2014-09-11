@@ -8,25 +8,22 @@ import it.enea.xlab.tebes.common.SUTConstants;
 import it.enea.xlab.tebes.entity.FileStore;
 import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Report;
+import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.Session;
-import it.enea.xlab.tebes.entity.TestResult;
-import it.enea.xlab.tebes.external.jolie.gjs.GJS;
+import it.enea.xlab.tebes.entity.TextStore;
+import it.enea.xlab.tebes.external.jolie.gjs.GJSConstants;
 import it.enea.xlab.tebes.input.FileManagerRemote;
 import it.enea.xlab.tebes.model.TAF;
 import it.enea.xlab.tebes.model.TestRule;
 import it.enea.xlab.tebes.report.ReportManagerRemote;
-import it.enea.xlab.validation.ValidationManagerRemote;
-import it.enea.xlab.validation.XErrorMessage;
-
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.naming.NamingException;
+
+import org.xlab.file.XLabFileManager;
+import org.xlab.utilities.XLabDates;
 
  
 
@@ -35,8 +32,6 @@ import javax.naming.NamingException;
 @Interceptors({Profile.class})
 public class RuleManagerImpl implements RuleManagerRemote {
 	
-	@EJB
-	private ValidationManagerRemote validationManager; 
 
 	@EJB
 	private FileManagerRemote fileManager; 
@@ -58,10 +53,10 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		report.addLineToFullDescription("---Target Type: " + taf.getTarget().getType());
 		
 		report.addLineToFullDescription("\n");
-		report.addLineToFullDescription("---- TEST RULE ----");
+		report.addLineToFullDescription("---- TEST EXECUTION ----");
 		TestRule testRule = taf.getPredicate();
-		report.addLineToFullDescription("- Language: " + testRule.getLanguage());
-		report.addLineToFullDescription("- Value: " + testRule.getValue());
+		report.addLineToFullDescription("---- Language: " + testRule.getLanguage());
+		report.addLineToFullDescription("---- Value: " + testRule.getValue());
 		
 		
 		
@@ -83,6 +78,8 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		if (taf.getTarget().getType().equals(SUTConstants.SUT_TYPE1_DOCUMENT)) {
 			
 			report.addLineToFullDescription("---- DOCUMENT Level recognized");
+			
+			DocumentManager documentManager = new DocumentManager();
 			
 			try {
 				Input input = taf.getInputs().get(0);
@@ -119,7 +116,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 					report.addLineToFullDescription("-executeTestRule: xml: " + fileRelPath);
 					report.addLineToFullDescription("-executeTestRule: xsd: " + testRule.getValue());
 					
-					report = xmlSchemaValidation( fileRelPath, schema, report );
+					report = documentManager.xmlSchemaValidation( fileRelPath, schema, report );
 					
 					report.addLineToFullDescription("-END XMLSCHEMA Validation");
 				}			
@@ -140,7 +137,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 					}*/
 						
 					
-					report = schematronValidation(xmlString, schematron, report);
+					report = documentManager.schematronValidation(xmlString, schematron, report);
 					
 					report.addLineToFullDescription("-END SCHEMATRON Validation");
 				}
@@ -154,7 +151,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 					
 					report.addLineToFullDescription("-TESTRULE: " + testRule.getValue());
 		
-					report = xPathValidation(xmlString, testRule.getValue(), report);
+					report = documentManager.xPathValidation(xmlString, testRule.getValue(), report);
 					
 					report.addLineToFullDescription("-END XPATH Validation");
 				}
@@ -181,10 +178,14 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		// CASO 2: TRANSPORT //
 		///////////////////////
 		if (taf.getTarget().getType().equals(SUTConstants.SUT_TYPE2_TRANSPORT)) {
-			
-			
+					
 			report.addLineToFullDescription("---- TRANSPORT Level recognized");
-			report.addLineToFullDescription("---- Subcase: " + taf.getInputs().get(0).getInteraction());
+			
+			TransportManager transportManager = new TransportManager();
+			
+			
+			
+			report.addLineToFullDescription("---- Subcase: " + taf.getTarget().getValue());
 			 
 			
 			// NEL CASO TRANSPORT ABBIAMO 4 CASI, RELATIVI A 4 TIPI DI SUT DA TESTARE: 
@@ -192,17 +193,68 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			// C'E' SEMPRE UN INPUT (QUANDO NON C'E'?)
 			
 			
-			// 2.4 Transport WS_SERVER Validation
+			
+			/////////////////////////////
+			// 2.4 Transport WS_SERVER //
+			/////////////////////////////
 			// In questo caso l'utente espone il WS e richiama la generazione del Client
-			if (taf.getInputs().get(0).getInteraction().equals(SUTConstants.INTERACTION_WS_SERVER)) {
+			if ( taf.getTarget().getValue().equals(SUTInteraction.WS_SERVER)) {
+				
+				report.addLineToFullDescription("---- Preparing for calling to GJS WS-Generator");
 				
 				
-				report.addLineToFullDescription("---- CALLING GJS WS-Generator to generate WS Client...");
+				// 2.4.1 Definition of WS Identifier as: sutInteraction + datetime
+				String serviceId = SUTInteraction.WS_SERVER.concat(Constants.UNDERSCORE);
+				serviceId = serviceId.concat(XLabDates.getCurrentUTC());
+				// TODO quando ricarichi xlab-common, sostituisci usando metodo getCurrentCleanedUTC()
+				serviceId = serviceId.replace(":", "");
+				serviceId = serviceId.replace("-", "");
+				
+				report.addLineToFullDescription("---- Defined Service ID: " + serviceId);
 				
 				
-				this.WSServerValidation(report);
+				// 2.4.2 WSDL SUT Parameters
+				SUTInteraction sutInteraction = session.getSut().getInteraction();
+				String wsdl = sutInteraction.getEndpoint();
+				String operation = sutInteraction.getOperation();
+				String port = sutInteraction.getPort();
 				
-				report.addLineToFullDescription("---- OK CALLED GJS WS-Generator.");
+				report.addLineToFullDescription("----- Add WSDL parameters");
+				report.addLineToFullDescription("------ WSDL: " + wsdl);
+				report.addLineToFullDescription("------ Operation: " + operation);
+				report.addLineToFullDescription("------ Port: " + port);
+				
+				
+				// 2.4.3 GJS Output
+				String gjsOutputPath = PropertiesUtil.getUserWSDirPath(session.getUser().getId());
+				gjsOutputPath = gjsOutputPath.concat(serviceId).concat(Constants.SLASH);
+				XLabFileManager.createDir(gjsOutputPath);
+				String gjsOutputReport = GJSConstants.REPORT_NAME;
+				
+				report.addLineToFullDescription("---- Output: " + gjsOutputPath + gjsOutputReport);
+				
+				
+				// 2.4.4 Text Input Parameters
+				Input inputTemp;
+				int inputNumber = taf.getInputs().size();
+				String[][] parameters = new String[inputNumber][inputNumber];	
+				for (int i=0; i<inputNumber; i++) {
+
+					inputTemp = taf.getInputs().get(i);				
+					TextStore text = fileManager.readTextbyIdRef(inputTemp.getFileIdRef());
+
+					parameters[i][0] = text.getLabel();
+					parameters[i][1] = text.getValue();
+					
+					report.addLineToFullDescription("----- Add Text Input: " + text.getLabel() + " - " + text.getValue());
+				}
+
+				report.addLineToFullDescription("---- Start CALL GJS WS-Generator to generate WS CLIENT...");
+				
+				// WS-SERVER CALL
+				report = transportManager.WSServerValidation(wsdl, operation, port, serviceId, gjsOutputPath, gjsOutputReport, parameters, report);			
+				
+				report.addLineToFullDescription("---- OK. End CALL to GJS WS-Generator.");
 				
 			} // END CASE 2.4
 			
@@ -219,228 +271,14 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		
 		
 		
-		report.addLineToFullDescription("-------------------");
-		
-		
-		return report;
-	}
-	
-
-	public Report xmlSchemaValidation(String xmlString, String xsdString, Report report) {
-
-		
-		
-		// TODO
-		// verifica sia uno schematron valido
-
-		report.addLineToFullDescription("XML Schema Validation - XML: " + xmlString);
-		report.addLineToFullDescription("XML Schema Validation - XSD: " + xsdString);
-		
-
-		//String xmlRelPathFileName = "TeBES_Artifacts/users/0/docs/ubl-invoice.xml";
-		//String xsdURL = "http://winter.bologna.enea.it/peppol_schema_rep/xsd/maindoc/UBL-Invoice-2.0.xsd";
-		
-		XErrorMessage emList[] = null;
-
-		try {
-			validationManager = JNDIServices.getValidationManagerService();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		TestResult result;
-		
-		try {
-			emList = validationManager.validation(xmlString, xsdString);
-			
-			ArrayList<TestResult> testResultList = new ArrayList<TestResult>(); 
-			
-			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
-			
-			if (emList.length > 0) {
-				
-				String errorType;
-				if (emList[0].getErrorType().equals("ERROR"))
-					errorType = TestResult.FAILURE_RESULT;
-				else
-					errorType = TestResult.ERROR_RESULT;
-				
-				result = new TestResult(errorType, emList[0].getLineNumber(), emList[0].getDescription());
-				report.setPartialResultSuccessfully(false);
-				
-				// NEW
-				
-				for (int i=0; i<emList.length; i++) {
-					
-					testResultList.add(new TestResult(errorType, emList[i].getLineNumber(), emList[i].getDescription()));
-					report.addLineToFullDescription("Add TestResult " + i + ": "  
-					+ errorType + " " + emList[i].getLineNumber() + " " + emList[i].getDescription() );
-				}
-				report.setTempResultList(testResultList);
-				
-			}
-			else {
-				result = new TestResult(TestResult.PASS_RESULT, 0, "Success: Empty Error Message List");
-				report.setPartialResultSuccessfully(true);
-				
-				testResultList.add(result);
-				report.setTempResultList(testResultList);
-			}
-		
-			report.setTempResult(result);
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-			
-			result = new TestResult(TestResult.ERROR_RESULT, 0, e.getMessage());		
-			report.setTempResult(result);
-			report.setPartialResultSuccessfully(false);
-			return report;
-		}
-		
-
-		return report;
-	}	
-
-	
-	public Report schematronValidation(String xmlString, String xmlSchematron, Report report) {
-
-		
-		// TODO
-		// verifica sia uno schematron valido
-		
-		XErrorMessage emList[] = null;
-
-		try {
-
-			validationManager = JNDIServices.getValidationManagerService();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		TestResult result;
-		try {
-
-			emList = validationManager.validation(xmlString, xmlSchematron);
-
-			ArrayList<TestResult> testResultList = new ArrayList<TestResult>(); 
-			
-			// TODO considero solo il primo record (dalle prove... solo il primo veniva effettivamente usato)
-			
-			if (emList.length > 0) {
-				
-				String errorType;
-				if (emList[0].getErrorType().equals("ERROR"))
-					errorType = TestResult.FAILURE_RESULT;
-				else
-					errorType = TestResult.ERROR_RESULT;
-				
-				result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
-				report.setPartialResultSuccessfully(false);
-				
-				// NEW
-				
-				for (int i=0; i<emList.length; i++) {
-					
-					testResultList.add(new TestResult(errorType, emList[i].getLineNumber(), emList[i].getDescription()));
-					
-					report.addLineToFullDescription("Add TestResult " + i + ": "  
-							+ errorType + " " + emList[i].getLineNumber() + " " + emList[i].getDescription() );
-				}
-				report.setTempResultList(testResultList);
-			}
-			else {
-				
-				/*String errorType;
-				if (emList[0].getErrorType().equals("ERROR"))
-					errorType = TestResult.FAILURE_RESULT;
-				else
-					errorType = TestResult.ERROR_RESULT;*/
-				
-				result = new TestResult(TestResult.PASS_RESULT, 0, "Success: Empty Error Message List");
-				report.setPartialResultSuccessfully(true);
-				
-				testResultList.add(result);
-				report.setTempResultList(testResultList);
-			}
-			
-			report.setTempResult(result);
-
-		} catch (Exception e) {
-			
-			result = new TestResult(TestResult.ERROR_RESULT, 0, e.getMessage());		
-			report.setTempResult(result);
-			
-			e.printStackTrace();
-			
-			
-			report.setPartialResultSuccessfully(false);
-			return report;
-		}
-		
+		report.addLineToFullDescription("------------------------");
 		
 		return report;
 	}
+	
 
 
-	public Report xPathValidation(String xmlString, String xpath, Report report) {
-		
-		report.setPartialResultSuccessfully(true);
-		return report;
-	}
 	
 	
-	
-	public Report WSServerValidation(Report report) {
-		
-
-		String[][] parameters = new String[2][2];
-		
-		parameters[0][0] = "CountryName";
-		parameters[0][1] = "Italy";
-
-		parameters[1][0] = "CityName";
-		parameters[1][1] = "Bologna";
-
-		
-			try {
-				GJS.generateClientWS("http://www.webservicex.net/globalweather.asmx?WSDL", 
-						"GetWeather", 
-						"GlobalWeatherSoap",
-						"test",
-						"./test/tmppath",
-						"report.xml",
-						"standard",
-						parameters);
-				
-				report.setPartialResultSuccessfully(true);
-				
-			} 
-			
-			
-			catch (ConnectException e) {
-				report.setPartialResultSuccessfully(false);
-				report.addLineToFullDescription(e.getMessage());
-				reportManager.saveLog(report, "WSServerValidation.ConnectException");
-				
-			} catch (IOException e) {
-				report.setPartialResultSuccessfully(false);
-				report.addLineToFullDescription(e.getMessage());
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				report.setPartialResultSuccessfully(false);
-				report.addLineToFullDescription(e.getMessage());
-				e.printStackTrace();
-			} catch (Exception e) {
-				report.setPartialResultSuccessfully(false);
-				report.addLineToFullDescription(e.getMessage());
-				e.printStackTrace();
-			} finally {			
-				return report;
-			}
-
-	}
 }
 

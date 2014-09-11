@@ -7,9 +7,5 @@ public class SUTConstants {
 	public static final String SUT_TYPE2_TRANSPORT = "transport";
 	public static final String SUT_TYPE3_PROCESS = "process";
 	
-	// SUT Interactions
-	public static final String INTERACTION_WEBSITE = "website";
-	public static final String INTERACTION_EMAIL = "email";
-	public static final String INTERACTION_WS_SERVER = "webservice-server";
-	public static final String INTERACTION_WS_CLIENT = "webservice-client";
+
 }

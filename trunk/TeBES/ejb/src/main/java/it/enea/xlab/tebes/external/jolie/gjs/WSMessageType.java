@@ -6,15 +6,20 @@ import java.util.List;
 import jolie.runtime.Value;
 
 public class WSMessageType {
-	
 	public class parameter {
-		private String _value;
+		private Object _value;
 		private String _key;
 
 		public parameter(Value v){
 
 			if (v.hasChildren("value")){
-				_value = v.getFirstChild("value").strValue();
+				if(v.getFirstChild("value").isDouble()){
+					_value = v.getFirstChild("value").doubleValue();
+				}else if(v.getFirstChild("value").isString()){
+					_value = v.getFirstChild("value").strValue();
+				}else if(v.getFirstChild("value").isInt()){
+					_value = v.getFirstChild("value").intValue();
+				}
 			}
 			if (v.hasChildren("key")){
 				_key= v.getFirstChild("key").strValue();
@@ -23,11 +28,11 @@ public class WSMessageType {
 		public parameter(){
 
 		}
-		public String get__Value(){
+		public Object get__Value(){
 
 			return _value;
 		}
-		public void set__Value(String value ){
+		public void set__Value(Object value ){
 
 			_value = value;
 		}
@@ -39,21 +44,22 @@ public class WSMessageType {
 
 			_key = value;
 		}
-		
 		public Value getValue(){
 			Value vReturn = Value.create();
 			if((_value!=null)){
-				vReturn.getNewChild("value").setValue(_value);
-				//vReturn.getNewChild("value").deepCopy(_value.getValue());
-			}
+				if(_value instanceof Integer){
+					vReturn.getNewChild("value").setValue(((Integer)(_value)).intValue());
+				}else if(_value instanceof Double){
+					vReturn.getNewChild("value").setValue(((Double)(_value)).doubleValue());
+				}else if(_value instanceof String){
+					vReturn.getNewChild("value").setValue((String)(_value));
+				}}
 			if((_key!=null)){
 				vReturn.getNewChild("key").setValue(_key);
 			}
 			return vReturn ;
-			
 		}
 	}
-	
 	private List<parameter> _parameter;
 
 	public WSMessageType(Value v){

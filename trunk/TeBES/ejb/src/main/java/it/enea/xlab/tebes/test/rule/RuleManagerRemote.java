@@ -12,9 +12,9 @@ public interface RuleManagerRemote {
 	
 	public Report executeTestRule(TAF taf, Session session);
 	
-	public Report schematronValidation(String xmlString, String xmlSchematron, Report report);
+	/*public Report schematronValidation(String xmlString, String xmlSchematron, Report report);
 	
 	public Report xPathValidation(String xmlString, String xpath, Report report);
 	
-	public Report xmlSchemaValidation(String xmlString, String xsdString, Report report);
+	public Report xmlSchemaValidation(String xmlString, String xsdString, Report report);*/
 }

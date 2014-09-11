@@ -24,7 +24,7 @@ public class Input implements Serializable {
 	
 	public static final String REACTION_UPLOAD = "upload";
 	public static final String REACTION_TEXT = "text";
-	//private static final String REACTION_MESSAGE = "message";
+	public static final String REACTION_MESSAGE = "message";
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

@@ -37,8 +37,7 @@
                 	<tebes:Name>EMPTY</tebes:Name>
                 	<tebes:Description>EMPTY</tebes:Description>
                 	<tebes:Type>EMPTY</tebes:Type>
-                    <tebes:Language>EMPTY</tebes:Language>
-                    <tebes:Interaction>EMPTY</tebes:Interaction>
+                    <tebes:Interaction endpoint="EMPTY" operation="EMPTY" port="EMPTY">EMPTY</tebes:Interaction>
                 </tebes:SUT>
             </tebes:SUTList>
         </tebes:User>
@@ -94,7 +93,8 @@
                     		name="EMPTY"
                     		result="EMPTY"
                     		line="0"
-                            message="EMPTY" />
+                            message="EMPTY" 
+                            link="EMPTY" />
                 </tebes:TestResults>
                 <tebes:Prerequisites>                	
                     <tebes:PrerequisiteResult
@@ -106,7 +106,8 @@
 		                    		name="EMPTY"
 		                    		result="EMPTY"
 		                    		line="0"
-		                            message="EMPTY" />
+		                            message="EMPTY" 
+		                            link="EMPTY" />
                     </tebes:PrerequisiteResult>
                 </tebes:Prerequisites>
             </tebes:TestAction>

@@ -223,10 +223,19 @@ public class ReportManagerImpl implements ReportManagerRemote {
 			// Aggiorno blocco XML relativo a SUT
 			SUT sut = session.getSut();
 			reportDOM.setSUTId(sut.getId());
-			reportDOM.setSUTName(sut.getName());
-			reportDOM.setSUTType(sut.getType());
-			reportDOM.setSUTInteraction(sut.getInteraction().getType());						
-			reportDOM.setSUTDescription(sut.getDescription());
+			Node sutNode = reportDOM.getSUTNodeById(sut.getId().toString());
+			reportDOM.setSUTName(sutNode, sut.getName());
+			reportDOM.setSUTType(sutNode, sut.getType());
+			reportDOM.setSUTInteraction(sutNode, sut.getInteraction().getType());
+			Node sutInteractionNode = reportDOM.getSUTInteractionNode(sutNode);
+			if (sut.getInteraction().getEndpoint() != null)
+				reportDOM.setSUTInteractionEndPoint(sutInteractionNode, sut.getInteraction().getEndpoint());
+			if (sut.getInteraction().getOperation() != null)
+				reportDOM.setSUTInteractionOperation(sutInteractionNode, sut.getInteraction().getOperation());
+			if (sut.getInteraction().getPort()!= null)
+				reportDOM.setSUTInteractionPort(sutInteractionNode, sut.getInteraction().getPort());
+			
+			reportDOM.setSUTDescription(sutNode, sut.getDescription());
 			fullDescription = fullDescription.concat("\nReport DOM XML SUT updated");
 					
 			// Aggiorno blocco XML relativo a TestPlan	

@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.xlab.file.XLabFileManager;
 import org.xlab.net.XURL;
 
 
@@ -58,7 +57,7 @@ public class SessionManagerImplITCase {
 	private static String TESTPLAN_1 = "TP-1";
 	private static String TESTPLAN_2 = "TP-2";
 	private static String TESTPLAN_80 = "TP-80";
-	//private static String TESTPLAN_81 = "TP-81";
+	private static String TESTPLAN_81 = "TP-81";
 	
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
@@ -158,11 +157,11 @@ public class SessionManagerImplITCase {
 		
 		// Create superuser SUTs (SUTs supported by TeBES)
 		logger.info("4) SUT creating...");
-		SUTInteraction interactionWebSite = new SUTInteraction(SUTConstants.INTERACTION_WEBSITE);
-		SUTInteraction interactionEmail = new SUTInteraction(SUTConstants.INTERACTION_EMAIL);
-		SUTInteraction interactionWSClient = new SUTInteraction(SUTConstants.INTERACTION_WS_CLIENT);
-		SUTInteraction interactionWSServer = new SUTInteraction(SUTConstants.INTERACTION_WS_SERVER);
-			
+		SUTInteraction interactionWebSite = new SUTInteraction(SUTInteraction.WEBSITE);
+		SUTInteraction interactionEmail = new SUTInteraction(SUTInteraction.EMAIL);
+		SUTInteraction interactionWSClient = new SUTInteraction(SUTInteraction.WS_CLIENT);
+		SUTInteraction interactionWSServer = new SUTInteraction(SUTInteraction.WS_SERVER);
+		interactionWSServer.setEndpoint("http://www.webservicex.net/globalweather.asmx?WSDL");
 		ArrayList<SUT> sutList = new ArrayList<SUT>();
 		
 		// SUT supportati per il tipo "document"
@@ -314,7 +313,7 @@ public class SessionManagerImplITCase {
 			Assert.assertTrue(systemTestPlanList.size()>0);
 			
 			TestPlan testPlan = null;
-			Long testPlan91Id, testPlan1Id, testPlan80Id, testPlanIdTemp;
+			Long testPlan91Id, testPlan1Id, testPlan80Id, testPlan81Id, testPlanIdTemp;
 			String tpString = "";
 			
 			Hashtable<String, TestPlan> tpTable = new Hashtable<String, TestPlan>();
@@ -377,28 +376,35 @@ public class SessionManagerImplITCase {
 	
 			TestPlan testPlan80 = tpTable.get(TESTPLAN_80);
 			Assert.assertNotNull(testPlan80);
+
+			TestPlan testPlan81 = tpTable.get(TESTPLAN_81);
+			Assert.assertNotNull(testPlan81);
 			
 			// Copia e importazione del TestPlan scelto per l'utente (currentUser)
 			testPlan91Id = testPlanController.cloneTestPlan(testPlan91, user1Id);
 			testPlan1Id = testPlanController.cloneTestPlan(testPlan1, user2Id);
 			testPlan80Id = testPlanController.cloneTestPlan(testPlan80, user3Id);
+			testPlan81Id = testPlanController.cloneTestPlan(testPlan81, user3Id);
 			Assert.assertTrue(testPlan91Id.intValue()>0);
 			Assert.assertTrue(testPlan1Id.intValue()>0);
 			Assert.assertTrue(testPlan80Id.intValue()>0);
+			Assert.assertTrue(testPlan81Id.intValue()>0);
 			
 			// Il testPlan selezionato diventa quello clonato per lo User
 			testPlan91 = testPlanController.readTestPlan(testPlan91Id);
 			testPlan1 = testPlanController.readTestPlan(testPlan1Id);
 			testPlan80 = testPlanController.readTestPlan(testPlan80Id);
+			testPlan81 = testPlanController.readTestPlan(testPlan81Id);
 			Assert.assertNotNull(testPlan91.getWorkflow());
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions());
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0));
 			
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0).getInputs());
-			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0).getInputs().get(0));		
+			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0).getInputs().get(0));
+			Assert.assertNotNull(testPlan81.getWorkflow().getActions().get(0).getInputs().get(0));	
 	
 			logger.info("OK! IMPORTED selected TestPlans " + 
-					testPlan91.getName() + ", " + testPlan1.getName() + " and " + testPlan80.getName() +
+					testPlan91.getName() + ", " + testPlan1.getName() + ", " + testPlan80.getName() + ", " + testPlan81.getName() +
 					" for users " + user1.getName() + ", " + user2.getName() + " and " + user3.getName());
 			
 			
@@ -419,7 +425,7 @@ public class SessionManagerImplITCase {
 			
 			// 4. l'utente sceglie un'interazione tra quelle disponibili, deve avvenire un cast
 			SUTInteraction defaultInteraction = (SUTInteraction) sutInteractionList.get(0);
-			Assert.assertTrue(defaultInteraction.getType().equals(SUTConstants.INTERACTION_WEBSITE));
+			Assert.assertTrue(defaultInteraction.getType().equals(SUTInteraction.WEBSITE));
 	
 			// 5. creo l'interazione utente con il tipo scelto
 			SUTInteraction interaction4User= new SUTInteraction(defaultInteraction.getType());
@@ -470,14 +476,36 @@ public class SessionManagerImplITCase {
 			// interazioni per transoport
 			
 			SUTInteraction wsServerInteraction = (SUTInteraction) sutInteractionList.get(2);
-			Assert.assertTrue(wsServerInteraction.getType().equals(SUTConstants.INTERACTION_WS_SERVER));
+			Assert.assertTrue(wsServerInteraction.getType().equals(SUTInteraction.WS_SERVER));
 			
 			SUTInteraction interactionWSServer= new SUTInteraction(wsServerInteraction.getType());
 			interactionWSServer.setEndpoint("http://www.webservicex.net/globalweather.asmx?WSDL");
+			interactionWSServer.setOperation("GetWeather");
+			interactionWSServer.setPort("GlobalWeatherSoap");
 			
 			SUT sutWSServer = new SUT("WS-Server", transportSUTType, interactionWSServer, "sut ws-server");
 			Long sutServerId = sutController.createSUT(sutWSServer, user3);
+			// --- fine DEFINE SUT WS-SERVER ---		
+			
+			
+			
+			// --- DEFINISCO SUT WS-CLIENT ---
+			// interazioni per transoport
+			
+			SUTInteraction wsClientInteraction = (SUTInteraction) sutInteractionList.get(1);
+			Assert.assertTrue(wsClientInteraction.getType().equals(SUTInteraction.WS_CLIENT));
+			
+			SUTInteraction interactionWSClient= new SUTInteraction(wsClientInteraction.getType());
+			interactionWSClient.setEndpoint("http://www.webservicex.net/globalweather.asmx?WSDL");
+			interactionWSClient.setOperation("GetWeather");
+			interactionWSClient.setPort("GlobalWeatherSoap");
+			
+			SUT sutWSClient = new SUT("WS-Client", transportSUTType, interactionWSClient, "sut ws-client");
+			Long sutClientId = sutController.createSUT(sutWSClient, user3);
 			// --- fine DEFINE SUT WS-CLIENT ---		
+						
+			
+			
 			
 			// Nel momento in cui l'utente avvia il test
 			// il sistema, nel controller, effettua prima una verifica di consistenza ( check() )
@@ -490,9 +518,9 @@ public class SessionManagerImplITCase {
 			
 			
 			
-			/*
-			 * SESSION1: 2 actions for correct UBL invoice and wrong UBL invoice
-			 * Long session91Id = sessionController.createSession(user1Id, sutId, testPlan91Id);
+		
+			// SESSION1: 2 actions for correct UBL invoice and wrong UBL invoice
+			Long session91Id = sessionController.createSession(user1Id, sutId, testPlan91Id);
 			Assert.assertNotNull(session91Id);
 			logger.info("sessionId:" + session91Id);
 			Assert.assertTrue(session91Id.intValue()>0);		
@@ -500,7 +528,7 @@ public class SessionManagerImplITCase {
 			
 			// Preparo una lista di file per ogni sessione di test
 			String[] fileList91 = {"ubl-invoice.xml", "ubl-invoice_withError.xml"};
-			*/
+			
 	
 			
 			
@@ -527,7 +555,15 @@ public class SessionManagerImplITCase {
 			
 			
 			
-
+			// SESSION4: 1 actions for Global Weather Web Service (User-ClientWS and TeBES-ServerWS)
+			Long session81Id = sessionController.createSession(user3Id, sutClientId, testPlan81Id);
+			Assert.assertNotNull(session81Id);
+			logger.info("sessionId:" + session81Id);
+			Assert.assertTrue(session81Id.intValue()>0);		
+			logger.info("OK! CREATE SESSION4 with id " + session81Id);	
+			logger.info("");	
+			
+			
 			
 
 			
@@ -538,7 +574,7 @@ public class SessionManagerImplITCase {
 			// List of Input fot the Global Weather case = 0 Input required
 			String[] fileList80 = {"Bologna", "Italy"};
 			
-			//String[] fileList81 = {"response.xml"};
+			//String[] fileList81 = {"ok"};
 			
 			
 			// SESSION EXECUTION
@@ -549,10 +585,8 @@ public class SessionManagerImplITCase {
 			// Global Weather Web Service
 			execution(session80Id, fileList80);
 			
-			// eStockFlow
-			//execution(session1Id, fileList81);
-			
-			
+			// UserClient-TeBESWS
+			//execution(session81Id, fileList81);			
 			
 		
 		
@@ -911,17 +945,39 @@ public class SessionManagerImplITCase {
 								logger.info("Text Value: " + textValue);
 								
 								currentSession = fileController.textUpload(inputTemp, textValue, currentSession);
-								
-								//currentSession = fileController.upload(inputTemp, fileName, sut.getType(), fileByteArray, currentSession);
-								
-				
-								
+
 								logger.info("OK Input " + inputTemp.getName() + " by TEXT");
-							}
+								
+							} // END if REACTION_TEXT
 							
-							// X. NO PREVIOUS CASE -> EXCEPTION 
+							// 3. MESSAGE	
+							if (inputTemp.getGuiReaction().equals(Input.REACTION_MESSAGE)) {
+								
+								logger.info("No Input required but TEXT MESSAGE displayed.");
+
+								
+								////////////////
+								// TODO nell'input by message non c'è un valore di input MA
+								// FORSE c'è quello che l'utente preme: OK o ANNULLA
+								// SE OK vado a vedere il risultato della chiamata client-WS
+								// SE ANNULLA inserisco nel report un messaggio di test annullato per questa Action.
+								
+								textValue = userInputList[inputCounter];
+								inputCounter++;
+								
+								logger.info("Text Label: " + inputTemp.getName()); 
+								logger.info("Text Value: " + textValue);
+								
+								currentSession = fileController.textUpload(inputTemp, textValue, currentSession);
+
+								logger.info("OK Input " + inputTemp.getName() + " by MESSAGE");
+								
+							} // END if REACTION_MESSAGE
+							
+							// 4. NO PREVIOUS CASE -> EXCEPTION 
 							if ( !inputTemp.getGuiReaction().equals(Input.REACTION_TEXT) && 
-									!inputTemp.getGuiReaction().equals(Input.REACTION_UPLOAD) ) {
+									!inputTemp.getGuiReaction().equals(Input.REACTION_UPLOAD) &&
+										!inputTemp.getGuiReaction().equals(Input.REACTION_MESSAGE) ) {
 								
 										throw new Exception("Test Exception: Invalid GUI REACTION in Input: " + inputTemp.getName()); 
 							}
