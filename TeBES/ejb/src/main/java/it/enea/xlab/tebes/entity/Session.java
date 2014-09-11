@@ -80,7 +80,7 @@ public class Session implements Serializable {
 
 	@OneToMany(mappedBy="session",cascade = {CascadeType.ALL})
 	@LazyCollection(LazyCollectionOption.TRUE)
-	private List<Text> texts;
+	private List<TextStore> texts;
 	
 	private int actionMark;
 	
@@ -309,11 +309,11 @@ public class Session implements Serializable {
 		this.actionMark = actionMark;
 	}
 
-	public List<Text> getTexts() {
+	public List<TextStore> getTexts() {
 		return texts;
 	}
 
-	public void setTexts(List<Text> texts) {
+	public void setTexts(List<TextStore> texts) {
 		this.texts = texts;
 	}
 

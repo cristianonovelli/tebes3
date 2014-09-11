@@ -103,7 +103,7 @@ public class UserManagerController extends WebController<User> {
 			if (result > 0) {
 				
 				// Create default SUT
-				SUTInteraction interactionWebSite = new SUTInteraction(SUTConstants.INTERACTION_WEBSITE);
+				SUTInteraction interactionWebSite = new SUTInteraction(SUTInteraction.WEBSITE);
 				SUT defaultSUT = new SUT("DefaultSUT", SUTConstants.SUT_TYPE1_DOCUMENT, interactionWebSite, "Default SUT Document-WebSite for User " + user.getSurname());				
 				user = this.userManagerService.readUser(result);					
 				sutManagerService.createSUT(defaultSUT, user);

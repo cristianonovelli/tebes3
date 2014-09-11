@@ -5,7 +5,7 @@ import java.util.List;
 import it.enea.xlab.tebes.entity.FileStore;
 import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Session;
-import it.enea.xlab.tebes.entity.Text;
+import it.enea.xlab.tebes.entity.TextStore;
 
 import javax.ejb.Remote;
 
@@ -29,5 +29,5 @@ public interface FileManagerRemote {
 	
 	public boolean isTextIdPresent(String idRef);
 
-	public Text readTextbyIdRef(String idRef);
+	public TextStore readTextbyIdRef(String idRef);
 }

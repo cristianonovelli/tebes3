@@ -13,16 +13,24 @@ import javax.persistence.Table;
 @Table(name = "sutinteraction")
 public class SUTInteraction implements Serializable {
 
+	// SUT Interactions
+	public static final String WEBSITE = "website";
+	public static final String EMAIL = "email";
+	public static final String WS_SERVER = "webservice-server";
+	public static final String WS_CLIENT = "webservice-client";
+	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	// 
 	private String type;
 
-	private String endpoint;
-	
+	private String endpoint;	
+	private String operation;
+	private String port;
 
 	@OneToOne
 	private SUT sut;
@@ -72,6 +80,22 @@ public class SUTInteraction implements Serializable {
 	public void addToSUT(SUT s) {
 		
 		this.sut = s;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
 	}
 	
 	

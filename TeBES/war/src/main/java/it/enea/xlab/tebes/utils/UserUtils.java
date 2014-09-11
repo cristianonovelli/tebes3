@@ -39,7 +39,7 @@ public class UserUtils {
 				selectedType == null || selectedType.equals("") || selectedInteraction == null || selectedInteraction.equals("") ) 
 			return FormMessages.getErrorSutNotCompiled();
 			
-		if (!selectedInteraction.equals(SUTConstants.INTERACTION_WEBSITE) && ( (endpoint == null) || endpoint.equals("") ) )
+		if (!selectedInteraction.equals(SUTInteraction.WEBSITE) && ( (endpoint == null) || endpoint.equals("") ) )
 			return FormMessages.getErrorEndpointNotCompiled();
 		
 		return null;

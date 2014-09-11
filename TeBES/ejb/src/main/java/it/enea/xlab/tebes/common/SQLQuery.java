@@ -43,7 +43,7 @@ public class SQLQuery {
 	public static final String WHERE_TYPE = " WHERE f.type = ?";
 	//public static final String WHERE_SOURCE = " WHERE f.source = ?";
 	
-	public static final String SELECT_TEXTS = "SELECT t FROM Text AS t";
+	public static final String SELECT_TEXTS = "SELECT t FROM TextStore AS t";
 	public static final String WHERE_REFID2 = " WHERE t.refId = ?";
 	
 }

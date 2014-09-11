@@ -239,7 +239,7 @@ public class SUTManagerController extends WebController<SUT> {
 				this.selectedInteraction != null && !this.selectedInteraction.equals(SELECT_INTERACTION_DEFAULT) &&
 				this.selectedInteraction != null && !this.selectedInteraction.equals(SELECT_TYPE_DEFAULT)) {
 			
-			if(!this.selectedInteraction.equals(SUTConstants.INTERACTION_WEBSITE)) {
+			if(!this.selectedInteraction.equals(SUTInteraction.WEBSITE)) {
 				if(this.endpoint == null || this.endpoint.equals("")) {
 					
 					this.sutFormMessage = FormMessages.getErrorUserNotCompiled();
@@ -274,7 +274,7 @@ public class SUTManagerController extends WebController<SUT> {
 	public String onSelectedInteractionValue() {
 		
 		
-		if(!this.selectedInteraction.equals(SUTConstants.INTERACTION_WEBSITE))
+		if(!this.selectedInteraction.equals(SUTInteraction.WEBSITE))
 			this.showEndpointInput = true;
 		else
 			this.showEndpointInput = false;
@@ -353,7 +353,7 @@ public class SUTManagerController extends WebController<SUT> {
 		if (this.isSUTEditMode)
 			if (this.sut != null)
 				if (this.sut.getInteraction() != null)
-					if (!this.sut.getInteraction().getType().equals(SUTConstants.INTERACTION_WEBSITE))
+					if (!this.sut.getInteraction().getType().equals(SUTInteraction.WEBSITE))
 			this.showEndpointInput = true;
 		
 		return this.showEndpointInput;

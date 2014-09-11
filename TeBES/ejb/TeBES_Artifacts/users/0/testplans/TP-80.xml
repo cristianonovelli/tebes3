@@ -14,8 +14,8 @@
 	    <tebes:Id>80</tebes:Id>
 	    <tebes:Name>TP-80</tebes:Name>
 	    <tebes:State>draft</tebes:State>
-	    <tebes:Description lg="en">TP-80 Test Plan is used to test a Web Service Client for the Global Weather Web Service case.</tebes:Description>
-	    <tebes:Description lg="it">Il Test Plan TP-80 è usato per il test del trasporto Web Service Client per il caso Global Weather Web Service.</tebes:Description>
+	    <tebes:Description lg="en">TP-80 Test Plan is used to test a Web Service Server for the Global Weather Web Service case.</tebes:Description>
+	    <tebes:Description lg="it">Il Test Plan TP-80 è usato per il test del trasporto Web Service Server per il caso Global Weather Web Service.</tebes:Description>
 	    <tebes:UserId>0</tebes:UserId>
 	    <tebes:CreationDatetime>2014-08-21T16:43:00Z</tebes:CreationDatetime>
 	    <tebes:LastUpdateDatetime>2014-08-21T16:43:00Z</tebes:LastUpdateDatetime>
@@ -25,9 +25,8 @@
 	
 		<tebes:TestAction id="TA-1_TP-80" number="1">
 			
-			<tebes:ActionName>Web Service Client</tebes:ActionName>
-			<tebes:ActionDescription lg="en">Test of Client for the Global Weather Web Service.</tebes:ActionDescription>
-			<tebes:ActionDescription lg="it">Test Client per il Web Service Global Weather.</tebes:ActionDescription>
+			<tebes:ActionName>Web Service Server</tebes:ActionName>
+			<tebes:ActionDescription lg="en">Test of Server for the Global Weather Web Service.</tebes:ActionDescription>
 				
 			<tebes:Test 
 				lg="taml" 
@@ -44,8 +43,8 @@
 					<tebes:InputDescription lg="it">Campo Testuale 2 di 2: Città.</tebes:InputDescription>	
 					
 					<tebes:SUT 
-					    interaction="webservice-server"
-						type="transport" 
+					    type="transport"
+					    interaction="webservice-server" 
 						lg="soap"
 						fileIdRef="TI-1_transport-soap-webservice-server-IN-1_TA-1_TP-80">		    
 					</tebes:SUT>

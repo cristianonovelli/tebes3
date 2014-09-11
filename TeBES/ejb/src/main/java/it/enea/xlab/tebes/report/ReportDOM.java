@@ -1,9 +1,6 @@
 package it.enea.xlab.tebes.report;
 
-import it.enea.xlab.tebes.entity.TestResult;
-
 import java.io.IOException;
-import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -251,35 +248,55 @@ public class ReportDOM extends JXLabDOM {
 	//// Methods to handle SUT Node ////
 	////////////////////////////////////
 	
-	private Element getSUTElement() {
+	public Element getFirstSUTElement() {
 		
 		return (Element) getRootElement().getElementsByTagName("tebes:SUT").item(0);
 	}
+	
+	public Node getSUTNodeById(String id) {
+		
+		String xpath = "//Report/Session/User/SUTList/SUT[@id='" + id + "']";
 
+		return this.getNodesByXPath(xpath).item(0);
+	}
+	
 	public void setSUTId(Long sutId) {
 		
-		this.setIdAttribute(this.getSUTElement(), sutId.toString());	
+		this.setIdAttribute(this.getFirstSUTElement(), sutId.toString());	
 	}
 
-	private void setSUTChildNode(String nodeTagName, String value) {
+	/*private void setSUTChildNode(String nodeTagName, String value) {
 		
-		Element sutChildElement = (Element) this.getSUTElement().getElementsByTagName(nodeTagName).item(0);		
+		Element sutChildElement = (Element) this.getFirstSUTElement().getElementsByTagName(nodeTagName).item(0);		
+		sutChildElement.getChildNodes().item(0).setNodeValue(value);	
+	}*/
+
+	private void setSUTChildNode2(Element sutElement, String nodeTagName, String value) {
+		
+		Element sutChildElement = (Element) sutElement.getElementsByTagName(nodeTagName).item(0);		
 		sutChildElement.getChildNodes().item(0).setNodeValue(value);	
 	}
 	
-	public void setSUTName(String name) {
+	public Node getSUTInteractionNode(Node sut) {
+
+		return ((Element) sut).getElementsByTagName("tebes:Interaction").item(0);
+	}
+	
+	
+	
+	public void setSUTName(Node sut, String name) {
 		
-		this.setSUTChildNode("tebes:Name", name);			
+		this.setSUTChildNode2((Element) sut, "tebes:Name", name);			
 	}
 
-	public void setSUTType(String type) {
+	public void setSUTType(Node sut, String type) {
 		
-		this.setSUTChildNode("tebes:Type", type);
+		this.setSUTChildNode2((Element) sut, "tebes:Type", type);
 	}
 
-	public void setSUTLanguage(String language) {
+	public void setSUTLanguage(Node sut, String language) {
 		
-		this.setSUTChildNode("tebes:Language", language);
+		this.setSUTChildNode2((Element) sut, "tebes:Language", language);
 	}
 
 /*	public void setSUTReference(String reference) {
@@ -287,14 +304,32 @@ public class ReportDOM extends JXLabDOM {
 		this.setSUTChildNode("tebes:Reference", reference);	
 	}*/
 
-	public void setSUTInteraction(String interactionType) {
+	public void setSUTInteraction(Node sut, String interactionType) {
 		
-		this.setSUTChildNode("tebes:Interaction", interactionType);	
+		Element sutInteractionElement = (Element) this.getSUTInteractionNode((Element) sut);	
+		sutInteractionElement.getChildNodes().item(0).setNodeValue(interactionType);
 	}
 
-	public void setSUTDescription(String description) {
+	public void setSUTInteractionEndPoint(Node sutInteraction, String endpoint) {
 		
-		this.setSUTChildNode("tebes:Description", description);
+		this.setNodeAttribute(sutInteraction, "endpoint", endpoint);
+	}
+
+
+	public void setSUTInteractionOperation(Node sutInteraction, String operation) {
+		
+		this.setNodeAttribute(sutInteraction, "operation", operation);		
+	}
+
+
+	public void setSUTInteractionPort(Node sutInteraction, String port) {
+		
+		this.setNodeAttribute(sutInteraction, "port", port);
+	}
+	
+	public void setSUTDescription(Node sut, String description) {
+		
+		this.setSUTChildNode2((Element) sut, "tebes:Description", description);
 	}
 
 	
@@ -490,7 +525,7 @@ public class ReportDOM extends JXLabDOM {
 	}
 
 
-	public void setSingleResult(Node singleResultNode, String id, String name, String result, int line, String message) {
+	public void setSingleResult(Node singleResultNode, String id, String name, String result, int line, String message, String link) {
 		
 		//for(int i=0; i<testResulList.size(); i++) {
 		
@@ -499,6 +534,11 @@ public class ReportDOM extends JXLabDOM {
 			this.setNodeAttribute(singleResultNode, "result", result);
 			this.setNodeAttribute(singleResultNode, "line", new Integer(line).toString());
 			this.setNodeAttribute(singleResultNode, "message", message);
+			
+			if (link != null)
+				this.setNodeAttribute(singleResultNode, "link", link);
+			else
+				this.setNodeAttribute(singleResultNode, "link", "");
 		//}
 	}
 
@@ -657,6 +697,7 @@ public class ReportDOM extends JXLabDOM {
 		
 		return actionElement.getElementsByTagName("tebes:SingleResult");
 	}
+
 
 	
 	

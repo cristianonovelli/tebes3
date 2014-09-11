@@ -784,9 +784,6 @@ public class TestPlanManagerImpl implements TestPlanManagerRemote {
 				else
 					inputGuiMessage = null;
 				
-				
-				//inputGuiMessage = testPlanDOM.getGuiMessageAttribute(inputNode);
-				System.out.println("inputtt2:" + inputGuiReaction);
 				// Create Input object
 				Input input = new Input(inputName, inputDescription, inputType, inputLanguage,
 						inputInteraction, inputFileIdRef, inputGuiReaction, inputGuiMessage, false);

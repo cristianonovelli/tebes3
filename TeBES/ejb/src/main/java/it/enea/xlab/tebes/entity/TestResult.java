@@ -32,6 +32,7 @@ public class TestResult implements Serializable {
 	private String globalResult;
 	private int line;
 	private String message;
+	private String link;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="report_id")
@@ -43,9 +44,18 @@ public class TestResult implements Serializable {
 
 	public TestResult(String globalResult, int line, String message) {
 
-		this.globalResult = globalResult;
-		this.line = line;
-		this.message = message;
+		this.setGlobalResult(globalResult);
+		this.setLine(line);
+		this.setMessage(message);
+		this.setLink(null);
+	}
+
+	public TestResult(String globalResult, int line, String message, String link) {
+
+		this.setGlobalResult(globalResult);
+		this.setLine(line);
+		this.setMessage(message);
+		this.setLink(link);
 	}
 	
 	public String getGlobalResult() {
@@ -81,6 +91,14 @@ public class TestResult implements Serializable {
 
 	public void setReport(Report report) {
 		this.report = report;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
 	}
 	
 	

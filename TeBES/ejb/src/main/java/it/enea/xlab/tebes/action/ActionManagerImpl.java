@@ -705,7 +705,8 @@ public class ActionManagerImpl implements ActionManagerRemote {
 									taf.getName(), 
 									"syserror", 
 									0, 
-									"Validation Failure: check Validation Project.");
+									"Validation Failure. Contact Administrator: check Validation Project.",
+									null);
 							
 							report.addLineToFullDescription("TAF Execution: ResultList is NULL");
 						}
@@ -764,7 +765,8 @@ public class ActionManagerImpl implements ActionManagerRemote {
 										taf.getName(), 
 										testResultTemp.getGlobalResult(), 
 										testResultTemp.getLine(), 
-										testResultTemp.getMessage());	
+										testResultTemp.getMessage(),
+										testResultTemp.getLink());	
 							}
 						
 						}

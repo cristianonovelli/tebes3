@@ -12,7 +12,7 @@
     xsi:schemaLocation="http://docs.oasis-open.org/ns/tag/taml-201002/ http://docs.oasis-open.org/tag/taml/v1.0/cs02/xsd/testAssertionMarkupLanguage.xsd"
 	xmlns:tebes="http://www.ubl-italia.org/tebes"
     setid="TC-001_TS-006"
-    setname="Test Case for Web Service SOAP Envelope validation."
+    setname="Test Case for Web Service SERVER and CLIENT SOAP Envelope validation."
 	tebes:version="0.2">
 
     <taml:common>
@@ -23,10 +23,10 @@
     
     <taml:testAssertion 
         id="TA-001_TC-001_TS-006" 
-        name="SOAPValidation" 
+        name="SOAPValidation for webservice-server Case" 
         tebes:isNotePresent="false">
 
-        <taml:description>Web Service SOAP Envelope Validation.</taml:description>
+        <taml:description>Web Service Server Validation.</taml:description>
         
         <taml:normativeSource>
             <taml:comment></taml:comment>
@@ -36,7 +36,7 @@
 
         <taml:var vname="soap-validation" vtype="http://www.w3.org/TR/xpath20/">count(//soap:Envelope) ge 1</taml:var>
         
-        <taml:target type="transport" lg="xml">soap-validation</taml:target>
+        <taml:target type="transport" lg="xml">webservice-server</taml:target>
         
         <!-- 
             The XPath expression executes the XML Schema validation 
@@ -49,13 +49,48 @@
         
         <taml:report 
             label="pass" 
-            message="OK validation SOAP Envelope.">The message is valid against SOAP Envelope XML Schema.</taml:report>
+            message="OK validation for Web Service SERVER case.">OK validation for Web Service SERVER case.</taml:report>
         <taml:report 
             label="fail" 
             when="count(//soap:Envelope) ge 0"
-            message="SOAP Envelope IS NOT VALID.">The message is NOT valid against SOAP Envelope XML Schema.</taml:report>
+            message="Failure for test on Web Service SERVER. See details.">Failure for test on Web Service SERVER. See details.</taml:report>
 
     </taml:testAssertion>
 	
     
+    <taml:testAssertion 
+        id="TA-002_TC-001_TS-006" 
+        name="SOAPValidation for webservice-client Case" 
+        tebes:isNotePresent="false">
+
+        <taml:description>Web Service Client Validation.</taml:description>
+        
+        <taml:normativeSource>
+            <taml:comment></taml:comment>
+            <taml:refSourceItem></taml:refSourceItem>
+            <taml:textSourceItem></taml:textSourceItem>
+        </taml:normativeSource>
+
+        <taml:var vname="soap-validation" vtype="http://www.w3.org/TR/xpath20/">count(//soap:Envelope) ge 1</taml:var>
+        
+        <taml:target type="transport" lg="xml">webservice-client</taml:target>
+        
+        <!-- 
+            The XPath expression executes the XML Schema validation 
+            on the XML root Invoice, calling the XML Schema specified by soap: namespace defined in taml:common.
+            The "ge" XPath means "greater than or equal to". 
+        -->
+        <taml:predicate>soap-validation</taml:predicate>
+        
+        <taml:prescription level="mandatory" />
+        
+        <taml:report 
+            label="pass" 
+            message="OK validation for Web Service CLIENT case.">OK validation for Web Service CLIENT case.</taml:report>
+        <taml:report 
+            label="fail" 
+            when="count(//soap:Envelope) ge 0"
+            message="Failure for test on Web Service CLIENT. See details.">Failure for test on Web Service CLIENT. See details.</taml:report>
+
+    </taml:testAssertion>
 </taml:testAssertionSet>

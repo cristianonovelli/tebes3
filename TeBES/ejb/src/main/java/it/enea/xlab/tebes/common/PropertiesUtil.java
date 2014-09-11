@@ -431,13 +431,27 @@ public class PropertiesUtil {
 		return result;
 	}
 
+	public static String getUserWSDirPath(Long userId) {
 
+		String result = getUserDirPath(userId);
+		
+		String wsDir = getWSDirProperty();
+		result = result.concat(wsDir);
+		result = checkFinalSlash(result);
+		
+		return result;
+	}
 
 
 
 	public static String getLogsDirProperty() {
 		
 		return getConfiguration().getString("logs.dir");
+	}
+
+	public static String getWSDirProperty() {
+		
+		return getConfiguration().getString("ws.dir");
 	}
 	
 	public static String getCacheDirProperty() {
@@ -454,5 +468,11 @@ public class PropertiesUtil {
 		
 		return result;
 	}
+
+
+
+
+
+
 }
 

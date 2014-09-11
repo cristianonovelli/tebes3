@@ -7,7 +7,7 @@ import it.enea.xlab.tebes.common.SQLQuery;
 import it.enea.xlab.tebes.entity.FileStore;
 import it.enea.xlab.tebes.entity.Input;
 import it.enea.xlab.tebes.entity.Session;
-import it.enea.xlab.tebes.entity.Text;
+import it.enea.xlab.tebes.entity.TextStore;
 import it.enea.xlab.tebes.session.SessionManagerRemote;
 
 import java.io.IOException;
@@ -116,7 +116,7 @@ public class FileManagerImpl implements FileManagerRemote {
 		if ( !this.isTextIdPresent(inputTemp.getFileIdRef()) ) {
 			
 			// Persist Text 
-			Text uploadedText = new Text(inputTemp.getFileIdRef(), inputTemp.getName(), textValue);
+			TextStore uploadedText = new TextStore(inputTemp.getFileIdRef(), inputTemp.getName(), textValue);
 			
 			Long id = this.createText(uploadedText);
 			
@@ -168,7 +168,7 @@ public class FileManagerImpl implements FileManagerRemote {
 	} 
 
 	
-	private Long createText(Text text) {
+	private Long createText(TextStore text) {
 
 		try {
 			eM.persist(text);
@@ -186,9 +186,9 @@ public class FileManagerImpl implements FileManagerRemote {
 		return eM.find(FileStore.class, fileId);
 	}
 
-	private Text readText(Long textId) {
+	private TextStore readText(Long textId) {
 		
-		return eM.find(Text.class, textId);
+		return eM.find(TextStore.class, textId);
 	}
 	
 	
@@ -271,9 +271,9 @@ public class FileManagerImpl implements FileManagerRemote {
 		return;
 	}
 
-	private void setSessionOfText(Text text, Session session) {
+	private void setSessionOfText(TextStore text, Session session) {
 
-		Text t = this.readText(text.getId());
+		TextStore t = this.readText(text.getId());
 		Session s = sessionManager.readSession(session.getId());
 		
 		t.setSession(s);
@@ -295,7 +295,7 @@ public class FileManagerImpl implements FileManagerRemote {
         Query query = eM.createQuery(queryString);
         query.setParameter(param1, idRef);
         @SuppressWarnings("unchecked")
-		List<Text> resultList = query.getResultList();
+		List<TextStore> resultList = query.getResultList();
         if ((resultList != null) && (resultList.size() > 0))
         	return true;
         else
@@ -304,7 +304,7 @@ public class FileManagerImpl implements FileManagerRemote {
 
 
 
-	public Text readTextbyIdRef(String idRef) {
+	public TextStore readTextbyIdRef(String idRef) {
 
 		String param1 = "1";
         String queryString = SQLQuery.SELECT_TEXTS.concat(SQLQuery.WHERE_REFID2).concat(param1);
@@ -313,10 +313,10 @@ public class FileManagerImpl implements FileManagerRemote {
         query.setParameter(param1, idRef);
 
         @SuppressWarnings("unchecked")
-		List<Text> resultList = query.getResultList();
+		List<TextStore> resultList = query.getResultList();
         
         if ((resultList != null) && (resultList.size() > 0))
-        	return (Text) resultList.get(0);
+        	return (TextStore) resultList.get(0);
         else
         	return null;
 	}

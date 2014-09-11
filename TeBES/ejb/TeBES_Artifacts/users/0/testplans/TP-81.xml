@@ -14,11 +14,11 @@
 	    <tebes:Id>81</tebes:Id>
 	    <tebes:Name>TP-81</tebes:Name>
 	    <tebes:State>draft</tebes:State>
-	    <tebes:Description lg="en">TP-81 Test Plan is used to test the Web Service Client and Server transport for the Stock Flow case.</tebes:Description>
-	    <tebes:Description lg="it">Il Test Plan TP-81 è usato per il test del trasporto Web Service Client e Server per il caso Stock Flow.</tebes:Description>
+	    <tebes:Description lg="en">TP-81 Test Plan is used to test a Web Service Client for the Global Weather Web Service case.</tebes:Description>
+	    <tebes:Description lg="it">Il Test Plan TP-81 è usato per il test del trasporto Web Service Client per il caso Global Weather Web Service.</tebes:Description>
 	    <tebes:UserId>0</tebes:UserId>
-	    <tebes:CreationDatetime>2014-07-27T16:43:00Z</tebes:CreationDatetime>
-	    <tebes:LastUpdateDatetime>2014-07-27T16:43:00Z</tebes:LastUpdateDatetime>
+	    <tebes:CreationDatetime>2014-08-21T16:43:00Z</tebes:CreationDatetime>
+	    <tebes:LastUpdateDatetime>2014-08-21T16:43:00Z</tebes:LastUpdateDatetime>
 	</tebes:TestPlanHeader>
     
 	<tebes:TestActionList>
@@ -26,34 +26,36 @@
 		<tebes:TestAction id="TA-1_TP-81" number="1">
 			
 			<tebes:ActionName>Web Service Client</tebes:ActionName>
-			<tebes:ActionDescription lg="en">Web Service Client.</tebes:ActionDescription>
-			<tebes:ActionDescription lg="it">Web Service Client.</tebes:ActionDescription>
-				
+			<tebes:ActionDescription lg="en">Test of Client for the Global Weather Web Service.</tebes:ActionDescription>
+			<tebes:ActionDescription lg="it">Test Client per il Web Service Global Weather.</tebes:ActionDescription>
+			
 			<tebes:Test 
 				lg="taml" 
 				type="TestAssertion" 
 				skipPrerequisites="true"
-				location="http://www.ubl-italia.org/TeBES/testsuites/WS/TS-006_WS/TC-001_SOAPEnvelope-WS.xml">TA-001_TC-001_TS-006</tebes:Test>
+				location="http://www.ubl-italia.org/TeBES/testsuites/WS/TS-006_WS/TC-001_SOAPEnvelope-WS.xml">TA-002_TC-001_TS-006</tebes:Test>
 			
 			<tebes:Inputs>
-				<tebes:Input>		
-				    <tebes:Name>IN-1_TA-1_TP-81</tebes:Name>
+			    
+			    <tebes:Input>		
+				    <tebes:Name>TestWS</tebes:Name>
 				    
-					<tebes:InputDescription lg="en">Web Service Sending.</tebes:InputDescription>
-					<tebes:InputDescription lg="it">Invio tramite Web Service.</tebes:InputDescription>	
+					<tebes:InputDescription lg="en">Text Message from TeBES to User to invite him to test his Client to the Web Service URL.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Messaggio testuale di TeBES all'utente per invitarlo a testare il proprio Client all'URL del Web Service generato.</tebes:InputDescription>	
 					
 					<tebes:SUT 
-					    interaction="webservice-client"
-						type="transport" 
-						lg="xml"
-						fileIdRef="FI-1_message-xml-webservice-client-IN-1_TA-1_TP-81">		    
+					    type="transport"
+					    interaction="webservice-client" 
+						lg="soap"
+						fileIdRef="TI-1_transport-soap-webservice-client-IN-1_TA-1_TP-81">		    
 					</tebes:SUT>
 					
-					<tebes:GUI reaction="upload">
-						<tebes:GUIDescription lg="en">Upload of CORRECT UBL Invoice.</tebes:GUIDescription>				
-						<tebes:GUIDescription lg="it">Upload della Fattura UBL CORRETTA.</tebes:GUIDescription>				    				    
+					<tebes:GUI reaction="message">
+						<tebes:GUIDescription lg="en">The Web Service is ready. Check your client to the specified URL.</tebes:GUIDescription>				
+						<tebes:GUIDescription lg="it">Il Web Service  è pronto. Prova il tuo Client all'URL specificato.</tebes:GUIDescription>				    				    
 					</tebes:GUI>
 				</tebes:Input>
+
 			</tebes:Inputs>			
 
 		</tebes:TestAction>

@@ -69,7 +69,7 @@ public class UserProfileController extends WebController<User> {
 					userManagerService.setUserRole(user, role);
 					
     				// Create default SUT
-    				SUTInteraction interactionWebSite = new SUTInteraction(SUTConstants.INTERACTION_WEBSITE);
+    				SUTInteraction interactionWebSite = new SUTInteraction(SUTInteraction.WEBSITE);
     				SUT defaultSUT = new SUT("DefaultSUT", SUTConstants.SUT_TYPE1_DOCUMENT, interactionWebSite, "Default SUT Document-WebSite for User " + user.getSurname());									
     				sutManagerService.createSUT(defaultSUT, user);
 					
