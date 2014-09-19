@@ -29,6 +29,7 @@ public class GJS {
 
 	// Other
 	private static boolean waitGJS = true;
+	private static final int WAIT_UNIT = 200;
 
 
 	
@@ -115,13 +116,14 @@ public class GJS {
 		while( waitGJS ) {
 			try {
 
-				Thread.sleep(100);
-				System.out.println(i++);
+				Thread.sleep(WAIT_UNIT);
+				System.out.print(i++);
 
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+		System.out.println();
 		
 		return;
 		
@@ -197,8 +199,8 @@ public class GJS {
 
 			public void shutdown() {
 
-				waitGJS=false;
 				factory.shutdown();
+				waitGJS=false;
 			}
 
 		}); // END callRequestResponse
@@ -208,13 +210,14 @@ public class GJS {
 		while( waitGJS ) {
 			try {
 
-				Thread.sleep(100);
-				System.out.println(i++);
+				Thread.sleep(WAIT_UNIT);
+				System.out.print(i++);
 
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
+		System.out.println();
 		
 		return;
 		

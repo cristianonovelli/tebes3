@@ -154,10 +154,32 @@ public class TransportManager {
 			}
 
 	} // END WSServerValidation
+
+
 	
+	////////////////////////////////////////////////
+	// WSClientValidation -> GJS.generateServerWS //
+	////////////////////////////////////////////////
+	public Report WSClientValidation(String wsdl, String operation,
+			String port, String serviceId, String gjsOutputPath,
+			String gjsOutputReport, String[][] response, Report report) {
+
+		report.addLineToFullDescription("----- START TransportManager.WSClientValidation");
+		report.addLineToFullDescription("----- CALL to GJS.generateServerWS");
+		
+		
+		
+		report.addLineToFullDescription("TODO WSClientValidation");
+		
+		
+		report.addLineToFullDescription("----- END TransportManager.WSClientValidation");
+		
+		
+		return report;
+		
+	} // END WSClientValidation
 	
-	
-	
-	
+
 }
+
 

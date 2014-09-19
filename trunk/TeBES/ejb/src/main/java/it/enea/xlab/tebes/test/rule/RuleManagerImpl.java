@@ -189,22 +189,29 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			 
 			
 			// NEL CASO TRANSPORT ABBIAMO 4 CASI, RELATIVI A 4 TIPI DI SUT DA TESTARE: 
-			// website, email, webservice-client, webservice-server
+			// email, webservice-client, webservice-server
 			// C'E' SEMPRE UN INPUT (QUANDO NON C'E'?)
 			
 			
+			//////////////////////
+			// COMMON Variables //
+			//////////////////////
+			SUTInteraction sutInteraction;
+			String serviceId, wsdl, operation, port;
+			String gjsOutputPath, gjsOutputReport;
+			
 			
 			/////////////////////////////
-			// 2.4 Transport WS_SERVER //
+			// 2.2 Transport WS_CLIENT //
 			/////////////////////////////
-			// In questo caso l'utente espone il WS e richiama la generazione del Client
-			if ( taf.getTarget().getValue().equals(SUTInteraction.WS_SERVER)) {
+			// In questo caso l'utente ha il Client e richiama la generazione del WS
+			if ( taf.getTarget().getValue().equals(SUTInteraction.WS_CLIENT)) {
 				
 				report.addLineToFullDescription("---- Preparing for calling to GJS WS-Generator");
 				
 				
-				// 2.4.1 Definition of WS Identifier as: sutInteraction + datetime
-				String serviceId = SUTInteraction.WS_SERVER.concat(Constants.UNDERSCORE);
+				// 2.2.1 Definition of WS Identifier as: sutInteraction + datetime
+				serviceId = SUTInteraction.WS_CLIENT.concat(Constants.UNDERSCORE);
 				serviceId = serviceId.concat(XLabDates.getCurrentUTC());
 				// TODO quando ricarichi xlab-common, sostituisci usando metodo getCurrentCleanedUTC()
 				serviceId = serviceId.replace(":", "");
@@ -213,11 +220,11 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				report.addLineToFullDescription("---- Defined Service ID: " + serviceId);
 				
 				
-				// 2.4.2 WSDL SUT Parameters
-				SUTInteraction sutInteraction = session.getSut().getInteraction();
-				String wsdl = sutInteraction.getEndpoint();
-				String operation = sutInteraction.getOperation();
-				String port = sutInteraction.getPort();
+				// 2.2.2 WSDL SUT Parameters
+				sutInteraction = session.getSut().getInteraction();
+				wsdl = sutInteraction.getEndpoint();
+				operation = sutInteraction.getOperation();
+				port = sutInteraction.getPort();
 				
 				report.addLineToFullDescription("----- Add WSDL parameters");
 				report.addLineToFullDescription("------ WSDL: " + wsdl);
@@ -225,16 +232,81 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				report.addLineToFullDescription("------ Port: " + port);
 				
 				
-				// 2.4.3 GJS Output
-				String gjsOutputPath = PropertiesUtil.getUserWSDirPath(session.getUser().getId());
+				// 2.2.3 GJS Output
+				gjsOutputPath = PropertiesUtil.getUserWSDirPath(session.getUser().getId());
 				gjsOutputPath = gjsOutputPath.concat(serviceId).concat(Constants.SLASH);
 				XLabFileManager.createDir(gjsOutputPath);
-				String gjsOutputReport = GJSConstants.REPORT_NAME;
+				gjsOutputReport = GJSConstants.REPORT_NAME;
 				
 				report.addLineToFullDescription("---- Output: " + gjsOutputPath + gjsOutputReport);
 				
 				
-				// 2.4.4 Text Input Parameters
+				// 2.2.4 Response
+				//Input inputTemp;
+				//int inputNumber = taf.getInputs().size();
+				String[][] response = new String[2][2];	
+
+					//inputTemp = taf.getInputs().get(i);				
+					//TextStore text = fileManager.readTextbyIdRef(inputTemp.getFileIdRef());
+
+					response[0][0] = "Payload";
+					response[0][1] = "TODO-response-file-source";
+					
+					report.addLineToFullDescription("----- Add Payload: TODO-response-file-source");
+				
+
+				report.addLineToFullDescription("---- Start CALL GJS WS-Generator to generate WS SERVER...");
+				
+				// WS-SERVER CALL
+				report = transportManager.WSClientValidation(wsdl, operation, port, serviceId, gjsOutputPath, gjsOutputReport, response, report);			
+				
+				report.addLineToFullDescription("---- OK. End CALL to GJS WS-Generator.");
+				
+			} // END CASE 2.2
+			
+			
+			
+			/////////////////////////////
+			// 2.3 Transport WS_SERVER //
+			/////////////////////////////
+			// In questo caso l'utente espone il WS e richiama la generazione del Client
+			else if ( taf.getTarget().getValue().equals(SUTInteraction.WS_SERVER)) {
+				
+				report.addLineToFullDescription("---- Preparing for calling to GJS WS-Generator");
+				
+				
+				// 2.3.1 Definition of WS Identifier as: sutInteraction + datetime
+				serviceId = SUTInteraction.WS_SERVER.concat(Constants.UNDERSCORE);
+				serviceId = serviceId.concat(XLabDates.getCurrentUTC());
+				// TODO quando ricarichi xlab-common, sostituisci usando metodo getCurrentCleanedUTC()
+				serviceId = serviceId.replace(":", "");
+				serviceId = serviceId.replace("-", "");
+				
+				report.addLineToFullDescription("---- Defined Service ID: " + serviceId);
+				
+				
+				// 2.3.2 WSDL SUT Parameters
+				sutInteraction = session.getSut().getInteraction();
+				wsdl = sutInteraction.getEndpoint();
+				operation = sutInteraction.getOperation();
+				port = sutInteraction.getPort();
+				
+				report.addLineToFullDescription("----- Add WSDL parameters");
+				report.addLineToFullDescription("------ WSDL: " + wsdl);
+				report.addLineToFullDescription("------ Operation: " + operation);
+				report.addLineToFullDescription("------ Port: " + port);
+				
+				
+				// 2.3.3 GJS Output
+				gjsOutputPath = PropertiesUtil.getUserWSDirPath(session.getUser().getId());
+				gjsOutputPath = gjsOutputPath.concat(serviceId).concat(Constants.SLASH);
+				XLabFileManager.createDir(gjsOutputPath);
+				gjsOutputReport = GJSConstants.REPORT_NAME;
+				
+				report.addLineToFullDescription("---- Output: " + gjsOutputPath + gjsOutputReport);
+				
+				
+				// 2.3.4 Text Input Parameters
 				Input inputTemp;
 				int inputNumber = taf.getInputs().size();
 				String[][] parameters = new String[inputNumber][inputNumber];	
@@ -251,12 +323,17 @@ public class RuleManagerImpl implements RuleManagerRemote {
 
 				report.addLineToFullDescription("---- Start CALL GJS WS-Generator to generate WS CLIENT...");
 				
-				// WS-SERVER CALL
+				// WS-SERVER VALIDATION CALL
 				report = transportManager.WSServerValidation(wsdl, operation, port, serviceId, gjsOutputPath, gjsOutputReport, parameters, report);			
 				
 				report.addLineToFullDescription("---- OK. End CALL to GJS WS-Generator.");
 				
-			} // END CASE 2.4
+			} // END CASE 2.3
+			
+			
+			
+			
+			
 			
 			
 			// OTHERWISE

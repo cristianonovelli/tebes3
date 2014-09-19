@@ -572,9 +572,9 @@ public class SessionManagerImplITCase {
 			
 			
 			// List of Input fot the Global Weather case = 0 Input required
-			String[] fileList80 = {"Bologna", "Italy"};
+			//String[] fileList80 = {"Bologna", "Italy"};
 			
-			//String[] fileList81 = {"ok"};
+			String[] fileList81 = {"ok"};
 			
 			
 			// SESSION EXECUTION
@@ -583,10 +583,10 @@ public class SessionManagerImplITCase {
 			//execution(session1Id, fileList1);
 			
 			// Global Weather Web Service
-			execution(session80Id, fileList80);
+			//execution(session80Id, fileList80);
 			
 			// UserClient-TeBESWS
-			//execution(session81Id, fileList81);			
+			execution(session81Id, fileList81);			
 			
 		
 		
