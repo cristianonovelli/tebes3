@@ -17,7 +17,7 @@
 
     <taml:common>
         <taml:namespaces 
-            xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/envelope.xml" />
+            xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" />
     </taml:common>
     
     
