@@ -17,9 +17,11 @@ import joliex.java.ServiceFactory;
  */
 public class GJS {
 
-	// Client or Server Calls
+	// Client, Server or Status Calls
 	public static final String CLIENT = "generateClientWS";
 	public static final String SERVER = "generateServerWS";
+	public static final String STATUS = "getStatus";
+	public static final String STOP = "stop";
 
 	// Protocol TeBES -> GJS
 	private static final String SODEP = "sodep";
@@ -29,7 +31,7 @@ public class GJS {
 
 	// Other
 	private static boolean waitGJS = true;
-	private static final int WAIT_UNIT = 200;
+	private static final int WAIT_UNIT = 100;
 
 
 	
@@ -65,20 +67,16 @@ public class GJS {
 		request.setFilename(outputFileName);
 		request.setMessageProfile(messageProfile);
 
+		
 		// Creazione messaggio
 		WSMessageType messageType = new WSMessageType();
-		WSMessageType.parameter parameter0 = messageType.new parameter();
-
-
-// TODO ciclo 
-		parameter0.setKey(parameters[0][0]);
-		parameter0.set__Value(parameters[0][1]);
-		WSMessageType.parameter parameter1 = messageType.new parameter();
-		parameter1.setKey(parameters[1][0]);
-		parameter1.set__Value(parameters[1][1]);
-
-		messageType.addParameterValue(parameter0);
-		messageType.addParameterValue(parameter1);
+		for (int p=0; p<parameters.length; p++) {
+			
+			WSMessageType.parameter singleParameter = messageType.new parameter();
+			singleParameter.setKey(parameters[p][0]);
+			singleParameter.set__Value(parameters[p][1]);
+			messageType.addParameterValue(singleParameter);
+		}
 		request.setRequestMessage(messageType);
 
 		
@@ -87,7 +85,8 @@ public class GJS {
 
 			public void onSuccess(Value value) {
 				
-				gjsResult.setSuccess();				
+				gjsResult.setSuccess();		
+				gjsResult.setDescription("Success: Client generated and call to WS performed!");
 				shutdown();
 			}
 
@@ -113,11 +112,12 @@ public class GJS {
 		
 		// Aspetto che la callRequestResponse raggiunga un esito
 		int i=0;
+		System.out.print("Waiting for GJS factory shutdown: ");
 		while( waitGJS ) {
 			try {
 
 				Thread.sleep(WAIT_UNIT);
-				System.out.print(i++);
+				System.out.print(++i + " ");
 
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -161,12 +161,17 @@ public class GJS {
 		request.setOperation(operation);
 		request.setPort(port);
 
+		// Creazione messaggio
 		WSMessageType messageType = new WSMessageType();
-		WSMessageType.parameter parameter0 = messageType.new parameter();
-		parameter0.setKey(parameters[0][0]);
-		parameter0.set__Value(parameters[0][1]);
-		messageType.addParameterValue(parameter0);
+		for (int p=0; p<parameters.length; p++) {
+			
+			WSMessageType.parameter singleParameter = messageType.new parameter();
+			singleParameter.setKey(parameters[p][0]);
+			singleParameter.set__Value(parameters[p][1]);
+			messageType.addParameterValue(singleParameter);
+		}
 		request.setResponseMessage(messageType);
+		
 
 
 		request.setIdService(serviceId);
@@ -181,7 +186,9 @@ public class GJS {
 			public void onSuccess(Value value) {
 				
 				GenerateServerWSResponse response = new GenerateServerWSResponse( value );				
-				gjsResult.setSuccess(response.getWsdlEndpoint());				
+				gjsResult.setSuccess(response.getWsdlEndpoint());	
+				gjsResult.setDescription("Success: Web Service generated at URL: " + response.getWsdlEndpoint() + " Test your Client!");
+				
 				shutdown();
 			}
 
@@ -207,11 +214,12 @@ public class GJS {
 
 		// Aspetto che la callRequestResponse raggiunga un esito
 		int i=0;
+		System.out.print("Waiting for GJS factory shutdown: ");
 		while( waitGJS ) {
 			try {
 
 				Thread.sleep(WAIT_UNIT);
-				System.out.print(i++);
+				System.out.print(++i + " ");
 
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -222,6 +230,114 @@ public class GJS {
 		return;
 		
 	} // END generateServerWS
+	
+	
+	
+	/////////////////
+	/// getStatus ///
+	/////////////////
+	public static void getStatus(String idService, 
+			final GJSResult gjsResult) 
+					throws URISyntaxException, IOException, InterruptedException {
+
+		
+		// Creazione client
+		final ServiceFactory factory = new ServiceFactory();
+		String gjsURL = PropertiesUtil.getGJSURL();
+		final Service service = factory.create(new URI(gjsURL), SODEP, Value.UNDEFINED_VALUE);
+
+        // Creazione richiesta
+        GetStatusRequest request = new GetStatusRequest();
+        request.setIdService( idService );
+        
+        service.callRequestResponse(STATUS, request.getValue(), new Callback() {
+        	
+            public void onSuccess(Value value) {
+
+                GetStatusResponse response = new GetStatusResponse( value );				
+				gjsResult.setSuccess(response.getStatus());				
+				shutdown();
+            }
+
+			public void onFault(FaultException fe) {
+				
+				gjsResult.setFault(fe.faultName());
+				shutdown();
+			}
+
+			public void onError(IOException ioe) {
+				
+				gjsResult.setError(ioe.getMessage());
+				shutdown();
+			}
+            
+			public void shutdown() {
+
+				factory.shutdown();
+				waitGJS=false;
+			}
+        });
+      
+    } // END getStatus
+
+	
+	
+	/////////////////
+	/// getStatus ///
+	/////////////////
+	/*public static void stop(
+			String idService, 
+			final GJSResult gjsResult) 
+					throws URISyntaxException, IOException, InterruptedException {
+
+		
+		// Creazione client
+		final ServiceFactory factory = new ServiceFactory();
+		String gjsURL = PropertiesUtil.getGJSURL();
+		final Service service = factory.create(new URI(gjsURL), SODEP, Value.UNDEFINED_VALUE);
+
+        // Creazione richiesta
+        GetStatusRequest request = new GetStatusRequest();
+        request.setIdService( idService );
+        
+        service.callRequestResponse(STOP, request.getValue(), new Callback() {
+        	
+            public void onSuccess(Value value) {
+
+                GetStatusResponse response = new GetStatusResponse( value );				
+				gjsResult.setSuccess(response.getStatus());				
+				shutdown();
+            }
+
+			public void onFault(FaultException fe) {
+				
+				gjsResult.setFault(fe.faultName());
+				shutdown();
+			}
+
+			public void onError(IOException ioe) {
+				
+				gjsResult.setError(ioe.getMessage());
+				shutdown();
+			}
+            
+			public void shutdown() {
+
+				factory.shutdown();
+				waitGJS=false;
+			}
+        });
+      
+    } // END stop
+	*/
+	
+	
+	
+	
+	
+	
+	
+	
 
 } // END GJS
 

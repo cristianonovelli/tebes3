@@ -9,7 +9,7 @@ public class GJSResult {
 	private String call;
 	private String type;
 	private String description;
-	private String url;
+	private String specificResult;
 
 	
 	
@@ -18,7 +18,7 @@ public class GJSResult {
 		this.call = null;
 		this.type = RESULT_ERROR;
 		this.description = "GJS Result EMPTY";
-		this.url = null;
+		this.specificResult = null;
 	}
 	
 	public boolean isSuccess() {
@@ -47,16 +47,10 @@ public class GJSResult {
 		this.type = this.RESULT_SUCCESS;
 	}	
 	
-	public void setSuccess(String url) {
+	public void setSuccess(String specificResult) {
 
 		this.type = this.RESULT_SUCCESS;
-		this.url = url;
-		
-		if (this.call.equals(GJS.CLIENT))
-			this.setDescription("Success: Client generated and call to WS performed!");
-		
-		if (this.call.equals(GJS.SERVER))
-			this.setDescription("Success: Web Service generated at URL: " + this.getUrl() + " Test your Client!");
+		this.specificResult = specificResult;	
 	}	
 
 	public void setFault(String description) {
@@ -70,12 +64,12 @@ public class GJSResult {
 	}	
 	
 	
-	public String getUrl() {
-		return url;
+	public String getSpecificResult() {
+		return specificResult;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setSpecificResult(String specificResult) {
+		this.specificResult = specificResult;
 	}
 
 	public String getType() {
