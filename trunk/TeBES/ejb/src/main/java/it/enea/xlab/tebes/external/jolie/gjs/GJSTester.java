@@ -11,9 +11,9 @@ public class GJSTester {
 	//////////
 	public static void main(String[] args) throws Exception {
 		
-		//generalDoubleTest();
+		generalDoubleTest();
 		
-		globalWeatherDoubleTest();
+		//globalWeatherDoubleTest();
 		
 	} // End MAIN
 
@@ -31,13 +31,13 @@ public class GJSTester {
 		
 		
 		// Preparo Risposta per il Server
-		String[][] parameters = new String[2][2];	
+		String[][] parameters = new String[1][2];	
 		parameters[0][0] = "result";
 		parameters[0][1] = "ResponseFromServer";
 		
 		// GJSResult
 		GJSResult myHandler = new GJSResult();
-		GJSResult statusHandler = new GJSResult();
+		GJSResult stHandler = new GJSResult();
 		
 		try {
 			System.out.println("** Test1 General-Server **");
@@ -57,15 +57,15 @@ public class GJSTester {
 		}
 
 		int i=0;
-		System.out.println("waiting for test1:");
+		System.out.println("Waiting for Test1:");
 		while( i<5 ) {
 			try {
-				GJS.getStatus("General-Server", statusHandler);
+				GJS.getStatus("General-Server", stHandler);
 								
 				Thread.sleep(1000);
-				System.out.println(" " + ++i + " " + statusHandler.getSpecificResult());
+				System.out.println(" " + ++i + " " + stHandler.getValue());
 				
-				if ( !statusHandler.getSpecificResult().equals("Initialization") )
+				if ( (stHandler != null) && (stHandler.getValue() != null) && !stHandler.getValue().equals("Initialization") )
 					i = 10;
 
 			} catch (InterruptedException e) {
@@ -81,20 +81,17 @@ public class GJSTester {
 		
 		if (myHandler.isSuccess()) {
 		
-			String[][] parameters2 = new String[2][2];
+			String[][] parameters2 = new String[1][2];
 			
 			parameters2[0][0] = "msg";
-			parameters2[0][1] = "Italy";
-	
-			/*parameters2[1][0] = "CityName";
-			parameters2[1][1] = "Bologna";*/
+			parameters2[0][1] = "document";
 	
 			GJSResult myHandler2 = new GJSResult();
 			
 			System.out.println("** Test2 GJSTester-Client **");
 			System.out.println("CALL: generateClientWS");
-			System.out.println("Test Client for WS: " + myHandler.getSpecificResult());
-			GJS.generateClientWS(myHandler.getSpecificResult(), 
+			System.out.println("Test Client for WS: " + myHandler.getValue());
+			GJS.generateClientWS(myHandler.getValue(), 
 						"submit", 
 						"SoapPortServicePort",
 						"General-Client",
@@ -105,12 +102,17 @@ public class GJSTester {
 						myHandler2);
 		
 			i=0;
+			stHandler = new GJSResult();
 			System.out.print("waiting for test2:");
-			while( i<3 ) {
+			while( i<5 ) {
 				try {
-	
+					GJS.getStatus("General-Client", stHandler);
+					
 					Thread.sleep(1000);
-					System.out.print(" " + ++i);
+					System.out.println(" " + ++i + " " + stHandler.getValue());
+					
+					if ( (stHandler != null) && (stHandler.getValue() != null) && stHandler.getValue().equals("Done") )
+						i = 5;
 	
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -128,7 +130,8 @@ public class GJSTester {
 			System.out.println();
 		}
 		
-		
+		GJS.stop("General-Server", stHandler);
+		GJS.stop("General-Client", stHandler);		
 		
 		System.out.println("** END General DoubleTest **");
 		System.out.println("****************************");
@@ -156,8 +159,8 @@ public class GJSTester {
 
 		
 		// GJSResult
-		GJSResult myHandler = new GJSResult();
-		GJSResult statusHandler = new GJSResult();
+		GJSResult globalWeatherHandler = new GJSResult();
+		GJSResult gwStHandler = new GJSResult();
 		
 		try {
 			System.out.println("** Test GlobalWeather-Server **");
@@ -171,21 +174,21 @@ public class GJSTester {
 					"standard",
 					10000,
 					parameters, 
-					myHandler);
+					globalWeatherHandler);
 		} catch (Exception e) {
-			myHandler.setError(e.getMessage());
+			globalWeatherHandler.setError(e.getMessage());
 		}
 
 		int i=0;
 		System.out.println("waiting for test1:");
 		while( i<5 ) {
 			try {
-				GJS.getStatus("GlobalWeather-Server", statusHandler);
+				GJS.getStatus("GlobalWeather-Server", gwStHandler);
 								
 				Thread.sleep(1000);
-				System.out.println(" " + ++i + " " + statusHandler.getSpecificResult());
+				System.out.println(" " + ++i + " " + gwStHandler.getValue());
 				
-				if ( !statusHandler.getSpecificResult().equals("Initialization") )
+				if ( (gwStHandler != null) && (gwStHandler.getValue() != null) && !gwStHandler.getValue().equals("Initialization") )
 					i = 10;
 
 			} catch (InterruptedException e) {
@@ -194,13 +197,13 @@ public class GJSTester {
 		}
 		
 		System.out.println();
-		System.out.println("End GJSTester-Server: " + myHandler.getDescription());		
+		System.out.println("End GJSTester-Server: " + globalWeatherHandler.getDescription());		
 		
 		System.out.println("****************************");
 		System.out.println();
 
 
-		if (myHandler.isSuccess()) {
+		if (globalWeatherHandler.isSuccess()) {
 		
 		
 			String[][] parametersClient = new String[2][2];
@@ -215,8 +218,8 @@ public class GJSTester {
 			
 			System.out.println("** Test2 GlobalWeather-Client **");
 			System.out.println("CALL: generateClientWS");
-			System.out.println("Test Client for WS: " + myHandler.getSpecificResult());
-			GJS.generateClientWS(myHandler.getSpecificResult(), 
+			System.out.println("Test Client for WS: " + globalWeatherHandler.getValue());
+			GJS.generateClientWS(globalWeatherHandler.getValue(), 
 						"GetWeather", 
 						"GlobalWeatherSoap",
 						"GlobalWeather-Client",
@@ -227,10 +230,11 @@ public class GJSTester {
 						myHandler2);
 		
 			i=0;
+			gwStHandler = new GJSResult();
 			System.out.print("waiting for test2:");
 			while( i<3 ) {
 				try {
-	
+					
 					Thread.sleep(1000);
 					System.out.print(" " + ++i);
 	
@@ -250,7 +254,9 @@ public class GJSTester {
 			System.out.println();
 		}
 		
-
+		GJS.stop("GlobalWeather-Server", gwStHandler);
+		GJS.stop("GlobalWeather-Client", gwStHandler);
+		
 		System.out.println("** END GlobalWeather DoubleTest **");
 		System.out.println("**********************************");
 		System.out.println("**********************************");

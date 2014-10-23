@@ -320,6 +320,24 @@ public class FileManagerImpl implements FileManagerRemote {
         else
         	return null;
 	}
+
+
+	public Session messageUpload(String message, Session session) {
+		
+		if (message.equals("OK")) {
+			
+			// TODO Check WS Client Call and adjust Report in the Session
+			System.out.println("MESSAGE OK!!!");
+			
+		}
+		else
+		{
+		
+			// TODO nothing
+		}
+		
+		return session;
+	}
 	
 }
 

@@ -73,7 +73,10 @@ public class Report implements Serializable {
 	private boolean partialResultSuccessfully;
 	private boolean finalResultSuccessfully;
 
+	private String globalResult;
+	private String atomicResult;
 
+	private String request4Interaction;
 	
 	
 	
@@ -83,6 +86,11 @@ public class Report implements Serializable {
 		this.setFullDescription("");
 		this.setFinalResultSuccessfully(true);
 		this.setTempResult(null);
+		
+		this.setAtomicResult(UNDEFINED_RESULT);
+		this.setGlobalResult(UNDEFINED_RESULT);
+		
+		this.setRequest4Interaction(null);		
 	}
 
 	
@@ -258,6 +266,36 @@ public class Report implements Serializable {
 
 	public void setTempResultList(List<TestResult> tempResultList) {
 		this.tempResultList = tempResultList;
+	}
+
+
+	public String getGlobalResult() {
+		return globalResult;
+	}
+
+
+	public void setGlobalResult(String globalResult) {
+		this.globalResult = globalResult;
+	}
+
+
+	public String getAtomicResult() {
+		return atomicResult;
+	}
+
+
+	public void setAtomicResult(String atomicResult) {
+		this.atomicResult = atomicResult;
+	}
+
+
+	public String getRequest4Interaction() {
+		return request4Interaction;
+	}
+
+
+	public void setRequest4Interaction(String request4Interaction) {
+		this.request4Interaction = request4Interaction;
 	}
 
 

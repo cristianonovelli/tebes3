@@ -131,6 +131,7 @@ public class SUTManagerController extends WebController<SUT> {
 			if(checkSUTFields()) {
 				SUTInteraction interaction = new SUTInteraction();
 				interaction.setType(this.selectedInteraction);
+				interaction.setTimeout(0);
 				
 				if ( (this.endpoint != null) && !this.endpoint.equals("") )
 					interaction.setEndpoint(this.endpoint);

@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 
-import org.xlab.file.XLabFileManager;
-
  
 
 
@@ -32,7 +30,7 @@ public class TransportManager {
 	// WSServerValidation -> GJS.generateClientWS //
 	////////////////////////////////////////////////
 	@SuppressWarnings("finally")
-	public Report WSServerValidation(
+	public Report wsServerValidationGenerateClient(
 			String wsdl, 
 			String operation, 
 			String port, 
@@ -53,7 +51,16 @@ public class TransportManager {
 				GJSResult gjsResult = new GJSResult();
 				
 				// CALL TO GJS TO GENERATE WS CLIENT
-				GJS.generateClientWS(wsdl, operation, port, serviceId, outputPath, outputReport, GJS.PROFILE_STANDARD, parameters, gjsResult);
+				GJS.generateClientWS(
+						wsdl, 
+						operation, 
+						port, 
+						serviceId, 
+						outputPath, 
+						outputReport, 
+						GJS.PROFILE_STANDARD, 
+						parameters, 
+						gjsResult);
 				
 				
 				// TODO GESTIONE GET STATUS!!!
@@ -67,6 +74,7 @@ public class TransportManager {
 				{				
 					// TODO INSERISCO 3 MESSAGGI DI SUCCESSO CHE PUNTANO AI FILE NELLA CARTELLA CON I RISPETTIVI LINK
 					report.setPartialResultSuccessfully(true);
+					report.setAtomicResult(Report.getSuccessfulResult());
 					
 					// Inserisco messaggio 1di3, generale di SUCCESS
 					result = new TestResult(TestResult.PASS_RESULT, 0, gjsResult.getDescription());
@@ -97,6 +105,7 @@ public class TransportManager {
 
 					
 					report.setPartialResultSuccessfully(false);		
+					report.setAtomicResult(Report.getFailureResult());
 					
 					result = new TestResult(TestResult.ERROR_RESULT, 0, gjsResult.getDescription());
 					
@@ -108,16 +117,18 @@ public class TransportManager {
 				
 				
 				
-				if (result == null)
+				if (result == null) {
 					result = new TestResult(TestResult.ERROR_RESULT, 0, "No Results for GJS WS-Generator: contact TeBES Admnistrator.");
-					
+					report.setAtomicResult(Report.getErrorResult());
+				}
 				report.setTempResult(result);
 			} 
 			
 			
 			catch (ConnectException e) {
 
-				report.setPartialResultSuccessfully(false);				
+				report.setPartialResultSuccessfully(false);	
+				report.setAtomicResult(Report.getErrorResult());
 				report.addLineToFullDescription(e.getMessage());
 				
 				result = new TestResult(TestResult.ERROR_RESULT, 0, e.getMessage());
@@ -133,7 +144,8 @@ public class TransportManager {
 				
 			} catch (Exception e) {
 				
-				report.setPartialResultSuccessfully(false);			
+				report.setPartialResultSuccessfully(false);		
+				report.setAtomicResult(Report.getErrorResult());
 				report.addLineToFullDescription(e.getMessage());
 				
 				result = new TestResult(TestResult.ERROR_RESULT, 0, e.getMessage());
@@ -160,24 +172,152 @@ public class TransportManager {
 	////////////////////////////////////////////////
 	// WSClientValidation -> GJS.generateServerWS //
 	////////////////////////////////////////////////
-	public Report WSClientValidation(String wsdl, String operation,
-			String port, String serviceId, String gjsOutputPath,
-			String gjsOutputReport, String[][] response, Report report) {
+	@SuppressWarnings("finally")
+	public Report wsClientValidationGenerateServer(
+			String wsdl, 
+			String operation,
+			String port, 
+			String serviceId, 
+			String gjsOutputPath,
+			String gjsOutputReport, 
+			int timeout,
+			String[][] parameters, 
+			Report report) {
 
-		report.addLineToFullDescription("----- START TransportManager.WSClientValidation");
-		report.addLineToFullDescription("----- CALL to GJS.generateServerWS");
+		
+		TestResult result = null;
+		ArrayList<TestResult> testResultList = new ArrayList<TestResult>(); 
+		
+		try {
+		
+			report.addLineToFullDescription("----- START TransportManager.wsClientValidationGenerateServer");
+			report.addLineToFullDescription("----- CALL to GJS.generateServerWS");
+			
+			
+
+			GJSResult gjsResult = new GJSResult();
+			
+			// CALL TO GJS TO GENERATE WS SERVER
+			GJS.generateServerWS(
+					wsdl, 
+					operation, 
+					port, 
+					serviceId, 
+					gjsOutputPath, 
+					gjsOutputReport, 
+					GJS.PROFILE_STANDARD, 
+					timeout,
+					parameters, 
+					gjsResult);
+	
+			
+			report.addLineToFullDescription("----- gjsResult: " + gjsResult.getValue());
+			
+			// 1. SUCCESS
+			if ( gjsResult.isSuccess() )
+			{				
+				// TODO STO SOSTITUENDO IL BOOLEAN CON LO STRING
+				report.setPartialResultSuccessfully(true);
+				
+				report.setAtomicResult(Report.getSuccessfulResult());
+				
+				report.setRequest4Interaction(gjsResult.getValue());
+				report.addLineToFullDescription("----- request4Interaction: " + gjsResult.getValue());
+				
+				// Inserisco messaggio 1di3, generale di SUCCESS
+				result = new TestResult(TestResult.PASS_RESULT, 0, gjsResult.getDescription());
+				testResultList.add(result);
+				
+				// Inserisco messaggio 2di3, link alla Richiesta 
+				String wsRequest = gjsOutputPath.concat(GJSConstants.WSREQUEST);
+				String wsRequestURL = TeBESDAO.location2publication(wsRequest);
+				result = new TestResult(TestResult.PASS_RESULT, 0, 
+						"See the generated request " + GJSConstants.WSREQUEST + " to the Link.", wsRequestURL);			
+				testResultList.add(result);
+				
+				// Inserisco messaggio 3di3, link alla Risposta
+				String wsResponse = gjsOutputPath.concat(GJSConstants.WSRESPONSE);
+				String wsResponseURL = TeBESDAO.location2publication(wsResponse);
+				result = new TestResult(TestResult.PASS_RESULT, 0, 
+						"See the received response " + GJSConstants.WSRESPONSE + " to the Link.", wsResponseURL);
+				
+				testResultList.add(result);										
+				report.setTempResultList(testResultList);					
+				report.addLineToFullDescription("----- GJS Generator: " + gjsResult.getDescription());
+				
+			} // END 1. SUCCESS
+			
+			
+			// 2. FAULT o ERROR
+			if ( gjsResult.isFault() || gjsResult.isError() ) {
+	
+				
+				report.setPartialResultSuccessfully(false);		
+				report.setAtomicResult(Report.getFailureResult());
+				report.setRequest4Interaction(null);
+				
+				result = new TestResult(TestResult.ERROR_RESULT, 0, gjsResult.getDescription());
+				
+				testResultList.add(result);										
+				report.setTempResultList(testResultList);					
+				report.addLineToFullDescription("----- GJS Generator: " + gjsResult.getDescription());
+				
+			} // END 2. FAULT o ERROR
+			
+			
+			
+			if (result == null) {
+				result = new TestResult(TestResult.ERROR_RESULT, 0, "No Results for GJS WS-Generator: contact TeBES Admnistrator.");
+				report.setAtomicResult(Report.getErrorResult());
+				report.setRequest4Interaction(null);
+			}
+			report.setTempResult(result);
+		} 
 		
 		
+		catch (ConnectException e) {
+	
+			report.setPartialResultSuccessfully(false);		
+			report.setAtomicResult(Report.getErrorResult());
+			report.addLineToFullDescription(e.getMessage());
+			
+			result = new TestResult(TestResult.ERROR_RESULT, 0, e.getMessage());
+			
+			report.setTempResult(result);
+			
+			testResultList.add(result);
+			report.setTempResultList(testResultList);
+			
+			e.printStackTrace();	
+			
+			report.addLineToFullDescription("----- " + TestResult.ERROR_RESULT + ": " + e.getMessage());
+			
+		} catch (Exception e) {
+			
+			report.setPartialResultSuccessfully(false);		
+			report.setAtomicResult(Report.getErrorResult());
+			report.addLineToFullDescription(e.getMessage());
+			
+			result = new TestResult(TestResult.ERROR_RESULT, 0, e.getMessage());
+			
+			report.setTempResult(result);
+			
+			testResultList.add(result);
+			report.setTempResultList(testResultList);
+			
+			e.printStackTrace();
+			
+			report.addLineToFullDescription("----- " + TestResult.ERROR_RESULT + ": " + e.getMessage());
+	
+		} finally {			
+			
+			report.addLineToFullDescription("----- END TransportManager.wsClientValidationGenerateServer");
+			return report;
+		}
 		
-		report.addLineToFullDescription("TODO WSClientValidation");
+	
 		
-		
-		report.addLineToFullDescription("----- END TransportManager.WSClientValidation");
-		
-		
-		return report;
-		
-	} // END WSClientValidation
+	} // END wsClientValidationGenerateServer
 	
 
 }

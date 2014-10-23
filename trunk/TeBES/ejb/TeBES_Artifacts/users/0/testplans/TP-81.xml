@@ -33,30 +33,7 @@
 				lg="taml" 
 				type="TestAssertion" 
 				skipPrerequisites="true"
-				location="http://www.ubl-italia.org/TeBES/testsuites/WS/TS-006_WS/TC-001_SOAPEnvelope-WS.xml">TA-002_TC-001_TS-006</tebes:Test>
-			
-			<tebes:Inputs>
-			    
-			    <tebes:Input>		
-				    <tebes:Name>TestWS</tebes:Name>
-				    
-					<tebes:InputDescription lg="en">Text Message from TeBES to User to invite him to test his Client to the Web Service URL.</tebes:InputDescription>
-					<tebes:InputDescription lg="it">Messaggio testuale di TeBES all'utente per invitarlo a testare il proprio Client all'URL del Web Service generato.</tebes:InputDescription>	
-					
-					<tebes:SUT 
-					    type="transport"
-					    interaction="webservice-client" 
-						lg="soap"
-						fileIdRef="TI-1_transport-soap-webservice-client-IN-1_TA-1_TP-81">		    
-					</tebes:SUT>
-					
-					<tebes:GUI reaction="message">
-						<tebes:GUIDescription lg="en">The Web Service is ready. Check your client to the specified URL.</tebes:GUIDescription>				
-						<tebes:GUIDescription lg="it">Il Web Service  è pronto. Prova il tuo Client all'URL specificato.</tebes:GUIDescription>				    				    
-					</tebes:GUI>
-				</tebes:Input>
-
-			</tebes:Inputs>			
+				location="http://www.ubl-italia.org/TeBES/testsuites/WS/TS-006_WS/TC-001_SOAPEnvelope-WS.xml">TA-002_TC-001_TS-006</tebes:Test>		
 
 		</tebes:TestAction>
 		

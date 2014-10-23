@@ -129,50 +129,47 @@ public class SessionManagerImpl implements SessionManagerRemote {
 	public Long createSession(Long userId, Long sutId, Long testPlanId, String localization) {
 		
 		System.out.println("createSession ENTER");
-		
-		
-		
-		
+
 		User user = userManager.readUser(userId);
 		SUT sut = sutManager.readSUT(sutId);
 		TestPlan testPlan = testPlanManager.readTestPlan(testPlanId);
 
-			// CREATE Session
-			Session session = new Session(user, testPlan, sut, localization);
-			session.setCreationDateTime(XLabDates.getCurrentUTC());
-			session.setLastUpdateDateTime(XLabDates.getCurrentUTC());
-			session.setLocalization(localization);
+		// CREATE Session
+		Session session = new Session(user, testPlan, sut, localization);
+		session.setCreationDateTime(XLabDates.getCurrentUTC());
+		session.setLastUpdateDateTime(XLabDates.getCurrentUTC());
+		session.setLocalization(localization);
+		
+		Long sessionId = this.createSession(session);
+		session = this.readSession(sessionId);
+		
+		
+		// CREATE Report Structure (DRAFT state by default)
+		Report report;
+		try {
 			
-			Long sessionId = this.createSession(session);
-			session = this.readSession(sessionId);
+			System.out.println("createSession PRE createReportForNewSession");
 			
+			report = reportManager.createReportForNewSession(session);
 			
-			// CREATE Report Structure (DRAFT state by default)
-			Report report;
-			try {
-				
-				System.out.println("createSession PRE createReportForNewSession");
-				
-				report = reportManager.createReportForNewSession(session);
-				
-				System.out.println("createSession POST createReportForNewSession");
-				System.out.println(report.getFullDescription());
+			System.out.println("createSession POST createReportForNewSession");
+			System.out.println(report.getFullDescription());
 
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new Long(-4);
-			}				
 			
-			
-			if (report == null)
-				return new Long(-5);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Long(-4);
+		}				
+		
+		
+		if (report == null)
+			return new Long(-5);
 
-			// ADD Report To Session
-			this.addReportToSession(report.getId(), session.getId());
+		// ADD Report To Session
+		this.addReportToSession(report.getId(), session.getId());
 
-			System.out.println("createSession EXIT");
-			return sessionId;
+		System.out.println("createSession EXIT");
+		return sessionId;
 
 	}
 	
@@ -423,56 +420,65 @@ public class SessionManagerImpl implements SessionManagerRemote {
 				report = actionManager.runAction(currentAction, session);
 				report.setFinalResultSuccessfully(report.isFinalResultSuccessfully() && report.isPartialResultSuccessfully());
 				
-				/* 
-				 * questo IF in questo punto implica che l'Action deve per forza finire in uno stato di successo
-				 * altrimenti non è possibile passare alla successiva 
-				 * 
-				 * if ( report.isPartialResultSuccessfully() ) {
+				// se c'è richiesta per altre interazioni
+				if (report.getRequest4Interaction() != null) {
 					
-					actionMark++;				
-					workflow.setActionMark(actionMark);
+					logger.info("getRequest4Interaction!");	
+					
+					currentAction.setStateToNew();
+					logger.info("currentAction.setStateToNew and insert NEW Input.");	
+					
+					Input newInput = new Input("request4interaction", "request4interaction", 
+							"transport", "xml", "webservice-client", null, "message", 
+							"Check your Client for the Web Service: " + report.getRequest4Interaction(), false);
+			
+					actionManager.createInput(newInput, currentAction.getId());
+					report.setRequest4Interaction(null);
 				}
-				*/
-				actionMark++;				
-				session.setActionMark(actionMark);
+				else {
 				
-				// Se questa era l'ultima azione il Report è concluso
-				// e la sessione di Test termina con state DONE
-				if (actionMark > actionListSize) {
+					actionMark++;				
+					session.setActionMark(actionMark);
 					
-					// Report state
-					report.setState(Report.getFinalState());	
-					
-					try {
+					// Se questa era l'ultima azione il Report è concluso
+					// e la sessione di Test termina con state DONE
+					if (actionMark > actionListSize) {
 						
-						ReportDOM reportDOM = new ReportDOM(report.getLocation());
-						reportDOM.setHeaderState(Report.getFinalState());
-						reportDOM.setSessionLastUpdateDateTime(XLabDates.getCurrentUTC());
-						reportDOM.save();
-						report.setXml(reportDOM.getXMLString());
-						session.setReport(report);
-										
-						// Log
-						//String log = "*** LOG FILE FOR SESSION: " + session.getId() + " ***\n";
-						//XLabFileManager.create(report.getLogLocation(), log.concat(report.getFullDescription()));
+						// Report state
+						report.setState(Report.getFinalState());	
 						
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} 
-					
-					// Session state
-					session.setStateToDone();
-					updating = this.updateSession(session);
-								
-					if (updating)
-						logger.info("Session State changed to DONE");					
-					else
-						logger.error("ERROR in the Session State updating to DONE");
-					
-					// String name = new Object(){}.getClass().getEnclosingMethod().getName();
-					reportManager.saveLog(report, "runWorkflow");
-					
+						try {
+							
+							ReportDOM reportDOM = new ReportDOM(report.getLocation());
+							reportDOM.setHeaderState(Report.getFinalState());
+							reportDOM.setSessionLastUpdateDateTime(XLabDates.getCurrentUTC());
+							reportDOM.save();
+							report.setXml(reportDOM.getXMLString());
+							session.setReport(report);
+											
+							// Log
+							//String log = "*** LOG FILE FOR SESSION: " + session.getId() + " ***\n";
+							//XLabFileManager.create(report.getLogLocation(), log.concat(report.getFullDescription()));
+							
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} 
+						
+						// Session state
+						session.setStateToDone();
+						updating = this.updateSession(session);
+									
+						if (updating)
+							logger.info("Session State changed to DONE");					
+						else
+							logger.error("ERROR in the Session State updating to DONE");
+						
+						// String name = new Object(){}.getClass().getEnclosingMethod().getName();
+						reportManager.saveLog(report, "runWorkflow");
+						
+					}
+				
 				}
 				
 				// Updating workflow and Session

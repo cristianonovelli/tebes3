@@ -31,6 +31,7 @@ public class SUTInteraction implements Serializable {
 	private String endpoint;	
 	private String operation;
 	private String port;
+	private int timeout;
 
 	@OneToOne
 	private SUT sut;
@@ -43,6 +44,7 @@ public class SUTInteraction implements Serializable {
 	public SUTInteraction(String type) {
 
 		this.setType(type);
+		this.setTimeout(0);
 	}
 
 	public Long getId() {
@@ -96,6 +98,14 @@ public class SUTInteraction implements Serializable {
 
 	public void setPort(String port) {
 		this.port = port;
+	}
+
+	public int getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
 	}
 	
 	

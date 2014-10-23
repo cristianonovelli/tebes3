@@ -30,4 +30,8 @@ public interface FileManagerRemote {
 	public boolean isTextIdPresent(String idRef);
 
 	public TextStore readTextbyIdRef(String idRef);
+
+	
+	// MESSAGE
+	public Session messageUpload(String message, Session session);
 }

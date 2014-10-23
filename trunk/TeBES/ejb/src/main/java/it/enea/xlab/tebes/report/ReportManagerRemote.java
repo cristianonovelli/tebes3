@@ -19,4 +19,6 @@ public interface ReportManagerRemote {
 	//Long createTestResult(TestResult tr, Long reportId);
 	
 	void saveLog(Report report, String methodName);
+	
+	Report adjustGlobalResultWithSpecificResult(Report report);
 }

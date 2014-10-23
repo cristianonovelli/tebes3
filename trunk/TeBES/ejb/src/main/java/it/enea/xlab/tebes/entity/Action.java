@@ -331,9 +331,5 @@ public class Action implements Serializable {
 	public void setActionDescriptions(List<ActionDescription> actionDescriptions) {
 		this.actionDescriptions = actionDescriptions;
 	}
-
-
-
-
 	
 }

@@ -9,7 +9,7 @@ public class GJSResult {
 	private String call;
 	private String type;
 	private String description;
-	private String specificResult;
+	private String value;
 
 	
 	
@@ -18,7 +18,7 @@ public class GJSResult {
 		this.call = null;
 		this.type = RESULT_ERROR;
 		this.description = "GJS Result EMPTY";
-		this.specificResult = null;
+		this.value = null;
 	}
 	
 	public boolean isSuccess() {
@@ -50,7 +50,7 @@ public class GJSResult {
 	public void setSuccess(String specificResult) {
 
 		this.type = this.RESULT_SUCCESS;
-		this.specificResult = specificResult;	
+		this.value = specificResult;	
 	}	
 
 	public void setFault(String description) {
@@ -64,12 +64,12 @@ public class GJSResult {
 	}	
 	
 	
-	public String getSpecificResult() {
-		return specificResult;
+	public String getValue() {
+		return value;
 	}
 
-	public void setSpecificResult(String specificResult) {
-		this.specificResult = specificResult;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	public String getType() {
