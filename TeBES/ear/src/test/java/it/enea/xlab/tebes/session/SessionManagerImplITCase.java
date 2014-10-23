@@ -401,7 +401,7 @@ public class SessionManagerImplITCase {
 			
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0).getInputs());
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0).getInputs().get(0));
-			Assert.assertNotNull(testPlan81.getWorkflow().getActions().get(0).getInputs().get(0));	
+			//Assert.assertNotNull(testPlan81.getWorkflow().getActions().get(0).getInputs().get(0));	
 	
 			logger.info("OK! IMPORTED selected TestPlans " + 
 					testPlan91.getName() + ", " + testPlan1.getName() + ", " + testPlan80.getName() + ", " + testPlan81.getName() +
@@ -482,6 +482,7 @@ public class SessionManagerImplITCase {
 			interactionWSServer.setEndpoint("http://www.webservicex.net/globalweather.asmx?WSDL");
 			interactionWSServer.setOperation("GetWeather");
 			interactionWSServer.setPort("GlobalWeatherSoap");
+			interactionWSServer.setTimeout(10000);
 			
 			SUT sutWSServer = new SUT("WS-Server", transportSUTType, interactionWSServer, "sut ws-server");
 			Long sutServerId = sutController.createSUT(sutWSServer, user3);
@@ -499,6 +500,7 @@ public class SessionManagerImplITCase {
 			interactionWSClient.setEndpoint("http://www.webservicex.net/globalweather.asmx?WSDL");
 			interactionWSClient.setOperation("GetWeather");
 			interactionWSClient.setPort("GlobalWeatherSoap");
+			interactionWSServer.setTimeout(10000);
 			
 			SUT sutWSClient = new SUT("WS-Client", transportSUTType, interactionWSClient, "sut ws-client");
 			Long sutClientId = sutController.createSUT(sutWSClient, user3);
@@ -958,19 +960,17 @@ public class SessionManagerImplITCase {
 								
 								////////////////
 								// TODO nell'input by message non c'è un valore di input MA
-								// FORSE c'è quello che l'utente preme: OK o ANNULLA
+								// c'è quello che l'utente preme: OK o ANNULLA
 								// SE OK vado a vedere il risultato della chiamata client-WS
 								// SE ANNULLA inserisco nel report un messaggio di test annullato per questa Action.
-								
-								textValue = userInputList[inputCounter];
+
 								inputCounter++;
 								
-								logger.info("Text Label: " + inputTemp.getName()); 
-								logger.info("Text Value: " + textValue);
+								logger.info("WS URL: " + inputTemp.getGuiMessage());
 								
-								currentSession = fileController.textUpload(inputTemp, textValue, currentSession);
+								currentSession = fileController.message(inputTemp, "OK", currentSession);
 
-								logger.info("OK Input " + inputTemp.getName() + " by MESSAGE");
+								logger.info("OK Input by MESSAGE");
 								
 							} // END if REACTION_MESSAGE
 							

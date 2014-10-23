@@ -332,6 +332,10 @@ public class ReportDOM extends JXLabDOM {
 		this.setSUTChildNode2((Element) sut, "tebes:Description", description);
 	}
 
+	public void setSUTInteractionTimeout(Node sutInteraction, int timeout) {
+
+		this.setNodeAttribute(sutInteraction, "timeout", new Integer(timeout).toString());
+	}
 	
 	
 	/////////////////////////////////////////
@@ -696,6 +700,18 @@ public class ReportDOM extends JXLabDOM {
 	public NodeList getSingleResultNodeList(Element actionElement) {
 		
 		return actionElement.getElementsByTagName("tebes:SingleResult");
+	}
+
+
+	public void removeEveryInputs(Node actionNode) {
+		
+		System.out.println("removeEveryInputs in");
+		
+		Node inputsNode = this.getInputsNode((Element) actionNode);
+		
+		actionNode.removeChild(inputsNode);
+		
+		System.out.println("removeEveryInputs out");
 	}
 
 

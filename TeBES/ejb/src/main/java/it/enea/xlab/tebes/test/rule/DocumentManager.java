@@ -60,11 +60,14 @@ public class DocumentManager {
 			if (emList.length > 0) {
 				
 				String errorType;
-				if (emList[0].getErrorType().equals("ERROR"))
+				if (emList[0].getErrorType().equals("ERROR")) {
 					errorType = TestResult.FAILURE_RESULT;
-				else
+					report.setAtomicResult(Report.getFailureResult());
+				}
+				else {
 					errorType = TestResult.ERROR_RESULT;
-				
+					report.setAtomicResult(Report.getErrorResult());
+				}
 				result = new TestResult(errorType, emList[0].getLineNumber(), emList[0].getDescription());
 				report.setPartialResultSuccessfully(false);
 				
@@ -82,6 +85,7 @@ public class DocumentManager {
 			else {
 				result = new TestResult(TestResult.PASS_RESULT, 0, "Success: Empty Error Message List");
 				report.setPartialResultSuccessfully(true);
+				report.setAtomicResult(Report.getSuccessfulResult());
 				
 				testResultList.add(result);
 				report.setTempResultList(testResultList);
@@ -96,6 +100,7 @@ public class DocumentManager {
 			result = new TestResult(TestResult.ERROR_RESULT, 0, e.getMessage());		
 			report.setTempResult(result);
 			report.setPartialResultSuccessfully(false);
+			report.setAtomicResult(Report.getErrorResult());
 			return report;
 		}
 		
@@ -131,11 +136,14 @@ public class DocumentManager {
 			if (emList.length > 0) {
 				
 				String errorType;
-				if (emList[0].getErrorType().equals("ERROR"))
+				if (emList[0].getErrorType().equals("ERROR")) {
 					errorType = TestResult.FAILURE_RESULT;
-				else
+					report.setAtomicResult(Report.getFailureResult());
+				}
+				else {
 					errorType = TestResult.ERROR_RESULT;
-				
+					report.setAtomicResult(Report.getErrorResult());
+				}
 				result = new TestResult(emList[0].getErrorType(), emList[0].getLineNumber(), emList[0].getDescription());
 				report.setPartialResultSuccessfully(false);
 				
@@ -160,6 +168,7 @@ public class DocumentManager {
 				
 				result = new TestResult(TestResult.PASS_RESULT, 0, "Success: Empty Error Message List");
 				report.setPartialResultSuccessfully(true);
+				report.setAtomicResult(Report.getSuccessfulResult());
 				
 				testResultList.add(result);
 				report.setTempResultList(testResultList);
@@ -176,6 +185,7 @@ public class DocumentManager {
 			
 			
 			report.setPartialResultSuccessfully(false);
+			report.setAtomicResult(Report.getErrorResult());
 			return report;
 		}
 		
@@ -187,6 +197,7 @@ public class DocumentManager {
 	public Report xPathValidation(String xmlString, String xpath, Report report) {
 		
 		report.setPartialResultSuccessfully(true);
+		report.setAtomicResult(Report.getUndefinedResult());
 		return report;
 	}
 	

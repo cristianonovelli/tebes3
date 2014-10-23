@@ -52,7 +52,7 @@ public class GJS {
 
 		gjsResult.setCall(CLIENT);
 		
-		// Creazione client
+		// Creazione factory
 		final ServiceFactory factory = new ServiceFactory();
 		String gjsURL = PropertiesUtil.getGJSURL();
 		final Service service = factory.create(new URI(gjsURL), SODEP, Value.UNDEFINED_VALUE);
@@ -149,7 +149,7 @@ public class GJS {
 
 		gjsResult.setCall(SERVER);
 		
-		// Creazione server
+		// Creazione factory
 		final ServiceFactory factory = new ServiceFactory();
 		String gjsURL = PropertiesUtil.getGJSURL();
 		final Service service = factory.create(new URI(gjsURL), SODEP, Value.UNDEFINED_VALUE);
@@ -241,7 +241,7 @@ public class GJS {
 					throws URISyntaxException, IOException, InterruptedException {
 
 		
-		// Creazione client
+		// Creazione factory
 		final ServiceFactory factory = new ServiceFactory();
 		String gjsURL = PropertiesUtil.getGJSURL();
 		final Service service = factory.create(new URI(gjsURL), SODEP, Value.UNDEFINED_VALUE);
@@ -282,30 +282,29 @@ public class GJS {
 
 	
 	
-	/////////////////
-	/// getStatus ///
-	/////////////////
-	/*public static void stop(
+	////////////
+	/// stop ///
+	////////////
+	public static void stop(
 			String idService, 
 			final GJSResult gjsResult) 
 					throws URISyntaxException, IOException, InterruptedException {
 
 		
-		// Creazione client
+		// Creazione factory
 		final ServiceFactory factory = new ServiceFactory();
 		String gjsURL = PropertiesUtil.getGJSURL();
 		final Service service = factory.create(new URI(gjsURL), SODEP, Value.UNDEFINED_VALUE);
 
         // Creazione richiesta
-        GetStatusRequest request = new GetStatusRequest();
+        StopRequest request = new StopRequest();
         request.setIdService( idService );
         
         service.callRequestResponse(STOP, request.getValue(), new Callback() {
         	
             public void onSuccess(Value value) {
-
-                GetStatusResponse response = new GetStatusResponse( value );				
-				gjsResult.setSuccess(response.getStatus());				
+		
+				gjsResult.setSuccess();				
 				shutdown();
             }
 
@@ -329,14 +328,6 @@ public class GJS {
         });
       
     } // END stop
-	*/
-	
-	
-	
-	
-	
-	
-	
 	
 
 } // END GJS

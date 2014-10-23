@@ -495,7 +495,7 @@ public class ActionManagerImpl implements ActionManagerRemote {
 		// 1.2 Set risultato parziale a false
 		// (il risultato parziale è il risultato momentaneo dell'esecuzione di tutti i test della nostra action)
 		report.setPartialResultSuccessfully(true);
-
+		report.setAtomicResult(Report.getUndefinedResult());
 		
 
 		try {
@@ -571,10 +571,17 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				List<Input> inputList = action.getInputs();
 				NodeList inputs = reportDOM.getInputNodeList((Element) actionTRNode);
 				
+				// inputList sono gli input presi dal TP
+				// inputs sono invece i nodi input presi dal TR
 				if ( inputList.size() > inputs.getLength() ) 			
 					for (int inn=1; inn<inputList.size(); inn++) 					
 						reportDOM.duplicateInputTemplateNode((Element) actionTRNode);
-								
+				
+				// Rimuovo tutti i nodi Input quando non ve ne sono 
+				if ( inputList.size() == 0 ) 
+					reportDOM.removeEveryInputs(actionTRNode);
+
+				
 				Input inpuTemp = null;
 				Node inputNode = null, sutNode = null;
 				
@@ -713,6 +720,9 @@ public class ActionManagerImpl implements ActionManagerRemote {
 						else {
 						
 						
+									
+										
+						
 							if ( report.getTempResultList().size() > 1 ) {
 							
 								report.addLineToFullDescription("TestResults express as " + report.getTempResultList().size() + " SingleResult.");
@@ -723,6 +733,8 @@ public class ActionManagerImpl implements ActionManagerRemote {
 								for(int tr=1; tr<report.getTempResultList().size(); tr++) {
 								
 							
+
+									
 									Node cloneSingleResultNode = singleResultNodeTemplate.cloneNode(true);
 									cloneSingleResultNode = reportDOM.doc.importNode(cloneSingleResultNode, true); 
 									cloneSingleResultNode = reportDOM.insertSingleResultNode(cloneSingleResultNode, singleResultNodeTemplate, actionTRNode);
@@ -742,6 +754,9 @@ public class ActionManagerImpl implements ActionManagerRemote {
 											testResultTemp.getGlobalResult(), 
 											testResultTemp.getLine(), 
 											testResultTemp.getMessage());*/
+									
+									
+									
 									
 								}
 							}	
@@ -835,13 +850,19 @@ public class ActionManagerImpl implements ActionManagerRemote {
 				
 				// 6.3 Aggiorno Global Result
 				//if ( report.isPartialResultSuccessfully() ) {
-					reportDOM.setGlobalResult(Report.getSuccessfulResult());
-					report.setXml(reportDOM.getXMLString());	
+
 				//}
 				// TODO non manca il caso di false?
 				
 					
 					
+					report = reportManager.adjustGlobalResultWithSpecificResult(report);						
+					
+					
+					report.addLineToFullDescription("adjustGlobalResultWithSpecificResult:" + report.getAtomicResult());
+					report.addLineToFullDescription("adjustGlobalResultWithSpecificResult:" + report.getGlobalResult());
+					reportDOM.setGlobalResult(report.getGlobalResult());
+					report.setXml(reportDOM.getXMLString());
 					
 
 				// 6.4 Update Report

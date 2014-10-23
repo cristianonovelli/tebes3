@@ -572,6 +572,7 @@ public class SessionManagerController extends WebController<Session> {
 	public Session runWorkflow(ActionWorkflow workflow, Session session) throws Exception {
 		
 		try {
+			
 			return sessionManagerService.runWorkflow(workflow, session);
 		} catch (UndeclaredThrowableException e) {
 			// TODO Auto-generated catch block

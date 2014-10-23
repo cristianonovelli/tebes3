@@ -58,6 +58,8 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		report.addLineToFullDescription("---- Language: " + testRule.getLanguage());
 		report.addLineToFullDescription("---- Value: " + testRule.getValue());
 		
+		// Setto a "undefined" il risultato temporaneo che verrà aggiornato dall'esecuzione della TAF
+		report.setAtomicResult(Report.getUndefinedResult());
 		
 		
 		try {
@@ -68,6 +70,9 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		} catch (NamingException e1) {
 			reportManager.saveLog(report, "executeTestRule.NamingException");
 			e1.printStackTrace();
+			
+			report.setAtomicResult(Report.getErrorResult());
+			//reportManager.adjustGlobalResultWithSpecificResult(report);
 		}
 		
 		
@@ -167,6 +172,9 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				reportManager.saveLog(report, "executeTestRule");
 
 				e.printStackTrace();
+				
+				report.setAtomicResult(Report.getErrorResult());
+				//reportManager.adjustGlobalResultWithSpecificResult(report);
 			}		
 			
 		}
@@ -198,6 +206,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 			//////////////////////
 			SUTInteraction sutInteraction;
 			String serviceId, wsdl, operation, port;
+			int timeout;
 			String gjsOutputPath, gjsOutputReport;
 			
 			
@@ -225,6 +234,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				wsdl = sutInteraction.getEndpoint();
 				operation = sutInteraction.getOperation();
 				port = sutInteraction.getPort();
+				timeout = sutInteraction.getTimeout();
 				
 				report.addLineToFullDescription("----- Add WSDL parameters");
 				report.addLineToFullDescription("------ WSDL: " + wsdl);
@@ -244,13 +254,17 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				// 2.2.4 Response
 				//Input inputTemp;
 				//int inputNumber = taf.getInputs().size();
-				String[][] response = new String[2][2];	
+				//String[][] response = new String[2][2];	
 
 					//inputTemp = taf.getInputs().get(i);				
 					//TextStore text = fileManager.readTextbyIdRef(inputTemp.getFileIdRef());
 
-					response[0][0] = "Payload";
-					response[0][1] = "TODO-response-file-source";
+					//response[0][0] = "Payload";
+					//response[0][1] = "TODO-response-file-source";
+					
+					String[][] response = new String[1][2];	
+					response[0][0] = "GetWeatherResult";
+					response[0][1] = "ResultFromDoubleTest";
 					
 					report.addLineToFullDescription("----- Add Payload: TODO-response-file-source");
 				
@@ -258,7 +272,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				report.addLineToFullDescription("---- Start CALL GJS WS-Generator to generate WS SERVER...");
 				
 				// WS-SERVER CALL
-				report = transportManager.WSClientValidation(wsdl, operation, port, serviceId, gjsOutputPath, gjsOutputReport, response, report);			
+				report = transportManager.wsClientValidationGenerateServer(wsdl, operation, port, serviceId, gjsOutputPath, gjsOutputReport, timeout, response, report);			
 				
 				report.addLineToFullDescription("---- OK. End CALL to GJS WS-Generator.");
 				
@@ -324,7 +338,7 @@ public class RuleManagerImpl implements RuleManagerRemote {
 				report.addLineToFullDescription("---- Start CALL GJS WS-Generator to generate WS CLIENT...");
 				
 				// WS-SERVER VALIDATION CALL
-				report = transportManager.WSServerValidation(wsdl, operation, port, serviceId, gjsOutputPath, gjsOutputReport, parameters, report);			
+				report = transportManager.wsServerValidationGenerateClient(wsdl, operation, port, serviceId, gjsOutputPath, gjsOutputReport, parameters, report);			
 				
 				report.addLineToFullDescription("---- OK. End CALL to GJS WS-Generator.");
 				
@@ -346,8 +360,9 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		
 		
 		
+		//report = reportManager.adjustGlobalResultWithSpecificResult(report);
 		
-		
+
 		report.addLineToFullDescription("------------------------");
 		
 		return report;

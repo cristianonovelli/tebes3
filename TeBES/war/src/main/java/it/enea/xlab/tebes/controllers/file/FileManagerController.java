@@ -106,6 +106,22 @@ public class FileManagerController extends WebController<Report> {
 	}
 
 
+	public Session message(Input input, String message, Session session) {
+		
+		// Aggiorno l'input
+		input.setInputSolved(true);
+		actionManagerService.updateInput(input);
+		
+		Action action = input.getAction();
+		boolean checking = actionManagerService.checkActionReady(action);
+		
+		if (checking)
+			action.setStateToReady();	
+		
+		return fileManagerService.messageUpload(message, session); 
+	}
+
+
 
 	
 	

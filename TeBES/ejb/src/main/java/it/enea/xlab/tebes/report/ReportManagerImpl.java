@@ -234,6 +234,8 @@ public class ReportManagerImpl implements ReportManagerRemote {
 				reportDOM.setSUTInteractionOperation(sutInteractionNode, sut.getInteraction().getOperation());
 			if (sut.getInteraction().getPort()!= null)
 				reportDOM.setSUTInteractionPort(sutInteractionNode, sut.getInteraction().getPort());
+			if (sut.getInteraction().getTimeout()>=0)
+				reportDOM.setSUTInteractionTimeout(sutInteractionNode, sut.getInteraction().getTimeout());			
 			
 			reportDOM.setSUTDescription(sutNode, sut.getDescription());
 			fullDescription = fullDescription.concat("\nReport DOM XML SUT updated");
@@ -379,6 +381,57 @@ public class ReportManagerImpl implements ReportManagerRemote {
 		
 		return;
 	}
+	
+
+    /*<!-- Global Result can take the following 5 values: 
+		"undefined": result is undefined because no action has been executed; 
+		"success": when every action finished with success result;
+		"warning": when there is at least an action with warning result and no action with failure or error result;
+		"failure": when there is at least an action with failure result and no action with error result; 
+		"error": there is at least an action with error result, this means that a system error happened -->  */  
+	@SuppressWarnings("finally")
+	public Report adjustGlobalResultWithSpecificResult(Report report) {
+		
+		try {
+			String tempResult = report.getAtomicResult();
+			String globalResult = report.getGlobalResult();
+			
+			// 1. IF tempResult == "undefined" 
+			// THEN nothing
+			
+			// 2. IF tempResult == "success"
+			if ( tempResult.equals(Report.getSuccessfulResult()) 
+					&& globalResult.equals(Report.getUndefinedResult()) )
+				report.setGlobalResult(tempResult);
+			
+			// 3. IF tempResult == "warning" 
+			if ( tempResult.equals(Report.getWarningResult()) 
+					&& ( globalResult.equals(Report.getUndefinedResult()) || globalResult.equals(Report.getSuccessfulResult()) ) )
+				report.setGlobalResult(tempResult);
+
+			// 4. IF tempResult == "failure" 
+			if ( tempResult.equals(Report.getFailureResult()) 
+					&& 
+					( globalResult.equals(Report.getUndefinedResult()) || 
+					  globalResult.equals(Report.getSuccessfulResult()) || 
+					  globalResult.equals(Report.getWarningResult()) ) )
+				report.setGlobalResult(tempResult);
+			
+			// 5. IF tempResult == "error" 
+			if ( tempResult.equals(Report.getErrorResult()) )
+				report.setGlobalResult(tempResult);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			report.addLineToFullDescription("adjustGlobalResultWithSpecificResult:" + e.getMessage());
+		}	
+		finally {
+			report.addLineToFullDescription("adjustGlobalResultWithSpecificResult: something");
+			return report;			
+		}
+
+	} // End adjustGlobalResultWithSpecificResult
 	
 }
 
