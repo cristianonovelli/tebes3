@@ -20,6 +20,8 @@ import it.enea.xlab.tebes.entity.SUTInteraction;
 import it.enea.xlab.tebes.entity.Session;
 import it.enea.xlab.tebes.entity.TestPlan;
 import it.enea.xlab.tebes.entity.User;
+import it.enea.xlab.tebes.external.jolie.gjs.GJS;
+import it.enea.xlab.tebes.external.jolie.gjs.GJSResult;
 import it.enea.xlab.tebes.utilities.WebControllersUtilities;
 
 import java.io.ByteArrayOutputStream;
@@ -579,7 +581,7 @@ public class SessionManagerImplITCase {
 			String[] fileList81 = {"ok"};
 			
 			
-			// SESSION EXECUTION
+			// UBL 
 			//execution(session91Id, fileList91);
 			
 			//execution(session1Id, fileList1);
@@ -662,7 +664,7 @@ public class SessionManagerImplITCase {
 			
 			User tempUser;
 			Long tempUserId;
-			for (int u=0;u<userIdList.size();u++) {
+			/*for (int u=0;u<userIdList.size();u++) {
 				
 				tempUserId = (Long) userIdList.get(u);
 				Assert.assertTrue(tempUserId.intValue() > 0);
@@ -691,7 +693,7 @@ public class SessionManagerImplITCase {
 		
 			
 	
-			List<FileStore> documentList = fileController.getFileListByType("document");
+			List<FileStore> documentList = fileController.getFileListByType("document");*/
 			//Assert.assertTrue(documentList.size() == 0);
 			
 			// Cancello ogni ruolo
@@ -967,6 +969,49 @@ public class SessionManagerImplITCase {
 								inputCounter++;
 								
 								logger.info("WS URL: " + inputTemp.getGuiMessage());
+								
+								System.out.println("");
+								System.out.println("");
+								System.out.println("WS URL: " + inputTemp.getGuiMessage());
+								
+								
+								
+								/*String[][] parameters2 = new String[1][2];
+								
+								parameters2[0][0] = "msg";
+								parameters2[0][1] = "document";
+						
+								GJSResult myHandler2 = new GJSResult();								
+								GJS.generateClientWS(
+										inputTemp.getGuiMessage(), 
+										currentSession.getSut().getInteraction().getOperation(), 
+										currentSession.getSut().getInteraction().getPort(), 
+										"temporary-client", 
+										"C:/Temp/temporary-client",
+										"report.xml",
+										"standard",
+										parameters2, 
+										myHandler2);*/
+
+								
+								
+								
+								int ii=0;
+								while( ii<30 ) {
+									try {
+
+										
+										
+										
+										
+										Thread.sleep(1000);
+										System.out.print(++ii + " ");
+
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+								}
+								System.out.println("");
 								
 								currentSession = fileController.message(inputTemp, "OK", currentSession);
 

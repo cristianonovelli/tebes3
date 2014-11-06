@@ -224,22 +224,23 @@ public class TransportManager {
 				report.setRequest4Interaction(gjsResult.getValue());
 				report.addLineToFullDescription("----- request4Interaction: " + gjsResult.getValue());
 				
-				// Inserisco messaggio 1di3, generale di SUCCESS
-				result = new TestResult(TestResult.PASS_RESULT, 0, gjsResult.getDescription());
+				// Inserisco messaggio 1di2, generale di SUCCESS per il WS creato (il test non è finito!)
+				result = new TestResult(TestResult.PASS_RESULT, 0, gjsResult.getDescription(), gjsResult.getValue());
 				testResultList.add(result);
 				
-				// Inserisco messaggio 2di3, link alla Richiesta 
+				// Inserisco messaggio 2di2, link alla Richiesta di generazione
 				String wsRequest = gjsOutputPath.concat(GJSConstants.WSREQUEST);
 				String wsRequestURL = TeBESDAO.location2publication(wsRequest);
 				result = new TestResult(TestResult.PASS_RESULT, 0, 
 						"See the generated request " + GJSConstants.WSREQUEST + " to the Link.", wsRequestURL);			
 				testResultList.add(result);
 				
+				// LA RISPOSTA A QUESTO PUNTO ANCORA NON E' STATA SALVATA
 				// Inserisco messaggio 3di3, link alla Risposta
-				String wsResponse = gjsOutputPath.concat(GJSConstants.WSRESPONSE);
+				/*String wsResponse = gjsOutputPath.concat(GJSConstants.WSRESPONSE);
 				String wsResponseURL = TeBESDAO.location2publication(wsResponse);
 				result = new TestResult(TestResult.PASS_RESULT, 0, 
-						"See the received response " + GJSConstants.WSRESPONSE + " to the Link.", wsResponseURL);
+						"See the received response " + GJSConstants.WSRESPONSE + " to the Link.", wsResponseURL);*/
 				
 				testResultList.add(result);										
 				report.setTempResultList(testResultList);					
