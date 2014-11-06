@@ -430,7 +430,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 					
 					Input newInput = new Input("request4interaction", "request4interaction", 
 							"transport", "xml", "webservice-client", null, "message", 
-							"Check your Client for the Web Service: " + report.getRequest4Interaction(), false);
+							report.getRequest4Interaction(), false);
 			
 					actionManager.createInput(newInput, currentAction.getId());
 					report.setRequest4Interaction(null);

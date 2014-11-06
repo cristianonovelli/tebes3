@@ -187,7 +187,7 @@ public class GJS {
 				
 				GenerateServerWSResponse response = new GenerateServerWSResponse( value );				
 				gjsResult.setSuccess(response.getWsdlEndpoint());	
-				gjsResult.setDescription("Success: Web Service generated at URL: " + response.getWsdlEndpoint() + " Test your Client!");
+				gjsResult.setDescription("Success: Web Service generated. Check the URL.");
 				
 				shutdown();
 			}
