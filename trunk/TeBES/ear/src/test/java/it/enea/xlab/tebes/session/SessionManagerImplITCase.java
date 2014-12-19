@@ -976,7 +976,9 @@ public class SessionManagerImplITCase {
 								
 								
 								
-								/*String[][] parameters2 = new String[1][2];
+								/*
+								 * client jolie per richiamare ws Global Weather creato nel test
+								 * String[][] parameters2 = new String[1][2];
 								
 								parameters2[0][0] = "msg";
 								parameters2[0][1] = "document";
