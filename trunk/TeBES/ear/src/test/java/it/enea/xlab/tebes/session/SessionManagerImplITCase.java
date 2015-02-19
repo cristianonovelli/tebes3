@@ -63,7 +63,7 @@ public class SessionManagerImplITCase {
 	
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
-	static User superUser, user1, user2, user3;
+	static User superUser, user3;
 	
 	static boolean beforeOK = false;
 	 
@@ -200,20 +200,21 @@ public class SessionManagerImplITCase {
 		
 		
 		// Create two generic Users
-		logger.info("5) Three STANDARD USERS creating...");
-		user1 = new User(Constants.USER1_NAME, Constants.USER1_SURNAME, Constants.USER1_EMAIL, Constants.USER1_PASSWORD);	
+		
+/*		user1 = new User(Constants.USER1_NAME, Constants.USER1_SURNAME, Constants.USER1_EMAIL, Constants.USER1_PASSWORD);	
 		Long idUser1 = userProfileController.registration(user1, role1_standard);
 		Assert.assertNotNull(user1);
 		Assert.assertTrue(idUser1.intValue()>0);
 		user2 = new User(Constants.USER2_NAME, Constants.USER2_SURNAME, Constants.USER2_EMAIL, Constants.USER2_PASSWORD);
 		Long idUser2 = userProfileController.registration(user2, role1_standard);
 		Assert.assertNotNull(user2);
-		Assert.assertTrue(idUser2.intValue()>0);
+		Assert.assertTrue(idUser2.intValue()>0);*/
+		logger.info("5) One STANDARD USER creating...");
 		user3 = new User(Constants.USER3_NAME, Constants.USER3_SURNAME, Constants.USER3_EMAIL, Constants.USER3_PASSWORD);	
 		Long idUser3 = userProfileController.registration(user3, role1_standard);
 		Assert.assertNotNull(user3);
 		Assert.assertTrue(idUser3.intValue()>0);		
-		logger.info("OK! 3 STANDARD USERS for " + user1.getName() + " , " + user2.getName() + " and " + user3.getName()  + " created!");
+		logger.info("OK! STANDARD USER for " + user3.getName() + " created!");
 		
 		// Login SuperUser
 		logger.info("6) SUPERUSER LOGIN");
@@ -288,23 +289,18 @@ public class SessionManagerImplITCase {
 			logger.info("********** Part 1: Configuration ***********");	
 			
 			// USERS 
-			logger.info("1) LOGIN USERS");
-			user1 = userProfileController.login(Constants.USER1_EMAIL, Constants.USER1_PASSWORD);
-			user2 = userProfileController.login(Constants.USER2_EMAIL, Constants.USER2_PASSWORD);
+			logger.info("1) LOGIN USER");
+
 			user3 = userProfileController.login(Constants.USER3_EMAIL, Constants.USER3_PASSWORD);
 			
-			Assert.assertTrue(user1 != null);
-			Assert.assertTrue(user2 != null);
+
 			Assert.assertTrue(user3 != null);
 			
-			Long user1Id = user1.getId();
-			Long user2Id = user2.getId();
+
 			Long user3Id = user3.getId();
-			Assert.assertTrue(user1.getId().intValue() > 0);
-			Assert.assertTrue(user2.getId().intValue() > 0);
+
 			Assert.assertTrue(user3.getId().intValue() > 0);
-			logger.info("OK! Login of user " + user1.getName() + " " + user1.getSurname() + " with id: " + user1Id);
-			logger.info("OK! Login of user " + user2.getName() + " " + user2.getSurname() + " with id: " + user2Id);
+
 			logger.info("OK! Login of user " + user3.getName() + " " + user3.getSurname() + " with id: " + user3Id);
 			
 			
@@ -383,8 +379,8 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(testPlan81);
 			
 			// Copia e importazione del TestPlan scelto per l'utente (currentUser)
-			testPlan91Id = testPlanController.cloneTestPlan(testPlan91, user1Id);
-			testPlan1Id = testPlanController.cloneTestPlan(testPlan1, user2Id);
+			testPlan91Id = testPlanController.cloneTestPlan(testPlan91, user3Id);
+			testPlan1Id = testPlanController.cloneTestPlan(testPlan1, user3Id);
 			testPlan80Id = testPlanController.cloneTestPlan(testPlan80, user3Id);
 			testPlan81Id = testPlanController.cloneTestPlan(testPlan81, user3Id);
 			Assert.assertTrue(testPlan91Id.intValue()>0);
@@ -407,7 +403,7 @@ public class SessionManagerImplITCase {
 	
 			logger.info("OK! IMPORTED selected TestPlans " + 
 					testPlan91.getName() + ", " + testPlan1.getName() + ", " + testPlan80.getName() + ", " + testPlan81.getName() +
-					" for users " + user1.getName() + ", " + user2.getName() + " and " + user3.getName());
+					" for user " + user3.getName() );
 			
 			
 			//  SUT
@@ -441,16 +437,16 @@ public class SessionManagerImplITCase {
 			String sutDescription = "XML document uploaded by email";
 	
 			// 7. Creo SUT e lo persisto per l'utente corrente
-			SUT sut = new SUT("SystemSUT1", defaultSUTType, interaction4User, sutDescription);
-			SUT sut2 = new SUT("SystemSUT2", defaultSUTType, interaction4User2, sutDescription);
+			//SUT sut = new SUT("SystemSUT1", defaultSUTType, interaction4User, sutDescription);
+			//SUT sut2 = new SUT("SystemSUT2", defaultSUTType, interaction4User2, sutDescription);
 			SUT sut3 = new SUT("SystemSUT3", defaultSUTType, interaction4User3, sutDescription);
-			Long sutId = sutController.createSUT(sut, user1);
-			Long sut2Id = sutController.createSUT(sut2, user2);
+			//Long sutId = sutController.createSUT(sut, user1);
+			//Long sut2Id = sutController.createSUT(sut2, user2);
 			Long sut3Id = sutController.createSUT(sut3, user3);
-			Assert.assertNotNull(sutId);				
-			Assert.assertTrue(sutId.intValue()>0);	
-			logger.info("OK! CREATED SUT1 " + sut.getName() + " with type: " + sut.getType() + " and interaction: " + sut.getInteraction().getType());
-			logger.info("OK! CREATED SUT2 " + sut2.getName() + " with type: " + sut2.getType() + " and interaction: " + sut2.getInteraction().getType());
+			Assert.assertNotNull(sut3Id);				
+			Assert.assertTrue(sut3Id.intValue()>0);	
+			//logger.info("OK! CREATED SUT1 " + sut.getName() + " with type: " + sut.getType() + " and interaction: " + sut.getInteraction().getType());
+			//logger.info("OK! CREATED SUT2 " + sut2.getName() + " with type: " + sut2.getType() + " and interaction: " + sut2.getInteraction().getType());
 			logger.info("OK! CREATED SUT3 " + sut3.getName() + " with type: " + sut3.getType() + " and interaction: " + sut3.getInteraction().getType());
 	
 	
@@ -524,7 +520,7 @@ public class SessionManagerImplITCase {
 			
 		
 			// SESSION1: 2 actions for correct UBL invoice and wrong UBL invoice
-			Long session91Id = sessionController.createSession(user1Id, sutId, testPlan91Id);
+			Long session91Id = sessionController.createSession(user3Id, sut3Id, testPlan91Id);
 			Assert.assertNotNull(session91Id);
 			logger.info("sessionId:" + session91Id);
 			Assert.assertTrue(session91Id.intValue()>0);		
@@ -582,7 +578,7 @@ public class SessionManagerImplITCase {
 			
 			
 			// UBL 
-			//execution(session91Id, fileList91);
+			execution(session91Id, fileList91);
 			
 			//execution(session1Id, fileList1);
 			
@@ -590,7 +586,7 @@ public class SessionManagerImplITCase {
 			//execution(session80Id, fileList80);
 			
 			// UserClient-TeBESWS
-			execution(session81Id, fileList81);			
+			//execution(session81Id, fileList81);			
 			
 		
 		

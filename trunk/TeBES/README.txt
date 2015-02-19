@@ -41,6 +41,8 @@ mvn clean install -Pprod -Dit.test=SessionManagerImplITCase verify
 9. To prepare database, import in MySQL the file ejb\config\tebes_import.sql:
 mysql -u root -proot7 -h localhost tebes < tebes_2014-4users_importV3.sql
 (export: mysqldump -u root -proot7 tebes > tebes_2014-4users_importV3.sql)
+mysqldump -u root -proot7 tebes > tebes_2015-4users-ws_importV1.sql
+mysql -u root -proot7 -h localhost tebes < tebes_2015-4users-ws_importV1.sql
 
 10. Config JAAS (si veda sotto)
 
