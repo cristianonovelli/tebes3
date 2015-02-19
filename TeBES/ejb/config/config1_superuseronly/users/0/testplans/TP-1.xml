@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../../xsl/TeBES_TestPlan.xsl" ?>
+<!-- 
+    Document Description:		Test Plan created for the TeBES Platform
+    Author:              		Cristiano Novelli (X-Lab, Cross-TEC, ENEA)
+    Project:                    Tecnopolo
+-->
+
+<tebes:TestPlan lg="en" 
+	xmlns:tebes="http://www.ubl-italia.org/TeBES"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<tebes:TestPlanHeader>
+	<!-- 
+		The "datetime" elements are related to the creation and last modify datetime of file.
+		The state element can take 2 values: "draft" or "final" 
+	-->
+	    <tebes:Id>1</tebes:Id>
+	    <tebes:Name>TP-1</tebes:Name>
+	    <tebes:State>draft</tebes:State>
+	    <tebes:Description lg="en">TP-1 Test Plan defined and used for the TeBES platform development.</tebes:Description>
+	    <tebes:Description lg="it">Test Plan TP-1 definito e utilizzato per lo sviluppo della piattaforma TeBES.</tebes:Description>
+	    <tebes:UserId>0</tebes:UserId>
+	    <tebes:CreationDatetime>2013-06-27T18:43:00Z</tebes:CreationDatetime>
+	    <tebes:LastUpdateDatetime>2014-02-04T17:15:00Z</tebes:LastUpdateDatetime>
+	</tebes:TestPlanHeader>
+    
+	<tebes:TestActionList>
+	
+		<tebes:TestAction id="TA-1_TP-1" number="1">
+			
+			<tebes:ActionName>XMLSchema-UBL-T10</tebes:ActionName>
+			<tebes:ActionDescription lg="en">UBL 2.0 Invoice XML Schema Validation.</tebes:ActionDescription>
+			<tebes:ActionDescription lg="it">Validazione UBL con XML Schema.</tebes:ActionDescription>
+			<tebes:Test 
+				lg="taml" 
+				type="TestAssertion" 
+				skipPrerequisites="true"
+				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml">TA-001_TC-001_TS-001</tebes:Test>
+			
+			<tebes:Inputs>
+				<tebes:Input>
+					
+				    <tebes:Name>IN-1_TA-1_TP-1</tebes:Name>
+				    
+					<tebes:InputDescription lg="en">Send UBL Invoice.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Invia Fattura UBL.</tebes:InputDescription>	
+					
+					<tebes:SUT 
+					    interaction="website"
+						type="document" 
+						lg="xml"
+						fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-1">		    
+					</tebes:SUT>
+					
+					<tebes:GUI reaction="upload">
+						<tebes:GUIDescription lg="en">Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-1.</tebes:GUIDescription>				
+						<tebes:GUIDescription lg="it">Upload dell'Input con fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-1.</tebes:GUIDescription>				    				    
+					</tebes:GUI>
+				</tebes:Input>
+				<!-- Questo secondo input ha lo stesso fileIdRef, quindi indica che richiederà lo stesso file -->
+				<tebes:Input>
+					
+				    <tebes:Name>IN-2_TA-1_TP-1</tebes:Name>
+				    
+					<tebes:InputDescription lg="en">Send UBL Invoice.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Invia Fattura UBL.</tebes:InputDescription>	
+					
+					<tebes:SUT 
+					    interaction="website"
+						type="document" 
+						lg="xml"
+						fileIdRef="FI-2_document-xml-website-IN-2_TA-1_TP-1">		    
+					</tebes:SUT>
+					
+					<tebes:GUI reaction="upload">
+						<tebes:GUIDescription lg="en">Upload of Input with fileIdRef = FI-2_document-xml-website-IN-2_TA-1_TP-1.</tebes:GUIDescription>				
+						<tebes:GUIDescription lg="it">Upload dell'Input con fileIdRef = FI-2_document-xml-website-IN-2_TA-1_TP-1.</tebes:GUIDescription>				    				    
+					</tebes:GUI>
+				</tebes:Input>
+			</tebes:Inputs>
+		</tebes:TestAction>
+	
+	
+		<!-- 
+			Each tebes:TestAction MUST have a @number attribute used to enumerate every action.
+			The N actions will be execute from 1 to N, sequentially, 
+			excepted different specification expressed through the tebes:TestPlan/tebes:Choreography element
+			
+			Each tebes:Test element MUST have a @type attribute used with one and only one of these values:
+				- "TestAssertion" 
+				- "TestCase" 
+				- "TestSuite" 
+		-->
+		<tebes:TestAction id="TA-2_TP-1" number="2">
+			
+			<!-- 
+				The following "tebes:ActionName" element can take different values 
+				dependent on previous tebes:TestAction/@type attribute:
+				- "TestAssertion" 
+					then tebes:ActionName element takes taml:testAssertion/@name from Test Assertion
+					(f.e. "SDI-UBL")
+				- "TestCase" 
+					then tebes:ActionName element takes taml:testAssertionSet/@setname from Test Case
+					(f.e. "Test Case for UBL Invoice Italian INTERCENT-ER Schematron validation")
+				- "TestSuite" 
+					then tebes:ActionName element takes Test Suite name folder
+					(f.e. "TS-005_sdi")
+			-->
+			<tebes:ActionName>SDI-UBL</tebes:ActionName>
+			
+			<!-- 
+				The following "tebes:ActionDescription" element can take different values 
+				dependent on previous tebes:TestAction/@type attribute:
+				- "TestAssertion" 
+					then Name element takes taml:testAssertion/taml:description
+				- "TestCase" 
+					then Name element takes taml:testAssertionSet/@setname (or user input)
+				- "TestSuite" then Name element takes Test Suite name folder  (or user input)
+			-->
+			<tebes:ActionDescription lg="en">Italian INTERCENT-ER UBL Invoice Schematron Validation.</tebes:ActionDescription>
+			<tebes:ActionDescription lg="it">Validazione Fattura UBL italiana INTERCENT-ER con Schematron.</tebes:ActionDescription>
+				
+			<!-- 
+				The tebes:Test element contains the reference to test to execute, 
+				dependent on previous tebes:TestAction/@type attribute:
+				- "TestAssertion" 
+					then tebes:Test element takes taml:testAssertion/@id from Test Assertion
+					(f.e. "TA-001_TC-001_TS-005")
+				- "TestCase" 
+					then tebes:Test element takes taml:testAssertionSet/@setid from Test Case
+					(f.e. "TC-001_TS-005")
+				- "TestSuite" 
+					then tebes:Test element takes Test Suite name folder prefix
+					(f.e. "TS-005")
+					
+				The tebes:Test/@location specifies the location of the test:
+				- an XML file absolute path, in the cases of "TestAssertion" or "TestCase" types;
+				- a folder absolute path, in the case of "TestSuite" type
+			-->
+			<tebes:Test 
+				lg="taml" 
+				type="TestAssertion" 
+				skipPrerequisites="false" 
+				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml">TA-001_TC-001_TS-005</tebes:Test>
+				
+			<!-- 
+				tebes:Input è un elemento che specifica l'input da parte del SUT 
+				(o il SUT stesso se l'elemento è uno)
+				su cui sarà eseguita quest'action.
+				Nell'action corrente, per esempio, il SUT è la fattura UBL.
+				I seguenti attributi possono assumere i seguenti valori:
+				- type: "document", "transport", "process";			
+				- description: descrizione testuale
+			-->
+			<tebes:Inputs>
+				<tebes:Input>
+					
+				    <tebes:Name>IN-1_TA-2_TP-1</tebes:Name>
+				    
+					<tebes:InputDescription lg="en">Send UBL Invoice.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Invia Fattura UBL.</tebes:InputDescription>	
+					
+					<tebes:SUT 
+					    interaction="website"
+						type="document" 
+						lg="xml"
+						fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-1">		    
+					</tebes:SUT>
+					
+					<tebes:GUI reaction="upload">
+						<tebes:GUIDescription lg="en">Upload of Input with fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-1.</tebes:GUIDescription>				
+						<tebes:GUIDescription lg="it">Upload dell'Input con fileIdRef = FI-1_document-xml-website-IN-1_TA-1_TP-1.</tebes:GUIDescription>				    				    
+					</tebes:GUI>
+				</tebes:Input>
+			</tebes:Inputs>
+		</tebes:TestAction>
+		
+	</tebes:TestActionList>
+
+	<!-- 
+		The "tebes:Choreography" element specifies a choreography among the defined test actions. 
+		If this element is empty, the N actions MUST be executed from number 1 to N, sequentially.
+		
+		The choreography XML element is work in progress:
+		a solution to express choreography may be an ebBP-like XML syntax. 
+	-->	
+	<tebes:Choreography />
+	
+</tebes:TestPlan>
+
