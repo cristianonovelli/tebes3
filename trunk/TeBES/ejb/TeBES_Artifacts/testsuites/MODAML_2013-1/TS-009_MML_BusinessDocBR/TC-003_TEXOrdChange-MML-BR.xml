@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../../xsl/TeBES_TestSuite.xsl" ?>
+<!-- 
+    Created by Arianna Brutti
+    ENEA, Bologna, 2012-25-05   
+    Version=0.1
+    
+    Notes:
+    - The tebes namespace is defined to extend TAML with new elements or attributes used in the TeBES platform
+-->
+
+<taml:testAssertionSet 
+    xmlns:taml="http://docs.oasis-open.org/ns/tag/taml-201002/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://docs.oasis-open.org/ns/tag/taml-201002/ http://docs.oasis-open.org/tag/taml/v1.0/cs02/xsd/testAssertionMarkupLanguage.xsd"
+    xmlns:tebes="http://www.ubl-italia.org/TeBES"
+    setid="TC-003_TS-009"
+    setname="Test Case for Textile Purchase Order Change Business Rules validation"
+	tebes:version="0.1">
+    
+    <taml:testAssertionRefList listname="prerequisites">   
+        <!-- 
+            The taml:testAssertionRef attributes have to take the following values:
+            - @taid: testAssertion/@id of the test assertion;
+            - @name: testAssertion/@name of the test assertion;
+            - @tebes:version: version of this Test Suite specification for TeBES
+        -->
+        <taml:testAssertionRef 
+            taid="TA-001_TC-003_TS-008" 
+            name="TEXOrdChange-MML" 
+            sourcedoc="http://www.ubl-italia.org/TeBES/testsuites/MODAML_2013-1/TS-008_MML_BusinessDocStr/TC-003_TEXOrdChange-MML.xml" 
+            tebes:version="0.1" />   
+    </taml:testAssertionRefList>	        	
+    
+    <taml:testAssertion 
+        id="TA-001_TC-003_TS-009" 
+        name="TEXOrdChange-MML-BR" 
+        tebes:isNotePresent="false">
+
+        <taml:description>Business rules on Moda-ML Textile Purchase Order Change (applied through Schematron Validation).</taml:description>
+        
+        <taml:normativeSource>
+            <taml:comment></taml:comment>
+            <taml:refSourceItem></taml:refSourceItem>
+            <taml:textSourceItem></taml:textSourceItem>
+        </taml:normativeSource>
+
+        <taml:var vname="TEXOrdChange-MML" vtype="http://docs.oasis-open.org/ns/tag/taml-201002/">taml:TA-001_TC-003_TS-008 eq 'pass'</taml:var>
+        
+        <taml:var vname="TEXOrdChange-MML-BR" vtype="http://purl.oclc.org/dsdl/schematron">http://www.moda-ml.net/moda-ml/repository/schematron/v2013-1/TEXOrdChangeValidator.sch</taml:var>
+        
+        <!-- XML document, target of Test --> 
+        <taml:target type="xml">document</taml:target>
+        
+        <taml:prerequisite>TEXOrdChange-MML</taml:prerequisite>
+        
+        <taml:predicate>TEXOrdChange-MML-BR</taml:predicate>
+        
+        <taml:prescription level="mandatory" />
+        
+        <taml:report 
+            label="pass" 
+            message="Moda-ML Textile Purchase Order Change Business Rules are satisfied.">The file is valid against Moda-ML Textile Purchase Order Change Business Rules.</taml:report>
+        <taml:report 
+            label="fail" 
+            message="One or more Moda-ML Textile Purchase Order Change Business Rules are NOT satisfied.">The file is NOT valid against Moda-ML Textile Purchase Order Change Business Rules.</taml:report>
+        <taml:report 
+            label="notQualified" 
+            message="Not qualified to perform the Moda-ML Textile Purchase Order Change Business Rules validation">The file is not qualified to perform the Moda-ML Textile Purchase Order Change Business Rules validation.</taml:report>
+    </taml:testAssertion>
+	
+</taml:testAssertionSet>

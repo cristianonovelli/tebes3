@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../../xsl/TeBES_TestSuite.xsl" ?>
+<!-- 
+	Created by Arianna Brutti
+	ENEA, Bologna, 2015-17-02   
+	Version=0.1
+-->
+
+<taml:testAssertionSet 
+    xmlns:taml="http://docs.oasis-open.org/ns/tag/taml-201002/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://docs.oasis-open.org/ns/tag/taml-201002/ http://docs.oasis-open.org/tag/taml/v1.0/cs02/xsd/testAssertionMarkupLanguage.xsd"
+	xmlns:tebes="http://www.ubl-italia.org/tebes"
+    setid="TC-004_TS-008"
+    setname="Test Case for MODA-ML Textile Purchase Order XML Schema validation."
+	tebes:version="0.1">
+
+    <taml:common>
+        <taml:namespaces 
+            xmlns:ml="http://www.moda-ml.org/moda-ml/repository/schema/v2013-1/TEXOrdStatus.xsd" />
+    </taml:common>
+    
+    
+    <taml:testAssertion 
+        id="TA-001_TC-004_TS-008" 
+        name="TEXOrdStatus-MML" 
+        tebes:isNotePresent="false">
+
+        <taml:description>MODA-ML Textile Purchase Order Status XML Schema validation.</taml:description>
+        
+        <taml:normativeSource>
+            <taml:comment>Reference page of the MODA-ML document with Guide and Schema.</taml:comment>
+            <taml:refSourceItem>http://www.moda-ml.org/moda-ml/imple/moda-ml-2013-1.asp?lingua=en&pag=3&modo=hd&nomenu=1&msg=3</taml:refSourceItem>
+            <taml:textSourceItem>http://www.moda-ml.org/moda-ml/imple/moda-ml-2013-1.asp?lingua=en&pag=3&modo=hd&nomenu=1&msg=3</taml:textSourceItem>
+        </taml:normativeSource>
+
+        <taml:var vname="TEXOrdStatus-MML" vtype="http://www.w3.org/TR/xpath20/">count(//ml:TEXOrdStatus) ge 1</taml:var>
+        
+        <taml:target type="document" lg="xml">document</taml:target>
+        
+        <!-- 
+            The XPath expression executes the XML Schema validation 
+            on the XML root Invoice, calling the XML Schema specified by soap: namespace defined in taml:common.
+            The "ge" XPath means "greater than or equal to". 
+        -->
+        <taml:predicate>TEXOrdStatus-MML</taml:predicate>
+        
+        <taml:prescription level="mandatory" />
+        
+        <taml:report 
+            label="pass" 
+            message="OK validation document Textile Purchase Order Status against MODA-ML XML Schema.">OK validation document Textile Purchase Order Status against MODA-ML XML Schema.</taml:report>
+        <taml:report 
+            label="fail" 
+            when="count(//ml:TEXOrdStatus) ge 0"
+            message="The document is NOT valid against MODA-ML Textile Purchase Order Status XML Schema.">The document is NOT valid against MODA-ML Textile Purchase Order Status XML Schema.</taml:report>
+
+    </taml:testAssertion>
+	
+</taml:testAssertionSet>

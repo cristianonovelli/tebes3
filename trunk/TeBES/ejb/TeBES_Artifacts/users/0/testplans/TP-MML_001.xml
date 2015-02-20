@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../../xsl/TeBES_TestPlan.xsl" ?>
+<!-- 
+    Document Description:		Test Plan created for the TeBES Platform 
+    Author:              		Arianna Brutti (X-Lab, Cross-TEC, ENEA)
+    Project:                    Tecnopolo
+-->
+
+<tebes:TestPlan lg="en" xmlns:tebes="http://www.ubl-italia.org/TeBES"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<tebes:TestPlanHeader>
+		<!-- 
+		The "datetime" elements are related to the creation and last modify datetime of file.
+		The state element can take 2 values: "draft" or "final" 
+	-->
+		<tebes:Id>MML</tebes:Id>
+		<tebes:Name>TP-MML</tebes:Name>
+		<tebes:State>draft</tebes:State>
+		<tebes:Description lg="en">TP-MML Test Plan is used to test the conformance of the business
+			documents exchanged in Moda-ML 'Purchase of fabrics' activity.</tebes:Description>
+		<tebes:Description lg="it">Test Plan TP-MML è utilizzato per testare la conformità dei
+			documenti di business usati nell'attivita' Moda-ML 'Acquisto
+			tessuti'.</tebes:Description>
+		<tebes:UserId>0</tebes:UserId>
+	    <tebes:CreationDatetime>2014-08-21T16:43:00Z</tebes:CreationDatetime>
+	    <tebes:LastUpdateDatetime>2014-08-21T16:43:00Z</tebes:LastUpdateDatetime>
+	</tebes:TestPlanHeader>
+
+	<tebes:TestActionList>
+
+		<tebes:TestAction id="TA-1_TP-MML" number="1">
+
+			<tebes:ActionName>Check TEXOrder-MML</tebes:ActionName>
+			<tebes:ActionDescription lg="en">Check if the document is valid against the Textile
+				Purchase Order MODA-ML XML Schema.</tebes:ActionDescription>
+			<tebes:ActionDescription lg="it">Verifica se il documento è valido rispetto allo Schema
+				Moda-ML Ordine di Acquisto Tessuti.</tebes:ActionDescription>
+
+			<tebes:Test lg="taml" type="TestAssertion" skipPrerequisites="true"
+				location="http://winter.bologna.enea.it/tebes-artifacts/testsuites/MODAML_2013-1/TS-009_MML_BusinessDocBR/TC-001_TEXOrder-MML-BR.xml"
+				>TA-001_TC-001_TS-001</tebes:Test>
+
+			<tebes:Inputs>
+				<tebes:Input>
+					<tebes:Name>IN-1_TA-1_TP-MML</tebes:Name>
+
+					<tebes:InputDescription lg="en">Sending of Moda-ML Textile Purchase
+						Order.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Invio di un Ordine di Acquisto Tessuti
+						Moda-ML.</tebes:InputDescription>
+
+					<tebes:SUT interaction="website" type="document" lg="xml"
+						fileIdRef="FI-1_document-xml-website-IN-1_TA-1_TP-MML"> </tebes:SUT>
+
+					<tebes:GUI reaction="upload">
+						<tebes:GUIDescription lg="en">Upload of Moda-ML Textile Purchase
+							Order.</tebes:GUIDescription>
+						<tebes:GUIDescription lg="it">Upload dell'Ordine di Acquisto Tessuti
+							Moda-ML.</tebes:GUIDescription>
+					</tebes:GUI>
+				</tebes:Input>
+			</tebes:Inputs>
+
+		</tebes:TestAction>
+
+
+		<tebes:TestAction id="TA-2_TP-MML" number="2">
+
+			<tebes:ActionName>Check TEXOrdResponse-MML</tebes:ActionName>
+			<tebes:ActionDescription lg="en">Check if the document is valid against the Textile
+				Purchase Order Response MODA-ML XML Schema.</tebes:ActionDescription>
+			<tebes:ActionDescription lg="it">Verifica se il documento è valido rispetto allo Schema
+				Moda-ML Risposta all'Ordine di Acquisto Tessuti.</tebes:ActionDescription>
+
+			<tebes:Test lg="taml" type="TestAssertion" skipPrerequisites="true"
+				location="http://winter.bologna.enea.it/tebes-artifacts/testsuites/MODAML_2013-1/TS-009_MML_BusinessDocBR/TC-002_TEXOrdResponse-MML-BR.xml"
+				>TA-001_TC-001_TS-001</tebes:Test>
+
+			<tebes:Inputs>
+				<tebes:Input>
+					<tebes:Name>IN-2_TA-2_TP-MML</tebes:Name>
+
+					<tebes:InputDescription lg="en">Sending of Moda-ML Textile Purchase
+						Order Response.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Invio di una Risposta all'Ordine di Acquisto Tessuti
+						Moda-ML.</tebes:InputDescription>
+
+					<tebes:SUT interaction="website" type="document" lg="xml"
+						fileIdRef="FI-1_document-xml-website-IN-2_TA-2_TP-MML"> </tebes:SUT>
+
+					<tebes:GUI reaction="upload">
+						<tebes:GUIDescription lg="en">Upload of Moda-ML Textile Purchase
+							Order Response.</tebes:GUIDescription>
+						<tebes:GUIDescription lg="it">Upload della Risposta all'Ordine di Acquisto Tessuti
+							Moda-ML.</tebes:GUIDescription>
+					</tebes:GUI>
+				</tebes:Input>
+			</tebes:Inputs>
+
+		</tebes:TestAction>
+
+
+		<tebes:TestAction id="TA-3_TP-MML" number="3">
+
+			<tebes:ActionName>Check TEXOrder-MML</tebes:ActionName>
+			<tebes:ActionDescription lg="en">Check if the document is valid against the Textile
+				Purchase Order against MODA-ML XML Schema.</tebes:ActionDescription>
+			<tebes:ActionDescription lg="it">Verifica se il documento è valido rispetto allo Schema
+				Moda-ML Ordine di Acquisto Tessuti.</tebes:ActionDescription>
+
+			<tebes:Test lg="taml" type="TestAssertion" skipPrerequisites="true"
+				location="http://winter.bologna.enea.it/tebes-artifacts/testsuites/MODAML_2013-1/TS-009_MML_BusinessDocBR/TC-003_TEXOrdChange-MML-BR.xml"
+				>TA-001_TC-001_TS-001</tebes:Test>
+
+			<tebes:Inputs>
+				<tebes:Input>
+					<tebes:Name>IN-3_TA-3_TP-MML</tebes:Name>
+
+					<tebes:InputDescription lg="en">Sending of Moda-ML Textile Purchase
+						Order Change.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Invio di una Modifica Ordine di Acquisto Tessuti
+						Moda-ML.</tebes:InputDescription>
+
+					<tebes:SUT interaction="website" type="document" lg="xml"
+						fileIdRef="FI-1_document-xml-website-IN-3_TA-3_TP-MML"> </tebes:SUT>
+
+					<tebes:GUI reaction="upload">
+						<tebes:GUIDescription lg="en">Upload of Moda-ML Textile Purchase
+							Order Change.</tebes:GUIDescription>
+						<tebes:GUIDescription lg="it">Upload della Modifica Ordine di Acquisto Tessuti
+							Moda-ML.</tebes:GUIDescription>
+					</tebes:GUI>
+				</tebes:Input>
+			</tebes:Inputs>
+
+		</tebes:TestAction>
+
+		<tebes:TestAction id="TA-4_TP-MML" number="4">
+
+			<tebes:ActionName>Check TEXOrder-MML</tebes:ActionName>
+			<tebes:ActionDescription lg="en">Check if the document is valid against the Textile
+				Purchase Order Status against MODA-ML XML Schema.</tebes:ActionDescription>
+			<tebes:ActionDescription lg="it">Verifica se il documento è valido rispetto allo Schema
+				Moda-ML Stato di Avanzamento Ordine di Acquisto Tessuti.</tebes:ActionDescription>
+
+			<tebes:Test lg="taml" type="TestAssertion" skipPrerequisites="true"
+				location="http://winter.bologna.enea.it/tebes-artifacts/testsuites/MODAML_2013-1/TS-009_MML_BusinessDocBR/TC-004_TEXOrdStatus-MML-BR.xml"
+				>TA-001_TC-001_TS-001</tebes:Test>
+
+			<tebes:Inputs>
+				<tebes:Input>
+					<tebes:Name>IN-4_TA-4_TP-MML</tebes:Name>
+
+					<tebes:InputDescription lg="en">Sending of Moda-ML Textile Purchase
+						Order Status.</tebes:InputDescription>
+					<tebes:InputDescription lg="it">Invio di uno  Stato di Avanzamento Ordine di Acquisto Tessuti
+						Moda-ML.</tebes:InputDescription>
+
+					<tebes:SUT interaction="website" type="document" lg="xml"
+						fileIdRef="FI-1_document-xml-website-IN-4_TA-4_TP-MML"> </tebes:SUT>
+
+					<tebes:GUI reaction="upload">
+						<tebes:GUIDescription lg="en">Upload of Moda-ML Textile Purchase
+							Order Status.</tebes:GUIDescription>
+						<tebes:GUIDescription lg="it">Upload dello  Stato di Avanzamento Ordine di Acquisto Tessuti
+							Moda-ML.</tebes:GUIDescription>
+					</tebes:GUI>
+				</tebes:Input>
+			</tebes:Inputs>
+
+		</tebes:TestAction>
+
+	</tebes:TestActionList>
+
+	<!-- 
+		The "tebes:Choreography" element specifies a choreography among the defined test actions. 
+		If this element is empty, the N actions MUST be executed from number 1 to N, sequentially.
+		
+		The choreography XML element is work in progress:
+		a solution to express choreography may be an ebBP-like XML syntax. 
+	-->
+	<tebes:Choreography/>
+
+</tebes:TestPlan>
