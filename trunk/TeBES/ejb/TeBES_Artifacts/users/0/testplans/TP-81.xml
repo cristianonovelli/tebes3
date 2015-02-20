@@ -33,7 +33,7 @@
 				lg="taml" 
 				type="TestAssertion" 
 				skipPrerequisites="true"
-				location="http://www.ubl-italia.org/TeBES/testsuites/WS/TS-006_WS/TC-001_SOAPEnvelope-WS.xml">TA-002_TC-001_TS-006</tebes:Test>		
+				location="http://winter.bologna.enea.it/tebes-artifacts/testsuites/WS/TS-006_WS/TC-001_SOAPEnvelope-WS.xml">TA-002_TC-001_TS-006</tebes:Test>		
 
 		</tebes:TestAction>
 		

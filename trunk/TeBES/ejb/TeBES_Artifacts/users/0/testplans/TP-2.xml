@@ -35,7 +35,7 @@
 				lg="taml" 
 				type="TestAssertion" 
 				skipPrerequisites="true"
-				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml">TA-001_TC-001_TS-001</tebes:Test>
+				location="http://winter.bologna.enea.it/tebes-artifacts/testsuites/UBL/TS-001_UBL/TC-001_XMLSchema-UBL-T10.xml">TA-001_TC-001_TS-001</tebes:Test>
 			<tebes:Inputs>
 				<tebes:Input>
 					
@@ -127,7 +127,7 @@
 				lg="taml" 
 				type="TestAssertion" 
 				skipPrerequisites="false" 
-				location="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml">TA-001_TC-001_TS-005</tebes:Test>
+				location="http://winter.bologna.enea.it/tebes-artifacts/testsuites/UBL/TS-005_sdi/TC-001_SDI-UBL-T10.xml">TA-001_TC-001_TS-005</tebes:Test>
 
 			<!-- 
 				tebes:Input è un elemento che specifica l'input da parte del SUT 

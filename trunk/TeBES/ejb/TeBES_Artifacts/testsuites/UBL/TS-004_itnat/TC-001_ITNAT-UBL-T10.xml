@@ -28,7 +28,7 @@
         <taml:testAssertionRef 
             taid="TA-001_TC-001_TS-003" 
             name="EUGEN-UBL-T10" 
-            sourcedoc="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-003_eugen/TC-001_EUGEN-UBL-T10.xml" 
+            sourcedoc="http://winter.bologna.enea.it/tebes-artifacts/testsuites/UBL/TS-003_eugen/TC-001_EUGEN-UBL-T10.xml" 
             tebes:version="0.1" />
     </taml:testAssertionRefList>	        	
     

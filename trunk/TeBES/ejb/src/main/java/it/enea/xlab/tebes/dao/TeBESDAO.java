@@ -26,14 +26,14 @@ public class TeBESDAO {
 		String relativeLocation = null;
 
 		// Recognize TeBES home URL 
-		if (urlLocation.startsWith(PropertiesUtil.getTeBESURL())) {
+		if (urlLocation.startsWith(PropertiesUtil.getTeBESArtifactsURL())) {
 			
 			// Get relative URL
-			relativeLocation = urlLocation.substring(PropertiesUtil.getTeBESURL().length(), urlLocation.length());
+			relativeLocation = urlLocation.substring(PropertiesUtil.getTeBESArtifactsURL().length(), urlLocation.length());
 			
 			// Add file system local path
 			localLocation = PropertiesUtil.getArtifactsDirPath().concat(relativeLocation);
-			System.out.println("localLocation: " + localLocation);
+			//System.out.println("localLocation: " + localLocation);
 			
 		}
 		else 
@@ -58,7 +58,7 @@ public class TeBESDAO {
 			relativeLocation = location.substring(PropertiesUtil.getArtifactsDirPath().length(), location.length());
 			
 			// Add file system local path
-			publication = PropertiesUtil.getTeBESURL().concat(relativeLocation);			
+			publication = PropertiesUtil.getTeBESArtifactsURL().concat(relativeLocation);			
 		}
 		
 		return publication;

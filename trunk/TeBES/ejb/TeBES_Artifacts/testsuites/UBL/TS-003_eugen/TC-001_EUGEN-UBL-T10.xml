@@ -28,17 +28,17 @@
         <taml:testAssertionRef 
             taid="TA-001_TC-001_TS-002" 
             name="BIICORE-UBL-T10" 
-            sourcedoc="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-002_bii/TC-001_BII-UBL-T10.xml" 
+            sourcedoc="http://winter.bologna.enea.it/tebes-artifacts/testsuites/UBL/TS-002_bii/TC-001_BII-UBL-T10.xml" 
             tebes:version="0.1" />
         <taml:testAssertionRef 
             taid="TA-002_TC-001_TS-002" 
             name="BIIPROFILES-UBL-T10" 
-            sourcedoc="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-002_bii/TC-001_BII-UBL-T10.xml" 
+            sourcedoc="http://winter.bologna.enea.it/tebes-artifacts/testsuites/UBL/TS-002_bii/TC-001_BII-UBL-T10.xml" 
             tebes:version="0.1" />        
         <taml:testAssertionRef 
             taid="TA-003_TC-001_TS-002" 
             name="BIIRULES-UBL-T10" 
-            sourcedoc="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-002_bii/TC-001_BII-UBL-T10.xml" 
+            sourcedoc="http://winter.bologna.enea.it/tebes-artifacts/testsuites/UBL/TS-002_bii/TC-001_BII-UBL-T10.xml" 
             tebes:version="0.1" />    
     </taml:testAssertionRefList>	        	
     

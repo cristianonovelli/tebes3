@@ -29,7 +29,7 @@
         <taml:testAssertionRef 
             taid="TA-001_TC-001_TS-004" 
             name="ITNAT-UBL-T10" 
-            sourcedoc="http://www.ubl-italia.org/TeBES/testsuites/UBL/TS-004_itnat/TC-001_ITNAT-UBL-T10.xml" 
+            sourcedoc="http://winter.bologna.enea.it/tebes-artifacts/testsuites/UBL/TS-004_itnat/TC-001_ITNAT-UBL-T10.xml" 
             tebes:version="0.1" />
     </taml:testAssertionRefList>	        	
     
