@@ -48,7 +48,6 @@ public class PropertiesUtil {
 	public static String getArtifactsLocationProperty() {
 
 		return getConfiguration().getString("artifacts.location");
-		// artifacts.location=C:/Java/jboss-4.2.3.GA/server/default/
 	}
 	
 	public static String getSuperUserNameProperty() {
