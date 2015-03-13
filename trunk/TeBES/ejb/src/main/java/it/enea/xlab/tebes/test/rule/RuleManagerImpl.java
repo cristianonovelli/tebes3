@@ -76,7 +76,9 @@ public class RuleManagerImpl implements RuleManagerRemote {
 		}
 		
 		
-		
+		report.addLineToFullDescription("---- PRE-CASE 1,2,3 ----"); 
+		report.addLineToFullDescription("taf.getTarget().getType():" + taf.getTarget().getType());
+				
 		//////////////////////
 		// CASO 1: DOCUMENT //
 		//////////////////////

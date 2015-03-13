@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="./xsl/TEXOrdStatus.xsl"?>
+
+<ml:TEXOrdStatus xmlns:ml="urn:moda-ml:repository:schema:TEXOrdStatus"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:moda-ml:repository:schema:TEXOrdStatus http://www.moda-ml.org/moda-ml/repository/schema/v2013-1/TEXOrdStatus.xsd"
+	TStype="C" msgfunction="OR" version="2013-1" useProfile="CA">
+
+	<TSheader>
+		<msgN>AB001</msgN>
+		<msgID>001 Stato avanzamento ordine</msgID>
+		<msgDate>2007-08-04</msgDate>
+		<buyer logo="http://spring.bologna.enea.it/moda-ml/images/garment.jpg" sender="false">
+			<id numberingOrg="MF">IT99999999</id>
+			<legalName>GARMENT srl</legalName>
+			<dept>R.D.</dept>
+			<person email="bianchi@garment.it" phone="+39-051-1111111" fax="+39 051-11111111">Mario
+				Bianchi</person>
+			<street>via Pera, 34</street>
+			<city>Milano</city>
+			<subCountry>MI</subCountry>
+			<country>IT</country>
+			<postCode>99111</postCode>
+		</buyer>
+		<supplier logo="http://spring.bologna.enea.it/moda-ml/images/green.jpg" sender="true">
+			<id numberingOrg="MF">UK99999999</id>
+			<legalName>Green Fabrics LTD</legalName>
+			<dept>Warehouse</dept>
+			<person email="doe@dyer.uk" phone="2323232323" fax="23232324">Joe Doe</person>
+			<street>2 Hawkley Drive</street>
+			<city>Bristol</city>
+			<subCountry>BF</subCountry>
+			<country>GB</country>
+			<postCode>BS32 0BF </postCode>
+		</supplier>
+		<note numberingOrg="CL" codeList="cl0" noteLabel="ln0">Documento di test</note>
+		<note numberingOrg="CL" codeList="cl1" noteLabel="ln1">Solo uso dimostrativo</note>
+	</TSheader>
+	<TSbody>
+
+		<TSitem>
+			<lineN>1</lineN>
+			<refDoc docType="OSR">
+				<docID numberingOrg="CL">001 test</docID>
+				<docDate dateForm="D">2014-05-09</docDate>
+				<season>32015</season>
+				<itemID>1</itemID>
+			</refDoc>
+			<refDoc docType="CTR">
+				<docID numberingOrg="CL">001 test</docID>
+				<docDate dateForm="D">2014-04-13</docDate>
+				<season>32015</season>
+				<itemID>1</itemID>
+			</refDoc>
+
+			<texCode numberingOrg="CL">
+				<art codeList="TTTT" listName="mylistname" listVersion="V1.1">FABRIC TYPE1</art>
+				<pattern codeList="TTTT" listName="mylistname" listVersion="V1.1"
+					>10400-001</pattern>
+				<color codeList="PTN" listName="mylistname" listVersion="V1.1">1WV2QQQ3AK</color>
+				<added addType="LT" numberingOrg="CL">2100</added>
+				<description>tessuto cotone leggero</description>
+			</texCode>
+			<progress>
+				<qty um="MTR">50.00</qty>
+				<deliveryDate dateForm="D">2014-10-30</deliveryDate>
+				<delGrantedDate dateForm="D">2014-11-15</delGrantedDate>
+				<mfrStatus>899</mfrStatus>
+			</progress>
+			<note numberingOrg="CL" codeList="cl0" noteLabel="ln0">Documento di test</note>
+		</TSitem>
+
+		<TSitem>
+			<lineN>2</lineN>
+			<refDoc docType="OSR">
+				<docID numberingOrg="CL">AA004</docID>
+				<docDate>2014-05-04</docDate>
+				<season>22015</season>
+				<itemID>3288</itemID>
+			</refDoc>
+			<texCode numberingOrg="CL">
+				<art>124</art>
+				<pattern>AF5</pattern>
+				<color>A65</color>
+				<added addType="CC">F55</added>
+				<description>Descrizione articolo</description>
+			</texCode>
+			<progress>
+				<qty um="MTR">50</qty>
+				<deliveryDate>2014-08-10</deliveryDate>
+				<delGrantedDate>2014-08-07</delGrantedDate>
+				<mfrStatusText>Materiale pronto per la spedizione</mfrStatusText>
+			</progress>
+		</TSitem>
+	</TSbody>
+</ml:TEXOrdStatus>

@@ -177,6 +177,8 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 	 */
 	private TAF buildTestAssertionTAF(Action action) {
 
+		System.out.println("buildTestAssertionTAF-1");
+		
 		// TAF Result
 		TAF taf = null;
 		
@@ -204,7 +206,8 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			if (absoluteLocation == null) {
 				logger.error("ERROR: Method url2localLocation returns null!");
 				return null;
-			}
+			} else
+				System.out.println("buildTestAssertionTAF-2");
 			
 			
 			// Get DOM object from TAML 
@@ -213,11 +216,15 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			// Get TestAssertion Hashtable from TAML
 			taHashtable = t2j.getTestAssertionHashtable(tamlDOM, action.getInputs());
 			
+			System.out.println("buildTestAssertionTAF-3");
+			System.out.println("buildTestAssertionTAF testValue:" + action.getTestValue());
 			
 			// Get testAssertion Node from TAML
 			testAssertionNode = tamlDOM.getTestAssertionNode((action.getTestValue()));
 
 			// Get Variables Hashtable from TAML
+			System.out.println("buildTestAssertionTAF XML:" + tamlDOM.getXMLString());
+			System.out.println("buildTestAssertionTAF node:" + testAssertionNode.getNodeName());
 			variableHashtable = t2j.getVariableHashtable(tamlDOM, testAssertionNode);
 
 			// Get CommonNamespaces Hashtable from TAML
@@ -226,6 +233,8 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			// Get Target
 			target = t2j.getTarget(tamlDOM, testAssertionNode);
 
+			System.out.println("buildTestAssertionTAF-4");
+			
 			// Get Predicate from TAML
 			predicate = t2j.getPredicate(tamlDOM, testAssertionNode);		
 
@@ -256,6 +265,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 				}
 			}
 
+			System.out.println("buildTestAssertionTAF-5");
 			
 			ArrayList<TestRule> testRuleList2 = new ArrayList<TestRule>();
 			 testRuleList2.add(predicate);
@@ -268,6 +278,7 @@ public class TAMLManager extends TestManagerImpl implements TestManagerRemote {
 			// Get Report Hashtable from TAML
 			Hashtable<String, ReportFragment> reportHashtable = t2j.getReportHashtable(tamlDOM, testAssertionNode);			
 			
+			System.out.println("buildTestAssertionTAF-6");
 
 			// Adjust Predicate Test Rule
 			// TODO Si assume che il predicato sia 1 ed 1 soltanto

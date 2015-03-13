@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="./xsl/TEXOrdChange.xsl"?>
+
+<ml:TEXOrdChange xmlns:ml="urn:moda-ml:repository:schema:TEXOrdChange"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:moda-ml:repository:schema:TEXOrder http://www.moda-ml.org/moda-ml/repository/schema/v2013-1/TEXOrdChange.xsd"
+	TOtype="A" msgfunction="OR" version="2013-1" useProfile="CA">
+
+	<TXheader>
+		<msgN>AB003</msgN>
+		<msgID>Doc2347</msgID>
+		<msgDate dateForm="D">2014-06-24</msgDate>
+		<validityEnd dateForm="D">2014-07-24</validityEnd>
+		<msgCurrency>EUR</msgCurrency>
+		<otherCurrency currencyUseQualifier="PAY">GBP</otherCurrency>
+		<refDoc docType="ORD">
+			<docID numberingOrg="CL">Ord9876</docID>
+			<docDate dateForm="D">2014-05-09</docDate>
+			<season>32015</season>
+		</refDoc>
+		<buyer logo="http://spring.bologna.enea.it/moda-ml/images/garment.jpg" sender="true">
+			<id numberingOrg="MF">IT99999999</id>
+			<legalName>GARMENT srl</legalName>
+			<dept>R.D.</dept>
+			<person email="bianchi@garment.it" phone="+39-051-1111111" fax="+39 051-11111111">Mario
+				Bianchi</person>
+			<street>via Pera, 34</street>
+			<city>Milano</city>
+			<subCountry>MI</subCountry>
+			<country>IT</country>
+			<postCode>99111</postCode>
+		</buyer>
+		<supplier logo="http://spring.bologna.enea.it/moda-ml/images/green.jpg">
+			<id numberingOrg="MF">UK99999999</id>
+			<legalName>Green Fabrics LTD</legalName>
+			<dept>Warehouse</dept>
+			<person email="doe@dyer.uk" phone="2323232323" fax="23232324">Joe Doe</person>
+			<street>2 Hawkley Drive</street>
+			<city>Bristol</city>
+			<subCountry>BF</subCountry>
+			<country>GB</country>
+			<postCode>BS32 0BF </postCode>
+		</supplier>
+		<thirdParty role="DF">
+			<id numberingOrg="MF">IT45678901234</id>
+			<legalName>Finbianchi SPA</legalName>
+			<dept>Fornitori</dept>
+			<person email="ulisse@finbianchi.it" phone="053 6098111" fax="053 6098222"
+				>Ulisse</person>
+			<street>via dei Finanzieri 99</street>
+			<city>Dollaropoli</city>
+			<subCountry>LB</subCountry>
+			<country>IT</country>
+			<postCode>44444</postCode>
+		</thirdParty>
+		<thirdParty role="DM">
+			<id numberingOrg="MF">IT00111111111</id>
+			<legalName>ENA WAREHOUSE ltd</legalName>
+			<dept>UTT</dept>
+			<person email="sempronio@enea.it" phone="051-4478244" fax="051-4478244">Sempronio de
+				Francisci </person>
+			<street>Via Verdi 1</street>
+			<city>Bologna</city>
+			<subCountry>BO</subCountry>
+			<country>IT</country>
+			<postCode>99111</postCode>
+		</thirdParty>
+		<note>Documento di test, ogni riferimento a persone, aziende e prodotti è puramente
+			casuale</note>
+	</TXheader>
+
+	<terms>
+		<payment finDiscount="10" finSurcharge="22">
+			<payTermText>pagamento a 20gg data fattura</payTermText>
+			<payMode>RD</payMode>
+		</payment>
+		<trade>
+			<incoTermText>Consegna in porto franco</incoTermText>
+			<location LRI="EN4">locazione 0</location>
+		</trade>
+		<transInfo transReason="SEL">
+			<transMode>3</transMode>
+			<carrier>DHL</carrier>
+			<deliveryPlace>destinazione consegna 0</deliveryPlace>
+			<grossWeight um="KGM">50.00</grossWeight>
+			<netWeight um="KGM">48.00</netWeight>
+			<transMeans>TRU</transMeans>
+			<transCondition>PRO</transCondition>
+			<transConditionText>Tramite corriere DHL</transConditionText>
+		</transInfo>
+		<allowanceCharge>
+			<AC_category>CWB</AC_category>
+			<AC_percent>10</AC_percent>
+			<dtScheme taxType="VAT">
+				<taxCategory>AA</taxCategory>
+				<taxRate>10</taxRate>
+				<legalRef codeList="cl2">rif. legale 31</legalRef>
+				<note numberingOrg="CL" codeList="cl3" noteLabel="ln2">nota2</note>
+			</dtScheme>
+		</allowanceCharge>
+		<allowanceCharge>
+			<AC_categoryText>Anticipo lavoro</AC_categoryText>
+			<AC_amount>0.15</AC_amount>
+			<dtScheme taxType="VAT">
+				<taxCategory>AA</taxCategory>
+				<taxRate>10</taxRate>
+				<legalRef codeList="cl2">rif. legale 35</legalRef>
+				<note numberingOrg="CL" codeList="cl4" noteLabel="ln3">nota3</note>
+			</dtScheme>
+		</allowanceCharge>
+	</terms>
+	<texComInfo endUse="PR" IC="false" techSheet="false">
+		<season>32015</season>
+		<project>PRJ-03412</project>
+		<deliveryDate dateForm="D">2014-07-15</deliveryDate>
+		<specDate dateForm="D">2014-01-11</specDate>
+		<fabricWidth um="CMT">50.00</fabricWidth>
+		<pieceLength um="MTR">50.00</pieceLength>
+		<piecePack>
+			<piecePackText>Strato protettivo in Cellophane</piecePackText>
+		</piecePack>
+	</texComInfo>
+	<TXbody>
+		<TXitem act="R">
+			<lineN>1</lineN>
+			<refDoc docType="ORD">
+				<docID numberingOrg="FO">Ord9876</docID>
+				<docDate dateForm="D">2014-05-09</docDate>
+				<itemID>4</itemID>
+			</refDoc>
+			<texCode numberingOrg="CL">
+				<art codeList="TTTT" listName="mylistname" listVersion="V1.1">FABRIC TYPE1</art>
+				<pattern codeList="TTTT" listName="mylistname" listVersion="V1.1"
+					>10400-001</pattern>
+				<color codeList="PTN" listName="mylistname" listVersion="V1.1">1WV2QQQ3AK</color>
+				<added addType="LT" numberingOrg="CL">2100</added>
+				<description>cotone leggero</description>
+			</texCode>
+			<texCode numberingOrg="FO">
+				<art>FABRICTYPE2</art>
+				<pattern>12400-021</pattern>
+				<color>1WV23AK</color>
+				<added addType="LT">2100</added>
+				<description>TESSUTO GIUSEPPE</description>
+			</texCode>
+			<selvedge>
+				<selvedgeText>doppio ritorto</selvedgeText>
+				<selvedgeColor>azzurro</selvedgeColor>
+			</selvedge>
+			<fabricTreat>
+				<surfaceTreatment>trattamento 04</surfaceTreatment>
+				<finishCycle>finissaggio 75</finishCycle>
+				<oneLot>true</oneLot>
+				<metricMark>false</metricMark>
+			</fabricTreat>
+			<qty um="MTR">400</qty>
+			<price um="MTR" priceQualifier="NET">25.50</price>
+			<comDiscount>10</comDiscount>
+			<texComInfo endUse="PR" IC="false" techSheet="false">
+				<season>32015</season>
+				<project>PRJ-03412</project>
+				<deliveryDate dateForm="D">2014-07-15</deliveryDate>
+				<specDate dateForm="D">2014-01-11</specDate>
+				<fabricWidth um="CMT">50.00</fabricWidth>
+				<pieceLength um="MTR">50.00</pieceLength>
+				<piecePack>
+					<pieceInnWrap1>D</pieceInnWrap1>
+					<pieceInnWrap2>J</pieceInnWrap2>
+					<pieceOutWrap>5</pieceOutWrap>
+				</piecePack>
+			</texComInfo>
+			<note numberingOrg="CL" codeList="cl4" noteLabel="ln3">nota3</note>
+		</TXitem>
+		<TXitem act="A">
+			<lineN>2</lineN>
+			<refDoc docType="ORD">
+				<docID numberingOrg="FO">Ord9876</docID>
+				<docDate dateForm="D">2014-05-09</docDate>
+				<itemID>2</itemID>
+			</refDoc>
+			<texCode numberingOrg="CL">
+				<art>T10144</art>
+				<color>G10</color>
+				<description>London Gentleman</description>
+			</texCode>
+			<texCode numberingOrg="FO">
+				<art>AK7002</art>
+				<color>301</color>
+			</texCode>
+			<qty um="MTR">800</qty>
+			<price um="MTR" priceQualifier="NET">20.00</price>
+			<comDiscount>10</comDiscount>
+			<texComInfo>
+				<deliveryDate dateForm="D">2014-10-01</deliveryDate>
+			</texComInfo>
+			<note>note1</note>
+		</TXitem>
+	</TXbody>
+	<totals>
+		<totQty um="MTR">400</totQty>
+		<goodsAmount>10200.00</goodsAmount>
+	</totals>
+</ml:TEXOrdChange>

@@ -28,7 +28,7 @@
         <taml:testAssertionRef 
             taid="TA-001_TC-001_TS-008" 
             name="TEXOrder-MML" 
-            sourcedoc="http://www.ubl-italia.org/TeBES/testsuites/MODAML_2013-1/TS-008_MML_BusinessDocStr/TC-001_TEXOrder-MML.xml" 
+            sourcedoc="http://winter.bologna.enea.it/tebes-artifacts/testsuites/MODAML_2013-1/TS-008_MML_BusinessDocStr/TC-001_TEXOrder-MML.xml" 
             tebes:version="0.1" />   
     </taml:testAssertionRefList>	        	
     
@@ -50,7 +50,7 @@
         <taml:var vname="TEXOrder-MML-BR" vtype="http://purl.oclc.org/dsdl/schematron">http://www.moda-ml.net/moda-ml/repository/schematron/v2013-1/TEXOrderValidator.sch</taml:var>
         
         <!-- XML document, target of Test --> 
-        <taml:target type="xml">document</taml:target>
+        <taml:target type="document" lg="xml">document</taml:target>
         
         <taml:prerequisite>TEXOrder-MML</taml:prerequisite>
         
