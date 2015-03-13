@@ -592,10 +592,9 @@ public class UserManagerImpl implements UserManagerRemote {
 			User user = userList.get(0);
 			
 			if (user.getPassword().equals(userPassword)) {
+				
 				result = user;
-				logger.info("LOGIN User: " + user.getName() + " " + user.getSurname());
-				System.out.println("LOGIN User: " + user.getName() + " " + user.getSurname());
-
+				
 				// If doesn't exist, create the user file system
 				this.createUserFileSystem(user.getId());
 			}

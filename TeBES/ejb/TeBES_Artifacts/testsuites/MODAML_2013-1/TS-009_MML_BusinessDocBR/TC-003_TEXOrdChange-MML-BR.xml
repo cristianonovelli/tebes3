@@ -28,7 +28,7 @@
         <taml:testAssertionRef 
             taid="TA-001_TC-003_TS-008" 
             name="TEXOrdChange-MML" 
-            sourcedoc="http://www.ubl-italia.org/TeBES/testsuites/MODAML_2013-1/TS-008_MML_BusinessDocStr/TC-003_TEXOrdChange-MML.xml" 
+            sourcedoc="http://winter.bologna.enea.it/tebes-artifacts/testsuites/MODAML_2013-1/TS-008_MML_BusinessDocStr/TC-003_TEXOrdChange-MML.xml" 
             tebes:version="0.1" />   
     </taml:testAssertionRefList>	        	
     
@@ -50,7 +50,7 @@
         <taml:var vname="TEXOrdChange-MML-BR" vtype="http://purl.oclc.org/dsdl/schematron">http://www.moda-ml.net/moda-ml/repository/schematron/v2013-1/TEXOrdChangeValidator.sch</taml:var>
         
         <!-- XML document, target of Test --> 
-        <taml:target type="xml">document</taml:target>
+        <taml:target type="document" lg="xml">document</taml:target>
         
         <taml:prerequisite>TEXOrdChange-MML</taml:prerequisite>
         

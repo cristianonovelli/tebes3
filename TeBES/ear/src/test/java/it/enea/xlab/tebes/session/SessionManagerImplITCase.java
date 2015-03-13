@@ -55,11 +55,13 @@ public class SessionManagerImplITCase {
 	static FileManagerController fileController;
 	
 	
+	// elemento tebes:Name interno al TP
 	private static String TESTPLAN_91 = "TP-91";
 	private static String TESTPLAN_1 = "TP-1";
 	private static String TESTPLAN_2 = "TP-2";
 	private static String TESTPLAN_80 = "TP-80";
 	private static String TESTPLAN_81 = "TP-81";
+	private static String TESTPLAN_MML = "TP-MML";
 	
 	static Role role1_standard, role2_advanced, role3_admin, role4_superuser;
 	
@@ -311,7 +313,7 @@ public class SessionManagerImplITCase {
 			Assert.assertTrue(systemTestPlanList.size()>0);
 			
 			TestPlan testPlan = null;
-			Long testPlan91Id, testPlan1Id, testPlan80Id, testPlan81Id, testPlanIdTemp;
+			Long testPlan91Id, testPlan1Id, testPlan80Id, testPlan81Id, testPlanIdTemp, testPlanMMLId;
 			String tpString = "";
 			
 			Hashtable<String, TestPlan> tpTable = new Hashtable<String, TestPlan>();
@@ -378,21 +380,27 @@ public class SessionManagerImplITCase {
 			TestPlan testPlan81 = tpTable.get(TESTPLAN_81);
 			Assert.assertNotNull(testPlan81);
 			
+			TestPlan testPlanMML = tpTable.get(TESTPLAN_MML);
+			Assert.assertNotNull(testPlanMML);
+			
 			// Copia e importazione del TestPlan scelto per l'utente (currentUser)
 			testPlan91Id = testPlanController.cloneTestPlan(testPlan91, user3Id);
 			testPlan1Id = testPlanController.cloneTestPlan(testPlan1, user3Id);
 			testPlan80Id = testPlanController.cloneTestPlan(testPlan80, user3Id);
 			testPlan81Id = testPlanController.cloneTestPlan(testPlan81, user3Id);
+			testPlanMMLId = testPlanController.cloneTestPlan(testPlanMML, user3Id);
 			Assert.assertTrue(testPlan91Id.intValue()>0);
 			Assert.assertTrue(testPlan1Id.intValue()>0);
 			Assert.assertTrue(testPlan80Id.intValue()>0);
 			Assert.assertTrue(testPlan81Id.intValue()>0);
+			Assert.assertTrue(testPlanMMLId.intValue()>0);
 			
 			// Il testPlan selezionato diventa quello clonato per lo User
 			testPlan91 = testPlanController.readTestPlan(testPlan91Id);
 			testPlan1 = testPlanController.readTestPlan(testPlan1Id);
 			testPlan80 = testPlanController.readTestPlan(testPlan80Id);
 			testPlan81 = testPlanController.readTestPlan(testPlan81Id);
+			testPlanMML = testPlanController.readTestPlan(testPlanMMLId);
 			Assert.assertNotNull(testPlan91.getWorkflow());
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions());
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0));
@@ -401,8 +409,10 @@ public class SessionManagerImplITCase {
 			Assert.assertNotNull(testPlan91.getWorkflow().getActions().get(0).getInputs().get(0));
 			//Assert.assertNotNull(testPlan81.getWorkflow().getActions().get(0).getInputs().get(0));	
 	
+			Assert.assertNotNull(testPlanMML.getWorkflow().getActions().get(0));
+			
 			logger.info("OK! IMPORTED selected TestPlans " + 
-					testPlan91.getName() + ", " + testPlan1.getName() + ", " + testPlan80.getName() + ", " + testPlan81.getName() +
+					testPlan91.getName() + ", " + testPlan1.getName() + ", " + testPlan80.getName() + ", " + testPlan81.getName() + ", " + testPlanMML.getName() +
 					" for user " + user3.getName() );
 			
 			
@@ -434,7 +444,7 @@ public class SessionManagerImplITCase {
 			interaction4User3.setEndpoint(null);
 			
 			// 6. inserisce una descrizione
-			String sutDescription = "XML document uploaded by email";
+			String sutDescription = "description...";
 	
 			// 7. Creo SUT e lo persisto per l'utente corrente
 			//SUT sut = new SUT("SystemSUT1", defaultSUTType, interaction4User, sutDescription);
@@ -526,9 +536,7 @@ public class SessionManagerImplITCase {
 			Assert.assertTrue(session91Id.intValue()>0);		
 			logger.info("OK! CREATE SESSION with id " + session91Id);
 			
-			// Preparo una lista di file per ogni sessione di test
-			String[] fileList91 = {"ubl-invoice.xml", "ubl-invoice_withError.xml"};
-			
+
 	
 			
 			
@@ -564,7 +572,13 @@ public class SessionManagerImplITCase {
 			logger.info("");	
 			
 			
-			
+			// SESSION5: 4 actions for MML
+			Long sessionMMLId = sessionController.createSession(user3Id, sut3Id, testPlanMMLId);
+			Assert.assertNotNull(sessionMMLId);
+			logger.info("sessionId:" + sessionMMLId);
+			Assert.assertTrue(sessionMMLId.intValue()>0);		
+			logger.info("OK! CREATE SESSION5 with id " + sessionMMLId);	
+			logger.info("");				
 
 			
 			
@@ -574,11 +588,14 @@ public class SessionManagerImplITCase {
 			// List of Input fot the Global Weather case = 0 Input required
 			//String[] fileList80 = {"Bologna", "Italy"};
 			
-			String[] fileList81 = {"ok"};
+			
 			
 			
 			// UBL 
-			execution(session91Id, fileList91);
+			// Preparo una lista di file per ogni sessione di test
+			//String[] fileList91 = {"ubl-invoice.xml", "ubl-invoice_withError.xml"};
+			
+			//execution(session91Id, fileList91);
 			
 			//execution(session1Id, fileList1);
 			
@@ -586,9 +603,12 @@ public class SessionManagerImplITCase {
 			//execution(session80Id, fileList80);
 			
 			// UserClient-TeBESWS
+			//String[] fileList81 = {"ok"};
 			//execution(session81Id, fileList81);			
 			
-		
+			// MML
+			String[] fileListMML = {"TEXOrder.xml", "TEXOrdResponse.xml", "TEXOrdChange.xml", "TEXOrdStatus.xml"};
+			execution(sessionMMLId, fileListMML);
 		
 		}
 		

@@ -190,6 +190,7 @@ public class SessionManagerImpl implements SessionManagerRemote {
 		for (int i=0; i<actionList.size(); i++) {				
 			
 			a = actionList.get(i);
+			System.out.println("-- action: " + a.getActionName() + " --");
 			inputList = a.getInputs();
 			
 			for (int j=0; j<inputList.size(); j++) {	

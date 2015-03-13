@@ -38,8 +38,8 @@
 				Moda-ML Ordine di Acquisto Tessuti.</tebes:ActionDescription>
 
 			<tebes:Test lg="taml" type="TestAssertion" skipPrerequisites="true"
-				location="http://winter.bologna.enea.it/tebes-artifacts/testsuites/MODAML_2013-1/TS-009_MML_BusinessDocBR/TC-001_TEXOrder-MML-BR.xml"
-				>TA-001_TC-001_TS-009</tebes:Test>
+				location="https://dl.dropboxusercontent.com/u/7198633/ENEA/TeBES_Artifacts/testsuites/MODAML_2013-1/TS-008_MML_BusinessDocStr/TC-001_TEXOrder-MML.xml"
+				>TA-001_TC-001_TS-001</tebes:Test>
 
 			<tebes:Inputs>
 				<tebes:Input>
@@ -74,8 +74,8 @@
 				Moda-ML Risposta all'Ordine di Acquisto Tessuti.</tebes:ActionDescription>
 
 			<tebes:Test lg="taml" type="TestAssertion" skipPrerequisites="true"
-				location="http://winter.bologna.enea.it/tebes-artifacts/testsuites/MODAML_2013-1/TS-009_MML_BusinessDocBR/TC-002_TEXOrdResponse-MML-BR.xml"
-				>TA-001_TC-002_TS-009</tebes:Test>
+				location="https://dl.dropboxusercontent.com/u/7198633/ENEA/TeBES_Artifacts/testsuites/MODAML_2013-1/TS-008_MML_BusinessDocStr/TC-002_TEXOrdResponse-MML.xml"
+				>TA-001_TC-001_TS-001</tebes:Test>
 
 			<tebes:Inputs>
 				<tebes:Input>
@@ -110,8 +110,8 @@
 				Moda-ML Ordine di Acquisto Tessuti.</tebes:ActionDescription>
 
 			<tebes:Test lg="taml" type="TestAssertion" skipPrerequisites="true"
-				location="http://winter.bologna.enea.it/tebes-artifacts/testsuites/MODAML_2013-1/TS-009_MML_BusinessDocBR/TC-003_TEXOrdChange-MML-BR.xml"
-				>TA-001_TC-003_TS-009</tebes:Test>
+				location="https://dl.dropboxusercontent.com/u/7198633/ENEA/TeBES_Artifacts/testsuites/MODAML_2013-1/TS-008_MML_BusinessDocStr/TC-003_TEXOrdChange-MML.xml"
+				>TA-001_TC-001_TS-001</tebes:Test>
 
 			<tebes:Inputs>
 				<tebes:Input>
@@ -145,8 +145,8 @@
 				Moda-ML Stato di Avanzamento Ordine di Acquisto Tessuti.</tebes:ActionDescription>
 
 			<tebes:Test lg="taml" type="TestAssertion" skipPrerequisites="true"
-				location="http://winter.bologna.enea.it/tebes-artifacts/testsuites/MODAML_2013-1/TS-009_MML_BusinessDocBR/TC-004_TEXOrdStatus-MML-BR.xml"
-				>TA-001_TC-004_TS-009</tebes:Test>
+				location="https://dl.dropboxusercontent.com/u/7198633/ENEA/TeBES_Artifacts/testsuites/MODAML_2013-1/TS-008_MML_BusinessDocStr/TC-004_TEXOrdStatus-MML.xml"
+				>TA-001_TC-001_TS-001</tebes:Test>
 
 			<tebes:Inputs>
 				<tebes:Input>
